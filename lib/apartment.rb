@@ -1,3 +1,5 @@
 module Apartment
-	establish_connection(ActiveRecord::Base.configurations["alt_#{RAILS_ENV"])
+	db_name = "alt_#{RAILS_ENV}"
+	logger.info "Apartment overriding database to #{db_name}"
+	establish_connection(db_name)
 end
