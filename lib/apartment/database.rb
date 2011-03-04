@@ -33,6 +33,7 @@ module Apartment
 		end
 		
 		def self.create(database)
+			config = get_default_database
 			if config["adapter"] == "postgresql"
 				ActiveRecord::Base.connection.execute('create table schema_migrations(version varchar(255))')
 			end
