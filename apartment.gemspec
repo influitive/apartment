@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{apartment}
-  s.version = "0.1.0"
+  s.version = "0.1.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ryan Brunner"]
@@ -24,8 +24,6 @@ Gem::Specification.new do |s|
     "README.markdown",
     "Rakefile",
     "VERSION",
-    "apartment-0.1.1.gem",
-    "apartment-0.1.2.gem",
     "apartment.gemspec",
     "lib/apartment.rb",
     "lib/apartment/associations/multi_tenant_association.rb",
@@ -34,7 +32,7 @@ Gem::Specification.new do |s|
     "lib/apartment/database.rb",
     "lib/apartment/railtie.rb",
     "lib/tasks/multi_tenant_migrate.rake",
-    "pkg/apartment-0.1.0.gem"
+    "pkg/apartment-0.1.3.gem"
   ]
   s.homepage = %q{http://github.com/ryanbrunner/apartment}
   s.licenses = ["MIT"]
