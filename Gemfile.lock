@@ -1,6 +1,7 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    activesupport (3.0.3)
     git (1.2.5)
     jeweler (1.5.1)
       bundler (~> 1.0.0)
@@ -14,6 +15,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activesupport (>= 2.3.5)
   bundler (~> 1.0.0)
   jeweler (~> 1.5.1)
   rcov

@@ -1,5 +1,11 @@
+
 module Apartment
-	db_name = "alt_#{RAILS_ENV}"
-	logger.info "Apartment overriding database to #{db_name}"
-	establish_connection(db_name)
+	require 'apartment/railtie'
+	require 'apartment/config'
+	require 'apartment/database'
+
+  def self.included(base)
+    base.extend Apartment::ClassMethods
+  end
 end
+
