@@ -16,6 +16,8 @@ module Apartment
 			
 			ActiveRecord::Base.establish_connection(switched_config)
 			
+			puts Apartment::Config.excluded_models
+			
 			Apartment::Config.excluded_models.each do |m|
 				klass = Kernel
 				m.split("::").each do |i|
@@ -41,6 +43,10 @@ module Apartment
 			
 			ActiveRecord::Base.establish_connection(switched_config)
 			
+			if config["adapter"] == "postgresql"
+				ActiveRecord::Base.connection.execute('create table schema_migrations(version varchar(255))')
+			end
+			
 			ActiveRecord::Migrator.migrate(File.join(Rails.root, 'db', 'migrate'))
 			
 			ActiveRecord::Base.establish_connection(config)
@@ -54,7 +60,7 @@ module Apartment
 			def self.multi_tenantify(configuration, database)
 				new_config = configuration.clone
 				
-				if new_config['adapter'] == "postgres" && Apartment::Config.use_postgres_schemas 
+				if new_config['adapter'] == "postgresql" && Apartment::Config.use_postgres_schemas 
 					new_config['schema_search_path'] = database
 				else
 					new_config['database'] = new_config['database'].gsub(Rails.env.to_s, "#{database}_#{Rails.env}")
