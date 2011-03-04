@@ -24,6 +24,8 @@ module Apartment
 				
 				raise "Excluded class #{klass} could not be found." if klass.nil?
 				
+				puts "Excluding class #{m}"
+				
 				klass.establish_connection(config)
 			end	
 		end
