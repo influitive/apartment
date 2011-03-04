@@ -33,6 +33,11 @@ module Apartment
 		end
 		
 		def self.create(database)
+			if config["adapter"] == "postgresql"
+				ActiveRecord::Base.connection.execute('create table schema_migrations(version varchar(255))')
+			end
+			
+			
 			migrate(database)
 		end
 		
@@ -43,9 +48,6 @@ module Apartment
 			
 			ActiveRecord::Base.establish_connection(switched_config)
 			
-			if config["adapter"] == "postgresql"
-				ActiveRecord::Base.connection.execute('create table schema_migrations(version varchar(255))')
-			end
 			
 			ActiveRecord::Migrator.migrate(File.join(Rails.root, 'db', 'migrate'))
 			
