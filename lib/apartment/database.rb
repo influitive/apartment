@@ -60,7 +60,7 @@ module Apartment
 			def self.multi_tenantify(configuration, database)
 				new_config = configuration.clone
 				
-				if new_config['adapter'] == "postgresql" && Apartment::Config.use_postgres_schemas 
+				if new_config['adapter'] == "postgresql"  
 					new_config['schema_search_path'] = database
 				else
 					new_config['database'] = new_config['database'].gsub(Rails.env.to_s, "#{database}_#{Rails.env}")
