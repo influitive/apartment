@@ -34,10 +34,14 @@ module Apartment
 		
 		def self.create(database)
 			config = get_default_database
+			
+			switched_config = multi_tenantify(config, database)
+			
+			ActiveRecord::Base.establish_connection(switched_config)
+			
 			if config["adapter"] == "postgresql"
 				ActiveRecord::Base.connection.execute('create table schema_migrations(version varchar(255))')
 			end
-			
 			
 			migrate(database)
 		end
@@ -55,22 +59,22 @@ module Apartment
 			ActiveRecord::Base.establish_connection(config)
 		end
 		
-		protected
-			def self.get_default_database
-				Rails.configuration.database_configuration[Rails.env]
-			end
-			
-			def self.multi_tenantify(configuration, database)
-				new_config = configuration.clone
-				
-				if new_config['adapter'] == "postgresql"  
-					new_config['schema_search_path'] = database
-				else
-					new_config['database'] = new_config['database'].gsub(Rails.env.to_s, "#{database}_#{Rails.env}")
+			protected
+				def self.get_default_database
+					Rails.configuration.database_configuration[Rails.env]
 				end
 				
-				new_config
-			end
+				def self.multi_tenantify(configuration, database)
+					new_config = configuration.clone
+					
+					if new_config['adapter'] == "postgresql"  
+						new_config['schema_search_path'] = database
+					else
+						new_config['database'] = new_config['database'].gsub(Rails.env.to_s, "#{database}_#{Rails.env}")
+					end
+					
+					new_config
+				end
 	end
 	
 end
