@@ -1,5 +1,7 @@
 module Apartment
-	config = {:excluded_models => ["User"],
+  require 'ostruct'
+  
+  config = {:excluded_models => ["User"],
 						:use_postgres_schemas => true
 					 }		
 	
