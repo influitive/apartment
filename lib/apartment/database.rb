@@ -1,4 +1,3 @@
-
 module Apartment
 	class Database
 		def self.switch(database)

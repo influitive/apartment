@@ -1,4 +1,3 @@
-
 module Apartment
 	require 'apartment/railtie'
 	require 'apartment/config'

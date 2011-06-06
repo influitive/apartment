@@ -1,4 +1,3 @@
-require 'apartment'
 require 'rails'
 
 module Apartment
