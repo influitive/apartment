@@ -28,14 +28,22 @@ module Apartment
 		def create(database)
 			
       # Postgres will (optionally) use 'schemas' instead of actual dbs, create a new schema while connected to main (global) db
+      if use_schemas?
+        puts "creating postgres schema"
+      else
+        puts "not using schemas!!"
+      end
+      
       ActiveRecord::Base.connection.execute("create schema #{database}") if use_schemas?
       
 			connect_to_new(database)
 			
-			load_database_schema
+			import_database_schema
 			
       # Manually init schema migrations table (apparently there were issues with Postgres)
 			ActiveRecord::ConnectionAdapters::SchemaStatements.initialize_schema_migrations_table
+			
+			reset_connection
 		end
 		
 		def migrate(database)
@@ -44,12 +52,12 @@ module Apartment
 			
 			ActiveRecord::Migrator.migrate(File.join(Rails.root, ActiveRecord::Migrator.migrations_path))
 			
-			ActiveRecord::Base.establish_connection(config)
+			reset_connection
 		end
 		
 		protected
 		
-		  def load_database_schema
+		  def import_database_schema
 		    file = "#{Rails.root}/db/schema.rb"
         if File.exists?(file)
           load(file)
@@ -59,7 +67,7 @@ module Apartment
 	    end
 	    
       # Are we using postgres schemas
-	    def use_schemas?(conf)
+	    def use_schemas?(conf = nil)
 	      (conf || config)['adapter'] == "postgresql" && Config.use_postgres_schemas
       end
 	    
@@ -84,14 +92,18 @@ module Apartment
 				new_config
 			end
 			
-			def get_default_database
+			def default_database_config
 				Rails.configuration.database_configuration[Rails.env]
 			end
+			
+			def reset_connection
+			  ActiveRecord::Base.establish_connection(config)
+		  end
 			
 		private
 		
 		  def config
-		    @config ||= get_default_database
+		    @config ||= default_database_config
 	    end
 	    
 	end

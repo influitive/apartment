@@ -7,9 +7,9 @@ module Apartment
     extend self
     
     @default_config = {
-      :excluded_models => ["User"],
-  		:use_postgres_schemas => true
-  	}
+      :excluded_models => ["User", "Admin::Company"],
+      :use_postgres_schemas => true
+    }
   	
     # Always query from config object, fallback to super method_missing
     def method_missing(method)
