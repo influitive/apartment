@@ -1,12 +1,11 @@
 module Apartment
   require 'ostruct'
   
-  config = {:excluded_models => ["User"],
-						:use_postgres_schemas => true
-					 }		
-	
-	if File.exists? "config/apartment.yml"
-  	config = config.merge YAML.load_file "config/apartment.yml" 
-		Config = OpenStruct.new(config)
-	end									
+  config_file = File.join(Rails.root, "config/apartment.yml")
+  config = {
+    :excluded_models => ["User"],
+		:use_postgres_schemas => true
+	}
+					 	
+	Config = OpenStruct.new config.merge(YAML.load_file(config_file)) if File.exists? config_file
 end
