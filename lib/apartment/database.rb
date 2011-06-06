@@ -1,4 +1,5 @@
-require 'active_support'
+require 'active_support/core_ext/string/inflections'
+require 'active_record'
 
 module Apartment
 	module Database
@@ -6,18 +7,12 @@ module Apartment
 	  
 		def switch(database)
 			
-			if database.nil?
-				ActiveRecord::Base.establish_connection(config)
-				return
-			end
+      # Just connect to default db and return
+			return ActiveRecord::Base.establish_connection(config) if database.nil?
 
-			switched_config = multi_tenantify(database)
+      connect_to_new(database)
 			
-			puts switched_config.to_yaml
-			
-			ActiveRecord::Base.establish_connection(switched_config)
-			
-			puts Apartment::Config.excluded_models
+			puts "Apartment::Config.excluded_models: #{Apartment::Config.excluded_models}"
 			
 			Apartment::Config.excluded_models.each do |excluded_model|
 			  klass = excluded_model.constantize
@@ -27,49 +22,70 @@ module Apartment
 				puts "Excluding class #{excluded_model}"
 				
 				klass.establish_connection(config)
-			end	
+			end
 		end
 		
 		def create(database)
 			
-			switched_config = multi_tenantify(database)
+      # Postgres will (optionally) use 'schemas' instead of actual dbs, create a new schema while connected to main (global) db
+      ActiveRecord::Base.connection.execute("create schema #{database}") if use_schemas?
+      
+			connect_to_new(database)
 			
-			ActiveRecord::Base.establish_connection(switched_config)
+			load_database_schema
 			
-			if config["adapter"] == "postgresql"
-				ActiveRecord::Base.connection.execute('create table schema_migrations(version varchar(255))')
-			end
-			
-			migrate(database)
+      # Manually init schema migrations table (apparently there were issues with Postgres)
+			ActiveRecord::ConnectionAdapters::SchemaStatements.initialize_schema_migrations_table
 		end
 		
 		def migrate(database)
 			
-			switched_config = multi_tenantify(database)
+			connect_to_new(database)
 			
-			ActiveRecord::Base.establish_connection(switched_config)
-			
-			ActiveRecord::Migrator.migrate(File.join(Rails.root, 'db', 'migrate'))
+			ActiveRecord::Migrator.migrate(File.join(Rails.root, ActiveRecord::Migrator.migrations_path))
 			
 			ActiveRecord::Base.establish_connection(config)
 		end
 		
 		protected
 		
-			def get_default_database
-				Rails.configuration.database_configuration[Rails.env]
+		  def load_database_schema
+		    file = "#{Rails.root}/db/schema.rb"
+        if File.exists?(file)
+          load(file)
+        else
+          abort %{#{file} doesn't exist yet. Run "rake db:migrate" to create it then try again}
+        end
+	    end
+	    
+      # Are we using postgres schemas
+	    def use_schemas?(conf)
+	      (conf || config)['adapter'] == "postgresql" && Config.use_postgres_schemas
+      end
+	    
+      # Generate new connection config and connect
+	    def connect_to_new(database)
+	      switched_config = multi_tenantify(database)
+
+  			puts "connecting to db with config: #{switched_config.to_yaml}"
+
+  			ActiveRecord::Base.establish_connection(switched_config)
 			end
-			
+		
 			def multi_tenantify(database)
 				new_config = config.clone
 				
-				if new_config['adapter'] == "postgresql"  
+				if use_schemas?(new_config)
 					new_config['schema_search_path'] = database
 				else
 					new_config['database'] = new_config['database'].gsub(Rails.env.to_s, "#{database}_#{Rails.env}")
 				end
 				
 				new_config
+			end
+			
+			def get_default_database
+				Rails.configuration.database_configuration[Rails.env]
 			end
 			
 		private
