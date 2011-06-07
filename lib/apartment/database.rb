@@ -28,19 +28,13 @@ module Apartment
 		def create(database)
 			
       # Postgres will (optionally) use 'schemas' instead of actual dbs, create a new schema while connected to main (global) db
-      if use_schemas?
-        puts "creating postgres schema"
-      else
-        puts "not using schemas!!"
-      end
-      
       ActiveRecord::Base.connection.execute("create schema #{database}") if use_schemas?
       
 			connect_to_new(database)
 			
 			import_database_schema
 			
-      # Manually init schema migrations table (apparently there were issues with Postgres)
+      # Manually init schema migrations table (apparently there were issues with Postgres when this isn't done)
 			ActiveRecord::ConnectionAdapters::SchemaStatements.initialize_schema_migrations_table
 			
 			reset_connection
@@ -54,6 +48,10 @@ module Apartment
 			
 			reset_connection
 		end
+		
+		def reset
+		  switch(nil)
+	  end
 		
 		protected
 		
