@@ -19,7 +19,8 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
   
-  s.add_dependency 'rails', '~> 3.0.5'
+  s.add_dependency 'rails', '~> 3.0.8'
   s.add_development_dependency 'rspec', '~> 2.6.0'
+  s.add_development_dependency 'pg', '~> 0.11.0'
 
 end

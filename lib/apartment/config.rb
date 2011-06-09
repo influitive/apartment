@@ -7,7 +7,7 @@ module Apartment
     extend self
     
     @default_config = {
-      :excluded_models => ["User", "Admin::Company"],
+      :excluded_models => [],
       :use_postgres_schemas => true
     }
   	

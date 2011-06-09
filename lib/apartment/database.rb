@@ -5,17 +5,21 @@ module Apartment
 	module Database
 	  extend self
 	  
+    # Call init to establish a connection to the public schema on all excluded models
+    # This must be done before creating any new schemas or switching
+	  def init
+	    Apartment::Config.excluded_models.each do |excluded_model|
+			  klass = excluded_model.constantize				
+				klass.establish_connection(config)
+			end
+    end
+	  
 		def switch(database = nil)
 			
       # Just connect to default db and return
 			return ActiveRecord::Base.establish_connection(config) if database.nil?
 
       connect_to_new(database)
-			
-			Apartment::Config.excluded_models.each do |excluded_model|
-			  klass = excluded_model.constantize				
-				klass.establish_connection(config)
-			end
 		end
 		
 		def reset
@@ -24,15 +28,20 @@ module Apartment
 		
 		def create(database)
       # Postgres will (optionally) use 'schemas' instead of actual dbs, create a new schema while connected to main (global) db
-      ActiveRecord::Base.connection.execute("create schema #{database}") if use_schemas?
+      create_schema(database) if use_schemas?
+      # TODO create database if not using schemas
 			
-			connect_and_reset(database) do
+			connect_to_new(database).tap do
   			import_database_schema
 			
   			# Manually init schema migrations table (apparently there were issues with Postgres when this isn't done)
   			ActiveRecord::Base.connection.initialize_schema_migrations_table
 			end
 		end
+		
+		def create_schema(name)
+		  ActiveRecord::Base.connection.execute("CREATE SCHEMA #{name}")
+	  end
 		
     # Migrate to latest
 		def migrate(database)
@@ -53,15 +62,13 @@ module Apartment
 		  connect_and_reset(database){ ActiveRecord::Migrator.rollback(ActiveRecord::Migrator.migrations_path, step) }
 	  end
 	  
-	  def run(direction, path, version)
-    end
-		
 		protected
 		
 		  def connect_and_reset(database)
 		    connect_to_new(database)
 		    yield if block_given?
-		    reset
+		  ensure
+  		  reset
 	    end
 		
 		  def import_database_schema

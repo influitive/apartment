@@ -20,6 +20,13 @@ describe Apartment::Database do
       Apartment::Database.switch
     end
     
+    it "should fail with wrong schema" do
+      pending("requires actual connetion to DB, need a better setup for this")
+      expect {
+        Apartment::Database.switch('some_nonexistent_schema')
+      }.to raise_error
+    end
+    
     context "using postgres schemas" do
       
       before do
@@ -38,28 +45,32 @@ describe Apartment::Database do
         end
       end
       
-      context "with exclusions" do
-        before do
-          Apartment::Config.stub(:excluded_models).and_return ['Admin::Company', 'User']
-        end
-        
-        it "should connect excluded model with original config" do
-          Admin::Company.should_receive(:establish_connection).with config
-          User.should_receive(:establish_connection).with config
-          Apartment::Database.switch(schema_name)
-        end
-        
-        it "should raise an error for unkown class names" do
-          Apartment::Config.stub(:excluded_models).and_return ['Admin::Company', 'User', "Unknown::Class"]
-          lambda{
-            Apartment::Database.switch(schema_name)
-          }.should raise_error
-        end
-          
-      end
-      
     end
     
+  end
+  
+  describe "#init" do
+    
+    context "with model exclusions" do
+      before do
+        Apartment::Config.stub(:excluded_models).and_return ['Admin::Company', 'User']
+      end
+      
+      it "should connect excluded model with original config" do
+        Admin::Company.should_receive(:establish_connection).with config
+        User.should_receive(:establish_connection).with config
+        Apartment::Database.init
+      end
+      
+      it "should raise an error for unkown class names" do
+        Apartment::Config.stub(:excluded_models).and_return ['Admin::Company', 'User', "Unknown::Class"]
+        
+        expect{
+          Apartment::Database.init
+        }.to raise_error
+      end
+        
+    end
   end
   
   describe "#create" do
@@ -75,11 +86,9 @@ describe Apartment::Database do
       end
       
       it "should create the new schema" do
-        ActiveRecord::Base.connection.should_receive(:execute).with("create schema #{schema_name}")
+        ActiveRecord::Base.connection.should_receive(:execute).with("CREATE SCHEMA #{schema_name}")
         Apartment::Database.create(schema_name)
       end
-      
-      # need more tests
       
     end
     
@@ -94,6 +103,17 @@ describe Apartment::Database do
         Apartment::Database.create(schema_name)
       end
     end
+  end
+  
+  describe "#create_schema" do
+    let(:schema_name){ "some_schema" }
+    
+    it "should succeed" do
+      ActiveRecord::Base.connection.should_receive(:execute).with("CREATE SCHEMA #{schema_name}")
+      Apartment::Database.create_schema(schema_name)      
+    end
+    
+    it "should sanitize name"
   end
   
   context "migrations" do
