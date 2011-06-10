@@ -110,10 +110,14 @@ describe Apartment::Database do
     
     it "should succeed" do
       ActiveRecord::Base.connection.should_receive(:execute).with("CREATE SCHEMA #{schema_name}")
-      Apartment::Database.create_schema(schema_name)      
+      Apartment::Database.create_schema(schema_name)
     end
     
-    it "should sanitize name"
+    it "should sanitize name" do
+      bad_name = "some'nam\"e"
+      ActiveRecord::Base.connection.should_receive(:execute).with("CREATE SCHEMA somename")
+      Apartment::Database.create_schema(bad_name)
+    end
   end
   
   context "migrations" do

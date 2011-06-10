@@ -15,7 +15,7 @@ module Apartment
     end
 	  
 		def switch(database = nil)
-			
+			puts "ActiveRecord::Base.connection.schema_search_path: #{ActiveRecord::Base.connection.schema_search_path}"
       # Just connect to default db and return
 			return ActiveRecord::Base.establish_connection(config) if database.nil?
 
@@ -26,12 +26,14 @@ module Apartment
 		  switch nil
 	  end
 		
+    # Create new postgres schema
 		def create(database)
+		  puts ">> create: database: #{database}"
       # Postgres will (optionally) use 'schemas' instead of actual dbs, create a new schema while connected to main (global) db
       create_schema(database) if use_schemas?
       # TODO create database if not using schemas
 			
-			connect_to_new(database).tap do
+			connect_and_reset(database) do
   			import_database_schema
 			
   			# Manually init schema migrations table (apparently there were issues with Postgres when this isn't done)
@@ -40,7 +42,7 @@ module Apartment
 		end
 		
 		def create_schema(name)
-		  ActiveRecord::Base.connection.execute("CREATE SCHEMA #{name}")
+		  ActiveRecord::Base.connection.execute("CREATE SCHEMA #{name.gsub(/[\W]/,'')}")
 	  end
 		
     # Migrate to latest
