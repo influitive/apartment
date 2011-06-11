@@ -15,7 +15,6 @@ module Apartment
     end
 	  
 		def switch(database = nil)
-			puts "ActiveRecord::Base.connection.schema_search_path: #{ActiveRecord::Base.connection.schema_search_path}"
       # Just connect to default db and return
 			return ActiveRecord::Base.establish_connection(config) if database.nil?
 
@@ -28,7 +27,6 @@ module Apartment
 		
     # Create new postgres schema
 		def create(database)
-		  puts ">> create: database: #{database}"
       # Postgres will (optionally) use 'schemas' instead of actual dbs, create a new schema while connected to main (global) db
       create_schema(database) if use_schemas?
       # TODO create database if not using schemas
@@ -41,8 +39,11 @@ module Apartment
 			end
 		end
 		
-		def create_schema(name)
-		  ActiveRecord::Base.connection.execute("CREATE SCHEMA #{name.gsub(/[\W]/,'')}")
+		def create_schema(database)
+		  reset   # ensure that we're on the base connection when creating our schema
+		  ActiveRecord::Base.connection.execute("CREATE SCHEMA #{sanitize(database)}")
+		rescue Exception => e
+		  puts ">> create_schema threw an exception: #{e}"
 	  end
 		
     # Migrate to latest
@@ -89,9 +90,10 @@ module Apartment
 	    
       # Generate new connection config and connect
 	    def connect_to_new(database)
-	      switched_config = multi_tenantify(database)
-
+	      switched_config = multi_tenantify(sanitize(database))
   			ActiveRecord::Base.establish_connection(switched_config)
+  		rescue Exception => e
+  		  puts "ActiveRecord::Base.establish_connection threw an exception!!!: #{e.inspect}"  
 			end
 		
 			def multi_tenantify(database)
@@ -113,6 +115,11 @@ module Apartment
 		  def config
 		    @config ||= default_database_config
 	    end
+	    
+      # Remove all non-alphanumeric characters
+	    def sanitize(database)
+	      database.gsub(/[\W]/,'')
+      end
 	    
 	end
 	

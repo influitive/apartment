@@ -118,6 +118,11 @@ describe Apartment::Database do
       ActiveRecord::Base.connection.should_receive(:execute).with("CREATE SCHEMA somename")
       Apartment::Database.create_schema(bad_name)
     end
+    
+    it "should ensure it is on the public schema before creating the new schema" do
+      pending("cant stub out any longer here... we need to start integration testing")
+      Apartment::Database.init
+    end
   end
   
   context "migrations" do
