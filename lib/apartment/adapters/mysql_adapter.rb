@@ -1,6 +1,10 @@
 module Apartment
   
-  class MysqlAdapter < AbstractAdapter
+  module Adapters
+  
+    class MysqlAdapter < AbstractAdapter
+    end
+    
   end
   
 end

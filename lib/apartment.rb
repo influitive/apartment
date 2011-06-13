@@ -1,14 +1,13 @@
 require 'apartment/railtie'
-require 'apartment/config'
-require 'apartment/database'
 
 module Apartment
 
   autoload :ApartmentError, 'apartment/errors'
-  autoload :Database, 'aparment/database'
+  autoload :Config, 'apartment/config'
+  autoload :Database, 'apartment/database'
   
   module Adapters
-    autoload AbstractAdapter, 'apartment/adapters/abstract_adapter'
+    autoload :AbstractAdapter, 'apartment/adapters/abstract_adapter'
   end
 end
 

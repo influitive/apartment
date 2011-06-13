@@ -1,5 +1,3 @@
-require 'active_support/hash_with_indifferent_access'
-
 module Apartment
 
   module Config
@@ -11,7 +9,7 @@ module Apartment
       :use_postgres_schemas => true
     }
   	
-    # Always query from config object, fallback to super method_missing
+    # check config for attribute (method), fallback to super method_missing
     def method_missing(method)
       config[method] || super
     end

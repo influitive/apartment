@@ -1,0 +1,4 @@
+use_postgres_schemas: true
+
+excluded_models:
+  - Company

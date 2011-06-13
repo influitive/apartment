@@ -1,0 +1,4 @@
+test:
+  adapter: postgresql
+  database: apartment_postgresql_test
+  

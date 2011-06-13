@@ -10,17 +10,30 @@ RSpec::Core::RakeTask.new(:spec) do |spec|
 end
 
 namespace :spec do
-  RSpec::Core::RakeTask.new(:tasks) do |spec|
-    spec.pattern = "spec/tasks/**/*_spec.rb"
+  
+  [:tasks, :unit, :integration].each do |type|
+    RSpec::Core::RakeTask.new(type) do |spec|
+      spec.pattern = "spec/#{type}/**/*_spec.rb"
+    end
+  end
+  
+  namespace :unit do
+    RSpec::Core::RakeTask.new(:adapters) do |spec|
+      spec.pattern = "spec/unit/adapters/**/*_spec.rb"
+    end
   end
 
-  RSpec::Core::RakeTask.new(:unit) do |spec|
-    spec.pattern = "spec/unit/**/*_spec.rb"
-  end
-
-  RSpec::Core::RakeTask.new(:integration) do |spec|
-    spec.pattern = "spec/integration/**/*_spec.rb"
-  end
 end
 
 task :default => :spec
+
+namespace :postgres do
+  
+  desc 'Build the PostgreSQL test databases'
+  task :build_databases do
+    # config = ARTest.config['connections']['postgresql']
+    # %x{ createdb -E UTF8 #{config['arunit']['database']} }
+    # %x{ createdb -E UTF8 #{config['arunit2']['database']} }
+  end
+  
+end
