@@ -8,7 +8,10 @@ module Apartment
     # Call init to establish a connection to the public schema on all excluded models
     # This must be done before creating any new schemas or switching
 	  def init
-	    Apartment::Config.excluded_models.each do |excluded_model|
+	    @default_schema_search_path = ActiveRecord::Base.connection.schema_search_path
+      # Establish a connection for each specific excluded model
+      # Thus all other models will shared a connection (at ActiveRecord::Base) and we can modify at will
+	    Config.excluded_models.each do |excluded_model|
 			  klass = excluded_model.constantize				
 				klass.establish_connection(config)
 			end
@@ -16,13 +19,13 @@ module Apartment
 	  
 		def switch(database = nil)
       # Just connect to default db and return
-			return ActiveRecord::Base.establish_connection(config) if database.nil?
+			return reset if database.nil?
 
       connect_to_new(database)
 		end
 		
 		def reset
-		  switch nil
+		  ActiveRecord::Base.connection.schema_search_path = @default_schema_search_path
 	  end
 		
     # Create new postgres schema
@@ -90,10 +93,9 @@ module Apartment
 	    
       # Generate new connection config and connect
 	    def connect_to_new(database)
-	      switched_config = multi_tenantify(sanitize(database))
-  			ActiveRecord::Base.establish_connection(switched_config)
+  			ActiveRecord::Base.connection.schema_search_path = database
   		rescue Exception => e
-  		  puts "ActiveRecord::Base.establish_connection threw an exception!!!: #{e.inspect}"  
+  		  puts "setting schema_search_path threw an exception!!!: #{e.inspect}"  
 			end
 		
 			def multi_tenantify(database)
