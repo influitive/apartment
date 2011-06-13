@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-$:.push File.expand_path("../lib", __FILE__)
+$: << File.expand_path("../lib", __FILE__)
 require "apartment/version"
 
 Gem::Specification.new do |s|
@@ -20,7 +20,9 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.7}
   
   s.add_dependency 'rails', '~> 3.0.8'
+  s.add_development_dependency 'sqlite3'
   s.add_development_dependency 'rspec', '~> 2.6.0'
+  s.add_development_dependency 'rspec-rails', '~> 2.6.1'
   s.add_development_dependency 'pg', '~> 0.11.0'
-
+  s.add_development_dependency 'capybara', '~> 0.4.1.2'
 end
