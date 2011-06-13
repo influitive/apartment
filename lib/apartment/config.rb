@@ -13,14 +13,19 @@ module Apartment
     def method_missing(method)
       config[method] || super
     end
-
+    
+    def reload
+      @config = nil
+      config
+    end
+    
   	protected
   	
   	def config
   	  @config ||= begin
-  	    @default_config.merge!(YAML.load_file(config_file).symbolize_keys) if File.exists?(config_file)
-  	    
-  	    @default_config
+  	    @default_config.clone.tap do |config|
+  	      config.merge!(YAML.load_file(config_file).symbolize_keys) if File.exists?(config_file)
+	      end
 	    end
 	  end
 

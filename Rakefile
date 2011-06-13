@@ -28,12 +28,14 @@ end
 task :default => :spec
 
 namespace :postgres do
+  require 'active_record'
   
   desc 'Build the PostgreSQL test databases'
-  task :build_databases do
-    # config = ARTest.config['connections']['postgresql']
-    # %x{ createdb -E UTF8 #{config['arunit']['database']} }
-    # %x{ createdb -E UTF8 #{config['arunit2']['database']} }
+  task :build_db do
+    config = Apartment::Test.config['connections']['postgresql']
+    %x{ createdb -E UTF8 #{config['database']} } rescue "test db already exists"
+    ActiveRecord::Base.establish_connection config
+    load 'spec/dummy/db/schema.rb'
   end
   
 end

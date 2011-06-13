@@ -24,5 +24,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec', '~> 2.6.0'
   s.add_development_dependency 'rspec-rails', '~> 2.6.1'
   s.add_development_dependency 'pg', '~> 0.11.0'
-  s.add_development_dependency 'capybara', '~> 0.4.1.2'
+  s.add_development_dependency "silent-postgres", "~> 0.0.8"
 end
