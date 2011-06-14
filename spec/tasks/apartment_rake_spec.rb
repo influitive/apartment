@@ -18,15 +18,11 @@ describe "apartment rake tasks" do
   
   context 'database migration' do
     
-    def company(db)
-      stub('Company', :database => db, :name => db)
-    end
-    
-    let(:companies){ [company('company1'), company('company2'), company('company3')] }
-    let(:company_count){ companies.length }
+    let(:database_names){ ['company1', 'company2', 'company3'] }
+    let(:db_count){ database_names.length }
     
     before do
-      Admin::Company.stub(:where).and_return stub('Relation', :select => companies)
+      Apartment.stub(:database_names).and_return database_names
     end
     
     describe "apartment:migrate" do
@@ -35,7 +31,7 @@ describe "apartment rake tasks" do
       end
       
       it "should migrate all multi-tenant dbs" do
-        Apartment::Database.should_receive(:migrate).exactly(company_count).times
+        Apartment::Migrator.should_receive(:migrate).exactly(db_count).times
         @rake['apartment:migrate'].invoke
       end
     end
@@ -61,7 +57,7 @@ describe "apartment rake tasks" do
         end
         
         it "migrates up to a specific version" do
-          Apartment::Database.should_receive(:migrate_up).with(anything, version.to_i).exactly(company_count).times
+          Apartment::Migrator.should_receive(:run).with(:up, anything, version.to_i).exactly(db_count).times
           @rake['apartment:migrate:up'].invoke
         end
       end
@@ -88,7 +84,7 @@ describe "apartment rake tasks" do
         end
         
         it "migrates up to a specific version" do
-          Apartment::Database.should_receive(:migrate_down).with(anything, version.to_i).exactly(company_count).times
+          Apartment::Migrator.should_receive(:run).with(:down, anything, version.to_i).exactly(db_count).times
           @rake['apartment:migrate:down'].invoke
         end
       end
@@ -99,12 +95,12 @@ describe "apartment rake tasks" do
       let(:step){ '3' }
       
       it "should rollback dbs" do
-        Apartment::Database.should_receive(:rollback).exactly(company_count).times
+        Apartment::Migrator.should_receive(:rollback).exactly(db_count).times
         @rake['apartment:rollback'].invoke
       end
       
       it "should rollback dbs STEP amt" do
-        Apartment::Database.should_receive(:rollback).with(anything, step.to_i).exactly(company_count).times
+        Apartment::Migrator.should_receive(:rollback).with(anything, step.to_i).exactly(db_count).times
         ENV['STEP'] = step
         @rake['apartment:rollback'].invoke
       end

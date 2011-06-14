@@ -1,3 +1,14 @@
+# 0.4.0
+  * June 14, 2011
+  
+  - Added `configure` method on Apartment instead of using yml file, allows for dynamic setting of db names to migrate for rake task
+  
+# 0.3.0
+  * June 10, 2011
+  
+  - Added full support for database migration
+  - Added in method to establish new connection for excluded models on startup rather than on each switch
+    
 # 0.2.0
   * June 6, 2011 *
   
