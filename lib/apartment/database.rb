@@ -6,6 +6,7 @@ module Apartment
 	  MULTI_TENANT_METHODS = [:create, :switch, :reset, :connect_and_reset]
 	  
 	  class << self
+
       # Call init to establish a connection to the public schema on all excluded models
       # This must be done before creating any new schemas or switching
   	  def init
@@ -48,9 +49,8 @@ module Apartment
   		  def connect_exclusions
   		    # Establish a connection for each specific excluded model
           # Thus all other models will shared a connection (at ActiveRecord::Base) and we can modify at will
-    	    Config.excluded_models.each do |excluded_model|
-    			  klass = excluded_model.constantize
-    				klass.establish_connection config
+    	    Apartment.excluded_models.each do |excluded_model|
+    				excluded_model.establish_connection config
     			end
         end
       

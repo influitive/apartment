@@ -13,10 +13,11 @@
 ActiveRecord::Schema.define(:version => 20110613152810) do
 
   create_table 'companies', :force => true do |t|
-    t.boolean 'dummy', :default => true
+    t.boolean 'dummy'
+    t.string 'database'
   end
   
   create_table 'users', :force => true do |t|
-    t.boolean 'dummy', :default => true
+    t.boolean 'dummy'
   end
 end

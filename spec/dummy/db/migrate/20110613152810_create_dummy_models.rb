@@ -1,11 +1,12 @@
 class CreateDummyModels < ActiveRecord::Migration
   def self.up
     create_table :companies do |t|
-      t.boolean :dummy, :default => true
+      t.boolean :dummy
+      t.string :database
     end
     
     create_table :users do |t|
-      t.boolean :dummy, :default => true
+      t.boolean :dummy
     end
     
   end

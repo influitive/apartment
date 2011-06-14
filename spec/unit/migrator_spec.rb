@@ -4,12 +4,22 @@ describe Apartment::Migrator do
   
   let(:config){ Apartment::Test.config['connections']['postgresql'].symbolize_keys }
   let(:schema_name){ 'some_db_schema' }
-  let(:version){ 1234 }
+  let(:version){ 20110613152810 }     # note this is brittle!  I've literally just taken the version of the one migration I made...  don't change this version
   
   before do
     ActiveRecord::Base.establish_connection config
     Apartment::Database.stub(:config).and_return config   # Use postgresql config for this test
     @original_schema = ActiveRecord::Base.connection.schema_search_path
+    
+    Apartment.configure do |config|
+      config.use_postgres_schemas = true
+      config.excluded_models = []
+      config.database_names = [schema_name]
+    end
+    
+    Apartment::Database.create schema_name    # create the schema
+    migrations_path = Rails.root + ActiveRecord::Migrator.migrations_path     # tell AR where the real migrations are
+    ActiveRecord::Migrator.stub(:migrations_path).and_return(migrations_path)
   end
   
   context "postgresql" do

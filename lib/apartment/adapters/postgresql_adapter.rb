@@ -25,7 +25,7 @@ module Apartment
 			  
 			  # Postgres will (optionally) use 'schemas' instead of actual dbs, create a new schema while connected to main (global) db
         create_schema(database) if using_schemas?
-        super
+        super(database)
       end
 			
 			def reset
@@ -47,7 +47,7 @@ module Apartment
     	  end
 
         def using_schemas?
-          Config.use_postgres_schemas
+          Apartment.use_postgres_schemas
         end
 			
     end

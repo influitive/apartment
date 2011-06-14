@@ -29,13 +29,23 @@ task :default => :spec
 
 namespace :postgres do
   require 'active_record'
+  require "#{File.join(File.dirname(__FILE__), 'spec', 'support', 'config')}"
   
   desc 'Build the PostgreSQL test databases'
   task :build_db do
-    config = Apartment::Test.config['connections']['postgresql']
     %x{ createdb -E UTF8 #{config['database']} } rescue "test db already exists"
     ActiveRecord::Base.establish_connection config
     load 'spec/dummy/db/schema.rb'
+  end
+  
+  desc "drop the PostgreSQL test database"
+  task :drop_db do
+    puts "dropping database #{config['database']}"
+    %x{ dropdb #{config['database']} }
+  end
+  
+  def config
+    Apartment::Test.config['connections']['postgresql']
   end
   
 end

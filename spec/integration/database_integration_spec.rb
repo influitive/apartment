@@ -11,22 +11,22 @@ describe Apartment::Database do
     
     before do
       ActiveRecord::Base.establish_connection config
-      Apartment::Database.stub(:config).and_return config   # Use postgresql config for this test
+      Apartment::Database.stub(:config).and_return config   # Use postgresql database config for this test
       @schema_search_path = ActiveRecord::Base.connection.schema_search_path
     end
     
+    after do
+      Apartment::Test.reset
+    end
+    
     describe "#init" do
+      
       it "should process model exclusions" do
         Company.should_receive(:establish_connection).with( config )
-        Apartment::Database.init
-      end
-      
-      it "should raise an error for unkown class names" do
-        Apartment::Config.stub(:excluded_models).and_return ['Company', 'User', "Unknown::Class"]
         
-        expect{
-          Apartment::Database.init
-        }.to raise_error
+        Apartment.configure do |config|
+          config.excluded_models = [Company]
+        end
       end
       
     end
@@ -55,6 +55,10 @@ describe Apartment::Database do
     context "with schemas" do
       
       before do
+        Apartment.configure do |config|
+          config.excluded_models = []
+          config.use_postgres_schemas = true
+        end
         Apartment::Database.create database
       end
       
@@ -69,12 +73,17 @@ describe Apartment::Database do
       end
     
       describe "#switch" do
+        
         it "should connect to new schema" do
           Apartment::Database.switch database
           ActiveRecord::Base.connection.schema_search_path.should == database
         end
         
         it "should ignore excluded models" do
+          Apartment.configure do |config|
+            config.excluded_models = [Company]
+          end
+          
           Apartment::Database.switch database
           Company.connection.schema_search_path.should == @schema_search_path
         end
