@@ -11,8 +11,8 @@ describe Apartment::Database do
     
     before do
       ActiveRecord::Base.establish_connection config
-      @schema_search_path = ActiveRecord::Base.connection.schema_search_path
       Apartment::Database.stub(:config).and_return config   # Use postgresql config for this test
+      @schema_search_path = ActiveRecord::Base.connection.schema_search_path
     end
     
     describe "#init" do

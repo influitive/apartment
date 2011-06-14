@@ -4,6 +4,8 @@ module Apartment
 
   autoload :Config, 'apartment/config'
   autoload :Database, 'apartment/database'
+  autoload :Migrator, 'apartment/migrator'
+  
   # Exceptions
   autoload :ApartmentError, 'apartment/errors'
   autoload :AdapterNotFound, 'apartment/errors'

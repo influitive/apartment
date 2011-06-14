@@ -68,5 +68,6 @@ describe Apartment::Adapters::PostgresqlAdapter do
         ActiveRecord::Base.connection.schema_search_path.should == schema_search_path
       end
     end
+    
   end
 end
