@@ -60,35 +60,48 @@ database, call switch with no arguments.
 ### Switching Databases per request
 
 You can have Apartment route to the appropriate database per request by adding a warden task
-in application.rb. At Influitive for instance, we route dbs based on hostname.  
-We do something like the following:
+in application.rb. (assuming you're using Devise or some other Warden based auth solution)
+At Influitive for instance, we route dbs based on subdomain.  We do something like the following:
 
     Warden::Manager.on_request do |proxy|
-      if session[:user_id]
-        u = User.find(session[:user_id])
-        Apartment::Database.switch(u.database)
-      end
-    end
+      Apartment::Database.switch proxy.request.subdomain
+    end    
+    
+Note that if your authentication model is a global model (ie. not multi-tenanted) you can
+also use `Warden::Manager.after_set_user` but if it IS multi-tenanted, you MUST switch
+the db before your user is set
 
 ### Excluding models
 
 If you have some models that should always access the 'root' database, you can specify this by configuring
-Apartment using `Apartment.configure`.  This will yield a config object for you.  You can set the following
-options:
+Apartment using `Apartment.configure`.  This will yield a config object for you.  You can set excluded models like so:
 
     Apartment.configure do |config|
-      config.excluded_models = [User, Company]
-      config.database_names = lambda{ Company.scoped.collect(&:database_name) }     # pass in a block to be invoked for dynamically loaded names, or array of string for static db names
-      config.use_postgres_schemas = true      # whether or not to use postgresql schemas
+      config.excluded_models = [User, Company]        # these models will not be multi-tenanted, but remain in the global (public) namespace
     end
 
 ### Managing Migrations
 
-Currently, you will need to migrate each database individually. I'll be working on code to 
-migrate all known databases soon. You can migrate any database up to the current version by
-calling:
+In order to migrate all of your databases (or posgresql schemas) you need to provide a list
+of dbs to Apartment.  You can make this dynamic by providing a Proc object to be called on migrations.
+This object should yield an array of string representing each database name.  Example:
 
-     Apartment::Database.migrate('database_name')
+    # Dynamically get database names to migrate
+    Apartment.configure do |config|
+      config.database_names = lambda{ Company.all.collect(&:database_name) }
+    end
+    
+    # Use a static list of database names for migrate
+    Apartment.configure do |config|
+      config.database_names = ['db1', 'db2']
+    end
+      
+You can then migration your databases using the rake task:
+    
+    rake apartment:migrate
+    
+This basically invokes `Apartment::Database.migrate(#{db_name})` for each database name supplied
+from `Apartment.database_names`
 
 ## TODO
 
