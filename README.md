@@ -51,7 +51,7 @@ would not allow a full new database to be created.
 
 To switch databases using Apartment, use the following command:
 
-     Apartment::Database.switch('database_name')
+    Apartment::Database.switch('database_name')
 
 When switch is called, all requests coming to ActiveRecord will be routed to the database 
 you specify (with the exception of excluded models, see below). To return to the 'root' 
@@ -60,23 +60,27 @@ database, call switch with no arguments.
 ### Switching Databases per request
 
 You can have Apartment route to the appropriate database per request by adding a warden task
-in application.rb. For instance, if you want to route to a particular database depending on
-user, and you have a database attribute on your user model, you could do the following:
+in application.rb. At Influitive for instance, we route dbs based on hostname.  
+We do something like the following:
 
-     Warden::Manager.on_request do |proxy|
-        if session[:user_id]
-          u = User.find(session[:user_id])
-          Apartment::Database.switch(u.database)
-        end
-     end
+    Warden::Manager.on_request do |proxy|
+      if session[:user_id]
+        u = User.find(session[:user_id])
+        Apartment::Database.switch(u.database)
+      end
+    end
 
 ### Excluding models
 
-If you have some models that should always access the 'root' database, you can specify this in 
-a configuration file. Apartment will look for a config file called 'apartment.yml' in the /config
-directory of your Rails application. To exclude certain models, do the following:
+If you have some models that should always access the 'root' database, you can specify this by configuring
+Apartment using `Apartment.configure`.  This will yield a config object for you.  You can set the following
+options:
 
-    excluded_models: [User, Company] 
+    Apartment.configure do |config|
+      config.excluded_models = [User, Company]
+      config.database_names = lambda{ Company.scoped.collect(&:database_name) }     # pass in a block to be invoked for dynamically loaded names, or array of string for static db names
+      config.use_postgres_schemas = true      # whether or not to use postgresql schemas
+    end
 
 ### Managing Migrations
 
