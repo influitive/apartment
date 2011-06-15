@@ -26,20 +26,27 @@ module Apartment
   autoload :Database, 'apartment/database'
   autoload :Migrator, 'apartment/migrator'
   
-  # Exceptions
-  autoload :ApartmentError, 'apartment/errors'
-  autoload :AdapterNotFound, 'apartment/errors'
-  autoload :SchemaNotFound, 'apartment/errors'
-  
   module Adapters
     autoload :AbstractAdapter, 'apartment/adapters/abstract_adapter'
     # Specific adapters will be loaded dynamically based on adapter in config
   end
+  
+  # Exceptions
+  class ApartmentError < StandardError; end
+  
+  # Raised when apartment cannot find the adapter specified in <tt>config/database.yml</tt>
+  class AdapterNotFound < ApartmentError; end
+  
+  # Raised when database cannot find the specified schema
+  class SchemaNotFound < ApartmentError; end
+  
+  # Raised when trying to create a schema that already exists
+  class SchemaExists < ApartmentError; end
   
 end
 
 Apartment.configure do |config|
   config.excluded_models = []
   config.use_postgres_schemas = true
-  config.database_names = lambda{ [] }
+  config.database_names = []
 end

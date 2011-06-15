@@ -43,7 +43,7 @@ module Apartment
     		  
     		  ActiveRecord::Base.connection.execute("CREATE SCHEMA #{sanitize(database)}")
     		rescue Exception => e
-    		  puts ">> create_schema threw an exception: #{e}"
+    		  raise SchemaExists, e
     	  end
 
         def using_schemas?
