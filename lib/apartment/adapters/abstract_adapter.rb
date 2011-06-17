@@ -36,6 +36,9 @@ module Apartment
 
     			# Manually init schema migrations table (apparently there were issues with Postgres when this isn't done)
     			ActiveRecord::Base.connection.initialize_schema_migrations_table
+    			
+          # Seed data if appropriate
+          seed_data if Apartment.seed_after_create
   			end
   		end
     
@@ -63,13 +66,12 @@ module Apartment
 			  end
         
   	    def import_database_schema
-  		    file = "#{Rails.root}/db/schema.rb"
-          if File.exists?(file)
-            load(file)
-          else
-            abort %{#{file} doesn't exist yet. Run "rake db:migrate" to create it then try again}
-          end
+  	      load_or_abort("#{Rails.root}/db/schema.rb")
   	    end
+  	    
+  	    def seed_data
+  	      load_or_abort("#{Rails.root}/db/seeds.rb")
+	      end
   	    
   	    # Return a new config that is multi-tenanted
         def multi_tenantify(database)
@@ -86,6 +88,14 @@ module Apartment
         # Whether or not to use postgresql schemas
         def using_schemas?
           false
+        end
+        
+        def load_or_abort(file)
+          if File.exists?(file)
+            load(file)
+          else
+            abort %{#{file} doesn't exist yet}
+          end
         end
       
     end

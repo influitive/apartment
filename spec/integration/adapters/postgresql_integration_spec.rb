@@ -18,7 +18,7 @@ describe Apartment::Adapters::PostgresqlAdapter do
     end
   
     after do
-      ActiveRecord::Base.connection.execute("DROP SCHEMA IF EXISTS #{schema1} CASCADE")
+      Apartment::Test.drop_schema(schema1)
     end
   
     describe "#create" do

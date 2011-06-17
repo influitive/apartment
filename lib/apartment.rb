@@ -3,7 +3,7 @@ require 'apartment/railtie'
 module Apartment
   
   class << self
-    attr_accessor :excluded_models, :use_postgres_schemas
+    attr_accessor :excluded_models, :use_postgres_schemas, :seed_after_create
     attr_writer :database_names
     
     # configure apartment with available options
@@ -49,4 +49,5 @@ Apartment.configure do |config|
   config.excluded_models = []
   config.use_postgres_schemas = true
   config.database_names = []
+  config.seed_after_create = false
 end

@@ -6,8 +6,10 @@ class CreateDummyModels < ActiveRecord::Migration
     end
     
     create_table :users do |t|
-      t.boolean :dummy
-    end
+      t.string :name
+      t.datetime :birthdate
+      t.string :sex
+     end
     
   end
 

@@ -35,7 +35,7 @@ describe "apartment rake tasks" do
     end
     
     after do
-      @db_names.each{ |db| ActiveRecord::Base.connection.execute("DROP SCHEMA IF EXISTS #{db} CASCADE") }
+      @db_names.each{ |db| Apartment::Test.drop_schema(db) }
       Company.delete_all
     end
     

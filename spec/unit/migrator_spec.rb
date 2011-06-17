@@ -22,6 +22,10 @@ describe Apartment::Migrator do
     ActiveRecord::Migrator.stub(:migrations_path).and_return(migrations_path)
   end
   
+  after do
+    Apartment::Test.drop_schema(schema_name)
+  end
+  
   context "postgresql" do
 
     context "using schemas" do

@@ -37,6 +37,15 @@ describe Apartment do
       Apartment.use_postgres_schemas.should be_false
     end
     
+    it "should set seed_after_create" do
+      Apartment.configure do |config|
+        config.excluded_models = []
+        config.seed_after_create = true
+      end
+      Apartment.seed_after_create.should be_true
+    end
+      
+    
     context "databases" do
       it "should return object if it doesnt respond_to call" do
         database_names = ['users', 'companies']
@@ -69,7 +78,7 @@ describe Apartment do
         
         Apartment.database_names.should == Company.scoped
       end
-        
     end
+    
   end
 end

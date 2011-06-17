@@ -12,12 +12,15 @@
 
 ActiveRecord::Schema.define(:version => 20110613152810) do
 
-  create_table 'companies', :force => true do |t|
-    t.boolean 'dummy'
-    t.string 'database'
+  create_table "companies", :force => true do |t|
+    t.boolean "dummy"
+    t.string  "database"
   end
-  
-  create_table 'users', :force => true do |t|
-    t.boolean 'dummy'
+
+  create_table "users", :force => true do |t|
+    t.string   "name"
+    t.datetime "birthdate"
+    t.string   "sex"
   end
+
 end

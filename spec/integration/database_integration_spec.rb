@@ -58,17 +58,23 @@ describe Apartment::Database do
         Apartment.configure do |config|
           config.excluded_models = []
           config.use_postgres_schemas = true
+          config.seed_after_create = true
         end
         Apartment::Database.create database
       end
       
       after do
-        ActiveRecord::Base.connection.execute("DROP SCHEMA IF EXISTS #{database} CASCADE")
+        Apartment::Test.drop_schema(database)
       end
       
       describe "#create" do
         it "should create new postgres schema" do
           ActiveRecord::Base.connection.execute("SELECT nspname FROM pg_namespace;").collect{|row| row['nspname']}.should include(database)
+        end
+        
+        it "should seed data" do
+          Apartment::Database.switch database
+          User.count.should be > 0
         end
       end
     
@@ -94,6 +100,7 @@ describe Apartment::Database do
           }.to raise_error Apartment::SchemaNotFound
         end
       end
+      
     end
     
   end
