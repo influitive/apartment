@@ -2,6 +2,7 @@
   * June 14, 2011
   
   - Added `configure` method on Apartment instead of using yml file, allows for dynamic setting of db names to migrate for rake task
+  - Added `seed_after_create` config option to import seed data to new db on create
   
 # 0.3.0
   * June 10, 2011
