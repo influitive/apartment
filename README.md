@@ -106,8 +106,6 @@ from `Apartment.database_names`
 
 ## TODO
 
-* Migration support
-* Other rake task support
 * Cross-database associations
 
 ## Contributing
