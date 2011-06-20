@@ -59,18 +59,19 @@ database, call switch with no arguments.
 
 ### Switching Databases per request
 
-You can have Apartment route to the appropriate database per request by adding a warden task
-in application.rb. (assuming you're using Devise or some other Warden based auth solution)
-At Influitive for instance, we route dbs based on subdomain.  We do something like the following:
+You can have Apartment route to the appropriate database by adding some Rack middleware.
+Apartment can support many different "Elevators" that can take care of this routing to your data.
+In house, we use the subdomain elevator, which analyzes the subdomain of the request and switches
+to a database schema of the same name. It can be used like so:
 
-    Warden::Manager.on_request do |proxy|
-      Apartment::Database.switch proxy.request.subdomain
-    end    
+    # application.rb
+    module My Application
+      class Application < Rails::Application
+      
+        config.middleware.use 'Apartment::Elevators::Subdomain'
+      end
+    end
     
-Note that if your authentication model is a global model (ie. not multi-tenanted) you can
-also use `Warden::Manager.after_set_user` but if it IS multi-tenanted, you MUST switch
-the db before your user is set
-
 ### Excluding models
 
 If you have some models that should always access the 'root' database, you can specify this by configuring

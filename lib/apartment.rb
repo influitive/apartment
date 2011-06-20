@@ -3,8 +3,8 @@ require 'apartment/railtie'
 module Apartment
   
   class << self
-    attr_accessor :excluded_models, :use_postgres_schemas, :seed_after_create
-    attr_writer :database_names
+    attr_accessor :use_postgres_schemas, :seed_after_create
+    attr_writer :database_names, :excluded_models
     
     # configure apartment with available options
     def configure
@@ -21,6 +21,11 @@ module Apartment
       end
     end
     
+    # Default to none
+    def excluded_models
+      @excluded_models || []
+    end
+    
   end
   
   autoload :Database, 'apartment/database'
@@ -29,6 +34,10 @@ module Apartment
   module Adapters
     autoload :AbstractAdapter, 'apartment/adapters/abstract_adapter'
     # Specific adapters will be loaded dynamically based on adapter in config
+  end
+  
+  module Elevators
+    autoload :Subdomain, 'apartment/elevators/subdomain'
   end
   
   # Exceptions

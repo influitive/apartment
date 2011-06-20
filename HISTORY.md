@@ -1,3 +1,9 @@
+# 0.5.0
+  * June 20, 2011
+  
+  - Added the concept of an "Elevator", a rack based strategy for db switching
+  - Added the Subdomain Elevator middleware to enabled db switching based on subdomain
+
 # 0.4.0
   * June 14, 2011
   
