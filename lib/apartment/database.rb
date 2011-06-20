@@ -1,80 +1,64 @@
+require 'active_support/core_ext/string/inflections'    # for `constantize`
 
 module Apartment
-	class Database
-		def self.switch(database)
-			
-			config = get_default_database
-			
-			if database.nil?
-				ActiveRecord::Base.establish_connection(config)
-				return
-			end
+	module Database
+	  
+	  MULTI_TENANT_METHODS = [:create, :switch, :reset, :connect_and_reset]
+	  
+	  class << self
 
-			switched_config = multi_tenantify(config, database)
-			
-			puts switched_config.to_yaml
-			
-			ActiveRecord::Base.establish_connection(switched_config)
-			
-			puts Apartment::Config.excluded_models
-			
-			Apartment::Config.excluded_models.each do |m|
-				klass = Kernel
-				m.split("::").each do |i|
-					klass = klass.const_get(i)
-				end
-				
-				raise "Excluded class #{klass} could not be found." if klass.nil?
-				
-				puts "Excluding class #{m}"
-				
-				klass.establish_connection(config)
-			end	
-		end
-		
-		def self.create(database)
-			config = get_default_database
-			
-			switched_config = multi_tenantify(config, database)
-			
-			ActiveRecord::Base.establish_connection(switched_config)
-			
-			if config["adapter"] == "postgresql"
-				ActiveRecord::Base.connection.execute('create table schema_migrations(version varchar(255))')
-			end
-			
-			migrate(database)
-		end
-		
-		def self.migrate(database)
-			
-			config = get_default_database
-			switched_config = multi_tenantify(config, database)
-			
-			ActiveRecord::Base.establish_connection(switched_config)
-			
-			
-			ActiveRecord::Migrator.migrate(File.join(Rails.root, 'db', 'migrate'))
-			
-			ActiveRecord::Base.establish_connection(config)
-		end
-		
-			protected
-				def self.get_default_database
-					Rails.configuration.database_configuration[Rails.env]
-				end
-				
-				def self.multi_tenantify(configuration, database)
-					new_config = configuration.clone
-					
-					if new_config['adapter'] == "postgresql"  
-						new_config['schema_search_path'] = database
-					else
-						new_config['database'] = new_config['database'].gsub(Rails.env.to_s, "#{database}_#{Rails.env}")
-					end
-					
-					new_config
-				end
+      # Call init to establish a connection to the public schema on all excluded models
+      # This must be done before creating any new schemas or switching
+  	  def init
+  	    connect_exclusions
+      end
+      
+      MULTI_TENANT_METHODS.each do |method|
+        class_eval <<-RUBY
+          def #{method}(*args, &block)
+            adapter.send(:#{method}, *args, &block)
+          end
+        RUBY
+      end
+      
+      def adapter
+		    @adapter ||= begin
+  		    adapter_method = "#{config[:adapter]}_adapter"
+		    
+  		    begin
+            require "apartment/adapters/#{adapter_method}"
+          rescue LoadError => e
+            raise "The adapter `#{config[:adapter]}` is not yet supported"
+          end
+
+          unless respond_to?(adapter_method)
+            raise AdapterNotFound, "database configuration specifies nonexistent #{config[:adapter]} adapter"
+          end
+        
+          send(adapter_method, config)
+        end
+	    end
+	    
+	    def reload!
+	      @adapter = nil
+	      @config = nil
+      end
+      
+  		private
+  		
+  		  def connect_exclusions
+  		    # Establish a connection for each specific excluded model
+          # Thus all other models will shared a connection (at ActiveRecord::Base) and we can modify at will
+    	    Apartment.excluded_models.each do |excluded_model|
+    				excluded_model.establish_connection config
+    			end
+        end
+      
+        def config
+          @config ||= Rails.configuration.database_configuration[Rails.env].symbolize_keys
+        end
+    end
+	    					
 	end
 	
 end
