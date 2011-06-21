@@ -1,3 +1,9 @@
+# 0.5.1
+  * June 21, 2011
+  
+  - Fixed db migrate up/down/rollback
+  - added db:redo
+
 # 0.5.0
   * June 20, 2011
   

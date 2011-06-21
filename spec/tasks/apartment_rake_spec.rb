@@ -30,7 +30,8 @@ describe "apartment rake tasks" do
         ActiveRecord::Migrator.stub(:migrate)   # don't care about this
       end
       
-      it "should migrate all multi-tenant dbs" do
+      it "should migrate public and all multi-tenant dbs" do
+        ActiveRecord::Migrator.should_receive(:migrate).once
         Apartment::Migrator.should_receive(:migrate).exactly(db_count).times
         @rake['apartment:migrate'].invoke
       end
@@ -57,6 +58,7 @@ describe "apartment rake tasks" do
         end
         
         it "migrates up to a specific version" do
+          ActiveRecord::Migrator.should_receive(:run).with(:up, anything, version.to_i).once
           Apartment::Migrator.should_receive(:run).with(:up, anything, version.to_i).exactly(db_count).times
           @rake['apartment:migrate:up'].invoke
         end
@@ -84,6 +86,7 @@ describe "apartment rake tasks" do
         end
         
         it "migrates up to a specific version" do
+          ActiveRecord::Migrator.should_receive(:run).with(:down, anything, version.to_i).once
           Apartment::Migrator.should_receive(:run).with(:down, anything, version.to_i).exactly(db_count).times
           @rake['apartment:migrate:down'].invoke
         end
@@ -95,6 +98,7 @@ describe "apartment rake tasks" do
       let(:step){ '3' }
       
       it "should rollback dbs" do
+        ActiveRecord::Migrator.should_receive(:rollback).once
         Apartment::Migrator.should_receive(:rollback).exactly(db_count).times
         @rake['apartment:rollback'].invoke
       end
