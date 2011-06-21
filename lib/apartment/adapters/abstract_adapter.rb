@@ -24,6 +24,7 @@ module Apartment
 		  ensure
   		  reset
 	    end
+	    alias_method :process, :connect_and_reset     # more succinct name
       
       #   Create new postgres schema
       # 
