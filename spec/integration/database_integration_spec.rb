@@ -39,7 +39,6 @@ describe Apartment::Database do
       it "should load postgresql adapter" do
         Apartment::Database.adapter
         Apartment::Adapters::PostgresqlAdapter.should be_a(Class)
-        
       end
       
       it "should raise exception with invalid adapter specified" do
@@ -65,6 +64,19 @@ describe Apartment::Database do
       
       after do
         Apartment::Test.drop_schema(database)
+      end
+      
+      describe "#process" do
+        it "should connect to new schema" do
+          Apartment::Database.process(database) do
+            ActiveRecord::Base.connection.schema_search_path.should == database
+          end
+        end
+
+        it "should reset to public schema" do
+          Apartment::Database.process(database)
+          ActiveRecord::Base.connection.schema_search_path.should == @schema_search_path
+        end
       end
       
       describe "#create" do

@@ -1,3 +1,8 @@
+# 0.6.0
+  * June 21, 2011
+  
+  - Added #process to connect to new db, perform operations, then ensure a reset
+
 # 0.5.1
   * June 21, 2011
   
