@@ -40,7 +40,6 @@ describe "apartment rake tasks" do
     end
     
     describe "#migrate" do
-      
       it "should migrate all databases" do
         Apartment::Migrator.should_receive(:migrate).exactly(@db_names.length).times
         
@@ -55,6 +54,14 @@ describe "apartment rake tasks" do
         end
         
         @rake['apartment:rollback'].invoke
+      end
+    end
+    
+    describe "apartment:seed" do
+      it "should seed all databases" do
+        Apartment::Database.should_receive(:seed).exactly(@db_names.length + 1).times    # +1 for the public db
+        
+        @rake['apartment:seed'].invoke
       end
     end
     

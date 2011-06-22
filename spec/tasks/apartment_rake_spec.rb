@@ -104,11 +104,13 @@ describe "apartment rake tasks" do
       end
       
       it "should rollback dbs STEP amt" do
+        ActiveRecord::Migrator.should_receive(:rollback).once
         Apartment::Migrator.should_receive(:rollback).with(anything, step.to_i).exactly(db_count).times
         ENV['STEP'] = step
         @rake['apartment:rollback'].invoke
       end
     end
+    
   end
   
 end

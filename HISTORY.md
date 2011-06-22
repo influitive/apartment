@@ -1,3 +1,8 @@
+# 0.7.0
+  * June 22, 2011
+  
+  - Added apartment:seed rake task for seeding all dbs
+
 # 0.6.0
   * June 21, 2011
   

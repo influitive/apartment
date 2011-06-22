@@ -3,7 +3,7 @@ require 'active_support/core_ext/string/inflections'    # for `constantize`
 module Apartment
 	module Database
 	  
-	  MULTI_TENANT_METHODS = [:create, :switch, :reset, :connect_and_reset, :process]
+	  MULTI_TENANT_METHODS = [:create, :switch, :reset, :connect_and_reset, :process, :seed]
 	  
 	  class << self
 

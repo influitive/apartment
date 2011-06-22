@@ -55,6 +55,11 @@ module Apartment
 
         connect_to_new(database)
   		end
+  		
+  		def seed_data
+	      load_or_abort("#{Rails.root}/db/seeds.rb")
+      end
+	    alias_method :seed, :seed_data
       
       protected
       
@@ -69,10 +74,6 @@ module Apartment
   	    def import_database_schema
   	      load_or_abort("#{Rails.root}/db/schema.rb")
   	    end
-  	    
-  	    def seed_data
-  	      load_or_abort("#{Rails.root}/db/seeds.rb")
-	      end
   	    
   	    # Return a new config that is multi-tenanted
         def multi_tenantify(database)
