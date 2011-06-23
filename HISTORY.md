@@ -1,3 +1,8 @@
+# 0.8.0
+  * June 23, 2011
+  
+  - Added #current_database which will return the current database (or schema) name
+
 # 0.7.0
   * June 22, 2011
   
