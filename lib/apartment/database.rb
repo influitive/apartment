@@ -1,24 +1,17 @@
-require 'active_support/core_ext/string/inflections'    # for `constantize`
+require 'active_support/core_ext/module/delegation'
 
 module Apartment
 	module Database
 	  
-	  MULTI_TENANT_METHODS = [:create, :switch, :reset, :connect_and_reset, :process, :seed]
-	  
 	  class << self
+
+      # pass these methods to our adapter
+      delegate :create, :switch, :reset, :connect_and_reset, :process, :seed, :to => :adapter
 
       # Call init to establish a connection to the public schema on all excluded models
       # This must be done before creating any new schemas or switching
   	  def init
   	    connect_exclusions
-      end
-      
-      MULTI_TENANT_METHODS.each do |method|
-        class_eval <<-RUBY
-          def #{method}(*args, &block)
-            adapter.send(:#{method}, *args, &block)
-          end
-        RUBY
       end
       
       def adapter
