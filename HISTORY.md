@@ -1,3 +1,8 @@
+# 0.9.0
+  * June 23, 2011
+  
+  - Added module to provide delayed job hooks
+
 # 0.8.0
   * June 23, 2011
   

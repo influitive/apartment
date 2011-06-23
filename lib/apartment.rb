@@ -40,6 +40,12 @@ module Apartment
     autoload :Subdomain, 'apartment/elevators/subdomain'
   end
   
+  module Delayed
+    module Job
+      autoload :Hooks, 'apartment/delayed_job/hooks'
+    end
+  end
+  
   # Exceptions
   class ApartmentError < StandardError; end
   
