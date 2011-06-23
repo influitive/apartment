@@ -6,7 +6,7 @@ module Apartment
 	  class << self
 
       # pass these methods to our adapter
-      delegate :create, :switch, :reset, :connect_and_reset, :process, :seed, :to => :adapter
+      delegate :create, :switch, :reset, :process, :seed, :current_database, :to => :adapter
 
       # Call init to establish a connection to the public schema on all excluded models
       # This must be done before creating any new schemas or switching

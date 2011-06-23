@@ -3,7 +3,7 @@ module Apartment
   module Database
     
     def self.postgresql_adapter(config)
-      Adapters::PostgresqlAdapter.new config, :schema_search_path => ActiveRecord::Base.connection.schema_search_path
+      Adapters::PostgresqlAdapter.new config, :schema_search_path => ActiveRecord::Base.connection.schema_search_path   # this is the initial search path before any switches happen
     end
   end
   
@@ -14,7 +14,6 @@ module Apartment
       # Set schema path or connect to new db
 	    def connect_to_new(database)	      
     		return ActiveRecord::Base.connection.schema_search_path = database if using_schemas?
-
 			  super
       rescue ActiveRecord::StatementInvalid => e
         raise SchemaNotFound, e
@@ -28,12 +27,14 @@ module Apartment
       end
 			
 			def reset
-			  if using_schemas?
-    		  ActiveRecord::Base.connection.schema_search_path = @defaults[:schema_search_path]
-  		  else
-  		    super
-		    end
+    		return ActiveRecord::Base.connection.schema_search_path = @defaults[:schema_search_path] if using_schemas?
+		    super
   	  end
+  	  
+  	  def current_database
+  	    return ActiveRecord::Base.connection.schema_search_path if using_schemas?
+  	    super
+	    end
       
       protected
       

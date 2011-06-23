@@ -8,6 +8,10 @@ describe Apartment::Adapters::PostgresqlAdapter do
     @pg = Apartment::Database.postgresql_adapter Apartment::Test.config['connections']['postgresql'].symbolize_keys
   end
   
+  after do
+    ActiveRecord::Base.clear_all_connections!
+  end
+  
   context "using schemas" do
   
     let(:schema1){ 'first_db_schema' }
@@ -36,15 +40,15 @@ describe Apartment::Adapters::PostgresqlAdapter do
       end
     end
     
-    describe "#connect_and_reset" do
+    describe "#process" do
       it "should connect" do
-        @pg.connect_and_reset(schema1) do
+        @pg.process(schema1) do
           ActiveRecord::Base.connection.schema_search_path.should == schema1
         end
       end
       
       it "should reset" do
-        @pg.connect_and_reset(schema1)
+        @pg.process(schema1)
         ActiveRecord::Base.connection.schema_search_path.should == schema_search_path
       end
     end
@@ -66,6 +70,13 @@ describe Apartment::Adapters::PostgresqlAdapter do
       it "should reset connection if database is nil" do
         @pg.switch
         ActiveRecord::Base.connection.schema_search_path.should == schema_search_path
+      end
+    end
+    
+    describe "#current_database" do
+      it "should return the current schema name" do
+        @pg.switch(schema1)
+        @pg.current_database.should == schema1
       end
     end
     

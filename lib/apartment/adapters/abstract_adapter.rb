@@ -15,16 +15,15 @@ module Apartment
         @defaults = defaults
       end
       
-      #   Connect to db or schema, do stuff, reset
+      #   Connect to db or schema, do stuff, reset (equivalent to a switch... do stuff... reset)
       # 
       #   @param {String} database Database or schema to connect to
-      def connect_and_reset(database)
+      def process(database)
 		    connect_to_new(database)
 		    yield if block_given?
 		  ensure
   		  reset
 	    end
-	    alias_method :process, :connect_and_reset     # more succinct name
       
       #   Create new postgres schema
       # 
@@ -32,7 +31,7 @@ module Apartment
   		def create(database)
         # TODO create_database unless using_schemas?
 
-  			connect_and_reset(database) do
+  			process(database) do
     			import_database_schema
 
     			# Manually init schema migrations table (apparently there were issues with Postgres when this isn't done)
@@ -60,6 +59,11 @@ module Apartment
 	      load_or_abort("#{Rails.root}/db/seeds.rb")
       end
 	    alias_method :seed, :seed_data
+      
+      # Return the current database name
+      def current_database
+        ActiveRecord::Base.connection.current_database
+      end
       
       protected
       

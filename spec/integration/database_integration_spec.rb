@@ -113,6 +113,14 @@ describe Apartment::Database do
         end
       end
       
+      describe "#current_database" do
+        
+        it "should return the current schema search path" do
+          Apartment::Database.switch database
+          Apartment::Database.current_database.should == database
+        end
+      end
+      
     end
     
   end

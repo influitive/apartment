@@ -7,7 +7,7 @@ module Apartment
     end
     
     def self.drop_schema(schema)
-      ActiveRecord::Base.connection.execute("DROP SCHEMA IF EXISTS #{schema} CASCADE")
+      ActiveRecord::Base.silence{ ActiveRecord::Base.connection.execute("DROP SCHEMA IF EXISTS #{schema} CASCADE") }
     end
     
     def self.create_schema(schema)
