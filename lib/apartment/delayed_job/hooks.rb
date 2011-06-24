@@ -3,10 +3,13 @@ module Apartment
     module Job
       
       # Before and after hooks for performing Delayed Jobs within a particular apartment database
+      # Included these in your delayed jobs models and make sure provide a @database attr that will be serialized by DJ
       module Hooks
         
-        def before
-          Apartment::Database.switch(Apartment::Database.current_database)
+        attr_accessor :database
+        
+        def before(job)
+          Apartment::Database.switch(job.payload_object.database) if job.payload_object.database
         end
         
         def after

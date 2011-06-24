@@ -1,3 +1,8 @@
+# 0.9.1
+  * June 24, 2011
+  
+  - Hooks now take the payload object as an argument to fetch the proper db for DJ hooks
+
 # 0.9.0
   * June 23, 2011
   
