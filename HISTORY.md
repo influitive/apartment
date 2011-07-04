@@ -1,3 +1,8 @@
+# 0.9.2
+  * July 4, 2011
+  
+  - Migrations now run associated rails migration fully, fixes schema.rb not being reloaded after migrations
+
 # 0.9.1
   * June 24, 2011
   

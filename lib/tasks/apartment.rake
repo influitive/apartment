@@ -1,20 +1,17 @@
 apartment_namespace = namespace :apartment do
-  
-	desc "Migrate all multi-tenant databases"
-	task :migrate => :environment do
-		ActiveRecord::Migrator.migrate(ActiveRecord::Migrator.migrations_path)
 
+	desc "Migrate all multi-tenant databases"
+	task :migrate => 'db:migrate' do
+	  
 		Apartment.database_names.each do |db| 
-      # Note sure I should use puts here, but Rails.logger doesn't work,  how do I log in migrations?
 		  puts("Migrating #{db} database")
 		  Apartment::Migrator.migrate db
 	  end
 	end
 	
 	desc "Seed all multi-tenant databases"
-	task :seed => :environment do
-	  Apartment::Database.seed
-	  
+	task :seed => 'db:seed' do
+
 	  Apartment.database_names.each do |db| 
       puts("Seeding #{db} database")
       Apartment::Database.process(db) do
@@ -24,10 +21,9 @@ apartment_namespace = namespace :apartment do
   end
 	
 	desc "Rolls the schema back to the previous version (specify steps w/ STEP=n) across all multi-tenant dbs."
-  task :rollback => :environment do
+  task :rollback => 'db:rollback' do
     step = ENV['STEP'] ? ENV['STEP'].to_i : 1
-    ActiveRecord::Migrator.rollback(ActiveRecord::Migrator.migrations_path, step)
-    
+
     Apartment.database_names.each do |db| 
       puts("Rolling back #{db} database")
       Apartment::Migrator.rollback db, step
@@ -37,10 +33,9 @@ apartment_namespace = namespace :apartment do
 	namespace :migrate do
 	  
 	  desc 'Runs the "up" for a given migration VERSION across all multi-tenant dbs.'
-	  task :up => :environment do
+	  task :up => 'db:migrate:up' do
 	    version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
       raise 'VERSION is required' unless version
-      ActiveRecord::Migrator.run(:up, ActiveRecord::Migrator.migrations_path, version)
       
       Apartment.database_names.each do |db| 
         puts("Migrating #{db} database up")
@@ -49,10 +44,9 @@ apartment_namespace = namespace :apartment do
     end
 	  
 	  desc 'Runs the "down" for a given migration VERSION across all multi-tenant dbs.'
-	  task :down => :environment do
+	  task :down => 'db:migrate:down' do
 	    version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
       raise 'VERSION is required' unless version
-      ActiveRecord::Migrator.run(:down, ActiveRecord::Migrator.migrations_path, version)
       
       Apartment.database_names.each do |db| 
         puts("Migrating #{db} database down")
@@ -61,7 +55,7 @@ apartment_namespace = namespace :apartment do
     end
     
     desc  'Rollbacks the database one migration and re migrate up (options: STEP=x, VERSION=x).'
-    task :redo => :environment do
+    task :redo => 'db:migrate:redo' do
       if ENV['VERSION']
         apartment_namespace['migrate:down'].invoke
         apartment_namespace['migrate:up'].invoke

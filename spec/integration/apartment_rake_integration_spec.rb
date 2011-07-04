@@ -59,7 +59,7 @@ describe "apartment rake tasks" do
     
     describe "apartment:seed" do
       it "should seed all databases" do
-        Apartment::Database.should_receive(:seed).exactly(@db_names.length + 1).times    # +1 for the public db
+        Apartment::Database.should_receive(:seed).exactly(@db_names.length).times
         
         @rake['apartment:seed'].invoke
       end

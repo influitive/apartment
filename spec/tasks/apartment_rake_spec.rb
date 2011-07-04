@@ -7,7 +7,13 @@ describe "apartment rake tasks" do
     @rake = Rake::Application.new
     Rake.application = @rake
     load 'tasks/apartment.rake'
-    Rake::Task.define_task(:environment)    # stub out loading rails environment
+    # stub out rails tasks
+    Rake::Task.define_task('db:migrate')
+    Rake::Task.define_task('db:seed')
+    Rake::Task.define_task('db:rollback')
+    Rake::Task.define_task('db:migrate:up')
+    Rake::Task.define_task('db:migrate:down')
+    Rake::Task.define_task('db:migrate:redo')
   end
   
   after do
@@ -31,7 +37,6 @@ describe "apartment rake tasks" do
       end
       
       it "should migrate public and all multi-tenant dbs" do
-        ActiveRecord::Migrator.should_receive(:migrate).once
         Apartment::Migrator.should_receive(:migrate).exactly(db_count).times
         @rake['apartment:migrate'].invoke
       end
@@ -58,7 +63,6 @@ describe "apartment rake tasks" do
         end
         
         it "migrates up to a specific version" do
-          ActiveRecord::Migrator.should_receive(:run).with(:up, anything, version.to_i).once
           Apartment::Migrator.should_receive(:run).with(:up, anything, version.to_i).exactly(db_count).times
           @rake['apartment:migrate:up'].invoke
         end
@@ -86,7 +90,6 @@ describe "apartment rake tasks" do
         end
         
         it "migrates up to a specific version" do
-          ActiveRecord::Migrator.should_receive(:run).with(:down, anything, version.to_i).once
           Apartment::Migrator.should_receive(:run).with(:down, anything, version.to_i).exactly(db_count).times
           @rake['apartment:migrate:down'].invoke
         end
@@ -98,13 +101,11 @@ describe "apartment rake tasks" do
       let(:step){ '3' }
       
       it "should rollback dbs" do
-        ActiveRecord::Migrator.should_receive(:rollback).once
         Apartment::Migrator.should_receive(:rollback).exactly(db_count).times
         @rake['apartment:rollback'].invoke
       end
       
       it "should rollback dbs STEP amt" do
-        ActiveRecord::Migrator.should_receive(:rollback).once
         Apartment::Migrator.should_receive(:rollback).with(anything, step.to_i).exactly(db_count).times
         ENV['STEP'] = step
         @rake['apartment:rollback'].invoke
