@@ -92,18 +92,11 @@ describe Apartment::Database do
     
       describe "#switch" do
         
+        let(:x){ rand(3) }
+        
         it "should connect to new schema" do
           Apartment::Database.switch database
           ActiveRecord::Base.connection.schema_search_path.should == database
-        end
-        
-        it "should ignore excluded models" do
-          Apartment.configure do |config|
-            config.excluded_models = [Company]
-          end
-          
-          Apartment::Database.switch database
-          Company.connection.schema_search_path.should == @schema_search_path
         end
         
         it "should fail with invalid schema" do
@@ -111,6 +104,43 @@ describe Apartment::Database do
             Apartment::Database.switch('some_nonexistent_schema')
           }.to raise_error Apartment::SchemaNotFound
         end
+        
+        context "creating models" do
+          
+          it "should create a normal model in the current schema" do
+            count = User.count
+            Apartment::Database.switch database
+            new_count = User.count + x.times{ User.create }
+            Apartment::Database.reset
+            User.count.should == count
+            Apartment::Database.switch database
+            User.count.should == new_count
+          end
+        end
+        
+        context "with excluded models" do
+          
+          Apartment.configure do |config|
+            config.excluded_models = [Company]
+          end
+          
+          it "should ignore excluded models" do
+            Apartment::Database.switch database
+            Company.connection.schema_search_path.should == @schema_search_path
+          end
+          
+          it "should create excluded models in public schema" do
+            Apartment::Database.reset # ensure we're on public schema and get count
+            count = Company.count
+            
+            Apartment::Database.switch database
+            x.times{ Company.create }
+            Company.count.should == count + x
+            Apartment::Database.reset
+            Company.count.should == count + x
+          end
+        end
+        
       end
       
       describe "#current_database" do
