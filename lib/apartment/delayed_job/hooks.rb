@@ -1,9 +1,11 @@
+require 'apartment/delayed_job/enqueue'
+
 module Apartment
   module Delayed
     module Job
       
       # Before and after hooks for performing Delayed Jobs within a particular apartment database
-      # Included these in your delayed jobs models and make sure provide a @database attr that will be serialized by DJ
+      # Include these in your delayed jobs models and make sure provide a @database attr that will be serialized by DJ
       module Hooks
         
         attr_accessor :database

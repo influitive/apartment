@@ -15,7 +15,7 @@ module Apartment
 	    def connect_to_new(database)	      
     		return ActiveRecord::Base.connection.schema_search_path = database if using_schemas?
 
-			  super # if ! using_schemas?
+			  super # if !using_schemas? (implicit)
       rescue ActiveRecord::StatementInvalid => e
         raise SchemaNotFound, e
 			end
@@ -30,13 +30,13 @@ module Apartment
 			def reset
     		return ActiveRecord::Base.connection.schema_search_path = @defaults[:schema_search_path] if using_schemas?
 
-		    super # if ! using_schemas?
+		    super # if !using_schemas?
   	  end
   	  
   	  def current_database
   	    return ActiveRecord::Base.connection.schema_search_path if using_schemas?
   	    
-  	    super # if ! using_schemas?
+  	    super # if !using_schemas?
 	    end
       
     protected

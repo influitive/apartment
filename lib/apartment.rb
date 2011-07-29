@@ -41,6 +41,9 @@ module Apartment
   end
   
   module Delayed
+    
+    autoload :Requirements, 'apartment/delayed_job/requirements'
+    
     module Job
       autoload :Hooks, 'apartment/delayed_job/hooks'
     end
@@ -57,6 +60,9 @@ module Apartment
   
   # Raised when trying to create a schema that already exists
   class SchemaExists < ApartmentError; end
+  
+  # Raised when an ActiveRecord object does not have the required database field on it
+  class DJSerializationError < ApartmentError; end
   
 end
 
