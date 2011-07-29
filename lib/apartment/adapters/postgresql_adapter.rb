@@ -14,7 +14,8 @@ module Apartment
       # Set schema path or connect to new db
 	    def connect_to_new(database)	      
     		return ActiveRecord::Base.connection.schema_search_path = database if using_schemas?
-			  super
+
+			  super # if ! using_schemas?
       rescue ActiveRecord::StatementInvalid => e
         raise SchemaNotFound, e
 			end
@@ -28,27 +29,29 @@ module Apartment
 			
 			def reset
     		return ActiveRecord::Base.connection.schema_search_path = @defaults[:schema_search_path] if using_schemas?
-		    super
+
+		    super # if ! using_schemas?
   	  end
   	  
   	  def current_database
   	    return ActiveRecord::Base.connection.schema_search_path if using_schemas?
-  	    super
+  	    
+  	    super # if ! using_schemas?
 	    end
       
-      protected
-      
-        def create_schema(database)
-    		  reset
-    		  
-    		  ActiveRecord::Base.connection.execute("CREATE SCHEMA #{sanitize(database)}")
-    		rescue Exception => e
-    		  raise SchemaExists, e
-    	  end
+    protected
+    
+      def create_schema(database)
+  		  reset
+  		  
+  		  ActiveRecord::Base.connection.execute("CREATE SCHEMA #{sanitize(database)}")
+  		rescue Exception => e
+  		  raise SchemaExists, e
+  	  end
 
-        def using_schemas?
-          Apartment.use_postgres_schemas
-        end
+      def using_schemas?
+        Apartment.use_postgres_schemas
+      end
 			
     end
     

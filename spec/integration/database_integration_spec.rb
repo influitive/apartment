@@ -8,9 +8,11 @@ describe Apartment::Database do
     
     let(:config){ Apartment::Test.config['connections']['postgresql'].symbolize_keys }
     let(:database){ "some_new_database" }
+    let(:database2){ "yet_another_database" }
     
     before do
       ActiveRecord::Base.establish_connection config
+      Apartment::Test.load_schema   # load the Rails schema in the public db schema
       Apartment::Database.stub(:config).and_return config   # Use postgresql database config for this test
       @schema_search_path = ActiveRecord::Base.connection.schema_search_path
     end
@@ -63,20 +65,43 @@ describe Apartment::Database do
       end
       
       after do
-        Apartment::Test.drop_schema(database)
+        Apartment::Test.drop_schema database
       end
       
       describe "#process" do
+        
+        before do
+          Apartment::Database.create database2
+        end
+        
+        after do
+          Apartment::Test.drop_schema database2
+        end
+        
         it "should connect to new schema" do
           Apartment::Database.process(database) do
-            ActiveRecord::Base.connection.schema_search_path.should == database
+            Apartment::Database.current_database.should == database
           end
         end
 
-        it "should reset to public schema" do
+        it "should reset connection to the previous db" do
+          Apartment::Database.switch(database2)
           Apartment::Database.process(database)
-          ActiveRecord::Base.connection.schema_search_path.should == @schema_search_path
+          Apartment::Database.current_database.should == database2
         end
+        
+        it "should reset to previous schema if database is nil" do
+          Apartment::Database.switch(database)
+          Apartment::Database.process
+          Apartment::Database.current_database.should == database
+        end
+        
+        it "should set to public schema if database is nil" do
+          Apartment::Database.process do
+            Apartment::Database.current_database.should == @schema_search_path
+          end
+        end
+        
       end
       
       describe "#create" do
@@ -107,14 +132,26 @@ describe Apartment::Database do
         
         context "creating models" do
           
-          it "should create a normal model in the current schema" do
-            count = User.count
+          before do
+            Apartment::Database.create database2
+          end
+
+          after do
+            Apartment::Test.drop_schema database2
+          end
+          
+          it "should create a model instance in the current schema" do
+            Apartment::Database.switch database2
+            db2_count = User.count + x.times{ User.create }
+
             Apartment::Database.switch database
-            new_count = User.count + x.times{ User.create }
-            Apartment::Database.reset
-            User.count.should == count
+            db_count = User.count + x.times{ User.create }
+
+            Apartment::Database.switch database2
+            User.count.should == db2_count
+
             Apartment::Database.switch database
-            User.count.should == new_count
+            User.count.should == db_count
           end
         end
         
@@ -130,8 +167,8 @@ describe Apartment::Database do
           end
           
           it "should create excluded models in public schema" do
-            Apartment::Database.reset # ensure we're on public schema and get count
-            count = Company.count
+            Apartment::Database.reset # ensure we're on public schema
+            count = Company.count + x.times{ Company.create }
             
             Apartment::Database.switch database
             x.times{ Company.create }

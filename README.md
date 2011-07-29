@@ -104,6 +104,30 @@ You can then migration your databases using the rake task:
 This basically invokes `Apartment::Database.migrate(#{db_name})` for each database name supplied
 from `Apartment.database_names`
 
+### Delayed::Job
+
+In Apartment's current state, it doesn't seem to queue jobs properly using DJ.  For whatever reason, DJ jobs are created in the current schema, even though the DJ 
+is part of the ignored models.  I have to look into this further, but until then use `Apartment::Delayed::Job.enqueue` to ensure that queues are placed in the public schema
+
+In order to make ActiveRecord models play nice with DJ and Apartment, include `Apartment::Delayed::Requirements` in any model that is being serialized by DJ.  Also ensure
+that a `database` attribute is set on this model *before* it is serialized, to ensure that when it is fetched again, it is done so in the proper Apartment db context.  For example:
+
+    class SomeModel < ActiveRecord::Base
+      include Apartment::Delayed::Requirements
+    end
+
+    class SomeDJ
+  
+      def initialize(model)
+        @model = model
+        @model.database = Apartment::Database.current_database
+      end
+  
+      def perform
+        # do some stuff
+      end
+    end
+
 ## TODO
 
 * Cross-database associations

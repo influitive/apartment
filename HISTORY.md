@@ -1,3 +1,10 @@
+# 0.10.0
+  * July 29, 2001
+  
+  - Added better support for Delayed Job
+  - New config option that enables Delayed Job wrappers
+  - Note that DJ support uses a work-around in order to get queues stored in the public schema, not sure why it doesn't work out of the box, will look into it, until then, see documentation on queue'ng jobs
+  
 # 0.9.2
   * July 4, 2011
   

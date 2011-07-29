@@ -15,14 +15,15 @@ module Apartment
         @defaults = defaults
       end
       
-      #   Connect to db or schema, do stuff, reset (equivalent to a switch... do stuff... reset)
+      #   Connect to db or schema, do stuff, switch back to previous db/schema (equivalent to a switch... do stuff... switch back)
       # 
-      #   @param {String} database Database or schema to connect to
-      def process(database)
-		    connect_to_new(database)
+      #   @param {String?} database Database or schema to connect to, will reset if no database passed in
+      def process(database = nil)
+        current_db = current_database
+		    switch(database)
 		    yield if block_given?
 		  ensure
-  		  reset
+  		  switch(current_db)
 	    end
       
       #   Create new postgres schema
@@ -65,48 +66,45 @@ module Apartment
         ActiveRecord::Base.connection.current_database
       end
       
-      protected
+    protected
+    
+      def create_schema
+        # noop
+      end
+    
+      def connect_to_new(database)
+        ActiveRecord::Base.establish_connection multi_tenantify(database)
+		  end
       
-        def create_schema
-          # noop
-        end
-      
-        def connect_to_new(database)
-          ActiveRecord::Base.establish_connection multi_tenantify(database)
+	    def import_database_schema
+	      load_or_abort("#{Rails.root}/db/schema.rb")
+	    end
+	    
+	    # Return a new config that is multi-tenanted
+      def multi_tenantify(database)
+  			@config.clone.tap do |config|
+  			  config['database'].gsub!(Rails.env.to_s, "#{database}_#{Rails.env}")
 			  end
-        
-  	    def import_database_schema
-  	      load_or_abort("#{Rails.root}/db/schema.rb")
-  	    end
-  	    
-  	    # Return a new config that is multi-tenanted
-        def multi_tenantify(database)
-    			@config.clone.tap do |config|
-    			  config['database'].gsub!(Rails.env.to_s, "#{database}_#{Rails.env}")
-  			  end
-    		end
-        
-        # Remove all non-alphanumeric characters
-  	    def sanitize(database)
-  	      database.gsub(/[\W]/,'')
+  		end
+      
+      # Remove all non-alphanumeric characters
+	    def sanitize(database)
+	      database.gsub(/[\W]/,'')
+      end
+      
+      # Whether or not to use postgresql schemas
+      def using_schemas?
+        false
+      end
+      
+      def load_or_abort(file)
+        if File.exists?(file)
+          load(file)
+        else
+          abort %{#{file} doesn't exist yet}
         end
-        
-        # Whether or not to use postgresql schemas
-        def using_schemas?
-          false
-        end
-        
-        def load_or_abort(file)
-          if File.exists?(file)
-            load(file)
-          else
-            abort %{#{file} doesn't exist yet}
-          end
-        end
+      end
       
     end
-      
-      
-  
   end
 end

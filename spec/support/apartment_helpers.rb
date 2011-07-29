@@ -14,6 +14,10 @@ module Apartment
       ActiveRecord::Base.connection.execute("CREATE SCHEMA #{schema}")
     end
     
+    def self.load_schema
+      load "#{Rails.root}/db/schema.rb"
+    end
+    
     def self.in_database(db)
       Apartment::Database.switch db
       yield if block_given?
