@@ -5,7 +5,6 @@ apartment_namespace = namespace :apartment do
 		ActiveRecord::Migrator.migrate(ActiveRecord::Migrator.migrations_path)
 
 		Apartment.database_names.each do |db| 
-      # Note sure I should use puts here, but Rails.logger doesn't work,  how do I log in migrations?
 		  puts("Migrating #{db} database")
 		  Apartment::Migrator.migrate db
 	  end
