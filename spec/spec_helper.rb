@@ -8,7 +8,6 @@ require "rspec/rails"
 require 'capybara/rspec'
 require 'capybara/rails'
 
-
 ActionMailer::Base.delivery_method = :test
 ActionMailer::Base.perform_deliveries = true
 ActionMailer::Base.default_url_options[:host] = "test.com"

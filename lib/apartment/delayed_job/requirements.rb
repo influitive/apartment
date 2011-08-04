@@ -3,7 +3,7 @@ require 'apartment/delayed_job/enqueue'
 module Apartment
   module Delayed
     
-    # Mix this module into any model that gets serialized by DJ
+    # Mix this module into any ActiveRecord model that gets serialized by DJ
     module Requirements
       attr_accessor :database
       

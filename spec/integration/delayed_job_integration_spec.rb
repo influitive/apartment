@@ -68,7 +68,7 @@ describe Apartment::Delayed do
       user.database.should == database
     end
     
-    it "should not overwrite any previous after_initialize declarations" do      
+    it "should not overwrite any previous after_initialize declarations" do
       User.class_eval do
         after_find :set_name
         

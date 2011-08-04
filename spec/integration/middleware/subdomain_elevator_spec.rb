@@ -32,11 +32,11 @@ describe Apartment::Elevators::Subdomain do
     before do
       Apartment::Database.create(company2.subdomain)
       # Create some users for each db
-      Apartment::Test.in_database(company.subdomain) do
+      Apartment::Database.process(company.subdomain) do
         @c1_user_count = (2 + rand(2)).times{ User.create }
       end
       
-      Apartment::Test.in_database(company2.subdomain) do
+      Apartment::Database.process(company2.subdomain) do
         @c2_user_count = (@c1_user_count + 2).times{ User.create }
       end
     end
