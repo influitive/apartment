@@ -37,19 +37,19 @@ module Apartment
 	      @config = nil
       end
       
-  		private
-  		
-  		  def connect_exclusions
-  		    # Establish a connection for each specific excluded model
-          # Thus all other models will shared a connection (at ActiveRecord::Base) and we can modify at will
-    	    Apartment.excluded_models.each do |excluded_model|
-    				excluded_model.establish_connection config
-    			end
-        end
-      
-        def config
-          @config ||= Rails.configuration.database_configuration[Rails.env].symbolize_keys
-        end
+		private
+		
+		  def connect_exclusions
+		    # Establish a connection for each specific excluded model
+        # Thus all other models will shared a connection (at ActiveRecord::Base) and we can modify at will
+  	    Apartment.excluded_models.each do |excluded_model|
+  				excluded_model.establish_connection config
+  			end
+      end
+    
+      def config
+        @config ||= Rails.configuration.database_configuration[Rails.env].symbolize_keys
+      end
     end
 	    					
 	end
