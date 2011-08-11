@@ -1,5 +1,10 @@
+# 0.10.1
+  * Aug 11, 2011
+  
+  - Fixed bug in DJ where new objects (that hadn't been pulled from the db) didn't have the proper database assigned
+
 # 0.10.0
-  * July 29, 2001
+  * July 29, 2011
   
   - Added better support for Delayed Job
   - New config option that enables Delayed Job wrappers

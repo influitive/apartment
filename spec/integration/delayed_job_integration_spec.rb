@@ -82,6 +82,11 @@ describe Apartment::Delayed do
       user.name.should == "Some Name"
     end
     
+    it "should set the db on a new record before it saves" do
+      user = User.create
+      user.database.should == database
+    end
+    
     context "serialization" do
       it "should serialize the proper database attribute" do
         user_yaml = User.first.to_yaml
