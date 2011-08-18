@@ -33,19 +33,46 @@ namespace :postgres do
   
   desc 'Build the PostgreSQL test databases'
   task :build_db do
-    %x{ createdb -E UTF8 #{config['database']} } rescue "test db already exists"
-    ActiveRecord::Base.establish_connection config
+    %x{ createdb -E UTF8 #{pg_config['database']} } rescue "test db already exists"
+    ActiveRecord::Base.establish_connection pg_config
     load 'spec/dummy/db/schema.rb'
   end
   
   desc "drop the PostgreSQL test database"
   task :drop_db do
-    puts "dropping database #{config['database']}"
-    %x{ dropdb #{config['database']} }
+    puts "dropping database #{pg_config['database']}"
+    %x{ dropdb #{pg_config['database']} }
+  end
+    
+end
+
+namespace :mysql do
+  require 'active_record'
+  require "#{File.join(File.dirname(__FILE__), 'spec', 'support', 'config')}"
+  
+  desc 'Build the MySQL test databases'
+  task :build_db do
+    %x{ mysqladmin -u root create #{my_config['database']} } rescue "test db already exists"
+    ActiveRecord::Base.establish_connection my_config
+    load 'spec/dummy/db/schema.rb'
   end
   
-  def config
-    Apartment::Test.config['connections']['postgresql']
+  desc "drop the MySQL test database"
+  task :drop_db do
+    puts "dropping database #{my_config['database']}"
+    %x{ mysqladmin -u root drop #{my_config['database']} }
   end
-  
+    
+end
+
+def config
+  Apartment::Test.config['connections']
+end
+
+def pg_config
+  config['postgresql']
+end
+
+def my_config
+  config['mysql']
 end

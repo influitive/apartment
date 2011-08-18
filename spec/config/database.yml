@@ -3,8 +3,10 @@ connections:
     adapter: postgresql
     database: apartment_postgresql_test
     username: root
-    password:       
-    
+    password: 
+
   mysql:
-    adapater: mysql
+    adapter: mysql
     database: apartment_mysql_test
+    username: root
+    password: 
