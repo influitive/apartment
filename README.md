@@ -5,13 +5,6 @@ Apartment provides tools to help you deal with multiple databases in your Rails
 environment. If you need to have certain data sequestered based on account or company,
 but still allow some data to exist in a common database, Apartment can help.
 
-## Caveats
-
-Apartment was built to deal with a very particular use-case - the need to spin up 
-multiple databases within the same application instance on-demand while Rails is running.
-If your setup can accomodate creating new databases on deploy (by adding a new database to your
-database.yml), or doesn't need 100% database isolation, other solutions might be far simpler 
-for your use case.
 
 ## Installation
 
@@ -23,6 +16,8 @@ Add the following to your Gemfile:
 
 That's all you need to set up the Apartment libraries. If you want to switch databases 
 on a per-user basis, look under "Usage - Switching databases per request", below.
+
+*NOTE: You must use Rails >= 3.0.10, it contains a [patch](https://github.com/rails/rails/pull/1607) that has better postgresql schema support*
 
 ## Usage
 
@@ -72,6 +67,8 @@ to a database schema of the same name. It can be used like so:
       end
     end
     
+## Config
+    
 ### Excluding models
 
 If you have some models that should always access the 'root' database, you can specify this by configuring
@@ -89,7 +86,7 @@ This object should yield an array of string representing each database name.  Ex
 
     # Dynamically get database names to migrate
     Apartment.configure do |config|
-      config.database_names = lambda{ Company.all.collect(&:database_name) }
+      config.database_names = lambda{ Customer.select(:database_name).map(&:database_name) }
     end
     
     # Use a static list of database names for migrate
@@ -128,8 +125,11 @@ that a `database` attribute is set on this model *before* it is serialized, to e
       end
     end
 
+## Contributing
+
+* Please issue pull requests to the `development` branch.  All development happens here, master is used for releases
+* Ensure that your code is accompanied with tests.  No code will be merged without tests
+
 ## TODO
 
 * Cross-database associations
-
-## Contributing
