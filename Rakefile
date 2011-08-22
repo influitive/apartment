@@ -11,7 +11,7 @@ end
 
 namespace :spec do
   
-  [:tasks, :unit, :integration].each do |type|
+  [:tasks, :unit, :adapters, :integration].each do |type|
     RSpec::Core::RakeTask.new(type) do |spec|
       spec.pattern = "spec/#{type}/**/*_spec.rb"
     end
