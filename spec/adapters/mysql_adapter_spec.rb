@@ -12,5 +12,12 @@ describe Apartment::Adapters::MysqlAdapter do
     ActiveRecord::Base.clear_all_connections!
   end
   
+  describe "#create" do
+    
+    it "should create the new database" do
+      pending
+    end
+  end
+  
   
 end
