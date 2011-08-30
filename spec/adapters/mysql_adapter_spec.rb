@@ -5,7 +5,7 @@ describe Apartment::Adapters::MysqlAdapter do
   
   before do
     ActiveRecord::Base.establish_connection Apartment::Test.config['connections']['mysql']
-    @mysql = Apartment::Database.postgresql_adapter Apartment::Test.config['connections']['mysql'].symbolize_keys
+    @mysql = Apartment::Database.mysql_adapter Apartment::Test.config['connections']['mysql'].symbolize_keys
   end
   
   after do
