@@ -12,11 +12,24 @@ describe Apartment::Adapters::MysqlAdapter do
     ActiveRecord::Base.clear_all_connections!
   end
   
-  describe "#create" do
+  context "using databases" do
     
-    it "should create the new database" do
-      pending
+    let(:database1){ 'first_database' }
+    
+    before do
+      @mysql.create(database1)
     end
+  
+    after do
+      ActiveRecord::Base.connection.drop_database(@mysql.environmentify(database1))
+    end
+
+    describe "#create" do
+      it "should create the new database" do
+        ActiveRecord::Base.connection.execute("SELECT schema_name FROM information_schema.schemata").collect{|row| row[0]}.should include(@mysql.environmentify(database1))
+      end
+    end
+
   end
   
   

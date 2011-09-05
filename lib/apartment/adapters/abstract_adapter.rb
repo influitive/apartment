@@ -30,13 +30,13 @@ module Apartment
       # 
       #   @param {String} database Database name
   		def create(database)
-        # TODO create_database unless using_schemas?
+        ActiveRecord::Base.connection.execute("CREATE DATABASE #{environmentify(sanitize(database))}") unless using_schemas?
 
   			process(database) do
     			import_database_schema
 
     			# Manually init schema migrations table (apparently there were issues with Postgres when this isn't done)
-    			ActiveRecord::Base.connection.initialize_schema_migrations_table
+    			ActiveRecord::Base.connection.initialize_schema_migrations_table if using_schemas?
     			
           # Seed data if appropriate
           seed_data if Apartment.seed_after_create
@@ -54,6 +54,12 @@ module Apartment
   			return reset if database.nil?
 
         connect_to_new(database)
+  		end
+
+      def environmentify(database)
+        # prepend the environment if configured and the environment isn't already there
+        return "#{Rails.env}_#{database}" if Apartment.prepend_environment && !database.include?(Rails.env)
+        database
   		end
   		
   		def seed_data
@@ -83,7 +89,7 @@ module Apartment
 	    # Return a new config that is multi-tenanted
       def multi_tenantify(database)
   			@config.clone.tap do |config|
-  			  config['database'].gsub!(Rails.env.to_s, "#{database}_#{Rails.env}")
+  			  config[:database] = environmentify(database)
 			  end
   		end
       
