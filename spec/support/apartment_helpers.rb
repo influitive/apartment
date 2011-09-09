@@ -10,12 +10,11 @@ module Apartment
     end
     
     def drop_schema(schema)
-      puts ">> #{__method__}"
-      ActiveRecord::Base.silence{ ActiveRecord::Base.connection.execute("DROP SCHEMA IF EXISTS #{sanitize(schema)} CASCADE") }
+      ActiveRecord::Base.silence{ ActiveRecord::Base.connection.execute("DROP SCHEMA IF EXISTS #{schema} CASCADE") }
     end
     
     def create_schema(schema)
-      ActiveRecord::Base.connection.execute("CREATE SCHEMA #{sanitize(schema)}")
+      ActiveRecord::Base.connection.execute("CREATE SCHEMA #{schema}")
     end
     
     def load_schema
