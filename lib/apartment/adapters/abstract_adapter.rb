@@ -17,7 +17,7 @@ module Apartment
       
       #   Connect to db, do your biz, switch back to previous db
       # 
-      #   @param {String?} database Database or schema to connect to, will reset if no database passed in
+      #   @param {String?} database Database or schema to connect to
       def process(database = nil)
         current_db = current_database
 		    switch(database)
@@ -61,9 +61,7 @@ module Apartment
   		end
   		
   		def seed_data
-  		  puts ">> #{__method__}"
 	      load_or_abort("#{Rails.root}/db/seeds.rb")
-	      puts "<< #{__method__}"
       end
 	    alias_method :seed, :seed_data
       
@@ -79,9 +77,7 @@ module Apartment
 		  end
       
 	    def import_database_schema
-	      puts ">> #{__method__}"
 	      load_or_abort("#{Rails.root}/db/schema.rb")
-	      puts "<< #{__method__}"
 	    end
 	    
 	    # Return a new config that is multi-tenanted

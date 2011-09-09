@@ -19,31 +19,18 @@ describe Apartment::Adapters::PostgresqlAdapter do
     subject{ Apartment::Database.postgresql_adapter Apartment::Test.config['connections']['postgresql'].symbolize_keys }
   
     before do
-      puts ">> before"
       Apartment.use_postgres_schemas = true
-      # 
-      puts "<< before"
+      subject.create(schema)
     end
   
     after do
-      puts ">> after"
       Apartment::Test.drop_schema(schema)
     end
     
     describe "#create" do
       
-      before do
-        puts ">> before in #create"
-        subject.create(schema)
-        
-      end
-      
-      it "should pass" do
-      end
-      
       it "should create the new schema" do
-        puts ">> created db"
-        # ActiveRecord::Base.connection.execute("SELECT nspname FROM pg_namespace;").collect{|row| row['nspname']}.should include(schema)
+        ActiveRecord::Base.connection.execute("SELECT nspname FROM pg_namespace;").collect{|row| row['nspname']}.should include(schema)
       end
     
       it "should load schema.rb to new schema" do
