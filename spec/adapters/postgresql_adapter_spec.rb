@@ -5,7 +5,7 @@ describe Apartment::Adapters::PostgresqlAdapter do
   
   before do
     ActiveRecord::Base.establish_connection Apartment::Test.config['connections']['postgresql']
-    @pg = Apartment::Database.postgresql_adapter Apartment::Test.config['connections']['postgresql'].symbolize_keys
+    @schema_search_path = ActiveRecord::Base.connection.schema_search_path
   end
   
   after do
@@ -13,72 +13,92 @@ describe Apartment::Adapters::PostgresqlAdapter do
   end
   
   context "using schemas" do
-  
-    let(:schema1){ 'first_db_schema' }
-    let(:schema_search_path){ ActiveRecord::Base.connection.schema_search_path }
     
+    let(:schema){ 'first_db_schema' }
+    
+    subject{ Apartment::Database.postgresql_adapter Apartment::Test.config['connections']['postgresql'].symbolize_keys }
+  
     before do
-      @pg.create(schema1)
+      puts ">> before"
+      Apartment.use_postgres_schemas = true
+      # 
+      puts "<< before"
     end
   
     after do
-      Apartment::Test.drop_schema(schema1)
+      puts ">> after"
+      Apartment::Test.drop_schema(schema)
     end
-  
+    
     describe "#create" do
+      
+      before do
+        puts ">> before in #create"
+        subject.create(schema)
+        
+      end
+      
+      it "should pass" do
+      end
+      
       it "should create the new schema" do
-        ActiveRecord::Base.connection.execute("SELECT nspname FROM pg_namespace;").collect{|row| row['nspname']}.should include(schema1)
+        puts ">> created db"
+        # ActiveRecord::Base.connection.execute("SELECT nspname FROM pg_namespace;").collect{|row| row['nspname']}.should include(schema)
       end
     
       it "should load schema.rb to new schema" do
-        ActiveRecord::Base.connection.schema_search_path = schema1
+        ActiveRecord::Base.connection.schema_search_path = schema
         ActiveRecord::Base.connection.tables.should include('companies')
       end
     
       it "should reset connection when finished" do
-        ActiveRecord::Base.connection.schema_search_path.should_not == schema1
+        ActiveRecord::Base.connection.schema_search_path.should_not == schema
       end
     end
     
     describe "#process" do
       it "should connect" do
-        @pg.process(schema1) do
-          ActiveRecord::Base.connection.schema_search_path.should == schema1
+        subject.process(schema) do
+          ActiveRecord::Base.connection.schema_search_path.should == schema
         end
       end
       
       it "should reset" do
-        @pg.process(schema1)
-        ActiveRecord::Base.connection.schema_search_path.should == schema_search_path
+        subject.process(schema)
+        ActiveRecord::Base.connection.schema_search_path.should == @schema_search_path
       end
     end
     
     describe "#reset" do
       it "should reset connection" do
-        @pg.switch(schema1)
-        @pg.reset
-        ActiveRecord::Base.connection.schema_search_path.should == schema_search_path
+        subject.switch(schema)
+        subject.reset
+        ActiveRecord::Base.connection.schema_search_path.should == @schema_search_path
       end
     end
     
     describe "#switch" do
       it "should connect to new schema" do
-        @pg.switch(schema1)
-        ActiveRecord::Base.connection.schema_search_path.should == schema1
+        subject.switch(schema)
+        ActiveRecord::Base.connection.schema_search_path.should == schema
       end
       
       it "should reset connection if database is nil" do
-        @pg.switch
-        ActiveRecord::Base.connection.schema_search_path.should == schema_search_path
+        subject.switch
+        ActiveRecord::Base.connection.schema_search_path.should == @schema_search_path
       end
     end
     
     describe "#current_database" do
       it "should return the current schema name" do
-        @pg.switch(schema1)
-        @pg.current_database.should == schema1
+        subject.switch(schema)
+        subject.current_database.should == schema
       end
     end
     
+  end
+  
+  context "using databases" do
+    # TODO
   end
 end

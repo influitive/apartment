@@ -11,6 +11,7 @@ describe Apartment::Database do
     let(:database2){ "yet_another_database" }
     
     before do
+      Apartment.use_postgres_schemas = true
       ActiveRecord::Base.establish_connection config
       Apartment::Test.load_schema   # load the Rails schema in the public db schema
       Apartment::Database.stub(:config).and_return config   # Use postgresql database config for this test

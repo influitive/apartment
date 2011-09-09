@@ -10,12 +10,12 @@ module Apartment
       #   @param {Hash} config Database config
       #   @param {Hash} defaults Some default options
       # 
-      def initialize(config, defaults)
+      def initialize(config, defaults = {})
         @config = config
         @defaults = defaults
       end
       
-      #   Connect to db or schema, do stuff, switch back to previous db/schema (equivalent to a switch... do stuff... switch back)
+      #   Connect to db, do your biz, switch back to previous db
       # 
       #   @param {String?} database Database or schema to connect to, will reset if no database passed in
       def process(database = nil)
@@ -30,14 +30,11 @@ module Apartment
       # 
       #   @param {String} database Database name
   		def create(database)
-        ActiveRecord::Base.connection.execute("CREATE DATABASE #{environmentify(sanitize(database))}") unless using_schemas?
+        ActiveRecord::Base.connection.execute("CREATE DATABASE #{environmentify(sanitize(database))}")
 
   			process(database) do
     			import_database_schema
 
-    			# Manually init schema migrations table (apparently there were issues with Postgres when this isn't done)
-    			ActiveRecord::Base.connection.initialize_schema_migrations_table if using_schemas?
-    			
           # Seed data if appropriate
           seed_data if Apartment.seed_after_create
   			end
@@ -59,11 +56,14 @@ module Apartment
       def environmentify(database)
         # prepend the environment if configured and the environment isn't already there
         return "#{Rails.env}_#{database}" if Apartment.prepend_environment && !database.include?(Rails.env)
+        
         database
   		end
   		
   		def seed_data
+  		  puts ">> #{__method__}"
 	      load_or_abort("#{Rails.root}/db/seeds.rb")
+	      puts "<< #{__method__}"
       end
 	    alias_method :seed, :seed_data
       
@@ -74,16 +74,14 @@ module Apartment
       
     protected
     
-      def create_schema
-        # noop
-      end
-    
       def connect_to_new(database)
         ActiveRecord::Base.establish_connection multi_tenantify(database)
 		  end
       
 	    def import_database_schema
+	      puts ">> #{__method__}"
 	      load_or_abort("#{Rails.root}/db/schema.rb")
+	      puts "<< #{__method__}"
 	    end
 	    
 	    # Return a new config that is multi-tenanted
@@ -96,11 +94,6 @@ module Apartment
       # Remove all non-alphanumeric characters
 	    def sanitize(database)
 	      database.gsub(/[\W]/,'')
-      end
-      
-      # Whether or not to use postgresql schemas
-      def using_schemas?
-        false
       end
       
       def load_or_abort(file)

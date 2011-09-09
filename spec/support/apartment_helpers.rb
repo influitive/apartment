@@ -10,11 +10,12 @@ module Apartment
     end
     
     def drop_schema(schema)
-      ActiveRecord::Base.silence{ ActiveRecord::Base.connection.execute("DROP SCHEMA IF EXISTS #{schema} CASCADE") }
+      puts ">> #{__method__}"
+      ActiveRecord::Base.silence{ ActiveRecord::Base.connection.execute("DROP SCHEMA IF EXISTS #{sanitize(schema)} CASCADE") }
     end
     
     def create_schema(schema)
-      ActiveRecord::Base.connection.execute("CREATE SCHEMA #{schema}")
+      ActiveRecord::Base.connection.execute("CREATE SCHEMA #{sanitize(schema)}")
     end
     
     def load_schema
@@ -27,6 +28,12 @@ module Apartment
     
     def rollback
       ActiveRecord::Migrator.rollback(Rails.root + ActiveRecord::Migrator.migrations_path)
+    end
+    
+    private
+    
+    def sanitize(database)
+      database.gsub(/[\W]/,'')
     end
     
   end
