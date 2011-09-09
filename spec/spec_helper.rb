@@ -22,4 +22,10 @@ RSpec.configure do |config|
   
   config.include RSpec::Integration::CapybaraSessions, :type => :request
   
+  config.before(:all) do
+    # Ensure that each test starts with a clean connect
+    # Necessary as some tests will leak things like current_schema into the next
+    ActiveRecord::Base.clear_all_connections!
+  end
+  
 end

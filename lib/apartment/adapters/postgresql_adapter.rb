@@ -22,7 +22,6 @@ module Apartment
       # TODO sanitize method doesn't work with schemas as the default schema uses "$user", stripping out the quotes makes it fail
 	    def connect_to_new(database = nil)
 	      return reset if database.nil?
-	      
     		ActiveRecord::Base.connection.schema_search_path = database
       rescue ActiveRecord::StatementInvalid => e
         raise SchemaNotFound, e
@@ -41,14 +40,14 @@ module Apartment
   		  raise SchemaExists, e
       end
 			
+      def current_database
+        ActiveRecord::Base.connection.schema_search_path
+      end
+  	  
 			def reset
     		ActiveRecord::Base.connection.schema_search_path = @defaults[:schema_search_path]
   	  end
   	  
-  	  def current_database
-  	    ActiveRecord::Base.connection.schema_search_path
-	    end
-      
     end
     
   end
