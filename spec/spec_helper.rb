@@ -17,7 +17,6 @@ Rails.backtrace_cleaner.remove_silencers!
 # Load support files
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
-
 RSpec.configure do |config|
   
   config.include RSpec::Integration::CapybaraSessions, :type => :request
@@ -29,3 +28,6 @@ RSpec.configure do |config|
   end
   
 end
+
+# Load shared examples, must happen after configure for RSpec 3
+Dir["#{File.dirname(__FILE__)}/examples/**/*.rb"].each { |f| require f }
