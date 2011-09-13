@@ -55,6 +55,12 @@ module Apartment
   # Raised when apartment cannot find the adapter specified in <tt>config/database.yml</tt>
   class AdapterNotFound < ApartmentError; end
   
+  # Rails when apartment cannot find the specified database
+  class DatabaseNotFound < ApartmentError; end
+  
+  # Raised when trying to create a database that already exists
+  class DatabaseExists < ApartmentError; end
+  
   # Raised when database cannot find the specified schema
   class SchemaNotFound < ApartmentError; end
   

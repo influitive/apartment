@@ -1,0 +1,30 @@
+module Apartment
+
+  module Database
+    
+    def self.mysql2_adapter(config)
+      Adapters::Mysql2Adapter.new config
+    end
+  end
+  
+  module Adapters
+  
+    class Mysql2Adapter < AbstractAdapter
+      
+      #   Connect to new database
+      #   Abstract adapter will catch generic ActiveRecord error
+      #   Catch specific adapter errors here
+      # 
+      #   @param {String} database Database name
+      # 
+      def connect_to_new(database)
+        super
+      rescue Mysql2::Error => e
+        raise DatabaseNotFound, environmentify(database)
+		  end
+      
+    end
+    
+  end
+  
+end
