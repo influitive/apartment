@@ -13,41 +13,67 @@ module Apartment
     
     # Default adapter when not using Postgresql Schemas
     class PostgresqlAdapter < AbstractAdapter
+      
+      #   Connect to new database
+      #   Abstract adapter will catch generic ActiveRecord error
+      #   Catch specific adapter errors here
+      # 
+      #   @param {String} database Database name
+      # 
+      def connect_to_new(database)
+        super
+      rescue PGError => e
+        raise DatabaseNotFound, environmentify(database)
+		  end
+		  
     end
     
     # Separate Adapter for Postgresql when using schemas
     class PostgresqlSchemaAdapter < AbstractAdapter
       
-      # Set schema path or connect to new db
-      # TODO sanitize method doesn't work with schemas as the default schema uses "$user", stripping out the quotes makes it fail
-	    def connect_to_new(database = nil)
-	      return reset if database.nil?
-    		ActiveRecord::Base.connection.schema_search_path = database
-      rescue ActiveRecord::StatementInvalid => e
-        raise SchemaNotFound, e
-			end
-			
-			def create(database)
-  		  ActiveRecord::Base.connection.execute("CREATE SCHEMA #{database}")
-
-  		  process(database) do
-    			import_database_schema
-
-          # Seed data if appropriate
-          seed_data if Apartment.seed_after_create
-  			end
-  		rescue ActiveRecord::StatementInvalid => e
-  		  raise SchemaExists, e
-      end
-			
+      #   Get the current schema search path
+      # 
+      #   @return {String} current schema search path
+      # 
       def current_database
         ActiveRecord::Base.connection.schema_search_path
       end
+      
+      #   Drop the database schema
+      # 
+      #   @param {String} database Database (schema) to drop
+      # 
+      def drop(database)
+        ActiveRecord::Base.connection.execute("DROP SCHEMA #{database} CASCADE")
+      rescue ActiveRecord::StatementInvalid => e
+        raise SchemaNotFound, e
+      end
   	  
+      #   Reset search path to default search_path
+      # 
 			def reset
     		ActiveRecord::Base.connection.schema_search_path = @defaults[:schema_search_path]
   	  end
   	  
+  	protected
+  	
+  	  #   Set schema search path to new schema
+      # 
+	    def connect_to_new(database = nil)
+	      return reset if database.nil?
+    		ActiveRecord::Base.connection.schema_search_path = database
+    		
+      rescue ActiveRecord::StatementInvalid => e
+        raise SchemaNotFound, e
+			end
+  	  
+  	  def create_database(database)
+  	    ActiveRecord::Base.connection.execute("CREATE SCHEMA #{database}")
+  	    
+  	  rescue ActiveRecord::StatementInvalid => e
+  		  raise SchemaExists, e
+      end
+      
     end
     
   end
