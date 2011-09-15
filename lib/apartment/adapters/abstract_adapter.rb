@@ -94,7 +94,10 @@ module Apartment
       
       def load_or_abort(file)
         if File.exists?(file)
-          load(file)
+          # Don't log the output of loading files (such as schema or seeds)
+          silence_stream(STDOUT) do
+            load(file)
+          end
         else
           abort %{#{file} doesn't exist yet}
         end
