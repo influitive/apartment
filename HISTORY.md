@@ -1,3 +1,8 @@
+# 0.10.2
+  * Sep 15, 2011
+  
+  - Remove all the annoying logging for loading db schema and seeding on create
+
 # 0.10.1
   * Aug 11, 2011
   
