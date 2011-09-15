@@ -2,6 +2,7 @@ connections:
   postgresql:
     adapter: postgresql
     database: apartment_postgresql_test
+    min_messages: WARNING
     username: root
     password: 
 
