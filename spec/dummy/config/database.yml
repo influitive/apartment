@@ -18,3 +18,8 @@ development:
   database: apartment_postgresql_development
   pool: 5
   timeout: 5000
+development:
+  adapter: postgresql
+  database: apartment_postgresql_development
+  pool: 5
+  timeout: 5000
