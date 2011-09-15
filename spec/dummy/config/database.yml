@@ -6,3 +6,8 @@ test:
   database: apartment_postgresql_test
   pool: 5
   timeout: 5000
+development:
+  adapter: postgresql
+  database: apartment_postgresql_development
+  pool: 5
+  timeout: 5000
