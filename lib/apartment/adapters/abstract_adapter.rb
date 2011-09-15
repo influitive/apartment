@@ -115,6 +115,7 @@ module Apartment
       def connect_to_new(database)
         ActiveRecord::Base.establish_connection multi_tenantify(database)
         ActiveRecord::Base.connection.active?   # call active? to manually check if this connection is valid
+        
       rescue ActiveRecord::StatementInvalid => e
         raise DatabaseNotFound, e
 		  end
