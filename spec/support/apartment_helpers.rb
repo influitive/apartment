@@ -18,7 +18,7 @@ module Apartment
     end
     
     def load_schema
-      load "#{Rails.root}/db/schema.rb"
+      silence_stream(STDOUT){ load("#{Rails.root}/db/schema.rb") }
     end
     
     def migrate
