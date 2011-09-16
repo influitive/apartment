@@ -23,7 +23,7 @@ describe Apartment::Migrator do
   end
   
   after do
-    Apartment::Test.drop_schema(schema_name)
+    Apartment::Database.drop(schema_name)
   end
   
   context "postgresql" do

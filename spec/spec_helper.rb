@@ -21,7 +21,14 @@ RSpec.configure do |config|
   
   config.include RSpec::Integration::CapybaraSessions, :type => :request
   
+  config.before(:suite) do
+    # Load schema.rb into public schema for testing out excluded models
+    Apartment::Test.load_schema
+  end
+  
   config.before(:all) do
+    # Unset the adapter from Apartment::Database
+    Apartment::Database.reload!
     # Ensure that each test starts with a clean connect
     # Necessary as some tests will leak things like current_schema into the next
     ActiveRecord::Base.clear_all_connections!
