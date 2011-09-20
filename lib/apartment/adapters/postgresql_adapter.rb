@@ -24,7 +24,7 @@ module Apartment
 	      return reset if database.nil?
     		ActiveRecord::Base.connection.schema_search_path = database
       rescue ActiveRecord::StatementInvalid => e
-        raise SchemaNotFound, e
+        raise SchemaNotFound, "The Schema #{database.inspect} cannot be found."
 			end
 			
 			def create(database)
@@ -37,7 +37,7 @@ module Apartment
           seed_data if Apartment.seed_after_create
   			end
   		rescue ActiveRecord::StatementInvalid => e
-  		  raise SchemaExists, e
+  		  raise SchemaExists, "The schema #{database} already exists."
       end
 			
       def current_database

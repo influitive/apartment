@@ -1,3 +1,8 @@
+# 0.10.3
+  * Sep 20, 2011
+  
+  - Fix improper raising of exceptions on create and reset
+
 # 0.10.2
   * Sep 15, 2011
   
