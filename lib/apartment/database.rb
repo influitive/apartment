@@ -6,12 +6,12 @@ module Apartment
 	  class << self
 
       # pass these methods to our adapter
-      delegate :create, :switch, :reset, :process, :seed, :current_database, :to => :adapter
+      delegate :create, :current_database, :process, :process_excluded_models, :reset, :seed, :switch, :to => :adapter
 
       # Call init to establish a connection to the public schema on all excluded models
       # This must be done before creating any new schemas or switching
   	  def init
-  	    connect_exclusions
+        process_excluded_models
       end
       
       def adapter
@@ -39,14 +39,6 @@ module Apartment
       
 		private
 		
-		  def connect_exclusions
-		    # Establish a connection for each specific excluded model
-        # Thus all other models will shared a connection (at ActiveRecord::Base) and we can modify at will
-  	    Apartment.excluded_models.each do |excluded_model|
-  				excluded_model.establish_connection config
-  			end
-      end
-    
       def config
         @config ||= Rails.configuration.database_configuration[Rails.env].symbolize_keys
       end

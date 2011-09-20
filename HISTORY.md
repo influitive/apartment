@@ -1,3 +1,8 @@
+# 0.11.0
+  * Sep 20, 2011
+  
+  - Excluded models no longer use a different connection when using postgresql schemas.  Instead their table_name is prefixed with `public.`
+
 # 0.10.3
   * Sep 20, 2011
   

@@ -43,7 +43,28 @@ module Apartment
       def current_database
         ActiveRecord::Base.connection.schema_search_path
       end
+      
+      #   Set the table_name to always use the public namespace for excluded models
+      # 
+      def process_excluded_models
+		    
+  	    Apartment.excluded_models.each do |excluded_model|
+  	      # some models (such as delayed_job) seem to load and cache their column names before this, 
+          # so would never get the public prefix, so reset first
+  	      excluded_model.reset_column_information
+
+          # Ensure that if a schema *was* set, we override
+  	      table_name = excluded_model.table_name.split('.', 2).last
+
+          # Not sure why, but Delayed::Job somehow ignores table_name_prefix...  so we'll just manually set table name instead
+  				excluded_model.table_name = "public.#{table_name}"
+  			end
+      end
   	  
+      #   Reset schema search path to the default schema_search_path
+      # 
+      #   @return {String} default schema search path
+      # 
 			def reset
     		ActiveRecord::Base.connection.schema_search_path = @defaults[:schema_search_path]
   	  end

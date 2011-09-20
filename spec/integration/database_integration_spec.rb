@@ -25,11 +25,11 @@ describe Apartment::Database do
     describe "#init" do
       
       it "should process model exclusions" do
-        Company.should_receive(:establish_connection).with( config )
-        
         Apartment.configure do |config|
           config.excluded_models = [Company]
         end
+        
+        Company.table_name.should == "public.companies"
       end
       
     end
@@ -164,7 +164,7 @@ describe Apartment::Database do
           
           it "should ignore excluded models" do
             Apartment::Database.switch database
-            Company.connection.schema_search_path.should == @schema_search_path
+            Company.table_name.should include('public')
           end
           
           it "should create excluded models in public schema" do

@@ -5,10 +5,10 @@ module Apartment
   module Delayed
     module Job
       
-      # Will enqueue a job ensuring that it happens within the public schema
-      # This is a work-around due to the fact that DJ for some reason always
-      # queues its jobs in the current_schema, rather than the public schema
-      # as it is supposed to
+      # Will enqueue a job ensuring that it happens within the main 'public' database
+      # 
+      # Note that this should not longer be required for versions >= 0.11.0 when using postgresql schemas
+      # 
       def self.enqueue(payload_object, options = {})
         Apartment::Database.process do
           ::Delayed::Job.enqueue(payload_object, options)
