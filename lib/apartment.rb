@@ -1,4 +1,4 @@
-require 'apartment/railtie'
+require 'apartment/railtie' if defined?(Rails)
 
 module Apartment
   
@@ -70,12 +70,4 @@ module Apartment
   # Raised when an ActiveRecord object does not have the required database field on it
   class DJSerializationError < ApartmentError; end
   
-end
-
-Apartment.configure do |config|
-  config.excluded_models = []
-  config.use_postgres_schemas = true
-  config.database_names = []
-  config.seed_after_create = false
-  config.prepend_environment = true
 end

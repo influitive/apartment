@@ -15,18 +15,6 @@ module Apartment
         @defaults = defaults
       end
       
-      #   Connect to db, do your biz, switch back to previous db
-      # 
-      #   @param {String?} database Database or schema to connect to
-      # 
-      def process(database = nil)
-        current_db = current_database
-		    switch(database)
-		    yield if block_given?
-		  ensure
-  		  switch(current_db)
-	    end
-      
       #   Create a new database, import schema, seed if appropriate
       # 
       #   @param {String} database Database name
@@ -42,6 +30,23 @@ module Apartment
   			end
   		end
   		
+      #   Get the current database name
+      #   
+      #   @return {String} current database name
+      # 
+      def current_database
+        ActiveRecord::Base.connection.current_database
+      end
+      
+      #   Prepend the environment if configured and the environment isn't already there
+      # 
+      #   @param {String} database Database name
+      #   @return {String} database name with Rails environment *optionally* prepended
+      #  
+      def environmentify(database)
+        Apartment.prepend_environment && !database.include?(Rails.env) ? "#{Rails.env}_#{database}" : database
+  		end
+  		
       #   Drop the database
       # 
       #   @param {String} database Database name
@@ -54,6 +59,27 @@ module Apartment
   		  raise DatabaseNotFound, environmentify(database)
       end
     
+      #   Connect to db, do your biz, switch back to previous db
+      # 
+      #   @param {String?} database Database or schema to connect to
+      # 
+      def process(database = nil)
+        current_db = current_database
+		    switch(database)
+		    yield if block_given?
+		  ensure
+  		  switch(current_db)
+	    end
+	    
+	    #   Establish a new connection for each specific excluded model
+      # 
+      def process_excluded_models
+        # All other models will shared a connection (at ActiveRecord::Base) and we can modify at will
+  	    Apartment.excluded_models.each do |excluded_model|
+  				excluded_model.establish_connection @config
+  			end
+      end
+      
       #   Reset the base connection
       # 
       def reset
@@ -71,29 +97,12 @@ module Apartment
         connect_to_new(database)
   		end
 
-      #   prepend the environment if configured and the environment isn't already there
-      # 
-      #   @return {String} Database name with environment prepended (if applicable)
-      #   @param {String} database Database name
-      #   
-      def environmentify(database)
-        Apartment.prepend_environment && !database.include?(Rails.env) ? "#{Rails.env}_#{database}" : database
-  		end
-  		
       #   Seed data from Rails seeds
       # 
   		def seed_data
 	      load_or_abort("#{Rails.root}/db/seeds.rb")
       end
 	    alias_method :seed, :seed_data
-      
-      #   Get the current database name
-      # 
-      #   @return {String} current database name
-      # 
-      def current_database
-        ActiveRecord::Base.connection.current_database
-      end
       
     protected
     

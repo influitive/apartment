@@ -41,9 +41,14 @@ describe Apartment::Adapters::PostgresqlAdapter do
     # Some extra tests pertaining to schemas
     
     describe "#create" do
+      
+      it "should create new postgres schema" do
+        ActiveRecord::Base.connection.execute("SELECT nspname FROM pg_namespace;").collect{|row| row['nspname']}.should include(database)
+      end    
     end
     
     describe "#current_database" do
+      
       it "should return the current schema name" do
         subject.switch(schema1)
         subject.current_database.should == schema1
@@ -51,6 +56,7 @@ describe Apartment::Adapters::PostgresqlAdapter do
     end
     
     describe "#drop" do
+      
       it "should delete the schema" do
         subject.drop schema1
         
@@ -67,6 +73,7 @@ describe Apartment::Adapters::PostgresqlAdapter do
     end
     
     describe "#process" do
+      
       it "should connect to new schema" do
         subject.process(schema1) do
           ActiveRecord::Base.connection.schema_search_path.should == schema1
@@ -86,6 +93,7 @@ describe Apartment::Adapters::PostgresqlAdapter do
     end
     
     describe "#reset" do
+      
       it "should reset connection" do
         subject.switch(schema1)
         subject.reset
@@ -94,9 +102,16 @@ describe Apartment::Adapters::PostgresqlAdapter do
     end
     
     describe "#switch" do
+      
       it "should connect to new schema" do
         subject.switch(schema1)
         ActiveRecord::Base.connection.schema_search_path.should == schema1
+      end
+      
+      it "should fail with invalid schema" do
+        expect {
+          Apartment::Database.switch('some_nonexistent_schema')
+        }.to raise_error Apartment::SchemaNotFound
       end
       
       it "should reset connection if database is nil" do
