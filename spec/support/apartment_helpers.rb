@@ -4,7 +4,6 @@ module Apartment
     extend self
     
     def reset
-      Apartment::Database.instance_variable_set :@initialized, nil
       Apartment.excluded_models = nil
       Apartment.use_postgres_schemas = nil
     end
@@ -27,12 +26,6 @@ module Apartment
     
     def rollback
       ActiveRecord::Migrator.rollback(Rails.root + ActiveRecord::Migrator.migrations_path)
-    end
-    
-    private
-    
-    def sanitize(database)
-      database.gsub(/[\W]/,'')
     end
     
   end

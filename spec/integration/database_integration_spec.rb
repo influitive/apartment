@@ -29,6 +29,8 @@ describe Apartment::Database do
           config.excluded_models = [Company]
         end
         
+        Apartment::Database.init
+        
         Company.table_name.should == "public.companies"
       end
       
@@ -158,8 +160,11 @@ describe Apartment::Database do
         
         context "with excluded models" do
           
-          Apartment.configure do |config|
-            config.excluded_models = [Company]
+          before do
+            Apartment.configure do |config|
+              config.excluded_models = [Company]
+            end
+            Apartment::Database.init
           end
           
           it "should ignore excluded models" do

@@ -1,3 +1,11 @@
+# 0.11.1
+  * Sep 22, 2011
+  
+  - Better use of Railties for initializing apartment
+  - The following changes were necessary as I haven't figured out how to properly hook into Rails reloading
+    - Added reloader middleware in development to init Apartment on each request
+    - Override `reload!` in console to also init Apartment
+
 # 0.11.0
   * Sep 20, 2011
   

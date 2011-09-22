@@ -9,7 +9,6 @@ module Apartment
     # configure apartment with available options
     def configure
       yield self if block_given?
-      Database.init
     end
     
     # Be careful not to use `return` here so both Proc and lambda can be used without breaking
@@ -30,6 +29,7 @@ module Apartment
   
   autoload :Database, 'apartment/database'
   autoload :Migrator, 'apartment/migrator'
+  autoload :Reloader, 'apartment/reloader'
   
   module Adapters
     autoload :AbstractAdapter, 'apartment/adapters/abstract_adapter'

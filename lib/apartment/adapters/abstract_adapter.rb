@@ -46,6 +46,7 @@ module Apartment
         current_db = current_database
 		    switch(database)
 		    yield if block_given?
+		    
 		  ensure
   		  switch(current_db)
 	    end
@@ -87,6 +88,8 @@ module Apartment
         database
   		end
   		
+      #   Load the rails seed file into the db
+      #   
   		def seed_data
 	      load_or_abort("#{Rails.root}/db/seeds.rb")
       end
