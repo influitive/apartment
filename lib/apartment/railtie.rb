@@ -17,7 +17,7 @@ module Apartment
     
     #   Hook into ActionDispatch::Reloader to ensure Apartment is properly initialized
     #   Note that this doens't entirely work as expected in Development, because this is called before classes are reloaded
-    #   See the above middleware declaration to help with this.  Hope to fix that soon.
+    #   See the above middleware/console declarations below to help with this.  Hope to fix that soon.
     config.to_prepare do
       Apartment::Database.init
     end
@@ -30,7 +30,7 @@ module Apartment
     # Note this is technically valid for any environment where cache_classes is false, for us, it's just development
     if Rails.env.development?
       
-      # Apartment::Reloader is middleware to initialize things properly on each requestion dev
+      # Apartment::Reloader is middleware to initialize things properly on each request to dev
   		initializer 'apartment.init' do |app|
         app.config.middleware.use "Apartment::Reloader"
       end
