@@ -11,6 +11,8 @@ module Apartment
   
     class Mysql2Adapter < AbstractAdapter
       
+    protected 
+    
       #   Connect to new database
       #   Abstract adapter will catch generic ActiveRecord error
       #   Catch specific adapter errors here

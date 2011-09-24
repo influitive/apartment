@@ -67,6 +67,7 @@ module Apartment
         current_db = current_database
 		    switch(database)
 		    yield if block_given?
+		    
 		  ensure
   		  switch(current_db)
 	    end
@@ -97,7 +98,7 @@ module Apartment
         connect_to_new(database)
   		end
 
-      #   Seed data from Rails seeds
+      #   Load the rails seed file into the db
       # 
   		def seed_data
 	      load_or_abort("#{Rails.root}/db/seeds.rb")
@@ -114,7 +115,7 @@ module Apartment
         ActiveRecord::Base.connection.create_database( environmentify(database) )
         
       rescue ActiveRecord::StatementInvalid => e
-  		  raise DatabaseExists, environmentify(database)
+  		  raise DatabaseExists, "The database #{environmentify(database)} already exists."
       end
     
       #   Connect to new database
@@ -126,7 +127,7 @@ module Apartment
         ActiveRecord::Base.connection.active?   # call active? to manually check if this connection is valid
 
       rescue ActiveRecord::StatementInvalid => e
-        raise DatabaseNotFound, e
+        raise DatabaseNotFound, "The database #{environmentify(database)} cannot be found."
 		  end
       
       #   Import database schema

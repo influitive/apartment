@@ -17,11 +17,6 @@ describe Apartment do
       end
     end
     
-    it "should initialize Database" do
-      Apartment::Database.should_receive(:init).once
-      Apartment.configure
-    end 
-    
     it "should set excluded models" do
       Apartment.configure do |config|
         config.excluded_models = excluded_models
@@ -44,7 +39,6 @@ describe Apartment do
       end
       Apartment.seed_after_create.should be_true
     end
-      
     
     context "databases" do
       it "should return object if it doesnt respond_to call" do

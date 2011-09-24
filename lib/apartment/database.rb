@@ -1,6 +1,8 @@
 require 'active_support/core_ext/module/delegation'
 
 module Apartment
+  
+  #   The main entry point to Apartment functions
 	module Database
 	  
 	  extend self
@@ -11,6 +13,10 @@ module Apartment
     # allow for config dependency injection
     attr_writer :config
 
+    #   Fetch the proper multi-tenant adapter based on Rails config
+    # 
+    #   @return {subclass of Apartment::AbstractAdapter}
+    # 
     def adapter
 	    @adapter ||= begin
 		    adapter_method = "#{config[:adapter]}_adapter"
@@ -29,22 +35,27 @@ module Apartment
       end
     end
     
-    # Call init to establish a connection to the public schema on all excluded models
-    # This must be done before creating any new schemas or switching
+    #   Initialize Apartment config options such as excluded_models
+    # 
 	  def init
 	    process_excluded_models
     end
     
+    #   Reset config and adapter so they are reloaded
+    # 
     def reload!
       @adapter = nil
       @config = nil
     end
     
 	private
-  
+	
+    #   Fetch the rails database configuration
+    # 
     def config
       @config ||= Rails.configuration.database_configuration[Rails.env].symbolize_keys
     end
+    
   end
 	
 end

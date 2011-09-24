@@ -7,6 +7,7 @@ module Apartment
         Adapters::PostgresqlSchemaAdapter.new(config, :schema_search_path => ActiveRecord::Base.connection.schema_search_path) :
         Adapters::PostgresqlAdapter.new(config)
     end
+    
   end
   
   module Adapters
@@ -14,6 +15,8 @@ module Apartment
     # Default adapter when not using Postgresql Schemas
     class PostgresqlAdapter < AbstractAdapter
       
+    protected
+    
       #   Connect to new database
       #   Abstract adapter will catch generic ActiveRecord error
       #   Catch specific adapter errors here
@@ -47,7 +50,7 @@ module Apartment
         ActiveRecord::Base.connection.execute("DROP SCHEMA #{database} CASCADE")
         
       rescue ActiveRecord::StatementInvalid => e
-        raise SchemaNotFound, "The Schema #{database.inspect} cannot be found."
+        raise SchemaNotFound, "The schema #{database.inspect} cannot be found."
       end
   	  
       #   Reset search path to default search_path
@@ -55,15 +58,24 @@ module Apartment
       # 
       def process_excluded_models
   	    Apartment.excluded_models.each do |excluded_model|
-  	      # some models (such as delayed_job) seem to load and cache their column names before this, 
-          # so would never get the public prefix, so reset first
-  	      excluded_model.reset_column_information
+          # Note that due to rails reloading, we now take string references to classes rather than
+          # actual object references.  This way when we contantize, we always get the proper class reference
+          if excluded_model.is_a? Class
+            warn "[Deprecation Warning] Passing class references to excluded models is now deprecated, please use a string instead"
+            excluded_model = excluded_model.name
+          end
+          
+          excluded_model.constantize.tap do |klass|
+            # some models (such as delayed_job) seem to load and cache their column names before this, 
+            # so would never get the public prefix, so reset first
+    	      klass.reset_column_information
 
-          # Ensure that if a schema *was* set, we override
-  	      table_name = excluded_model.table_name.split('.', 2).last
+            # Ensure that if a schema *was* set, we override
+      	    table_name = klass.table_name.split('.', 2).last
 
-          # Not sure why, but Delayed::Job somehow ignores table_name_prefix...  so we'll just manually set table name instead
-  				excluded_model.table_name = "public.#{table_name}"
+            # Not sure why, but Delayed::Job somehow ignores table_name_prefix...  so we'll just manually set table name instead
+    				klass.table_name = "public.#{table_name}"
+  				end
   			end
       end
   	  
@@ -84,9 +96,11 @@ module Apartment
     		ActiveRecord::Base.connection.schema_search_path = database
     		
       rescue ActiveRecord::StatementInvalid => e
-        raise SchemaNotFound, "The Schema #{database.inspect} cannot be found."
+        raise SchemaNotFound, "The schema #{database.inspect} cannot be found."
 			end
   	  
+      #   Create the new schema
+      # 
   	  def create_database(database)
   	    ActiveRecord::Base.connection.execute("CREATE SCHEMA #{database}")
   	    

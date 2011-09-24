@@ -31,7 +31,7 @@ RSpec.configure do |config|
     Apartment::Database.reload!
     
     # Ensure that each test starts with a clean connection
-    # Necessary as some tests will leak things like current_schema into the next
+    # Necessary as some tests will leak things like current_schema into the next test
     ActiveRecord::Base.clear_all_connections!
     
     # Reset all column based information because switching adapters doesn't clear the cached column info
