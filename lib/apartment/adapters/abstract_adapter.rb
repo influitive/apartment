@@ -56,7 +56,7 @@ module Apartment
         ActiveRecord::Base.connection.execute("DROP DATABASE #{environmentify(database)}" )
         
       rescue ActiveRecord::StatementInvalid => e
-  		  raise DatabaseNotFound, environmentify(database)
+  		  raise DatabaseNotFound, "The database #{environmentify(database)} cannot be found"
       end
     
       #   Connect to db, do your biz, switch back to previous db
@@ -77,7 +77,7 @@ module Apartment
       def process_excluded_models
         # All other models will shared a connection (at ActiveRecord::Base) and we can modify at will
   	    Apartment.excluded_models.each do |excluded_model|
-  				excluded_model.establish_connection @config
+  	      excluded_model.constantize.establish_connection @config
   			end
       end
       

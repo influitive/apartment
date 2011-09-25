@@ -5,11 +5,15 @@ test:
   adapter: postgresql
   database: apartment_postgresql_test
   min_messages: WARNING
+  username: root
+  password:
   pool: 5
   timeout: 5000
 development:
   adapter: postgresql
   database: apartment_postgresql_development
   min_messages: WARNING
+  username: root
+  password:
   pool: 5
   timeout: 5000

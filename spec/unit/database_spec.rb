@@ -98,7 +98,7 @@ describe Apartment::Database do
       end
       
       it "should set excluded models table_name properly" do
-        subject.switch database
+        subject.switch database1
         Company.table_name.should include('public')
       end
     

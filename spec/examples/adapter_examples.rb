@@ -6,13 +6,23 @@ shared_examples_for "an apartment adapter" do
   
   let(:database1){ "apartment_database1" }
   let(:database2){ "apartment_database2" }
+  
+  before(:all) do
+    Apartment::Database.config = config
+    ActiveRecord::Base.establish_connection config
+  end
+  
+  after(:all) do
+    # This is lame, I had to remove cached classes and this triggers a code reload so that each example_Group
+    # regenerates its table_name quoting, otherwise switching adapters fails with invalid sql
+    ActiveRecord::Base.descendants.each{ |klass| klass.reset_table_name; klass.reset_column_information }
+  end
     
   before do
-    ActiveRecord::Base.clear_all_connections!   # if you're connected to a db that gets dropped, active_record starts throwing errors
+    Apartment.use_postgres_schemas = false
     Apartment.prepend_environment = false   # disabled env prepending for most tests
     Apartment.seed_after_create = true      # to test seeding
-    ActiveRecord::Base.establish_connection config
-
+    
     subject.create(database1)
     subject.create(database2)
   end
@@ -89,9 +99,10 @@ shared_examples_for "an apartment adapter" do
   describe "#drop" do
 
     it "should delete the database" do
-      subject.drop database1
+      subject.switch database1    # can't drop db we're currently connected to, ensure these are different
+      subject.drop database2
 
-      database_names.should_not include(database1)
+      database_names.should_not include(database2)
     end
 
     it "should raise an error for unkown database" do

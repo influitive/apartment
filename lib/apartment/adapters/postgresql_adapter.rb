@@ -95,7 +95,7 @@ module Apartment
 	      return reset if database.nil?
     		ActiveRecord::Base.connection.schema_search_path = database
     		
-      rescue ActiveRecord::StatementInvalid => e
+      rescue PGError, ActiveRecord::StatementInvalid => e
         raise SchemaNotFound, "The schema #{database.inspect} cannot be found."
 			end
   	  
