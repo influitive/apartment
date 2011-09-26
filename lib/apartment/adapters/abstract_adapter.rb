@@ -15,12 +15,12 @@ module Apartment
         @defaults = defaults
       end
       
-      #   Create new postgres schema
+      #   Create a new database, import schema, seed if appropriate
       # 
       #   @param {String} database Database name
       # 
   		def create(database)
-        ActiveRecord::Base.connection.execute("CREATE DATABASE #{environmentify(sanitize(database))}")
+  		  create_database(database)
 
   			process(database) do
     			import_database_schema
@@ -29,7 +29,7 @@ module Apartment
           seed_data if Apartment.seed_after_create
   			end
   		end
-    
+      
       #   Get the current database name
       #   
       #   @return {String} current database name
@@ -38,6 +38,27 @@ module Apartment
         ActiveRecord::Base.connection.current_database
       end
       
+      #   Drop the database
+      # 
+      #   @param {String} database Database name
+      # 
+      def drop(database)
+        # ActiveRecord::Base.connection.drop_database   note that drop_database will not throw an exception, so manually execute
+        ActiveRecord::Base.connection.execute("DROP DATABASE #{environmentify(database)}" )
+        
+      rescue ActiveRecord::StatementInvalid => e
+  		  raise DatabaseNotFound, "The database #{environmentify(database)} cannot be found"
+      end
+      
+      #   Prepend the environment if configured and the environment isn't already there
+      # 
+      #   @param {String} database Database name
+      #   @return {String} database name with Rails environment *optionally* prepended
+      # 
+      def environmentify(database)
+        Apartment.prepend_environment && !database.include?(Rails.env) ? "#{Rails.env}_#{database}" : database
+  		end
+  		
       #   Connect to db, do your biz, switch back to previous db
       # 
       #   @param {String?} database Database or schema to connect to
@@ -56,11 +77,18 @@ module Apartment
       def process_excluded_models
         # All other models will shared a connection (at ActiveRecord::Base) and we can modify at will
   	    Apartment.excluded_models.each do |excluded_model|
-  				excluded_model.establish_connection @config
+  	      # Note that due to rails reloading, we now take string references to classes rather than
+          # actual object references.  This way when we contantize, we always get the proper class reference
+          if excluded_model.is_a? Class
+            warn "[Deprecation Warning] Passing class references to excluded models is now deprecated, please use a string instead"
+            excluded_model = excluded_model.name
+          end
+          
+  				excluded_model.constantize.establish_connection @config
   			end
       end
       
-      #   Reset the base connection
+      #   Reset the database connection to the default
       # 
       def reset
         ActiveRecord::Base.establish_connection @config
@@ -77,17 +105,6 @@ module Apartment
         connect_to_new(database)
   		end
 
-      #   Prepend the environment if configured and the environment isn't already there
-      # 
-      #   @param {String} database Database name
-      #   @return {String} database name with Rails environment *optionally* prepended
-      # 
-      def environmentify(database)
-        return "#{Rails.env}_#{database}" if Apartment.prepend_environment && !database.include?(Rails.env)
-        
-        database
-  		end
-  		
       #   Load the rails seed file into the db
       #   
   		def seed_data
@@ -97,21 +114,45 @@ module Apartment
       
     protected
     
+      #   Create the database
+      # 
+      #   @param {String} database Database name
+      # 
+      def create_database(database)
+        ActiveRecord::Base.connection.create_database( environmentify(database) )
+
+      rescue ActiveRecord::StatementInvalid => e
+        raise DatabaseExists, "The database #{environmentify(database)} already exists."
+      end
+  
+      #   Connect to new database
+      # 
+      #   @param {String} database Database name
+      # 
       def connect_to_new(database)
         ActiveRecord::Base.establish_connection multi_tenantify(database)
-		  end
+        ActiveRecord::Base.connection.active?   # call active? to manually check if this connection is valid
+
+      rescue ActiveRecord::StatementInvalid => e
+        raise DatabaseNotFound, "The database #{environmentify(database)} cannot be found."
+  	  end
       
+      #   Import the database schema
+      # 
 	    def import_database_schema
 	      load_or_abort("#{Rails.root}/db/schema.rb")
 	    end
 	    
-	    # Return a new config that is multi-tenanted
+	    #   Return a new config that is multi-tenanted
+      # 
       def multi_tenantify(database)
   			@config.clone.tap do |config|
   			  config[:database] = environmentify(database)
 			  end
   		end
       
+      #   Load a file or abort if it doesn't exists
+      # 
       def load_or_abort(file)
         if File.exists?(file)
           # Don't log the output of loading files (such as schema or seeds)
@@ -123,10 +164,10 @@ module Apartment
         end
       end
       
-      
-      
-      # Remove all non-alphanumeric characters
+      #   Remove all non-alphanumeric characters
+      # 
 	    def sanitize(database)
+	      warn "[Deprecation Warning] Sanitize is no longer used, client should ensure proper database names"
 	      database.gsub(/[\W]/,'')
       end
       

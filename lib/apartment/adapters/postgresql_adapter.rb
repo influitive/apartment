@@ -14,37 +14,26 @@ module Apartment
     
     # Default adapter when not using Postgresql Schemas
     class PostgresqlAdapter < AbstractAdapter
+      
+    protected
+    
+      #   Connect to new database
+      #   Abstract adapter will catch generic ActiveRecord error
+      #   Catch specific adapter errors here
+      # 
+      #   @param {String} database Database name
+      # 
+      def connect_to_new(database)
+        super
+      rescue PGError => e
+        raise DatabaseNotFound, "Cannot find database #{environmentify(database)}"
+		  end
+		  
     end
     
     # Separate Adapter for Postgresql when using schemas
     class PostgresqlSchemaAdapter < AbstractAdapter
       
-      #   Set schema path or connect to new db
-      # 
-	    def connect_to_new(database = nil)
-	      return reset if database.nil?
-    		ActiveRecord::Base.connection.schema_search_path = database
-    		
-      rescue ActiveRecord::StatementInvalid => e
-        raise SchemaNotFound, "The Schema #{database.inspect} cannot be found."
-			end
-			
-      #   Create a db schema
-      # 
-			def create(database)
-  		  ActiveRecord::Base.connection.execute("CREATE SCHEMA #{database}")
-
-  		  process(database) do
-    			import_database_schema
-
-          # Seed data if appropriate
-          seed_data if Apartment.seed_after_create
-  			end
-  			
-  		rescue ActiveRecord::StatementInvalid => e
-  		  raise SchemaExists, "The schema #{database} already exists."
-      end
-			
       #   Get the current schema search path
       # 
       #   @return {String} current schema search path
@@ -53,10 +42,21 @@ module Apartment
         ActiveRecord::Base.connection.schema_search_path
       end
       
+      #   Drop the database schema
+      # 
+      #   @param {String} database Database (schema) to drop
+      # 
+      def drop(database)
+        ActiveRecord::Base.connection.execute("DROP SCHEMA #{database} CASCADE")
+        
+      rescue ActiveRecord::StatementInvalid => e
+        raise SchemaNotFound, "The schema #{database.inspect} cannot be found."
+      end
+  	  
+      #   Reset search path to default search_path
       #   Set the table_name to always use the public namespace for excluded models
       # 
       def process_excluded_models
-        
   	    Apartment.excluded_models.each do |excluded_model|
           # Note that due to rails reloading, we now take string references to classes rather than
           # actual object references.  This way when we contantize, we always get the proper class reference
@@ -87,6 +87,27 @@ module Apartment
     		ActiveRecord::Base.connection.schema_search_path = @defaults[:schema_search_path]
   	  end
   	  
+  	protected
+  	
+  	  #   Set schema search path to new schema
+      # 
+	    def connect_to_new(database = nil)
+	      return reset if database.nil?
+    		ActiveRecord::Base.connection.schema_search_path = database
+    		
+      rescue ActiveRecord::StatementInvalid => e
+        raise SchemaNotFound, "The schema #{database.inspect} cannot be found."
+			end
+  	  
+      #   Create the new schema
+      # 
+  	  def create_database(database)
+  	    ActiveRecord::Base.connection.execute("CREATE SCHEMA #{database}")
+  	    
+  	  rescue ActiveRecord::StatementInvalid => e
+  		  raise SchemaExists, "The schema #{database} already exists."
+      end
+      
     end
     
   end

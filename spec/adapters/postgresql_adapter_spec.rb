@@ -15,6 +15,8 @@ describe Apartment::Adapters::PostgresqlAdapter do
   context "using schemas" do
     
     let(:schema){ 'first_db_schema' }
+    let(:schema2){ 'another_db_schema' }
+    let(:database_names){ ActiveRecord::Base.connection.execute("SELECT nspname FROM pg_namespace;").collect{|row| row['nspname']} }
     
     subject{ Apartment::Database.postgresql_adapter Apartment::Test.config['connections']['postgresql'].symbolize_keys }
   
@@ -30,7 +32,7 @@ describe Apartment::Adapters::PostgresqlAdapter do
     describe "#create" do
       
       it "should create the new schema" do
-        ActiveRecord::Base.connection.execute("SELECT nspname FROM pg_namespace;").collect{|row| row['nspname']}.should include(schema)
+        database_names.should include(schema)
       end
     
       it "should load schema.rb to new schema" do
@@ -42,6 +44,24 @@ describe Apartment::Adapters::PostgresqlAdapter do
         ActiveRecord::Base.connection.schema_search_path.should_not == schema
       end
     end
+    
+    describe "#drop" do
+
+      it "should delete the database" do
+        subject.create schema2
+        subject.switch schema    # can't drop db we're currently connected to, ensure these are different
+        subject.drop schema2
+
+        database_names.should_not include(schema2)
+      end
+
+      it "should raise an error for unkown database" do
+        expect {
+          subject.drop "unknown_database"
+        }.to raise_error(Apartment::SchemaNotFound)
+      end
+    end
+    
     
     describe "#process" do
       it "should connect" do
