@@ -86,7 +86,9 @@ To set config options, add this to your initializer:
 If you have some models that should always access the 'root' database, you can specify this by configuring
 Apartment using `Apartment.configure`.  This will yield a config object for you.  You can set excluded models like so:
     
-    config.excluded_models = [User, Company]        # these models will not be multi-tenanted, but remain in the global (public) namespace
+    config.excluded_models = ["User", "Company"]        # these models will not be multi-tenanted, but remain in the global (public) namespace
+
+Note that a string representation of the model name is now the standard so that models are properly constantized when reloaded in development
     
 ### Handling Environments
 

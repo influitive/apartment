@@ -108,7 +108,7 @@ module Apartment
       #   Load the rails seed file into the db
       #   
   		def seed_data
-	      load_or_abort("#{Rails.root}/db/seeds.rb")
+  		  silence_stream(STDOUT){ load_or_abort("#{Rails.root}/db/seeds.rb") } # Don't log the output of seeding the db
       end
 	    alias_method :seed, :seed_data
       
@@ -140,6 +140,7 @@ module Apartment
       #   Import the database schema
       # 
 	    def import_database_schema
+	      ActiveRecord::Schema.verbose = false    # do not log schema load output.  Note that this is slightly duplicated below with silenct_stream, except that this also works with Spork
 	      load_or_abort("#{Rails.root}/db/schema.rb")
 	    end
 	    
@@ -155,10 +156,7 @@ module Apartment
       # 
       def load_or_abort(file)
         if File.exists?(file)
-          # Don't log the output of loading files (such as schema or seeds)
-          silence_stream(STDOUT) do
-            load(file)
-          end
+          load(file)
         else
           abort %{#{file} doesn't exist yet}
         end
