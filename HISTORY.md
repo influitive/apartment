@@ -1,3 +1,11 @@
+# 0.12.0
+  * Oct 4, 2001
+  
+  - Added a `drop` method for removing databases/schemas
+  - Refactored abstract adapter to further remove duplication in concrete implementations
+  - Excluded models now take string references so they are properly reloaded in development
+  - Better silencing of `schema.rb` loading using `verbose` flag
+
 # 0.11.1
   * Sep 22, 2011
   
