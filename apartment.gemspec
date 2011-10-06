@@ -7,7 +7,6 @@ Gem::Specification.new do |s|
   s.version = Apartment::VERSION
 
   s.authors = ["Ryan Brunner", "Brad Robertson"]
-  s.date = %q{2011-04-18}
   s.summary = %q{A Ruby gem for managing database multitenancy in Rails applications}
   s.description = %q{Apartment allows Rails applications to deal with database multitenancy}
   s.email = %w{ryan@ryanbrunner.com bradleyrobertson@gmail.com}
