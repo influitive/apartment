@@ -1,6 +1,16 @@
 # Apartment
 *Multitenancy for Rails 3*
 
+> IMPORTANT! While I will do everything possible to get Apartment working for Rails 3.1, I haven't, as of yet, had this opportunity.  
+
+> There have been significant changes in the adapters such as prepared statements that might cause some issues.  
+
+> If anyone is successfully using Apartment with 3.1 please let me know, but please ensure that you're testing data integrity properly (ie. that queries are made in the right schema) as prepared_statements
+> could really throw a wrench in that one.
+
+> I know for a fact that Rails 3.1 missed a patch to make postgresql more schema aware, but it seems to have made it into Rails 3.1.1.  So at the very least, use 3.1.1
+
+
 Apartment provides tools to help you deal with multiple databases in your Rails
 application. If you need to have certain data sequestered based on account or company,
 but still allow some data to exist in a common database, Apartment can help.
