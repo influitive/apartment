@@ -78,7 +78,7 @@ module Apartment
   				end
   			end
       end
-  	  
+      
       #   Reset schema search path to the default schema_search_path
       # 
       #   @return {String} default schema search path

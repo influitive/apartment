@@ -23,10 +23,13 @@ describe Apartment::Adapters::PostgresqlAdapter do
     before do
       Apartment.use_postgres_schemas = true
       subject.create(schema)
+      subject.create(schema2)
     end
   
     after do
-      Apartment::Test.drop_schema(schema)
+      # sometimes we manually drop these schemas in testing, dont' care if we can't drop hence rescue
+      subject.drop(schema) rescue true 
+      subject.drop(schema2) rescue true
     end
     
     describe "#create" do
@@ -48,7 +51,6 @@ describe Apartment::Adapters::PostgresqlAdapter do
     describe "#drop" do
 
       it "should delete the database" do
-        subject.create schema2
         subject.switch schema    # can't drop db we're currently connected to, ensure these are different
         subject.drop schema2
 
@@ -73,6 +75,16 @@ describe Apartment::Adapters::PostgresqlAdapter do
       it "should reset" do
         subject.process(schema)
         ActiveRecord::Base.connection.schema_search_path.should == @schema_search_path
+      end
+      
+      # We're often finding when using Apartment in tests, the `current_database` (ie the previously attached to schema)
+      # gets dropped, but process will try to return to that schema in a test.  We should just reset if it doesnt exist
+      it "should not throw exception if current_database (schema) is no longer accessible" do
+        subject.switch(schema2)
+        
+        expect {
+          subject.process(schema){ subject.drop(schema2) }
+        }.to_not raise_error(Apartment::SchemaNotFound)
       end
     end
     

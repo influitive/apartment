@@ -65,6 +65,7 @@ namespace :mysql do
     
 end
 
+# TODO clean this up
 def config
   Apartment::Test.config['connections']
 end
