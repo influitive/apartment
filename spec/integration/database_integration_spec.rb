@@ -26,7 +26,7 @@ describe Apartment::Database do
       
       it "should process model exclusions" do
         Apartment.configure do |config|
-          config.excluded_models = [Company]
+          config.excluded_models = ["Company"]
         end
         
         Apartment::Database.init
@@ -162,7 +162,7 @@ describe Apartment::Database do
           
           before do
             Apartment.configure do |config|
-              config.excluded_models = [Company]
+              config.excluded_models = ["Company"]
             end
             Apartment::Database.init
           end

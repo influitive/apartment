@@ -46,6 +46,21 @@ describe Apartment::Adapters::PostgresqlAdapter do
       it "should reset connection when finished" do
         ActiveRecord::Base.connection.schema_search_path.should_not == schema
       end
+      
+      it "should yield to block if passed" do
+        Apartment::Test.migrate   # ensure we have latest schema in the public 
+        subject.drop(schema2) # so we don't get errors on creation
+        
+        @count = 0  # set our variable so its visible in and outside of blocks
+        
+        subject.create(schema2) do
+          @count = User.count
+          ActiveRecord::Base.connection.schema_search_path.should == schema2
+          User.create
+        end
+        
+        subject.process(schema2){ User.count.should == @count + 1 }
+      end
     end
     
     describe "#drop" do

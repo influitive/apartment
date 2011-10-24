@@ -27,6 +27,8 @@ module Apartment
 
           # Seed data if appropriate
           seed_data if Apartment.seed_after_create
+          
+          yield if block_given?
   			end
   		end
       
