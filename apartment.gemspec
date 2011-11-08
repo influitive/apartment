@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
   
-  s.add_dependency 'rails', '~> 3.0.10'   # must be >= 3.0.10 due to poor schema support pre 3.0.10, but < 3.1 because it hasn't been fully tested yet
+  s.add_dependency 'rails', '~> 3.1.1'   # must be >= 3.0.10 due to poor schema support pre 3.0.10, but < 3.1 because it hasn't been fully tested yet
   s.add_development_dependency 'rake', '~> 0.8.7'
   s.add_development_dependency 'sqlite3'
   s.add_development_dependency 'rspec', '~> 2.6.0'

@@ -18,6 +18,7 @@ describe "apartment rake tasks" do
   
   after do
     Rake.application = nil
+    ENV['VERSION'] = nil    # linux users reported env variable carrying on between tests
   end
   
   let(:version){ '1234' }

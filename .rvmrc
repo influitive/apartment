@@ -1,1 +1,1 @@
-rvm 1.9.2@apartment
+rvm --create ruby-1.9.2-p180@apartment

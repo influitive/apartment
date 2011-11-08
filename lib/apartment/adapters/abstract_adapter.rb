@@ -19,18 +19,18 @@ module Apartment
       # 
       #   @param {String} database Database name
       # 
-  		def create(database)
-  		  create_database(database)
+      def create(database)
+        create_database(database)
 
-  			process(database) do
-    			import_database_schema
+        process(database) do
+          import_database_schema
 
           # Seed data if appropriate
           seed_data if Apartment.seed_after_create
           
           yield if block_given?
-  			end
-  		end
+        end
+      end
       
       #   Get the current database name
       #   
