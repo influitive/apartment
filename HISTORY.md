@@ -1,3 +1,9 @@
+# 0.13.1
+  * Nov 8, 2011
+  
+  - Reset prepared statement cache for rails 3.1.1 before switching dbs when using postgresql schemas
+    - Only necessary until the next release which will be more schema aware
+
 # 0.13.0
   * Oct 25, 2011
   
