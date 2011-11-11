@@ -1,12 +1,12 @@
 require 'rails'
 
 module Apartment
-	class Railtie < Rails::Railtie
-	  
+  class Railtie < Rails::Railtie
+    
     # Set up our default config options
     # Do this before the app initializers run so we don't override custom settings
-	  config.before_initialize do
-	    Apartment.configure do |config|
+    config.before_initialize do
+      Apartment.configure do |config|
         config.excluded_models = []
         config.use_postgres_schemas = true
         config.database_names = []
@@ -21,17 +21,17 @@ module Apartment
     config.to_prepare do
       Apartment::Database.init
     end
-	  
-		rake_tasks do
-			load 'tasks/apartment.rake'
-		end
-		
+    
+    rake_tasks do
+      load 'tasks/apartment.rake'
+    end
+    
     # The following initializers are a workaround to the fact that I can't properly hook into the rails reloader
     # Note this is technically valid for any environment where cache_classes is false, for us, it's just development
     if Rails.env.development?
       
       # Apartment::Reloader is middleware to initialize things properly on each request to dev
-  		initializer 'apartment.init' do |app|
+      initializer 'apartment.init' do |app|
         app.config.middleware.use "Apartment::Reloader"
       end
     
@@ -42,5 +42,5 @@ module Apartment
       
     end
     
-	end
+  end
 end

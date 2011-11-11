@@ -3,15 +3,15 @@ require 'active_support/core_ext/module/delegation'
 module Apartment
   
   #   The main entry point to Apartment functions
-	module Database
-	  
-	  extend self
+  module Database
+    
+    extend self
 
     delegate :create, :current_database, :process, :process_excluded_models, :reset, :seed, :switch, :to => :adapter
 
     #   Initialize Apartment config options such as excluded_models
     # 
-	  def init
+    def init
       process_excluded_models
     end
     
@@ -20,10 +20,10 @@ module Apartment
     #   @return {subclass of Apartment::AbstractAdapter}
     # 
     def adapter
-	    @adapter ||= begin
-		    adapter_method = "#{config[:adapter]}_adapter"
-	    
-		    begin
+      @adapter ||= begin
+        adapter_method = "#{config[:adapter]}_adapter"
+
+        begin
           require "apartment/adapters/#{adapter_method}"
         rescue LoadError => e
           raise "The adapter `#{config[:adapter]}` is not yet supported"
@@ -44,8 +44,8 @@ module Apartment
       @config = nil
     end
     
-	private
-	
+  private
+  
     #   Fetch the rails database configuration
     # 
     def config
@@ -53,5 +53,5 @@ module Apartment
     end
     
   end
-	
+  
 end

@@ -9,15 +9,15 @@ module Apartment
     #   Note that this has one MAJOR caveat.  Doing  `reload!` in the console in development WILL NOT run init again
     #   Thus, excluded models will not be processed again and will be queried from the current_schema rather than public.  
     #   I hope to fix this soon
-	  def initialize(app)
-	    @app = app
+    def initialize(app)
+      @app = app
     end
     
     def call(env)
       Database.init
       @app.call(env)
     end
-	  
+    
   end
   
 end

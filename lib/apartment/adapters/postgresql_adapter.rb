@@ -27,8 +27,8 @@ module Apartment
         super
       rescue PGError => e
         raise DatabaseNotFound, "Cannot find database #{environmentify(database)}"
-		  end
-		  
+      end
+      
     end
     
     # Separate Adapter for Postgresql when using schemas

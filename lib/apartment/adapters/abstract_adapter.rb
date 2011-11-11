@@ -49,7 +49,7 @@ module Apartment
         ActiveRecord::Base.connection.execute("DROP DATABASE #{environmentify(database)}" )
         
       rescue ActiveRecord::StatementInvalid => e
-  		  raise DatabaseNotFound, "The database #{environmentify(database)} cannot be found"
+        raise DatabaseNotFound, "The database #{environmentify(database)} cannot be found"
       end
       
       #   Prepend the environment if configured and the environment isn't already there
@@ -59,35 +59,35 @@ module Apartment
       # 
       def environmentify(database)
         Apartment.prepend_environment && !database.include?(Rails.env) ? "#{Rails.env}_#{database}" : database
-  		end
-  		
+      end
+
       #   Connect to db, do your biz, switch back to previous db
       # 
       #   @param {String?} database Database or schema to connect to
       # 
       def process(database = nil)
         current_db = current_database
-		    switch(database)
-		    yield if block_given?
-		    
-		  ensure
-  		  switch(current_db) rescue reset
-	    end
-	    
-	    #   Establish a new connection for each specific excluded model
+        switch(database)
+        yield if block_given?
+
+      ensure
+        switch(current_db) rescue reset
+      end
+
+      #   Establish a new connection for each specific excluded model
       # 
       def process_excluded_models
         # All other models will shared a connection (at ActiveRecord::Base) and we can modify at will
-  	    Apartment.excluded_models.each do |excluded_model|
-  	      # Note that due to rails reloading, we now take string references to classes rather than
+        Apartment.excluded_models.each do |excluded_model|
+          # Note that due to rails reloading, we now take string references to classes rather than
           # actual object references.  This way when we contantize, we always get the proper class reference
           if excluded_model.is_a? Class
             warn "[Deprecation Warning] Passing class references to excluded models is now deprecated, please use a string instead"
             excluded_model = excluded_model.name
           end
           
-  				excluded_model.constantize.establish_connection @config
-  			end
+          excluded_model.constantize.establish_connection @config
+        end
       end
       
       #   Reset the database connection to the default
@@ -102,17 +102,17 @@ module Apartment
       # 
       def switch(database = nil)
         # Just connect to default db and return
-  			return reset if database.nil?
+        return reset if database.nil?
 
         connect_to_new(database)
-  		end
+      end
 
       #   Load the rails seed file into the db
       #   
-  		def seed_data
-  		  silence_stream(STDOUT){ load_or_abort("#{Rails.root}/db/seeds.rb") } # Don't log the output of seeding the db
+      def seed_data
+        silence_stream(STDOUT){ load_or_abort("#{Rails.root}/db/seeds.rb") } # Don't log the output of seeding the db
       end
-	    alias_method :seed, :seed_data
+      alias_method :seed, :seed_data
       
     protected
     
@@ -137,22 +137,22 @@ module Apartment
 
       rescue ActiveRecord::StatementInvalid => e
         raise DatabaseNotFound, "The database #{environmentify(database)} cannot be found."
-  	  end
+      end
       
       #   Import the database schema
       # 
-	    def import_database_schema
-	      ActiveRecord::Schema.verbose = false    # do not log schema load output.
-	      load_or_abort("#{Rails.root}/db/schema.rb")
-	    end
-	    
-	    #   Return a new config that is multi-tenanted
+      def import_database_schema
+        ActiveRecord::Schema.verbose = false    # do not log schema load output.
+        load_or_abort("#{Rails.root}/db/schema.rb")
+      end
+      
+      #   Return a new config that is multi-tenanted
       # 
       def multi_tenantify(database)
-  			@config.clone.tap do |config|
-  			  config[:database] = environmentify(database)
-			  end
-  		end
+        @config.clone.tap do |config|
+          config[:database] = environmentify(database)
+        end
+      end
       
       #   Load a file or abort if it doesn't exists
       # 
@@ -166,9 +166,9 @@ module Apartment
       
       #   Remove all non-alphanumeric characters
       # 
-	    def sanitize(database)
-	      warn "[Deprecation Warning] Sanitize is no longer used, client should ensure proper database names"
-	      database.gsub(/[\W]/,'')
+      def sanitize(database)
+        warn "[Deprecation Warning] Sanitize is no longer used, client should ensure proper database names"
+        database.gsub(/[\W]/,'')
       end
       
     end
