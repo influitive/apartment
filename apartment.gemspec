@@ -19,14 +19,14 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
   
-  s.add_dependency 'rails', '>= 3.0.10'
+  s.add_dependency 'rails', '~> 3.0.10'
   s.add_development_dependency 'rake', '~> 0.8.7'
   s.add_development_dependency 'sqlite3'
   s.add_development_dependency 'rspec', '~> 2.6.0'
   s.add_development_dependency 'rspec-rails', '~> 2.6.1'
   s.add_development_dependency 'capybara', '1.0.0'
   s.add_development_dependency 'pg', '~> 0.11.0'
-  s.add_development_dependency 'mysql2', '0.2.7'
+  s.add_development_dependency 'mysql2', '< 0.3'
   s.add_development_dependency "silent-postgres", "~> 0.1.1"
   s.add_development_dependency 'delayed_job', '~> 2.1.4'
 end
