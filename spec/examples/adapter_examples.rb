@@ -13,9 +13,8 @@ shared_examples_for "an apartment adapter" do
   end
   
   after(:all) do
-    # This is lame, I had to remove cached classes and this triggers a code reload so that each example_Group
-    # regenerates its table_name quoting, otherwise switching adapters fails with invalid sql
-    ActiveRecord::Base.descendants.each{ |klass| klass.reset_table_name; klass.reset_column_information }
+    # This is lame, trying to clear out column name caching as the quoting messes up when switching adapters
+    # ActiveRecord::Base.descendants.each{ |klass| klass.reset_table_name; klass.reset_column_information }
   end
     
   before do
