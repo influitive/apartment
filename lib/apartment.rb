@@ -13,11 +13,7 @@ module Apartment
     
     # Be careful not to use `return` here so both Proc and lambda can be used without breaking
     def database_names
-      if @database_names.respond_to?(:call)
-        @database_names.call
-      else
-        @database_names
-      end
+      @database_names.respond_to?(:call) ? @database_names.call : @database_names
     end
     
     # Default to none

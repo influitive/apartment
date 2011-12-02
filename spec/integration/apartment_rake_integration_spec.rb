@@ -3,10 +3,6 @@ require 'rake'
 
 describe "apartment rake tasks" do
   
-  before :all do
-    Apartment::Test.migrate   # ensure we have latest schema in the public 
-  end
-  
   before do
     @rake = Rake::Application.new
     Rake.application = @rake

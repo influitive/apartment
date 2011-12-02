@@ -22,6 +22,10 @@ RSpec.configure do |config|
   
   config.include RSpec::Integration::CapybaraSessions, :type => :request
   
+  config.before(:suite) do
+    require Rails.root.join('db','schema')    # Ensure we have some of our test tables loaded
+  end
+  
   config.before(:all) do
     # Ensure that each test starts with a clean connection
     # Necessary as some tests will leak things like current_schema into the next test

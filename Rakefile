@@ -17,12 +17,6 @@ namespace :spec do
     end
   end
   
-  namespace :unit do
-    RSpec::Core::RakeTask.new(:adapters) do |spec|
-      spec.pattern = "spec/unit/adapters/**/*_spec.rb"
-    end
-  end
-
 end
 
 task :default => :spec
