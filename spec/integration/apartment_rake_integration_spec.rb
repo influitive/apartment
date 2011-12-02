@@ -7,6 +7,10 @@ describe "apartment rake tasks" do
     @rake = Rake::Application.new
     Rake.application = @rake
     Dummy::Application.load_tasks
+
+    # stub out rails tasks (that modify the schema.rb)
+    Rake::Task.define_task('db:migrate')
+    Rake::Task.define_task('db:rollback')
   end
   
   after do
@@ -21,23 +25,25 @@ describe "apartment rake tasks" do
   end
 
   context "with x number of databases" do
+    
+    let(:x){ 1 + rand(5) }    # random number of dbs to create
+    let(:db_names){ x.times.map{|y| "database_#{y}" } }
+
     before do
-      @db_names = []
-      @x = 1 + rand(5).times do |x| 
-        @db_names << db_name = "schema_#{x}"
-        Apartment::Database.create db_name
+      db_names.collect do |db_name|
+        Apartment::Database.create(db_name)
         Company.create :database => db_name
       end
     end
     
     after do
-      @db_names.each{ |db| Apartment::Test.drop_schema(db) }
+      db_names.each{ |db| Apartment::Database.drop(db) }
       Company.delete_all
     end
     
     describe "#migrate" do
       it "should migrate all databases" do
-        Apartment::Migrator.should_receive(:migrate).exactly(@db_names.length).times
+        Apartment::Migrator.should_receive(:migrate).exactly(db_names.length).times
         
         @rake['apartment:migrate'].invoke
       end
@@ -45,7 +51,7 @@ describe "apartment rake tasks" do
     
     describe "#rollback" do
       it "should rollback all dbs" do
-        @db_names.each do |name|
+        db_names.each do |name|
           Apartment::Migrator.should_receive(:rollback).with(name, anything)
         end
         
@@ -55,7 +61,7 @@ describe "apartment rake tasks" do
     
     describe "apartment:seed" do
       it "should seed all databases" do
-        Apartment::Database.should_receive(:seed).exactly(@db_names.length).times
+        Apartment::Database.should_receive(:seed).exactly(db_names.length).times
         
         @rake['apartment:seed'].invoke
       end

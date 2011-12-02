@@ -23,7 +23,7 @@ RSpec.configure do |config|
   config.include RSpec::Integration::CapybaraSessions, :type => :request
   
   config.before(:suite) do
-    require Rails.root.join('db','schema')    # Ensure we have some of our test tables loaded
+    load Rails.root.join('db','schema.rb')    # Ensure we have some of our test tables loaded
   end
   
   config.before(:all) do

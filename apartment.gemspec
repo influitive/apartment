@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec-rails', '~> 2.6.1'
   s.add_development_dependency 'capybara', '1.0.0'
   s.add_development_dependency 'pg', '~> 0.11.0'
-  s.add_development_dependency 'mysql2', '0.3.7'
+  s.add_development_dependency 'mysql2', '~> 0.3.7'
   s.add_development_dependency "silent-postgres", "~> 0.1.1"
   s.add_development_dependency 'delayed_job', '~> 2.1.4'
 end

@@ -137,7 +137,7 @@ In order to make ActiveRecord models play nice with DJ and Apartment, include `A
       end
     end
 
-### Development
+## Development
 
 * The Local setup for development assumes that a root user with no password exists for both mysql and postgresl
 * Rake tasks (see the Rakefile) will help you setup your dbs necessary to run tests
