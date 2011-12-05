@@ -1,5 +1,5 @@
 class CreateDummyModels < ActiveRecord::Migration
-  def self.up
+  def change
     create_table :companies do |t|
       t.boolean :dummy
       t.string :database
@@ -28,9 +28,4 @@ class CreateDummyModels < ActiveRecord::Migration
     
   end
 
-  def self.down
-    drop_table :companies
-    drop_table :users
-    drop_table :delayed_jobs
-  end
 end
