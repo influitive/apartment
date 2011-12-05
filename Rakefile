@@ -5,7 +5,7 @@ Bundler::GemHelper.install_tasks
 require "rspec"
 require "rspec/core/rake_task"
 
-RSpec::Core::RakeTask.new(:spec => %w{postgres:drop_db postgres:build_db mysql:drop_db mysql:build_db}) do |spec|
+RSpec::Core::RakeTask.new(:spec => %w{postgres:drop_db postgres:build_db}) do |spec|
   spec.pattern = "spec/**/*_spec.rb"
 end
 
