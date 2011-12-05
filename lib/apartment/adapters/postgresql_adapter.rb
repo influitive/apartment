@@ -93,7 +93,6 @@ module Apartment
       # 
       def connect_to_new(database = nil)
         return reset if database.nil?
-        ActiveRecord::Base.connection.clear_cache!
         ActiveRecord::Base.connection.schema_search_path = database
 
       rescue ActiveRecord::StatementInvalid => e

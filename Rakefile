@@ -5,24 +5,18 @@ Bundler::GemHelper.install_tasks
 require "rspec"
 require "rspec/core/rake_task"
 
-RSpec::Core::RakeTask.new(:spec) do |spec|
+RSpec::Core::RakeTask.new(:spec => %w{postgres:drop_db postgres:build_db mysql:drop_db mysql:build_db}) do |spec|
   spec.pattern = "spec/**/*_spec.rb"
 end
 
 namespace :spec do
   
   [:tasks, :unit, :adapters, :integration].each do |type|
-    RSpec::Core::RakeTask.new(type) do |spec|
+    RSpec::Core::RakeTask.new(type => :spec) do |spec|
       spec.pattern = "spec/#{type}/**/*_spec.rb"
     end
   end
   
-  namespace :unit do
-    RSpec::Core::RakeTask.new(:adapters) do |spec|
-      spec.pattern = "spec/unit/adapters/**/*_spec.rb"
-    end
-  end
-
 end
 
 task :default => :spec
@@ -60,6 +54,7 @@ namespace :mysql do
   desc "drop the MySQL test database"
   task :drop_db do
     puts "dropping database #{my_config['database']}"
+    # TODO how can I run this and force answering y to the "are you sure?"
     %x{ mysqladmin -u root drop #{my_config['database']} }
   end
     

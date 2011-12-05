@@ -1,16 +1,6 @@
 # Apartment
 *Multitenancy for Rails 3*
 
-> IMPORTANT! While I will do everything possible to get Apartment working for Rails 3.1, I haven't, as of yet, had this opportunity.  
-
-> There have been significant changes in the adapters such as prepared statements that might cause some issues.  
-
-> If anyone is successfully using Apartment with 3.1 please let me know, but please ensure that you're testing data integrity properly (ie. that queries are made in the right schema) as prepared_statements
-> could really throw a wrench in that one.
-
-> I know for a fact that Rails 3.1 missed a patch to make postgresql more schema aware, but it seems to have made it into Rails 3.1.1.  So at the very least, use 3.1.1
-
-
 Apartment provides tools to help you deal with multiple databases in your Rails
 application. If you need to have certain data sequestered based on account or company,
 but still allow some data to exist in a common database, Apartment can help.
@@ -129,11 +119,7 @@ from `Apartment.database_names`
 
 ### Delayed::Job
 
-In Apartment's current state, it doesn't seem to queue jobs properly using DJ.  For whatever reason, DJ jobs are created in the current schema, even though the DJ 
-is part of the ignored models.  I have to look into this further, but until then use `Apartment::Delayed::Job.enqueue` to ensure that queues are placed in the public schema
-
-In order to make ActiveRecord models play nice with DJ and Apartment, include `Apartment::Delayed::Requirements` in any model that is being serialized by DJ.  Also ensure
-that a `database` attribute is set on this model *before* it is serialized, to ensure that when it is fetched again, it is done so in the proper Apartment db context.  For example:
+In order to make ActiveRecord models play nice with DJ and Apartment, include `Apartment::Delayed::Requirements` in any model that is being serialized by DJ.  Also ensure that the `database` attribute (provided by Apartment::Delayed::Requirements) is set on this model *before* it is serialized, to ensure that when it is fetched again, it is done so in the proper Apartment db context.  For example:
 
     class SomeModel < ActiveRecord::Base
       include Apartment::Delayed::Requirements
@@ -151,8 +137,10 @@ that a `database` attribute is set on this model *before* it is serialized, to e
       end
     end
 
-## Contributing
+## Development
 
+* The Local setup for development assumes that a root user with no password exists for both mysql and postgresl
+* Rake tasks (see the Rakefile) will help you setup your dbs necessary to run tests
 * Please issue pull requests to the `development` branch.  All development happens here, master is used for releases
 * Ensure that your code is accompanied with tests.  No code will be merged without tests
 
