@@ -8,9 +8,11 @@ describe "apartment rake tasks" do
     Rake.application = @rake
     Dummy::Application.load_tasks
 
-    # stub out rails tasks (that modify the schema.rb)
-    Rake::Task.define_task('db:migrate')
-    Rake::Task.define_task('db:rollback')
+    # somehow this misc.rake file gets lost in the shuffle
+    # it defines a `rails_env` task that our db:migrate depends on
+    # No idea why, but during the tests, we somehow lose this tasks, so we get an error when testing migrations
+    # This is STUPID!
+    load "rails/tasks/misc.rake"    
   end
   
   after do
@@ -56,6 +58,7 @@ describe "apartment rake tasks" do
         end
         
         @rake['apartment:rollback'].invoke
+        @rake['apartment:migrate'].invoke   # migrate again so that our next test 'seed' can run (requires migrations to be complete)
       end
     end
     

@@ -1,5 +1,5 @@
 class CreateDummyModels < ActiveRecord::Migration
-  def change
+  def self.up
     create_table :companies do |t|
       t.boolean :dummy
       t.string :database
@@ -26,6 +26,12 @@ class CreateDummyModels < ActiveRecord::Migration
 
      add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
     
+  end
+
+  def self.down
+    drop_table :companies
+    drop_table :users
+    drop_table :delayed_jobs
   end
 
 end
