@@ -17,7 +17,10 @@ Add the following to your Gemfile:
 That's all you need to set up the Apartment libraries. If you want to switch databases 
 on a per-user basis, look under "Usage - Switching databases per request", below.
 
-*NOTE: If using [postgresl schemas](http://www.postgresql.org/docs/9.0/static/ddl-schemas.html) you must use Rails >= 3.0.10, it contains a [patch](https://github.com/rails/rails/pull/1607) that has better postgresql schema support*
+> NOTE: If using [postgresl schemas](http://www.postgresql.org/docs/9.0/static/ddl-schemas.html) you must use:
+>
+> * for Rails 3.0.x: _Rails ~> 3.0.10_, it contains a [patch](https://github.com/rails/rails/pull/1607) that has better postgresql schema support
+> * for Rails 3.1.x: _Rails ~> 3.1.2_, it contains a [patch](https://github.com/rails/rails/pull/3232) that makes prepared statements work with multiple schemas
 
 ## Usage
 
