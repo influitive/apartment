@@ -4,10 +4,10 @@ connections:
     database: apartment_postgresql_test
     min_messages: WARNING
     username: root
-    password: 
+    password:
 
   mysql:
     adapter: mysql2
     database: apartment_mysql_test
     username: root
-    password: 
+    password:
