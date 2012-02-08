@@ -7,8 +7,8 @@ Gem::Specification.new do |s|
   s.version = Apartment::VERSION
 
   s.authors = ["Ryan Brunner", "Brad Robertson"]
-  s.summary = %q{A Ruby gem for managing database multitenancy in Rails applications}
-  s.description = %q{Apartment allows Rails applications to deal with database multitenancy}
+  s.summary = %q{A Ruby gem for managing database multitenancy in Rack applications using ActiveRecord}
+  s.description = %q{Apartment allows applications using ActiveRecord to deal with database multitenancy}
   s.email = %w{ryan@ryanbrunner.com bradleyrobertson@gmail.com}
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {spec}/*`.split("\n")
@@ -19,9 +19,10 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.7}
 
   s.add_dependency 'activerecord',    '~> 3.0.10'   # must be >= 3.0.10 due to poor schema support pre 3.0.10
-  s.add_dependency 'actionpack',  '~> 3.0.10'   # must be >= 3.0.10 due to poor schema support pre 3.0.10
+  s.add_dependency 'rack',            '~> 1.2.5'
 
   s.add_development_dependency 'rake',            '~> 0.8.7'
+  s.add_development_dependency 'rails',           '~> 3.0.10'
   s.add_development_dependency 'sqlite3'
   s.add_development_dependency 'rspec',           '~> 2.6.0'
   s.add_development_dependency 'rspec-rails',     '~> 2.6.1'
