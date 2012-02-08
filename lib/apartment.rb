@@ -3,8 +3,11 @@ require 'apartment/railtie' if defined?(Rails)
 module Apartment
 
   class << self
-    attr_accessor :use_postgres_schemas, :seed_after_create, :prepend_environment
-    attr_writer :database_names, :excluded_models
+    ACCESSOR_METHODS = [:use_postgres_schemas, :seed_after_create, :prepend_environment]
+    WRITER_METHODS = [:database_names, :excluded_models, :load_schema]
+
+    attr_accessor(*ACCESSOR_METHODS)
+    attr_writer(*WRITER_METHODS)
 
     # configure apartment with available options
     def configure
@@ -23,6 +26,16 @@ module Apartment
     # Default to none
     def excluded_models
       @excluded_models || []
+    end
+
+    # Defaults to true if not set
+    def load_schema
+      @load_schema != false
+    end
+
+    # Reset all the config for Apartment
+    def reset
+      (ACCESSOR_METHODS + WRITER_METHODS).each{|method| instance_variable_set(:"@#{method}", nil) }
     end
 
   end
