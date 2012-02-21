@@ -1,3 +1,8 @@
+# 0.14.3
+  * Feb 21, 2012
+
+  - Fix yaml serialization of non DJ models
+
 # 0.14.2
   * Feb 21, 2012
 

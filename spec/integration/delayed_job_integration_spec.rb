@@ -30,31 +30,6 @@ describe Apartment::Delayed do
     Apartment::Test.reset
   end
 
-  describe Apartment::Delayed::Job do
-    context "#enqueue" do
-
-      before do
-        Apartment::Database.reset
-      end
-
-      it "should queue up jobs in the public schema" do
-        dj_count = Delayed::Job.count
-        Apartment::Database.switch database
-        Apartment::Delayed::Job.enqueue FakeDjClass.new
-        Apartment::Database.reset
-
-        Delayed::Job.count.should == dj_count + 1
-      end
-
-      it "should not queue jobs in the current schema" do
-        Apartment::Database.switch database
-        expect {
-          Apartment::Delayed::Job.enqueue FakeDjClass.new
-        }.to_not change(Delayed::Job, :count)        # because we will still be on the `database` schema, not public
-      end
-    end
-  end
-
   describe Apartment::Delayed::Requirements do
 
     before do

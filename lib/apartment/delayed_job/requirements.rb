@@ -1,4 +1,4 @@
-require 'apartment/delayed_job/enqueue'
+require 'apartment/delayed_job/active_record'   # ensure that our AR hooks are loaded when queueing
 
 module Apartment
   module Delayed
