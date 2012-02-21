@@ -12,6 +12,15 @@ module ActiveRecord
       raise Delayed::DeserializationError
     end
 
+    # Rails > 3.0 now uses encode_with to determine what to encode with yaml
+    # @override to include database attribute
+    def encode_with_with_database(coder)
+      coder['database'] = database
+      encode_with_without_database(coder)
+    end
+    alias_method_chain :encode_with, :database
+
+    # Remain backwards compatible with old yaml serialization
     def to_yaml_properties
       ['@attributes', '@database']    # add in database attribute for serialization
     end
