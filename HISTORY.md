@@ -1,3 +1,8 @@
+# 0.14.2
+  * Feb 21, 2012
+
+  - Fix Delayed::Job yaml encoding with Rails > 3.0.x
+
 # 0.14.1
   * Dec 13, 2011
 
