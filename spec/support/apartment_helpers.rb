@@ -8,6 +8,12 @@ module Apartment
       Apartment.use_postgres_schemas = nil
     end
     
+    @x = 0
+    def next_db
+      @x += 1
+      "db_#{@x}"
+    end
+    
     def drop_schema(schema)
       ActiveRecord::Base.silence{ ActiveRecord::Base.connection.execute("DROP SCHEMA IF EXISTS #{schema} CASCADE") } rescue true
     end

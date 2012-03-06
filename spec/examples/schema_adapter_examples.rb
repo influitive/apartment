@@ -3,8 +3,8 @@ require 'spec_helper'
 shared_examples_for "a schema based apartment adapter" do
   include Apartment::Spec::AdapterRequirements
 
-  let(:schema1){ 'schema1' }
-  let(:schema2){ 'schema2' }
+  let(:schema1){ Apartment::Test.next_db }
+  let(:schema2){ Apartment::Test.next_db }
 
   before do
     ActiveRecord::Base.establish_connection config
