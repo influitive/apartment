@@ -122,8 +122,8 @@ from `Apartment.database_names`
 
 ### Delayed::Job
 
-If using Rails ~> 3.2, you *must* use `delayed_job ~> 3.0`.  It is more set up for Rails 3 plus has some major changes that affect the serialization of models.
-Furthermore, I haven't been able to get `psych` working whatsoever as the YAML parser, so to get things to work properly, you must set the parser to `syck` *before* requiring `delayed_job`
+If using Rails ~> 3.2, you *must* use `delayed_job ~> 3.0`.  It has better Rails 3 support plus has some major changes that affect the serialization of models.
+I haven't been able to get `psych` working whatsoever as the YAML parser, so to get things to work properly, you must explicitly set the parser to `syck` *before* requiring `delayed_job`
 This can be done in the `boot.rb` of your rails config *just above* where Bundler requires the gems from the Gemfile.  It will look something like:
 
     require 'rubygems'

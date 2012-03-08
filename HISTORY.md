@@ -1,3 +1,8 @@
+# 0.14.4
+  * March 8, 2012
+
+  - Delayed::Job Hooks now return to the previous database, rather than resetting
+
 # 0.14.3
   * Feb 21, 2012
 
