@@ -1,6 +1,6 @@
 require 'spec_helper'
 require 'delayed_job'
-Delayed::Worker.guess_backend
+require 'delayed_job_active_record'
 
 describe Apartment::Delayed do
 
@@ -69,6 +69,19 @@ describe Apartment::Delayed do
         user = YAML.load user_yaml
         user.database.should == database
       end
+    end
+  end
+
+  describe Apartment::Delayed::Job::Hooks do
+
+    let(:worker){ Delayed::Worker.new }
+    let(:job){ Delayed::Job.enqueue User.new }
+
+    it "should switch to previous db" do
+      Apartment::Database.switch database
+      worker.run(job)
+
+      Apartment::Database.current_database.should == database
     end
   end
 

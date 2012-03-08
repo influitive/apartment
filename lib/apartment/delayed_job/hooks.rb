@@ -12,11 +12,12 @@ module Apartment
         attr_accessor :database
 
         def before(job)
+          @_current_database = Apartment::Database.current_database
           Apartment::Database.switch(job.payload_object.database) if job.payload_object.database
         end
 
         def after
-          Apartment::Database.reset
+          Apartment::Database.switch(@_current_database)
         end
 
       end

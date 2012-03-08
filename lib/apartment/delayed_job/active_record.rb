@@ -8,8 +8,8 @@ module ActiveRecord
       Apartment::Database.process(val['database']) do
         klass.find(val['attributes']['id'])
       end
-    rescue ActiveRecord::RecordNotFound
-      raise Delayed::DeserializationError
+    rescue ActiveRecord::RecordNotFound => e
+      raise Delayed::DeserializationError,  e.message
     end
 
     # Rails > 3.0 now uses encode_with to determine what to encode with yaml
