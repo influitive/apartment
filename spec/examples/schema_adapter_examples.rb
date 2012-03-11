@@ -21,6 +21,20 @@ shared_examples_for "a schema based apartment adapter" do
     subject.drop(schema2) rescue true
     ActiveRecord::Base.clear_all_connections!
   end
+  
+  describe "#init" do
+    
+    it "should process model exclusions" do
+      Apartment.configure do |config|
+        config.excluded_models = ["Company"]
+      end
+      
+      Apartment::Database.init
+      
+      Company.table_name.should == "public.companies"
+    end
+    
+  end
 
   #
   #   Creates happen already in our before_filter
@@ -34,6 +48,10 @@ shared_examples_for "a schema based apartment adapter" do
     it "should load schema.rb to new schema" do
       connection.schema_search_path = schema1
       connection.tables.should include('companies')
+    end
+    
+    it "should reset connection when finished" do
+      connection.schema_search_path.should_not == schema
     end
 
     it "should yield to block if passed" do
@@ -49,7 +67,14 @@ shared_examples_for "a schema based apartment adapter" do
 
       subject.process(schema2){ User.count.should == @count + 1 }
     end
-
+  end
+  
+  describe "#drop" do
+    it "should raise an error for unkown database" do
+      expect {
+        subject.drop "unknown_database"
+      }.to raise_error(Apartment::SchemaNotFound)
+    end
   end
 
   describe "#process" do

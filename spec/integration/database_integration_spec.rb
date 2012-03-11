@@ -22,19 +22,7 @@ describe Apartment::Database do
       Apartment::Test.reset
     end
     
-    describe "#init" do
-      
-      it "should process model exclusions" do
-        Apartment.configure do |config|
-          config.excluded_models = ["Company"]
-        end
-        
-        Apartment::Database.init
-        
-        Company.table_name.should == "public.companies"
-      end
-      
-    end
+    
     
     describe "#adapter" do
       before do

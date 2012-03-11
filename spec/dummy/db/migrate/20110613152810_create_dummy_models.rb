@@ -4,13 +4,13 @@ class CreateDummyModels < ActiveRecord::Migration
       t.boolean :dummy
       t.string :database
     end
-    
+
     create_table :users do |t|
       t.string :name
       t.datetime :birthdate
       t.string :sex
      end
-     
+
      create_table :delayed_jobs do |t|
        t.integer  :priority,   :default => 0
        t.integer  :attempts,   :default => 0
@@ -22,10 +22,11 @@ class CreateDummyModels < ActiveRecord::Migration
        t.string   :locked_by
        t.datetime :created_at
        t.datetime :updated_at
+       t.string   :queue
      end
 
      add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
-    
+
   end
 
   def self.down

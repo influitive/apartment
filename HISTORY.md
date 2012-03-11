@@ -1,3 +1,18 @@
+# 0.14.4
+  * March 8, 2012
+
+  - Delayed::Job Hooks now return to the previous database, rather than resetting
+
+# 0.14.3
+  * Feb 21, 2012
+
+  - Fix yaml serialization of non DJ models
+
+# 0.14.2
+  * Feb 21, 2012
+
+  - Fix Delayed::Job yaml encoding with Rails > 3.0.x
+
 # 0.14.1
   * Dec 13, 2011
 
