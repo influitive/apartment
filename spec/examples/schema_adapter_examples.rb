@@ -2,26 +2,11 @@ require 'spec_helper'
 
 shared_examples_for "a schema based apartment adapter" do
   include Apartment::Spec::AdapterRequirements
-
-  let(:schema1){ Apartment::Test.next_db }
-  let(:schema2){ Apartment::Test.next_db }
-
-  before do
-    ActiveRecord::Base.establish_connection config
-    subject.create(schema1)
-    subject.create(schema2)
-  end
-
-  let!(:connection){ ActiveRecord::Base.connection }
-  let!(:schema_search_path){ connection.schema_search_path }
-
-  after do
-    # sometimes we manually drop these schemas in testing, don't care if we can't drop hence rescue
-    subject.drop(schema1) rescue true
-    subject.drop(schema2) rescue true
-    ActiveRecord::Base.clear_all_connections!
-  end
   
+  let(:schema1){ db1 }
+  let(:schema2){ db2 }
+  let(:public_schema){ Apartment::Database.process{ connection.schema_search_path } }
+
   describe "#init" do
     
     it "should process model exclusions" do
@@ -40,10 +25,6 @@ shared_examples_for "a schema based apartment adapter" do
   #   Creates happen already in our before_filter
   #
   describe "#create" do
-
-    it "should create the new schema" do
-      database_names.should include(schema1)
-    end
 
     it "should load schema.rb to new schema" do
       connection.schema_search_path = schema1
@@ -68,7 +49,7 @@ shared_examples_for "a schema based apartment adapter" do
   end
   
   describe "#drop" do
-    it "should raise an error for unkown database" do
+    it "should raise an error for unknown database" do
       expect {
         subject.drop "unknown_database"
       }.to raise_error(Apartment::SchemaNotFound)
@@ -84,7 +65,7 @@ shared_examples_for "a schema based apartment adapter" do
 
     it "should reset" do
       subject.process(schema1)
-      connection.schema_search_path.should == schema_search_path
+      connection.schema_search_path.should == public_schema
     end
 
     # We're often finding when using Apartment in tests, the `current_database` (ie the previously attached to schema)
@@ -102,7 +83,7 @@ shared_examples_for "a schema based apartment adapter" do
     it "should reset connection" do
       subject.switch(schema1)
       subject.reset
-      connection.schema_search_path.should == schema_search_path
+      connection.schema_search_path.should == public_schema
     end
   end
 
@@ -114,7 +95,7 @@ shared_examples_for "a schema based apartment adapter" do
 
     it "should reset connection if database is nil" do
       subject.switch
-      connection.schema_search_path.should == schema_search_path
+      connection.schema_search_path.should == public_schema
     end
   end
 

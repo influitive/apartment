@@ -52,15 +52,6 @@ module Apartment
         raise DatabaseNotFound, "The database #{environmentify(database)} cannot be found"
       end
 
-      #   Prepend the environment if configured and the environment isn't already there
-      #
-      #   @param {String} database Database name
-      #   @return {String} database name with Rails environment *optionally* prepended
-      #
-      def environmentify(database)
-        Apartment.prepend_environment && !database.include?(Rails.env) ? "#{Rails.env}_#{database}" : database
-      end
-
       #   Connect to db, do your biz, switch back to previous db
       #
       #   @param {String?} database Database or schema to connect to
@@ -139,6 +130,15 @@ module Apartment
         raise DatabaseNotFound, "The database #{environmentify(database)} cannot be found."
       end
 
+      #   Prepend the environment if configured and the environment isn't already there
+      #
+      #   @param {String} database Database name
+      #   @return {String} database name with Rails environment *optionally* prepended
+      #
+      def environmentify(database)
+        Apartment.prepend_environment && !database.include?(Rails.env) ? "#{Rails.env}_#{database}" : database
+      end
+
       #   Import the database schema
       #
       def import_database_schema
@@ -162,13 +162,6 @@ module Apartment
         else
           abort %{#{file} doesn't exist yet}
         end
-      end
-
-      #   Remove all non-alphanumeric characters
-      #
-      def sanitize(database)
-        warn "[Deprecation Warning] Sanitize is no longer used, client should ensure proper database names"
-        database.gsub(/[\W]/,'')
       end
 
     end
