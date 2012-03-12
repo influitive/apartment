@@ -50,11 +50,7 @@ shared_examples_for "a schema based apartment adapter" do
       connection.tables.should include('companies')
     end
     
-    it "should reset connection when finished" do
-      connection.schema_search_path.should_not == schema
-    end
-
-    it "should yield to block if passed" do
+    it "should yield to block if passed and reset" do
       subject.drop(schema2) # so we don't get errors on creation
 
       @count = 0  # set our variable so its visible in and outside of blocks
@@ -64,6 +60,8 @@ shared_examples_for "a schema based apartment adapter" do
         connection.schema_search_path.should == schema2
         User.create
       end
+      
+      connection.schema_search_path.should_not == schema2
 
       subject.process(schema2){ User.count.should == @count + 1 }
     end
