@@ -5,7 +5,7 @@ shared_examples_for "a schema based apartment adapter" do
   
   let(:schema1){ db1 }
   let(:schema2){ db2 }
-  let(:public_schema){ Apartment::Database.process{ connection.schema_search_path } }
+  let(:public_schema){ default_database }
 
   describe "#init" do
     
@@ -18,7 +18,6 @@ shared_examples_for "a schema based apartment adapter" do
       
       Company.table_name.should == "public.companies"
     end
-    
   end
 
   #
@@ -53,7 +52,7 @@ shared_examples_for "a schema based apartment adapter" do
       expect {
         subject.drop "unknown_database"
       }.to raise_error(Apartment::SchemaNotFound)
-    end
+    end    
   end
 
   describe "#process" do
@@ -66,16 +65,6 @@ shared_examples_for "a schema based apartment adapter" do
     it "should reset" do
       subject.process(schema1)
       connection.schema_search_path.should == public_schema
-    end
-
-    # We're often finding when using Apartment in tests, the `current_database` (ie the previously attached to schema)
-    # gets dropped, but process will try to return to that schema in a test.  We should just reset if it doesnt exist
-    it "should not throw exception if current_database (schema) is no longer accessible" do
-      subject.switch(schema2)
-
-      expect {
-        subject.process(schema1){ subject.drop(schema2) }
-      }.to_not raise_error(Apartment::SchemaNotFound)
     end
   end
 
@@ -96,6 +85,12 @@ shared_examples_for "a schema based apartment adapter" do
     it "should reset connection if database is nil" do
       subject.switch
       connection.schema_search_path.should == public_schema
+    end
+    
+    it "should raise an error if schema is invalid" do
+      expect {
+        subject.switch 'unknown_schema'
+      }.to raise_error(Apartment::SchemaNotFound)
     end
   end
 

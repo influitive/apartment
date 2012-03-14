@@ -27,6 +27,10 @@ RSpec.configure do |config|
     # Necessary as some tests will leak things like current_schema into the next test
     ActiveRecord::Base.clear_all_connections!
   end
+  
+  config.after(:each) do
+    Apartment::Test.reset
+  end
 
 end
 

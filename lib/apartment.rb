@@ -16,7 +16,7 @@ module Apartment
       @database_names.respond_to?(:call) ? @database_names.call : @database_names
     end
 
-    # Default to none
+    # Default to empty array
     def excluded_models
       @excluded_models || []
     end

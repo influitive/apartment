@@ -18,12 +18,6 @@ describe Apartment::Database do
       @schema_search_path = ActiveRecord::Base.connection.schema_search_path
     end
     
-    after do
-      Apartment::Test.reset
-    end
-    
-    
-    
     describe "#adapter" do
       before do
         Apartment::Database.reload!

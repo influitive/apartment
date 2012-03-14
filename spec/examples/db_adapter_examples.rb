@@ -3,6 +3,8 @@ require 'spec_helper'
 shared_examples_for "a db based apartment adapter" do
   include Apartment::Spec::AdapterRequirements
   
+  let(:default_database){ subject.process{ ActiveRecord::Base.connection.current_database } }
+  
   describe "#init" do
     
     it "should process model exclusions" do
@@ -19,9 +21,16 @@ shared_examples_for "a db based apartment adapter" do
   describe "#drop" do
     it "should raise an error for unknown database" do
       expect {
-        subject.drop "unknown_database"
+        subject.drop 'unknown_database'
+      }.to raise_error(Apartment::DatabaseNotFound)
+    end
+  end  
+  
+  describe "#switch" do
+    it "should raise an error if database is invalid" do
+      expect {
+        subject.switch 'unknown_database'
       }.to raise_error(Apartment::DatabaseNotFound)
     end
   end
-  
 end

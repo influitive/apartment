@@ -13,7 +13,7 @@ module Apartment
         config.use_postgres_schemas = true
         config.database_names = []
         config.seed_after_create = false
-        config.prepend_environment = true
+        config.prepend_environment = false
       end
     end
 

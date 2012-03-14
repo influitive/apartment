@@ -22,15 +22,19 @@ module Apartment
         end
 
         after do
+          # Reset before dropping (can't drop a db you're connected to)
+          subject.reset
+
           # sometimes we manually drop these schemas in testing, don't care if we can't drop hence rescue
           subject.drop(db1) rescue true
           subject.drop(db2) rescue true
+          
           ActiveRecord::Base.clear_all_connections!
           Apartment::Database.reload!
         end
       end
 
-      %w{subject config database_names}.each do |method|
+      %w{subject config database_names default_database}.each do |method|
         define_method method do
           raise "You must define a `#{method}` method in your host group"
         end unless defined?(method)

@@ -6,12 +6,12 @@ module Apartment
     def reset
       Apartment.excluded_models = nil
       Apartment.use_postgres_schemas = nil
+      Apartment.seed_after_create = nil
     end
     
-    @x = 0
     def next_db
-      @x += 1
-      "db_#{@x}"
+      @x ||= 0
+      "db_#{@x += 1}"
     end
     
     def drop_schema(schema)
@@ -23,7 +23,7 @@ module Apartment
     end
     
     def load_schema
-      silence_stream(STDOUT){ load("#{Rails.root}/db/schema.rb") }
+      silence_stream(STDOUT){ load(Rails.root.join('db', 'schema.rb')) }
     end
     
     def migrate

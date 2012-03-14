@@ -2,35 +2,16 @@ require 'spec_helper'
 require 'apartment/adapters/mysql_adapter'
 
 describe Apartment::Adapters::MysqlAdapter do
-
-  before do
-    ActiveRecord::Base.establish_connection Apartment::Test.config['connections']['mysql']
-    @mysql = Apartment::Database.mysql_adapter Apartment::Test.config['connections']['mysql'].symbolize_keys
+  
+  let(:config){ Apartment::Test.config['connections']['mysql'] }
+  subject{ Apartment::Database.mysql2_adapter config.symbolize_keys }
+  
+  def database_names
+    ActiveRecord::Base.connection.execute("SELECT schema_name FROM information_schema.schemata").collect{|row| row[0]}
   end
-
-  after do
-    ActiveRecord::Base.clear_all_connections!
-  end
-
-  context "using databases" do
-
-    let(:database1){ 'first_database' }
-
-    before do
-      @mysql.create(database1)
-    end
-
-    after do
-      ActiveRecord::Base.connection.drop_database(@mysql.environmentify(database1))
-    end
-
-    describe "#create" do
-      it "should create the new database" do
-        ActiveRecord::Base.connection.execute("SELECT schema_name FROM information_schema.schemata").collect{|row| row[0]}.should include(@mysql.environmentify(database1))
-      end
-    end
-
-  end
-
-
+  
+  let(:default_database){ subject.process{ ActiveRecord::Base.connection.current_database } }
+  
+  it_should_behave_like "a generic apartment adapter"
+  it_should_behave_like "a db based apartment adapter"
 end

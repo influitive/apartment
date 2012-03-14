@@ -7,7 +7,6 @@ module Apartment
         Adapters::PostgresqlSchemaAdapter.new(config, :schema_search_path => ActiveRecord::Base.connection.schema_search_path) :
         Adapters::PostgresqlAdapter.new(config)
     end
-
   end
 
   module Adapters
@@ -109,6 +108,5 @@ module Apartment
       end
 
     end
-
   end
 end

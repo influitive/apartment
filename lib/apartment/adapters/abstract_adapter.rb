@@ -114,7 +114,7 @@ module Apartment
       def create_database(database)
         ActiveRecord::Base.connection.create_database( environmentify(database) )
 
-      rescue ActiveRecord::StatementInvalid => e
+      rescue ActiveRecord::StatementInvalid
         raise DatabaseExists, "The database #{environmentify(database)} already exists."
       end
 
@@ -126,7 +126,7 @@ module Apartment
         ActiveRecord::Base.establish_connection multi_tenantify(database)
         ActiveRecord::Base.connection.active?   # call active? to manually check if this connection is valid
 
-      rescue ActiveRecord::StatementInvalid => e
+      rescue ActiveRecord::StatementInvalid
         raise DatabaseNotFound, "The database #{environmentify(database)} cannot be found."
       end
 
