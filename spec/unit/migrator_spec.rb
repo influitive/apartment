@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Apartment::Migrator do
 
   let(:config){ Apartment::Test.config['connections']['postgresql'].symbolize_keys }
-  let(:schema_name){ 'some_db_schema' }
+  let(:schema_name){ Apartment::Test.next_db }
   let(:version){ 20110613152810 }     # note this is brittle!  I've literally just taken the version of the one migration I made...  don't change this version
 
   before do

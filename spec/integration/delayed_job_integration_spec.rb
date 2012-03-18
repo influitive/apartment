@@ -7,14 +7,13 @@ describe Apartment::Delayed do
   # See apartment.yml file in dummy app config
 
   let(:config){ Apartment::Test.config['connections']['postgresql'].symbolize_keys }
-  let(:database){ "some_new_database" }
-  let(:database2){ "another_db" }
+  let(:database){ Apartment::Test.next_db }
+  let(:database2){ Apartment::Test.next_db }
 
   before do
     ActiveRecord::Base.establish_connection config
     Apartment::Test.load_schema   # load the Rails schema in the public db schema
     Apartment::Database.stub(:config).and_return config   # Use postgresql database config for this test
-    @schema_search_path = ActiveRecord::Base.connection.schema_search_path
 
     Apartment.configure do |config|
       config.use_postgres_schemas = true

@@ -25,7 +25,7 @@ describe "apartment rake tasks" do
 
   context 'database migration' do
 
-    let(:database_names){ ['company1', 'company2', 'company3'] }
+    let(:database_names){ 3.times.map{ Apartment::Test.next_db } }
     let(:db_count){ database_names.length }
 
     before do

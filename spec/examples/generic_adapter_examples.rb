@@ -35,14 +35,14 @@ shared_examples_for "a generic apartment adapter" do
       subject.current_database.should_not == db2
 
       subject.process(db2){ User.count.should == @count + 1 }
-    end
+    end    
   end
   
   describe "#drop" do
     it "should remove the db" do
       subject.drop db1
       database_names.should_not include(db1)
-    end
+    end    
   end
   
   describe "#process" do
@@ -85,7 +85,7 @@ shared_examples_for "a generic apartment adapter" do
     it "should reset connection if database is nil" do
       subject.switch
       subject.current_database.should == default_database
-    end
+    end    
   end
 
   describe "#current_database" do

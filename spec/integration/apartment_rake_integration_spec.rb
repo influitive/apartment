@@ -29,7 +29,8 @@ describe "apartment rake tasks" do
   context "with x number of databases" do
 
     let(:x){ 1 + rand(5) }    # random number of dbs to create
-    let(:db_names){ x.times.map{|y| "database_#{y}" } }
+    let(:db_names){ x.times.map{ Apartment::Test.next_db } }
+    let!(:company_count){ Company.count + db_names.length }
 
     before do
       db_names.collect do |db_name|
@@ -45,7 +46,7 @@ describe "apartment rake tasks" do
 
     describe "#migrate" do
       it "should migrate all databases" do
-        Apartment::Migrator.should_receive(:migrate).exactly(db_names.length).times
+        Apartment::Migrator.should_receive(:migrate).exactly(company_count).times
 
         @rake['apartment:migrate'].invoke
       end
@@ -64,7 +65,7 @@ describe "apartment rake tasks" do
 
     describe "apartment:seed" do
       it "should seed all databases" do
-        Apartment::Database.should_receive(:seed).exactly(db_names.length).times
+        Apartment::Database.should_receive(:seed).exactly(company_count).times
 
         @rake['apartment:seed'].invoke
       end
