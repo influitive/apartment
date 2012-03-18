@@ -1,5 +1,5 @@
 # Apartment
-*Multitenancy for Rails 3*
+*Multitenancy for Rails 3 and ActiveRecord*
 
 Apartment provides tools to help you deal with multiple databases in your Rails
 application. If you need to have certain data sequestered based on account or company,
@@ -19,7 +19,6 @@ on a per-user basis, look under "Usage - Switching databases per request", below
 
 > NOTE: If using [postgresl schemas](http://www.postgresql.org/docs/9.0/static/ddl-schemas.html) you must use:
 >
-> * for Rails 3.0.x: _Rails ~> 3.0.10_, it contains a [patch](https://github.com/rails/rails/pull/1607) that has better postgresql schema support
 > * for Rails 3.1.x: _Rails ~> 3.1.2_, it contains a [patch](https://github.com/rails/rails/pull/3232) that makes prepared statements work with multiple schemas
 
 ## Usage
@@ -158,7 +157,3 @@ In order to make ActiveRecord models play nice with DJ and Apartment, include `A
 * Rake tasks (see the Rakefile) will help you setup your dbs necessary to run tests
 * Please issue pull requests to the `development` branch.  All development happens here, master is used for releases
 * Ensure that your code is accompanied with tests.  No code will be merged without tests
-
-## TODO
-
-* Shared examples for testing to ensure consistency across all adapters

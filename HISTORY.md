@@ -1,3 +1,8 @@
+# 0.15.0
+  * March 18, 2012
+
+  - Remove Rails dependency, Apartment can now be used with any Rack based framework using ActiveRecord
+
 # 0.14.4
   * March 8, 2012
 
