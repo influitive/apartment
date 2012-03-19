@@ -33,7 +33,7 @@ namespace :postgres do
   
   desc 'Build the PostgreSQL test databases'
   task :build_db do
-    %x{ createdb -E UTF8 #{pg_config['database']} } rescue "test db already exists"
+    %x{ createdb -E UTF8 #{pg_config['database']} -Upostgres } rescue "test db already exists"
     ActiveRecord::Base.establish_connection pg_config
     ActiveRecord::Migrator.migrate('spec/dummy/db/migrate')
   end
@@ -41,7 +41,7 @@ namespace :postgres do
   desc "drop the PostgreSQL test database"
   task :drop_db do
     puts "dropping database #{pg_config['database']}"
-    %x{ dropdb #{pg_config['database']} }
+    %x{ dropdb #{pg_config['database']} -Upostgres }
   end
     
 end
