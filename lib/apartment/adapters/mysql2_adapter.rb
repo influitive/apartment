@@ -1,16 +1,16 @@
 module Apartment
 
   module Database
-    
+
     def self.mysql2_adapter(config)
-      Adapters::MysqlAdapter.new config
+      Adapters::Mysql2Adapter.new config
     end
   end
-  
+
   module Adapters
-  
-    class MysqlAdapter < AbstractAdapter
-      
+
+    class Mysql2Adapter < AbstractAdapter
+
     protected
 
       #   Connect to new database
