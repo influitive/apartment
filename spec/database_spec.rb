@@ -19,7 +19,7 @@ describe Apartment::Database do
 
       it "should load mysql adapter" do
         subject.adapter
-        Apartment::Adapters::MysqlAdapter.should be_a(Class)
+        Apartment::Adapters::Mysql2Adapter.should be_a(Class)
       end
 
     end
