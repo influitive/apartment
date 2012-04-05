@@ -139,15 +139,18 @@ In order to make ActiveRecord models play nice with DJ and Apartment, include `A
       include Apartment::Delayed::Requirements
     end
 
+Any classes that are being used as a Delayed::Job Job need to include the `Apartment::Delayed::Job::Hooks` module into the class.  This ensures that when a job runs, it switches to the appropriate tenant before performing its task.  It is also required (manually at the moment) that you set a `@database` attribute on your job so the hooks know what tennant to switch to
+
     class SomeDJ
 
-      def initialize(model)
-        @model = model
-        @model.database = Apartment::Database.current_database
+      include Apartment::Delayed::Job::Hooks
+
+      def initialize
+        @database = Apartment::Database.current_database
       end
 
       def perform
-        # do some stuff
+        # do some stuff (will automatically switch to @database before performing and switch back after)
       end
     end
 
