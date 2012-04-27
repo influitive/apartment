@@ -2,20 +2,20 @@ require 'spec_helper'
 
 shared_examples_for "a schema based apartment adapter" do
   include Apartment::Spec::AdapterRequirements
-  
+
   let(:schema1){ db1 }
   let(:schema2){ db2 }
   let(:public_schema){ default_database }
 
   describe "#init" do
-    
+
     it "should process model exclusions" do
       Apartment.configure do |config|
         config.excluded_models = ["Company"]
       end
-      
+
       Apartment::Database.init
-      
+
       Company.table_name.should == "public.companies"
     end
   end
@@ -29,7 +29,7 @@ shared_examples_for "a schema based apartment adapter" do
       connection.schema_search_path = schema1
       connection.tables.should include('companies')
     end
-    
+
     it "should yield to block if passed and reset" do
       subject.drop(schema2) # so we don't get errors on creation
 
@@ -40,12 +40,12 @@ shared_examples_for "a schema based apartment adapter" do
         connection.schema_search_path.should == schema2
         User.create
       end
-      
+
       connection.schema_search_path.should_not == schema2
 
       subject.process(schema2){ User.count.should == @count + 1 }
     end
-    
+
     it "should allow numeric database names" do
       expect {
         subject.create(1234)
@@ -54,16 +54,16 @@ shared_examples_for "a schema based apartment adapter" do
       # cleanup
       subject.drop(1234)
     end
-    
+
   end
-  
+
   describe "#drop" do
     it "should raise an error for unknown database" do
       expect {
         subject.drop "unknown_database"
       }.to raise_error(Apartment::SchemaNotFound)
     end
-    
+
     it "should be able to drop numeric dbs" do
       subject.create(1234)
       expect {
@@ -104,13 +104,13 @@ shared_examples_for "a schema based apartment adapter" do
       subject.switch
       connection.schema_search_path.should == public_schema
     end
-    
+
     it "should raise an error if schema is invalid" do
       expect {
         subject.switch 'unknown_schema'
       }.to raise_error(Apartment::SchemaNotFound)
     end
-    
+
     it "should connect to numeric dbs" do
       subject.create(1234)
       expect {

@@ -46,7 +46,7 @@ module Apartment
       #   @param {String} database Database (schema) to drop
       #
       def drop(database)
-        ActiveRecord::Base.connection.execute("DROP SCHEMA \"#{database}\" CASCADE")
+        ActiveRecord::Base.connection.execute(%{DROP SCHEMA "#{database}" CASCADE})
 
       rescue ActiveRecord::StatementInvalid
         raise SchemaNotFound, "The schema #{database.inspect} cannot be found."
@@ -101,7 +101,7 @@ module Apartment
       #   Create the new schema
       #
       def create_database(database)
-        ActiveRecord::Base.connection.execute("CREATE SCHEMA \"#{database}\"")
+        ActiveRecord::Base.connection.execute(%{CREATE SCHEMA "#{database}"})
 
       rescue ActiveRecord::StatementInvalid
         raise SchemaExists, "The schema #{database} already exists."
