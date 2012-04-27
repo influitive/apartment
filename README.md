@@ -154,7 +154,7 @@ Any classes that are being used as a Delayed::Job Job need to include the `Apart
       end
     end
 
-All jobs are stored in the global (public) namespace, so add it to the list of excluded models:
+All jobs *must* stored in the global (public) namespace, so add it to the list of excluded models:
 
     config.excluded_models = ["Delayed::Job"]
 
