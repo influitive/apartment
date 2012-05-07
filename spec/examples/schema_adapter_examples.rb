@@ -37,22 +37,27 @@ shared_examples_for "a schema based apartment adapter" do
 
       subject.create(schema2) do
         @count = User.count
-        connection.schema_search_path.should == schema2
+        connection.schema_search_path.should include schema2
+        connection.schema_search_path.should_not include "public"
         User.create
       end
 
-      connection.schema_search_path.should_not == schema2
+      connection.schema_search_path.should_not include schema2
 
       subject.process(schema2){ User.count.should == @count + 1 }
     end
 
-    it "should allow numeric database names" do
-      expect {
-        subject.create(1234)
-      }.to_not raise_error
-      database_names.should include("1234")
-      # cleanup
-      subject.drop(1234)
+    describe "numeric database names" do
+      specify "should be allowed" do
+        expect {
+          subject.create(1234)
+        }.to_not raise_error
+        database_names.should include("1234")
+        # cleanup
+      end
+
+      after { subject.drop(1234) }
+
     end
 
   end
@@ -64,25 +69,28 @@ shared_examples_for "a schema based apartment adapter" do
       }.to raise_error(Apartment::SchemaNotFound)
     end
 
-    it "should be able to drop numeric dbs" do
-      subject.create(1234)
-      expect {
-        subject.drop(1234)
-      }.to_not raise_error
-      database_names.should_not include("1234")
+    describe "numeric dbs" do
+      it "should be droppable" do
+        subject.create(1234)
+        expect {
+          subject.drop(1234)
+        }.to_not raise_error
+        database_names.should_not include("1234")
+      end
+      after { subject.drop(1234) rescue nil }
     end
   end
 
   describe "#process" do
     it "should connect" do
       subject.process(schema1) do
-        connection.schema_search_path.should == schema1
+        connection.schema_search_path.should include schema1
       end
     end
 
     it "should reset" do
       subject.process(schema1)
-      connection.schema_search_path.should == public_schema
+      connection.schema_search_path.should include public_schema
     end
   end
 
@@ -97,12 +105,31 @@ shared_examples_for "a schema based apartment adapter" do
   describe "#switch" do
     it "should connect to new schema" do
       subject.switch(schema1)
-      connection.schema_search_path.should == schema1
+      connection.schema_search_path.should include schema1
     end
 
     it "should reset connection if database is nil" do
       subject.switch
-      connection.schema_search_path.should == public_schema
+      connection.schema_search_path.should include public_schema
+    end
+
+    describe "other schemas in search path" do
+      let(:other_schema) { "other_schema" }
+      before do
+        subject.create(other_schema)
+        @old_schema = subject.instance_variable_get(:@defaults)[:schema_search_path]
+        subject.instance_variable_get(:@defaults)[:schema_search_path] += "," + other_schema
+      end
+
+      it "should maintain other schemas on switch" do
+        subject.switch(schema1)
+        connection.schema_search_path.should include other_schema
+      end
+
+      after do
+        subject.instance_variable_get(:@defaults)[:schema_search_path] = @old_schema
+        subject.drop(other_schema)
+      end
     end
 
     it "should raise an error if schema is invalid" do
@@ -111,12 +138,14 @@ shared_examples_for "a schema based apartment adapter" do
       }.to raise_error(Apartment::SchemaNotFound)
     end
 
-    it "should connect to numeric dbs" do
-      subject.create(1234)
-      expect {
-        subject.switch(1234)
-      }.to_not raise_error
-      subject.drop(1234)
+    describe "numeric dbs" do
+      it "should connect" do
+        subject.create(1234)
+        expect {
+          subject.switch(1234)
+        }.to_not raise_error
+      end
+      after { subject.drop(1234) }
     end
   end
 

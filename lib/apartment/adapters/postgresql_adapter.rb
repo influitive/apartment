@@ -33,13 +33,7 @@ module Apartment
     # Separate Adapter for Postgresql when using schemas
     class PostgresqlSchemaAdapter < AbstractAdapter
 
-      #   Get the current schema search path
-      #
-      #   @return {String} current schema search path
-      #
-      def current_database
-        ActiveRecord::Base.connection.schema_search_path
-      end
+      attr_reader :current_database
 
       #   Drop the database schema
       #
@@ -84,6 +78,7 @@ module Apartment
       #
       def reset
         ActiveRecord::Base.connection.schema_search_path = @defaults[:schema_search_path]
+        @current_database = @defaults[:schema_search_path]
       end
 
     protected
@@ -92,10 +87,14 @@ module Apartment
       #
       def connect_to_new(database = nil)
         return reset if database.nil?
-        ActiveRecord::Base.connection.schema_search_path = database
+
+        @current_database = database.to_s
+
+        new_search_path = @defaults[:schema_search_path].gsub("public", current_database)
+        ActiveRecord::Base.connection.schema_search_path = new_search_path
 
       rescue ActiveRecord::StatementInvalid
-        raise SchemaNotFound, "The schema #{database.inspect} cannot be found."
+        raise SchemaNotFound, "One of the following schema(s) is invalid: #{new_search_path}"
       end
 
       #   Create the new schema
