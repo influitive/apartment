@@ -3,12 +3,17 @@ require 'apartment/railtie' if defined?(Rails)
 module Apartment
 
   class << self
-    attr_accessor :use_postgres_schemas, :seed_after_create, :prepend_environment
+    attr_accessor :use_postgres_schemas, :seed_after_create, :prepend_environment, :schema_to_switch
     attr_writer :database_names, :excluded_models
 
     # configure apartment with available options
     def configure
       yield self if block_given?
+    end
+
+    # Default switch schema to public
+    def schema_to_switch
+      @schema_to_switch || "public"
     end
 
     # Be careful not to use `return` here so both Proc and lambda can be used without breaking

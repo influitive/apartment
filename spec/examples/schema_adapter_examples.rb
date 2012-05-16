@@ -130,6 +130,30 @@ shared_examples_for "a schema based apartment adapter" do
         subject.instance_variable_get(:@defaults)[:schema_search_path] = @old_schema
         subject.drop(other_schema)
       end
+
+      describe "with schema_to_switch specified" do
+        before do
+          Apartment.schema_to_switch = other_schema
+          subject.switch(schema1)
+        end
+
+        after do
+          # Reset the switch schema.
+          Apartment.schema_to_switch = nil
+        end
+
+        it "should switch out the schema to switch rather than public" do
+          connection.schema_search_path.should_not include other_schema
+        end
+
+        it "should retain the public schema" do
+          connection.schema_search_path.should include "public"
+        end
+
+        it "should still switch to the switched schema" do
+          connection.schema_search_path.should include schema1
+        end
+      end
     end
 
     it "should raise an error if schema is invalid" do
@@ -155,5 +179,7 @@ shared_examples_for "a schema based apartment adapter" do
       subject.current_database.should == schema1
     end
   end
+
+
 
 end
