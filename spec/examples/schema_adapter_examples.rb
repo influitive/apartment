@@ -37,11 +37,11 @@ shared_examples_for "a schema based apartment adapter" do
 
       subject.create(schema2) do
         @count = User.count
-        connection.schema_search_path.should == schema2
+        connection.schema_search_path.should start_with schema2
         User.create
       end
 
-      connection.schema_search_path.should_not == schema2
+      connection.schema_search_path.should_not start_with schema2
 
       subject.process(schema2){ User.count.should == @count + 1 }
     end
@@ -82,7 +82,7 @@ shared_examples_for "a schema based apartment adapter" do
   describe "#process" do
     it "should connect" do
       subject.process(schema1) do
-        connection.schema_search_path.should == schema1
+        connection.schema_search_path.should start_with schema1
       end
     end
 
@@ -103,7 +103,7 @@ shared_examples_for "a schema based apartment adapter" do
   describe "#switch" do
     it "should connect to new schema" do
       subject.switch(schema1)
-      connection.schema_search_path.should == schema1
+      connection.schema_search_path.should start_with schema1
     end
 
     it "should reset connection if database is nil" do
@@ -122,6 +122,7 @@ shared_examples_for "a schema based apartment adapter" do
         subject.create(1234)
         expect {
           subject.switch(1234)
+          connection.schema_search_path.should start_with '1234'
         }.to_not raise_error
       end
 
