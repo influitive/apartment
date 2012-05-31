@@ -4,7 +4,7 @@ module Apartment
 
     def self.postgresql_adapter(config)
       Apartment.use_postgres_schemas ?
-        Adapters::PostgresqlSchemaAdapter.new(config, :schema_search_path => ActiveRecord::Base.connection.schema_search_path) :
+        Adapters::PostgresqlSchemaAdapter.new(config) :
         Adapters::PostgresqlAdapter.new(config)
     end
   end
@@ -53,7 +53,7 @@ module Apartment
       end
 
       #   Reset search path to default search_path
-      #   Set the table_name to always use the public namespace for excluded models
+      #   Set the table_name to always use the default namespace for excluded models
       #
       def process_excluded_models
         Apartment.excluded_models.each do |excluded_model|
@@ -66,14 +66,14 @@ module Apartment
 
           excluded_model.constantize.tap do |klass|
             # some models (such as delayed_job) seem to load and cache their column names before this,
-            # so would never get the public prefix, so reset first
+            # so would never get the default prefix, so reset first
             klass.reset_column_information
 
             # Ensure that if a schema *was* set, we override
             table_name = klass.table_name.split('.', 2).last
 
             # Not sure why, but Delayed::Job somehow ignores table_name_prefix...  so we'll just manually set table name instead
-            klass.table_name = "public.#{table_name}"
+            klass.table_name = "#{Apartment.default_schema}.#{table_name}"
           end
         end
       end
@@ -83,7 +83,7 @@ module Apartment
       #   @return {String} default schema search path
       #
       def reset
-        ActiveRecord::Base.connection.schema_search_path = @defaults[:schema_search_path]
+        ActiveRecord::Base.connection.schema_search_path = Apartment.default_schema
       end
 
     protected

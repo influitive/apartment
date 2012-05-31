@@ -3,6 +3,7 @@ require 'active_support/core_ext/module/delegation'
 module Apartment
 
   #   The main entry point to Apartment functions
+  #
   module Database
 
     extend self

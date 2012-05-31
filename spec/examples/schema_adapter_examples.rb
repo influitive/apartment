@@ -9,14 +9,25 @@ shared_examples_for "a schema based apartment adapter" do
 
   describe "#init" do
 
-    it "should process model exclusions" do
+    before do
       Apartment.configure do |config|
         config.excluded_models = ["Company"]
       end
+    end
 
+    it "should process model exclusions" do
       Apartment::Database.init
 
       Company.table_name.should == "public.companies"
+    end
+
+    context "with a default_schema", :default_schema => true do
+
+      it "should set the proper table_name on excluded_models" do
+        Apartment::Database.init
+
+        Company.table_name.should == "#{default_schema}.companies"
+      end
     end
   end
 
@@ -91,7 +102,7 @@ shared_examples_for "a schema based apartment adapter" do
 
     it "should reset" do
       subject.process(schema1)
-      connection.schema_search_path.should == public_schema
+      connection.schema_search_path.should start_with public_schema
     end
   end
 
@@ -99,7 +110,15 @@ shared_examples_for "a schema based apartment adapter" do
     it "should reset connection" do
       subject.switch(schema1)
       subject.reset
-      connection.schema_search_path.should == public_schema
+      connection.schema_search_path.should start_with public_schema
+    end
+
+    context "with default_schema", :default_schema => true do
+      it "should reset to the default schema" do
+        subject.switch(schema1)
+        subject.reset
+        connection.schema_search_path.should start_with default_schema
+      end
     end
   end
 
@@ -133,6 +152,20 @@ shared_examples_for "a schema based apartment adapter" do
       end
 
       after{ subject.drop(db) }
+    end
+
+    describe "with default_schema specified", :default_schema => true do
+      before do
+        subject.switch(schema1)
+      end
+
+      it "should switch out the default schema rather than public" do
+        connection.schema_search_path.should_not include default_schema
+      end
+
+      it "should still switch to the switched schema" do
+        connection.schema_search_path.should start_with schema1
+      end
     end
   end
 

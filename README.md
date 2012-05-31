@@ -85,20 +85,19 @@ To set config options, add this to your initializer:
 
 ### Excluding models
 
-If you have some models that should always access the 'root' database, you can specify this by configuring
-Apartment using `Apartment.configure`.  This will yield a config object for you.  You can set excluded models like so:
+If you have some models that should always access the 'root' database, you can specify this by configuring Apartment using `Apartment.configure`.  This will yield a config object for you.  You can set excluded models like so:
 
     config.excluded_models = ["User", "Company"]        # these models will not be multi-tenanted, but remain in the global (public) namespace
 
 Note that a string representation of the model name is now the standard so that models are properly constantized when reloaded in development
 
-### Handling Environments
+### Providing a default schema
 
-By default, when not using postgresql schemas, Apartment will prepend the environment to the database name
-to ensure there is no conflict between your environments.  This is mainly for the benefit of your development
-and test environments.  If you wish to turn this option off in production, you could do something like:
+By default, ActiveRecord will use `"$user", public` as the default `schema_search_path`. This can be modified if you wish to use a different default schema be setting:
 
-    config.prepend_environment = !Rails.env.production?
+    config.default_schema = "some_other_schema"
+
+With that set, all excluded models will use this schema as the table name prefix instead of `public` and `reset` on `Apartment::Database` will return to this schema also
 
 ### Managing Migrations
 
@@ -119,7 +118,15 @@ You can then migration your databases using the rake task:
 This basically invokes `Apartment::Database.migrate(#{db_name})` for each database name supplied
 from `Apartment.database_names`
 
-### Delayed::Job
+### Handling Environments
+
+By default, when not using postgresql schemas, Apartment will prepend the environment to the database name
+to ensure there is no conflict between your environments.  This is mainly for the benefit of your development
+and test environments.  If you wish to turn this option off in production, you could do something like:
+
+    config.prepend_environment = !Rails.env.production?
+
+## Delayed::Job
 
 If using Rails ~> 3.2, you *must* use `delayed_job ~> 3.0`.  It has better Rails 3 support plus has some major changes that affect the serialization of models.
 I haven't been able to get `psych` working whatsoever as the YAML parser, so to get things to work properly, you must explicitly set the parser to `syck` *before* requiring `delayed_job`

@@ -4,7 +4,7 @@ module Apartment
 
   class << self
     attr_accessor :use_postgres_schemas, :seed_after_create, :prepend_environment
-    attr_writer :database_names, :excluded_models
+    attr_writer :database_names, :excluded_models, :default_schema
 
     # configure apartment with available options
     def configure
@@ -21,6 +21,9 @@ module Apartment
       @excluded_models || []
     end
 
+    def default_schema
+      @default_schema || "public"
+    end
   end
 
   autoload :Database, 'apartment/database'
