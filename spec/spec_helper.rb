@@ -7,6 +7,9 @@ require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 require "rspec/rails"
 require 'capybara/rspec'
 require 'capybara/rails'
+require 'pry'
+
+silence_warnings{ IRB = Pry }
 
 ActionMailer::Base.delivery_method = :test
 ActionMailer::Base.perform_deliveries = true
@@ -27,7 +30,7 @@ RSpec.configure do |config|
     # Necessary as some tests will leak things like current_schema into the next test
     ActiveRecord::Base.clear_all_connections!
   end
-  
+
   config.after(:each) do
     Apartment::Test.reset
   end
