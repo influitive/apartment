@@ -46,13 +46,15 @@ shared_examples_for "a schema based apartment adapter" do
       subject.process(schema2){ User.count.should == @count + 1 }
     end
 
-    it "should allow numeric database names" do
-      expect {
-        subject.create(1234)
-      }.to_not raise_error
-      database_names.should include("1234")
-      # cleanup
-      subject.drop(1234)
+    context "numeric database names" do
+      it "should allow them" do
+        expect {
+          subject.create(1234)
+        }.to_not raise_error
+        database_names.should include("1234")
+      end
+
+      after{ subject.drop(1234) }
     end
 
   end
@@ -64,12 +66,16 @@ shared_examples_for "a schema based apartment adapter" do
       }.to raise_error(Apartment::SchemaNotFound)
     end
 
-    it "should be able to drop numeric dbs" do
-      subject.create(1234)
-      expect {
-        subject.drop(1234)
-      }.to_not raise_error
-      database_names.should_not include("1234")
+    context "numeric database names" do
+      it "should be able to drop them" do
+        subject.create(1234)
+        expect {
+          subject.drop(1234)
+        }.to_not raise_error
+        database_names.should_not include("1234")
+      end
+
+      after { subject.drop(1234) rescue nil }
     end
   end
 
@@ -111,12 +117,15 @@ shared_examples_for "a schema based apartment adapter" do
       }.to raise_error(Apartment::SchemaNotFound)
     end
 
-    it "should connect to numeric dbs" do
-      subject.create(1234)
-      expect {
-        subject.switch(1234)
-      }.to_not raise_error
-      subject.drop(1234)
+    context "numeric databases" do
+      it "should connect to them" do
+        subject.create(1234)
+        expect {
+          subject.switch(1234)
+        }.to_not raise_error
+      end
+
+      after{ subject.drop(1234) }
     end
   end
 

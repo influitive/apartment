@@ -2,9 +2,9 @@ require 'spec_helper'
 
 shared_examples_for "a generic apartment adapter" do
   include Apartment::Spec::AdapterRequirements
-  
+
   before{ Apartment.prepend_environment = false }
-  
+
   #
   #   Creates happen already in our before_filter
   #
@@ -20,7 +20,7 @@ shared_examples_for "a generic apartment adapter" do
         connection.tables.should include('companies')
       end
     end
-    
+
     it "should yield to block if passed and reset" do
       subject.drop(db2) # so we don't get errors on creation
 
@@ -31,20 +31,20 @@ shared_examples_for "a generic apartment adapter" do
         subject.current_database.should == db2
         User.create
       end
-      
+
       subject.current_database.should_not == db2
 
       subject.process(db2){ User.count.should == @count + 1 }
-    end    
+    end
   end
-  
+
   describe "#drop" do
     it "should remove the db" do
       subject.drop db1
       database_names.should_not include(db1)
-    end    
+    end
   end
-  
+
   describe "#process" do
     it "should connect" do
       subject.process(db1) do
@@ -67,7 +67,7 @@ shared_examples_for "a generic apartment adapter" do
       }.to_not raise_error
     end
   end
-  
+
   describe "#reset" do
     it "should reset connection" do
       subject.switch(db1)
@@ -85,7 +85,7 @@ shared_examples_for "a generic apartment adapter" do
     it "should reset connection if database is nil" do
       subject.switch
       subject.current_database.should == default_database
-    end    
+    end
   end
 
   describe "#current_database" do
