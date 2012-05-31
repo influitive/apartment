@@ -92,7 +92,7 @@ module Apartment
       #
       def connect_to_new(database = nil)
         return reset if database.nil?
-        ActiveRecord::Base.connection.schema_search_path = database
+        ActiveRecord::Base.connection.schema_search_path = database.to_s
 
       rescue ActiveRecord::StatementInvalid
         raise SchemaNotFound, "The schema #{database.inspect} cannot be found."

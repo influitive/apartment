@@ -47,14 +47,15 @@ shared_examples_for "a schema based apartment adapter" do
     end
 
     context "numeric database names" do
+      let(:db){ 1234 }
       it "should allow them" do
         expect {
-          subject.create(1234)
+          subject.create(db)
         }.to_not raise_error
-        database_names.should include("1234")
+        database_names.should include(db.to_s)
       end
 
-      after{ subject.drop(1234) }
+      after{ subject.drop(db) }
     end
 
   end
@@ -67,15 +68,17 @@ shared_examples_for "a schema based apartment adapter" do
     end
 
     context "numeric database names" do
+      let(:db){ 1234 }
+
       it "should be able to drop them" do
-        subject.create(1234)
+        subject.create(db)
         expect {
-          subject.drop(1234)
+          subject.drop(db)
         }.to_not raise_error
-        database_names.should_not include("1234")
+        database_names.should_not include(db.to_s)
       end
 
-      after { subject.drop(1234) rescue nil }
+      after { subject.drop(db) rescue nil }
     end
   end
 
@@ -118,15 +121,18 @@ shared_examples_for "a schema based apartment adapter" do
     end
 
     context "numeric databases" do
+      let(:db){ 1234 }
+
       it "should connect to them" do
-        subject.create(1234)
+        subject.create(db)
         expect {
-          subject.switch(1234)
-          connection.schema_search_path.should start_with '1234'
+          subject.switch(db)
         }.to_not raise_error
+
+        connection.schema_search_path.should start_with db.to_s
       end
 
-      after{ subject.drop(1234) }
+      after{ subject.drop(db) }
     end
   end
 
