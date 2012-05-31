@@ -32,7 +32,7 @@ RSpec.configure do |config|
   end
 
   config.after(:each) do
-    Apartment::Test.reset
+    Apartment.reset
   end
 
 end

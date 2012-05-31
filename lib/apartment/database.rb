@@ -10,6 +10,8 @@ module Apartment
 
     delegate :create, :current_database, :drop, :process, :process_excluded_models, :reset, :seed, :switch, :to => :adapter
 
+    attr_writer :config
+
     #   Initialize Apartment config options such as excluded_models
     #
     def init
