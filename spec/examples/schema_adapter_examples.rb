@@ -120,6 +120,24 @@ shared_examples_for "a schema based apartment adapter" do
         connection.schema_search_path.should start_with default_schema
       end
     end
+
+    context "persistent_schemas", :persistent_schemas => true do
+      before do
+        subject.switch(schema1)
+        subject.reset
+      end
+
+      it "maintains the persistent schemas in the schema_search_path" do
+        connection.schema_search_path.should end_with persistent_schemas.join(', ')
+      end
+
+      context "with default_schema", :default_schema => true do
+        it "prioritizes the switched schema to front of schema_search_path" do
+          subject.reset # need to re-call this as the default_schema wasn't set at the time that the above reset ran
+          connection.schema_search_path.should start_with default_schema
+        end
+      end
+    end
   end
 
   describe "#switch" do
@@ -167,12 +185,32 @@ shared_examples_for "a schema based apartment adapter" do
         connection.schema_search_path.should start_with schema1
       end
     end
+
+    context "persistent_schemas", :persistent_schemas => true do
+
+      before{ subject.switch(schema1) }
+
+      it "maintains the persistent schemas in the schema_search_path" do
+        connection.schema_search_path.should end_with persistent_schemas.join(', ')
+      end
+
+      it "prioritizes the switched schema to front of schema_search_path" do
+        connection.schema_search_path.should start_with schema1
+      end
+    end
   end
 
   describe "#current_database" do
     it "should return the current schema name" do
       subject.switch(schema1)
       subject.current_database.should == schema1
+    end
+
+    context "persistent_schemas", :persistent_schemas => true do
+      it "should exlude persistent_schemas" do
+        subject.switch(schema1)
+        subject.current_database.should == schema1
+      end
     end
   end
 

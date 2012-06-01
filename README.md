@@ -115,13 +115,27 @@ If you have some models that should always access the 'root' database, you can s
 
 Note that a string representation of the model name is now the standard so that models are properly constantized when reloaded in development
 
-### Providing a default schema
+### Postgresql Schemas
 
+**Providing a Different default_schema**
 By default, ActiveRecord will use `"$user", public` as the default `schema_search_path`. This can be modified if you wish to use a different default schema be setting:
 
     config.default_schema = "some_other_schema"
 
 With that set, all excluded models will use this schema as the table name prefix instead of `public` and `reset` on `Apartment::Database` will return to this schema also
+
+**Persistent Schemas**
+Apartment will normally just switch the schema_search_path whole hog to the one passed in.  This can lead to problems if you want other schemas to always be searched as well.  Enter `persistent_schemas`.  You can configure a list of other schemas that will always remain in the search path, while the default gets swapped out:
+
+    config.persistent_schemas = ['some', 'other', 'schemas']
+
+This has numerous useful applications.  [Hstore](http://www.postgresql.org/docs/9.1/static/hstore.html), for instance, is a popular storage engine for Postgresql.  In order to use Hstore, you have to install to a specific schema and have that always in the `schema_search_path`.  This could be achieved like so:
+
+    # In a rake task, or on the console...
+    ActiveRecord::Base.connection.execute("CREATE SCHEMA hstore; CREATE EXTENSION HSTORE SCHEMA hstore")
+
+    # configure Apartment as usual
+    config.persistent_schemas = ['hstore']
 
 ### Managing Migrations
 
