@@ -16,7 +16,8 @@ module Dummy
     # -- all .rb files in that directory are automatically loaded.
 
     config.middleware.use 'Apartment::Elevators::Subdomain'
-
+    config.middleware.use 'Apartment::Elevators::Domain'
+    
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += %W(#{config.root}/lib)
 
