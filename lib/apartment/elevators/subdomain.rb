@@ -5,7 +5,7 @@ module Apartment
     #
     class Subdomain < Generic
 
-      def process(request)
+      def parse_database_name(request)
         request.subdomain.present? && request.subdomain || nil
       end
     end

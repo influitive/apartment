@@ -6,7 +6,7 @@ module Apartment
 
       def initialize(app, processor = nil)
         @app = app
-        @processor = processor || method(:process)
+        @processor = processor || method(:parse_database_name)
       end
 
       def call(env)
@@ -19,7 +19,7 @@ module Apartment
         @app.call(env)
       end
 
-      def process(request)
+      def parse_database_name(request)
         raise "Override"
       end
     end

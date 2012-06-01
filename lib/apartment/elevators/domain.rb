@@ -8,7 +8,7 @@ module Apartment
     #
     class Domain < Generic
 
-      def process(request)
+      def parse_database_name(request)
         return nil if request.host.blank?
 
         request.host.match(/(www.)?(?<sld>[^.]*)/)["sld"]
