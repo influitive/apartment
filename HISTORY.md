@@ -1,3 +1,11 @@
+# 0.16.0
+  * June 1, 2012
+
+  - Apartment now supports a default_schema to be set, rather than relying on ActiveRecord's default schema_search_path
+  - Additional schemas can always be maintained in the schema_search_path by configuring persistent_schemas
+  - There is now a full domain based elevator to switch dbs based on the whole domain [lcowell]
+  - There is now a generic elevator that takes a Proc to switch dbs based on the return value of that proc.
+
 # 0.15.0
   * March 18, 2012
 
