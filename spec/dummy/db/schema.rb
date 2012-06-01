@@ -11,7 +11,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110613152810) do
+ActiveRecord::Schema.define(:version => 20111202022214) do
+
+  create_table "books", :force => true do |t|
+    t.string   "name"
+    t.integer  "pages"
+    t.datetime "published"
+  end
 
   create_table "companies", :force => true do |t|
     t.boolean "dummy"
