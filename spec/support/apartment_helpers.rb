@@ -12,7 +12,7 @@ module Apartment
 
     def next_db
       @x ||= 0
-      "db_#{@x += 1}"
+      "db%d" % @x += 1
     end
 
     def drop_schema(schema)
