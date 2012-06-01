@@ -60,8 +60,9 @@ database, call switch with no arguments.
 
 You can have Apartment route to the appropriate database by adding some Rack middleware.
 Apartment can support many different "Elevators" that can take care of this routing to your data.
-In house, we use the subdomain elevator, which analyzes the subdomain of the request and switches
-to a database schema of the same name. It can be used like so:
+
+**Switch on subdomain**
+In house, we use the subdomain elevator, which analyzes the subdomain of the request and switches to a database schema of the same name. It can be used like so:
 
     # application.rb
     module My Application
@@ -70,6 +71,29 @@ to a database schema of the same name. It can be used like so:
         config.middleware.use 'Apartment::Elevators::Subdomain'
       end
     end
+
+**Switch on domain**
+To switch based on full domain (excluding subdomains *ie 'www'* and top level domains *ie '.com'* ) use the following:
+
+    # application.rb
+    module My Application
+      class Application < Rails::Application
+
+        config.middleware.use 'Apartment::Elevators::Domain'
+      end
+    end
+
+**Custom Elevator**
+A Generic Elevator exists that allows you to pass a `Proc` (or anything that responds to `call`) to the middleware. This Object will be passed in an `ActionDispatch::Request` object when called for you to do your magic. Apartment will use the return value of this proc to switch to the appropriate database.  Use like so:
+
+    # application.rb
+    module My Application
+      class Application < Rails::Application
+        # Obviously not a contrived example
+        config.middleware.use 'Apartment::Elevators::Generic', Proc.new { |request| request.host.reverse }
+      end
+    end
+
 
 ## Config
 
