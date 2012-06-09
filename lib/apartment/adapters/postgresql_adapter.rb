@@ -109,14 +109,8 @@ module Apartment
       #   Generate the final search path to set including persistent_schemas
       #
       def full_search_path
-        persistent_schemas = persistent_schema_string
+        persistent_schemas = Apartment.persistent_schemas.join(', ')
         @current_database.to_s + (persistent_schemas.empty? ? "" : ", #{persistent_schemas}")
-      end
-
-      #   Cached persistent schemas joined in a valid search path format (comma separated)
-      #
-      def persistent_schema_string
-        Apartment.persistent_schemas.join(', ')
       end
     end
   end
