@@ -3,4 +3,4 @@
 Gemfile.lock
 pkg/*
 *.log
-
+*.sw[pno]
