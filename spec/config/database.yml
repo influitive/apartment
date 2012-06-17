@@ -4,6 +4,7 @@ connections:
     database: apartment_postgresql_test
     min_messages: WARNING
     username: postgres
+    schema_search_path: public
     password:
 
   mysql:

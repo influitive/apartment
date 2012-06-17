@@ -6,10 +6,6 @@ describe Apartment do
 
     let(:excluded_models){ [Company] }
 
-    after do
-      Apartment::Test.reset
-    end
-
     it "should yield the Apartment object" do
       Apartment.configure do |config|
         config.excluded_models = []

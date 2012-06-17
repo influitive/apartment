@@ -7,9 +7,9 @@ module Apartment
     #
     #
     module AdapterRequirements
-      
+
       extend ActiveSupport::Concern
-      
+
       included do
         let(:db1){ Apartment::Test.next_db }
         let(:db2){ Apartment::Test.next_db }
@@ -28,7 +28,7 @@ module Apartment
           # sometimes we manually drop these schemas in testing, don't care if we can't drop, hence rescue
           subject.drop(db1) rescue true
           subject.drop(db2) rescue true
-          
+
           ActiveRecord::Base.clear_all_connections!
           Apartment::Database.reload!
         end
@@ -39,7 +39,7 @@ module Apartment
           raise "You must define a `#{method}` method in your host group"
         end unless defined?(method)
       end
-      
+
     end
   end
 end
