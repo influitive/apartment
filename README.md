@@ -207,7 +207,9 @@ All jobs *must* stored in the global (public) namespace, so add it to the list o
 
 ## Development
 
-* The Local setup for development assumes that a root user with no password exists for both mysql and postgresl
+* In both `spec/dummy/config` and `spec/config`, you will see `database.yml.sample` files
+  * Copy them into the same directory but with the name `database.yml`
+  * Edit them to fit your own settings
 * Rake tasks (see the Rakefile) will help you setup your dbs necessary to run tests
 * Please issue pull requests to the `development` branch.  All development happens here, master is used for releases
 * Ensure that your code is accompanied with tests.  No code will be merged without tests
