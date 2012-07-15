@@ -24,6 +24,9 @@ describe "apartment rake tasks" do
       config.excluded_models = ["Company"]
       config.database_names = lambda{ Company.scoped.collect(&:database) }
     end
+
+    # fix up table name of shared/excluded models
+    Company.table_name = 'public.companies'
   end
 
   context "with x number of databases" do

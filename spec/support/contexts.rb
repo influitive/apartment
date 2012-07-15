@@ -26,8 +26,10 @@ shared_context "elevators", :elevator => true do
    let(:api)       { Apartment::Database }
 
    before do
+     Apartment.reset # reset all config
      Apartment.seed_after_create = false
      Apartment.use_postgres_schemas = true
+     api.reload! # reload adapter
 
      api.create(database1)
      api.create(database2)
