@@ -84,4 +84,12 @@ module Apartment
   # Raised when an ActiveRecord object does not have the required database field on it
   class DJSerializationError < ApartmentError; end
 
+  def self.method_missing(meth, *args, &block)
+    if meth.to_s =~ /^use_(.+)$/
+      Apartment::Database.switch($1)
+    else
+      super
+    end
+  end
+
 end
