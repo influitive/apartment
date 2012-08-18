@@ -3,7 +3,7 @@ require 'apartment/railtie' if defined?(Rails)
 module Apartment
 
   class << self
-    ACCESSOR_METHODS  = [:use_postgres_schemas, :seed_after_create, :prepend_environment]
+    ACCESSOR_METHODS  = [:use_postgres_schemas, :seed_after_create, :prepend_environment, :append_environment]
     WRITER_METHODS    = [:database_names, :excluded_models, :default_schema, :persistent_schemas]
 
     attr_accessor(*ACCESSOR_METHODS)
