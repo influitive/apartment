@@ -23,7 +23,7 @@ module Apartment
         create_database(database)
 
         process(database) do
-          import_database_schema
+          import_database_schema(database)
 
           # Seed data if appropriate
           seed_data if Apartment.seed_after_create
@@ -142,9 +142,13 @@ module Apartment
 
       #   Import the database schema
       #
-      def import_database_schema
+      def import_database_schema(database = nil)
         ActiveRecord::Schema.verbose = false    # do not log schema load output.
-        load_or_abort("#{Rails.root}/db/schema.rb")
+        if Rails.application.config.active_record.schema_format == :sql
+          execute_or_abort("#{Rails.root}/db/structure.sql", database)
+        else
+          load_or_abort("#{Rails.root}/db/schema.rb")
+        end
       end
 
       #   Return a new config that is multi-tenanted
@@ -160,6 +164,18 @@ module Apartment
       def load_or_abort(file)
         if File.exists?(file)
           load(file)
+        else
+          abort %{#{file} doesn't exist yet}
+        end
+      end
+
+      #   Load a SQL file and execute it or abort if it doesn't exists
+      #
+      def execute_or_abort(file, database)
+        if File.exists?(file)
+          structure_sql = open(file, 'r').read
+          # structure_sql.gsub! /public/, database
+          ActiveRecord::Base.connection.execute(structure_sql)
         else
           abort %{#{file} doesn't exist yet}
         end
