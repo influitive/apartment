@@ -132,13 +132,30 @@ Apartment will normally just switch the `schema_search_path` whole hog to the on
 
     config.persistent_schemas = ['some', 'other', 'schemas']
 
-This has numerous useful applications.  [Hstore](http://www.postgresql.org/docs/9.1/static/hstore.html), for instance, is a popular storage engine for Postgresql.  In order to use Hstore, you have to install to a specific schema and have that always in the `schema_search_path`.  This could be achieved like so:
+This has numerous useful applications.  [Hstore](http://www.postgresql.org/docs/9.1/static/hstore.html), for instance, is a popular storage engine for Postgresql.  In order to use Hstore, you have to install it to a specific schema and have that always in the `schema_search_path`.  This could be achieved like so:
 
+    # NOTE do not do this in a migration, must be done
+    # manually before you configure apartment with hstore
     # In a rake task, or on the console...
     ActiveRecord::Base.connection.execute("CREATE SCHEMA hstore; CREATE EXTENSION HSTORE SCHEMA hstore")
 
     # configure Apartment to maintain the `hstore` schema in the `schema_search_path`
     config.persistent_schemas = ['hstore']
+
+There are a few caveats to be aware of when using `hstore`.  First off, the hstore schema and extension creation need to be done manually *before* you reference it in any way in your migrations, database.yml or apartment.  This is an unfortunate manual step, but I haven't found a way around it.  You can achieve this from the command line using something like:
+
+    rails r 'ActiveRecord::Base.connection.execute("CREATE SCHEMA hstore; CREATE EXTENSION HSTORE SCHEMA hstore")'
+
+Next, your `database.yml` file must mimic what you've set for your default and persistent schemas in Apartment.  When you run migrataions with Rails, it won't know about the hstore schema because Apartment isn't injected into the default connection, it's done on a per-request basis, therefore Rails doesn't know about `hstore` during migrations.  To do so, add the following to your `database.yml` for all environments
+
+    # database.yml
+    ...
+    adapter: postgresql
+    schema_search_path: "public,hstore"
+    ...
+
+This would be for a config with `default_schema` set to `public` and `persistent_schemas` set to `['hstore']`
+
 
 ### Managing Migrations
 
