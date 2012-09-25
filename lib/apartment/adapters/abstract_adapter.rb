@@ -39,7 +39,7 @@ module Apartment
       def current_database
         ActiveRecord::Base.connection.current_database
       end
-      alias :current, :current_database
+      alias_method :current, :current_database
 
       #   Drop the database
       #
