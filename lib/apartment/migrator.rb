@@ -6,7 +6,6 @@ module Apartment
 
     # Migrate to latest
     def migrate(database)
-      Database.process(database){ ActiveRecord::Migrator.migrate(ActiveRecord::Migrator.migrations_path) }
       Database.process(database) do
         ActiveRecord::Migrator.migrate(ActiveRecord::Migrator.migrations_path, ENV["VERSION"] ? ENV["VERSION"].to_i : nil) do |migration|
           ENV["SCOPE"].blank? || (ENV["SCOPE"] == migration.scope)
