@@ -1,6 +1,6 @@
 # Apartment
-[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/bradrobertson/apartment)
-[![Build Status](https://secure.travis-ci.org/bradrobertson/apartment.png?branch=development)](http://travis-ci.org/bradrobertson/apartment)
+[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/influitive/apartment)
+[![Build Status](https://secure.travis-ci.org/influitive/apartment.png?branch=development)](http://travis-ci.org/influitive/apartment)
 
 *Multitenancy for Rails 3 and ActiveRecord*
 

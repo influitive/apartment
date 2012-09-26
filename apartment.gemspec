@@ -7,13 +7,13 @@ Gem::Specification.new do |s|
   s.version = Apartment::VERSION
 
   s.authors = ["Ryan Brunner", "Brad Robertson"]
-  s.summary = %q{A Ruby gem for managing database multitenancy in Rails applications}
-  s.description = %q{Apartment allows Rails applications to deal with database multitenancy}
+  s.summary = %q{A Ruby gem for managing database multitenancy}
+  s.description = %q{Apartment allows Rack applications to deal with database multitenancy through ActiveRecord}
   s.email = %w{ryan@ryanbrunner.com bradleyrobertson@gmail.com}
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {spec}/*`.split("\n")
 
-  s.homepage = %q{http://github.com/bradrobertson/apartment}
+  s.homepage = %q{https://github.com/influitive/apartment}
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
