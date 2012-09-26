@@ -1,3 +1,10 @@
+# 0.17.0
+  * Sept 26, 2012
+
+  - Apartment has [a new home!](https://github.com/influitive/apartment)
+  - Support Sidekiq hooks to switch dbs [maedhr]
+  - Allow VERSION to be used on apartment:migrate [Bhavin Kamani]
+
 # 0.16.0
   * June 1, 2012
 
