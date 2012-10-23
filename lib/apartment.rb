@@ -3,7 +3,7 @@ require 'apartment/railtie' if defined?(Rails)
 module Apartment
 
   class << self
-    ACCESSOR_METHODS  = [:use_postgres_schemas, :seed_after_create, :prepend_environment]
+    ACCESSOR_METHODS  = [:use_postgres_schemas, :seed_after_create, :prepend_environment, :append_environment]
     WRITER_METHODS    = [:database_names, :excluded_models, :default_schema, :persistent_schemas]
 
     attr_accessor(*ACCESSOR_METHODS)
@@ -83,5 +83,13 @@ module Apartment
 
   # Raised when an ActiveRecord object does not have the required database field on it
   class DJSerializationError < ApartmentError; end
+
+  def self.method_missing(meth, *args, &block)
+    if meth.to_s =~ /^use_(.+)$/
+      Apartment::Database.switch($1)
+    else
+      super
+    end
+  end
 
 end

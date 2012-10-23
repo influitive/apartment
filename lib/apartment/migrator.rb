@@ -4,6 +4,16 @@ module Apartment
 
     extend self
 
+    # Create database
+    def create(database)
+      Database.create(database)
+    end
+
+    # Drop database
+    def drop(database)
+      Database.drop(database)
+    end
+
     # Migrate to latest
     def migrate(database)
       Database.process(database) do

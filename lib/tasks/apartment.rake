@@ -1,5 +1,23 @@
 apartment_namespace = namespace :apartment do
 
+  desc "Creates all multi-tenant databases"
+  task :create => ['environment', 'db:load_config'] do
+
+    Apartment.database_names.each do |db|
+      puts("Creating #{db} database")
+      Apartment::Migrator.create db
+    end
+  end
+
+  desc "Drops all multi-tenant databases"
+  task :drop => ['environment', 'db:load_config'] do
+
+    Apartment.database_names.each do |db|
+      puts("Dropping #{db} database")
+      Apartment::Migrator.drop db
+    end
+  end
+
   desc "Migrate all multi-tenant databases"
   task :migrate => 'db:migrate' do
 
@@ -29,6 +47,9 @@ apartment_namespace = namespace :apartment do
       Apartment::Migrator.rollback db, step
     end
   end
+
+  desc "Resets all multi-tenant databases"
+  task :reset => ['apartment:drop', 'apartment:create', 'apartment:migrate']
 
   namespace :migrate do
 

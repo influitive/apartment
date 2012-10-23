@@ -14,6 +14,7 @@ module Apartment
         config.database_names = []
         config.seed_after_create = false
         config.prepend_environment = false
+        config.append_environment = false
       end
     end
 
