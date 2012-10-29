@@ -137,7 +137,17 @@ module Apartment
       #   @return {String} database name with Rails environment *optionally* prepended
       #
       def environmentify(database)
-        Apartment.prepend_environment && !database.include?(Rails.env) ? "#{Rails.env}_#{database}" : database
+        unless database.include?(Rails.env)
+          if Apartment.prepend_environment
+            "#{Rails.env}_#{database}"
+          elsif Apartment.append_environment
+            "#{database}_#{Rails.env}"
+          else
+            database
+          end
+        else
+          database
+        end
       end
 
       #   Import the database schema
