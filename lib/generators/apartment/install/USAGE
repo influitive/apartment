@@ -1,0 +1,5 @@
+Description:
+  Creates an initializer for apartment.
+
+Example:
+  `rails generate apartment:install`
