@@ -231,3 +231,7 @@ All jobs *must* stored in the global (public) namespace, so add it to the list o
 * Rake tasks (see the Rakefile) will help you setup your dbs necessary to run tests
 * Please issue pull requests to the `development` branch.  All development happens here, master is used for releases
 * Ensure that your code is accompanied with tests.  No code will be merged without tests
+
+## License
+
+Apartment is released under the [MIT License](http://www.opensource.org/licenses/MIT).
