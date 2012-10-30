@@ -1,3 +1,8 @@
+# 0.17.1
+  * Oct 30, 2012
+
+  - Fixed a bug where switching to an unknown db in mysql2 would crash the app [Frodotus]
+
 # 0.17.0
   * Sept 26, 2012
 
