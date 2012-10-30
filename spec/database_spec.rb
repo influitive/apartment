@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Apartment::Database, :type => :request do
+describe Apartment::Database do
   context "using mysql" do
     # See apartment.yml file in dummy app config
 
@@ -23,7 +23,9 @@ describe Apartment::Database, :type => :request do
       end
     end
 
-    describe "#exception recovery" do
+    # TODO this doesn't belong here, but there aren't integration tests currently for mysql
+    # where to put???
+    describe "#exception recovery", :type => :request do
       let(:database1){ Apartment::Test.next_db }
 
       before do
