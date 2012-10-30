@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Apartment::Database do
+describe Apartment::Database, :type => :request do
   context "using mysql" do
     # See apartment.yml file in dummy app config
 
@@ -9,7 +9,7 @@ describe Apartment::Database do
     before do
       ActiveRecord::Base.establish_connection config
       Apartment::Test.load_schema   # load the Rails schema in the public db schema
-      subject.stub(:config).and_return config   # Use postgresql database config for this test
+      subject.stub(:config).and_return config   # Use mysql database config for this test
     end
 
     describe "#adapter" do
@@ -20,6 +20,25 @@ describe Apartment::Database do
       it "should load mysql adapter" do
         subject.adapter
         Apartment::Adapters::Mysql2Adapter.should be_a(Class)
+      end
+    end
+
+    describe "#exception recovery" do
+      let(:database1){ Apartment::Test.next_db }
+
+      before do
+        subject.reload!
+        subject.create database1
+      end
+      after{ subject.drop database1 }
+
+      it "should recover from incorrect database" do
+        session = Capybara::Session.new(:rack_test, Capybara.app)
+        session.visit("http://#{database1}.com")
+        expect {
+          session.visit("http://this-database-should-not-exist.com")
+        }.to raise_error
+        session.visit("http://#{database1}.com")
       end
 
     end
