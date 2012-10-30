@@ -22,6 +22,7 @@ module Apartment
       def connect_to_new(database)
         super
       rescue Mysql2::Error
+        Apartment::Database.reset
         raise DatabaseNotFound, "Cannot find database #{environmentify(database)}"
       end
     end
