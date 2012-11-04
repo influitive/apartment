@@ -145,6 +145,14 @@ module Apartment
       def import_database_schema
         ActiveRecord::Schema.verbose = false    # do not log schema load output.
         load_or_abort("#{Rails.root}/db/schema.rb")
+
+	Apartment.excluded_models.each do |model|
+	  if model.is_a? Class
+	    table_name = model.tabel_name
+	  end
+
+	  ActiveRecord::Base.connection.execute("DROP TABLE #{table_name}")
+	end
       end
 
       #   Return a new config that is multi-tenanted

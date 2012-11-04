@@ -149,6 +149,10 @@ module Apartment
 	Apartment.excluded_models.each do |model|
 	  if model.is_a? Class
 	    table_name = model.tabel_name
+	  else
+	    model.constantize.tap do |klass|
+	      table_name = klass.table_name
+	    end
 	  end
 
 	  ActiveRecord::Base.connection.execute("DROP TABLE #{table_name}")
