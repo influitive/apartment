@@ -15,7 +15,7 @@ module Apartment
     #   Initialize Apartment config options such as excluded_models
     #
     def init
-      # process_excluded_models
+      process_excluded_models
     end
 
     #   Fetch the proper multi-tenant adapter based on Rails config
