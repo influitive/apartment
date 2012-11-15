@@ -4,7 +4,7 @@ module Apartment
     # Assumes that database name should match subdomain
     class FirstSubdomain < Subdomain
 
-      def subdomain(request)
+      def parse_database_name(request)
         super(request).match(/(\w+)(\.\w+)?/)[1]
       end
 

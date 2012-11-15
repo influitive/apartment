@@ -54,14 +54,10 @@ module Apartment
   end
 
   module Elevators
-<<<<<<< HEAD
+    autoload :Generic,    'apartment/elevators/generic'
     autoload :Subdomain,      'apartment/elevators/subdomain'
     autoload :FirstSubdomain, 'apartment/elevators/first_subdomain'
-=======
-    autoload :Generic,    'apartment/elevators/generic'
-    autoload :Subdomain,  'apartment/elevators/subdomain'
     autoload :Domain,     'apartment/elevators/domain'
->>>>>>> 70834cfc99d2673e73fb82d2efcd501ce435b1a0
   end
 
   module Delayed

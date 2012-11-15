@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Apartment::Elevators::FirstSubdomain do
   describe "subdomain" do
-    subject { described_class.new("test").subdomain(request) }
+    subject { described_class.new("test").parse_database_name(request) }
     let(:request) { double(:request, :subdomain => subdomain)}
 
     context "one subdomain" do
