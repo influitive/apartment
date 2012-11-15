@@ -3,4 +3,6 @@
 Gemfile.lock
 pkg/*
 *.log
-
+*.sw[pno]
+spec/config/database.yml
+spec/dummy/config/database.yml

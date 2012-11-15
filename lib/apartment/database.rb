@@ -3,11 +3,14 @@ require 'active_support/core_ext/module/delegation'
 module Apartment
 
   #   The main entry point to Apartment functions
+  #
   module Database
 
     extend self
 
-    delegate :create, :current_database, :drop, :process, :process_excluded_models, :reset, :seed, :switch, :to => :adapter
+    delegate :create, :current_database, :current, :drop, :process, :process_excluded_models, :reset, :seed, :switch, :to => :adapter
+
+    attr_writer :config
 
     #   Initialize Apartment config options such as excluded_models
     #

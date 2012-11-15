@@ -4,7 +4,7 @@ module Apartment
 
     def self.postgresql_adapter(config)
       Apartment.use_postgres_schemas ?
-        Adapters::PostgresqlSchemaAdapter.new(config, :schema_search_path => ActiveRecord::Base.connection.schema_search_path) :
+        Adapters::PostgresqlSchemaAdapter.new(config) :
         Adapters::PostgresqlAdapter.new(config)
     end
   end
@@ -67,7 +67,7 @@ module Apartment
             table_name = klass.table_name.split('.', 2).last
 
             # Not sure why, but Delayed::Job somehow ignores table_name_prefix...  so we'll just manually set table name instead
-            klass.table_name = "#{Apartment.schema_to_switch}.#{table_name}"
+            klass.table_name = "#{Apartment.default_schema}.#{table_name}"
           end
         end
       end
@@ -77,8 +77,8 @@ module Apartment
       #   @return {String} default schema search path
       #
       def reset
-        ActiveRecord::Base.connection.schema_search_path = @defaults[:schema_search_path]
-        @current_database = @defaults[:schema_search_path]
+        @current_database = Apartment.default_schema
+        ActiveRecord::Base.connection.schema_search_path = full_search_path
       end
 
     protected
@@ -89,9 +89,7 @@ module Apartment
         return reset if database.nil?
 
         @current_database = database.to_s
-
-        new_search_path = @defaults[:schema_search_path].gsub(Apartment.schema_to_switch, current_database)
-        ActiveRecord::Base.connection.schema_search_path = new_search_path
+        ActiveRecord::Base.connection.schema_search_path = full_search_path
 
       rescue ActiveRecord::StatementInvalid
         raise SchemaNotFound, "One of the following schema(s) is invalid: #{new_search_path}"
@@ -106,6 +104,14 @@ module Apartment
         raise SchemaExists, "The schema #{database} already exists."
       end
 
+    private
+
+      #   Generate the final search path to set including persistent_schemas
+      #
+      def full_search_path
+        persistent_schemas = Apartment.persistent_schemas.join(', ')
+        @current_database.to_s + (persistent_schemas.empty? ? "" : ", #{persistent_schemas}")
+      end
     end
   end
 end

@@ -3,8 +3,11 @@ require 'apartment/railtie' if defined?(Rails)
 module Apartment
 
   class << self
-    attr_accessor :use_postgres_schemas, :seed_after_create, :prepend_environment, :schema_to_switch
-    attr_writer :database_names, :excluded_models
+    ACCESSOR_METHODS  = [:use_postgres_schemas, :seed_after_create, :prepend_environment]
+    WRITER_METHODS    = [:database_names, :excluded_models, :default_schema, :persistent_schemas]
+
+    attr_accessor(*ACCESSOR_METHODS)
+    attr_writer(*WRITER_METHODS)
 
     # configure apartment with available options
     def configure
@@ -26,6 +29,19 @@ module Apartment
       @excluded_models || []
     end
 
+    def default_schema
+      @default_schema || "public"
+    end
+
+    def persistent_schemas
+      @persistent_schemas || []
+    end
+
+    # Reset all the config for Apartment
+    def reset
+      (ACCESSOR_METHODS + WRITER_METHODS).each{|method| instance_variable_set(:"@#{method}", nil) }
+    end
+
   end
 
   autoload :Database, 'apartment/database'
@@ -38,8 +54,14 @@ module Apartment
   end
 
   module Elevators
+<<<<<<< HEAD
     autoload :Subdomain,      'apartment/elevators/subdomain'
     autoload :FirstSubdomain, 'apartment/elevators/first_subdomain'
+=======
+    autoload :Generic,    'apartment/elevators/generic'
+    autoload :Subdomain,  'apartment/elevators/subdomain'
+    autoload :Domain,     'apartment/elevators/domain'
+>>>>>>> 70834cfc99d2673e73fb82d2efcd501ce435b1a0
   end
 
   module Delayed
