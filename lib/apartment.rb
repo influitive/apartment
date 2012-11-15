@@ -38,7 +38,8 @@ module Apartment
   end
 
   module Elevators
-    autoload :Subdomain, 'apartment/elevators/subdomain'
+    autoload :Subdomain,      'apartment/elevators/subdomain'
+    autoload :FirstSubdomain, 'apartment/elevators/first_subdomain'
   end
 
   module Delayed
