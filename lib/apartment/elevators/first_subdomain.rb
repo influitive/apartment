@@ -5,7 +5,8 @@ module Apartment
     class FirstSubdomain < Subdomain
 
       def parse_database_name(request)
-        super(request).match(/(\w+)(\.\w+)?/)[1]
+        subdomain = super(request)
+        subdomain && subdomain.match(/(\w+)(\.\w+)?/)[1]
       end
 
     end
