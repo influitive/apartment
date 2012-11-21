@@ -92,7 +92,7 @@ module Apartment
         ActiveRecord::Base.connection.schema_search_path = full_search_path
 
       rescue ActiveRecord::StatementInvalid
-        raise SchemaNotFound, "One of the following schema(s) is invalid: #{new_search_path}"
+        raise SchemaNotFound, "One of the following schema(s) is invalid: #{full_search_path}"
       end
 
       #   Create the new schema
