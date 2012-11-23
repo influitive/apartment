@@ -4,7 +4,7 @@ module Apartment
 
   class << self
     ACCESSOR_METHODS  = [:use_postgres_schemas, :seed_after_create, :prepend_environment]
-    WRITER_METHODS    = [:database_names, :excluded_models, :default_schema, :persistent_schemas]
+    WRITER_METHODS    = [:database_names, :excluded_models, :default_schema, :persistent_schemas, :connection_class]
 
     attr_accessor(*ACCESSOR_METHODS)
     attr_writer(*WRITER_METHODS)
@@ -35,6 +35,10 @@ module Apartment
 
     def persistent_schemas
       @persistent_schemas || []
+    end
+
+    def connection_class
+      @connection_class || ActiveRecord::Base
     end
 
     # Reset all the config for Apartment
