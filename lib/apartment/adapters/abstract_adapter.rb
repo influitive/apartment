@@ -37,7 +37,7 @@ module Apartment
       #   @return {String} current database name
       #
       def current_database
-        ActiveRecord::Base.connection.current_database
+        Apartment.connection_class.connection.current_database
       end
       alias_method :current, :current_database
 
@@ -46,8 +46,8 @@ module Apartment
       #   @param {String} database Database name
       #
       def drop(database)
-        # ActiveRecord::Base.connection.drop_database   note that drop_database will not throw an exception, so manually execute
-        ActiveRecord::Base.connection.execute("DROP DATABASE #{environmentify(database)}" )
+        # Apartment.connection_class.connection.drop_database   note that drop_database will not throw an exception, so manually execute
+        Apartment.connection_class.connection.execute("DROP DATABASE #{environmentify(database)}" )
 
       rescue ActiveRecord::StatementInvalid
         raise DatabaseNotFound, "The database #{environmentify(database)} cannot be found"
@@ -69,7 +69,7 @@ module Apartment
       #   Establish a new connection for each specific excluded model
       #
       def process_excluded_models
-        # All other models will shared a connection (at ActiveRecord::Base) and we can modify at will
+        # All other models will shared a connection (at Apartment.connection_class) and we can modify at will
         Apartment.excluded_models.each do |excluded_model|
           # Note that due to rails reloading, we now take string references to classes rather than
           # actual object references.  This way when we contantize, we always get the proper class reference
@@ -85,7 +85,7 @@ module Apartment
       #   Reset the database connection to the default
       #
       def reset
-        ActiveRecord::Base.establish_connection @config
+        Apartment.connection_class.establish_connection @config
       end
 
       #   Switch to new connection (or schema if appopriate)
@@ -113,7 +113,7 @@ module Apartment
       #   @param {String} database Database name
       #
       def create_database(database)
-        ActiveRecord::Base.connection.create_database( environmentify(database) )
+        Apartment.connection_class.connection.create_database( environmentify(database) )
 
       rescue ActiveRecord::StatementInvalid
         raise DatabaseExists, "The database #{environmentify(database)} already exists."
@@ -124,8 +124,8 @@ module Apartment
       #   @param {String} database Database name
       #
       def connect_to_new(database)
-        ActiveRecord::Base.establish_connection multi_tenantify(database)
-        ActiveRecord::Base.connection.active?   # call active? to manually check if this connection is valid
+        Apartment.connection_class.establish_connection multi_tenantify(database)
+        Apartment.connection_class.connection.active?   # call active? to manually check if this connection is valid
 
       rescue ActiveRecord::StatementInvalid
         raise DatabaseNotFound, "The database #{environmentify(database)} cannot be found."
