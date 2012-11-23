@@ -3,7 +3,10 @@ require 'spec_helper'
 shared_examples_for "a generic apartment adapter" do
   include Apartment::Spec::AdapterRequirements
 
-  before{ Apartment.prepend_environment = false }
+  before {
+    Apartment.prepend_environment = false
+    Apartment.append_environment = false
+  }
 
   #
   #   Creates happen already in our before_filter
