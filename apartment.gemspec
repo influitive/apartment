@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.authors = ["Ryan Brunner", "Brad Robertson"]
   s.summary = %q{A Ruby gem for managing database multitenancy}
   s.description = %q{Apartment allows Rack applications to deal with database multitenancy through ActiveRecord}
-  s.email = %w{ryan@ryanbrunner.com bradleyrobertson@gmail.com}
+  s.email = %w{ryan@influitive.com brad@influitive.com}
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {spec}/*`.split("\n")
 
