@@ -40,7 +40,7 @@ module Apartment
       #   @param {String} database Database (schema) to drop
       #
       def drop(database)
-        Apartment.connection_class.connection.execute(%{DROP SCHEMA "#{database}" CASCADE})
+        Apartment.connection.execute(%{DROP SCHEMA "#{database}" CASCADE})
 
       rescue ActiveRecord::StatementInvalid
         raise SchemaNotFound, "The schema #{database.inspect} cannot be found."
@@ -78,7 +78,7 @@ module Apartment
       #
       def reset
         @current_database = Apartment.default_schema
-        Apartment.connection_class.connection.schema_search_path = full_search_path
+        Apartment.connection.schema_search_path = full_search_path
       end
 
     protected
@@ -89,7 +89,7 @@ module Apartment
         return reset if database.nil?
 
         @current_database = database.to_s
-        Apartment.connection_class.connection.schema_search_path = full_search_path
+        Apartment.connection.schema_search_path = full_search_path
 
       rescue ActiveRecord::StatementInvalid
         raise SchemaNotFound, "One of the following schema(s) is invalid: #{full_search_path}"
@@ -98,7 +98,7 @@ module Apartment
       #   Create the new schema
       #
       def create_database(database)
-        Apartment.connection_class.connection.execute(%{CREATE SCHEMA "#{database}"})
+        Apartment.connection.execute(%{CREATE SCHEMA "#{database}"})
 
       rescue ActiveRecord::StatementInvalid
         raise SchemaExists, "The schema #{database} already exists."

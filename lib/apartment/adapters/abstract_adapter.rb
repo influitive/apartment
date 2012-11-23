@@ -37,7 +37,7 @@ module Apartment
       #   @return {String} current database name
       #
       def current_database
-        Apartment.connection_class.connection.current_database
+        Apartment.connection.current_database
       end
       alias_method :current, :current_database
 
@@ -46,8 +46,8 @@ module Apartment
       #   @param {String} database Database name
       #
       def drop(database)
-        # Apartment.connection_class.connection.drop_database   note that drop_database will not throw an exception, so manually execute
-        Apartment.connection_class.connection.execute("DROP DATABASE #{environmentify(database)}" )
+        # Apartment.connection.drop_database   note that drop_database will not throw an exception, so manually execute
+        Apartment.connection.execute("DROP DATABASE #{environmentify(database)}" )
 
       rescue ActiveRecord::StatementInvalid
         raise DatabaseNotFound, "The database #{environmentify(database)} cannot be found"
@@ -85,7 +85,7 @@ module Apartment
       #   Reset the database connection to the default
       #
       def reset
-        Apartment.connection_class.establish_connection @config
+        Apartment.establish_connection @config
       end
 
       #   Switch to new connection (or schema if appopriate)
@@ -113,7 +113,7 @@ module Apartment
       #   @param {String} database Database name
       #
       def create_database(database)
-        Apartment.connection_class.connection.create_database( environmentify(database) )
+        Apartment.connection.create_database( environmentify(database) )
 
       rescue ActiveRecord::StatementInvalid
         raise DatabaseExists, "The database #{environmentify(database)} already exists."
@@ -124,8 +124,8 @@ module Apartment
       #   @param {String} database Database name
       #
       def connect_to_new(database)
-        Apartment.connection_class.establish_connection multi_tenantify(database)
-        Apartment.connection_class.connection.active?   # call active? to manually check if this connection is valid
+        Apartment.establish_connection multi_tenantify(database)
+        Apartment.connection.active?   # call active? to manually check if this connection is valid
 
       rescue ActiveRecord::StatementInvalid
         raise DatabaseNotFound, "The database #{environmentify(database)} cannot be found."

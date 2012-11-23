@@ -9,6 +9,8 @@ module Apartment
     attr_accessor(*ACCESSOR_METHODS)
     attr_writer(*WRITER_METHODS)
 
+    delegate :connection, :establish_connection, to: :connection_class
+
     # configure apartment with available options
     def configure
       yield self if block_given?
