@@ -1,5 +1,6 @@
-##
+#
 # Apartment Configuration
+#
 Apartment.configure do |config|
 
   # these models will not be multi-tenanted,
@@ -18,18 +19,18 @@ Apartment.configure do |config|
   # config.prepend_environment = true
   # config.append_environment = true
 
-  # supply list of database names
-  config.database_names = lambda{ ToDo_Tenant_Or_User_Model.scoped.collect(&:database) }
+  # supply list of database names for migrations to run on
+  config.database_names = lambda{ ToDo_Tenant_Or_User_Model.pluck :database }
 
 end
 
 ##
 # Elevator Configuration
 
+# Rails.application.config.middleware.use 'Apartment::Elevators::Generic', lambda { |request|
+#   # TODO: supply generic implementation
+# }
+
 # Rails.application.config.middleware.use 'Apartment::Elevators::Domain'
 
-# Rails.application.config.middleware.use 'Apartment::Elevators::Subdomain'
-
-Rails.application.config.middleware.use 'Apartment::Elevators::Generic', Proc.new { |request|
-  # TODO: supply generic implementation
-}
+Rails.application.config.middleware.use 'Apartment::Elevators::Subdomain'
