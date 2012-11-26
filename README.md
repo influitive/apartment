@@ -33,8 +33,8 @@ you need to create a new database, you can run the following command:
 
     Apartment::Database.create('database_name')
 
-Apartment will create a new database in the following format: "_environment_\_database_name".
-In the case of a sqlite database, this will be created in your 'db/migrate' folder. With
+If you're using the [prepend environment](https://github.com/influitive/apartment#handling-environments) config option or you AREN'T using Postgresql Schemas, this will create a database in the following format: "#{environment}\_database_name".
+In the case of a sqlite database, this will be created in your 'db/' folder. With
 other databases, the database will be created as a new DB within the system.
 
 When you create a new database, all migrations will be run against that database, so it will be
