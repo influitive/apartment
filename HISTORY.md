@@ -1,3 +1,11 @@
+# 0.18.0
+  * Nov 27, 2012
+
+  - Added `append_environment` config option [virtualstaticvoid]
+  - Cleaned up the readme and generator documentation
+  - Added `connection_class` config option [smashtank]
+  - Fixed a [bug](https://github.com/influitive/apartment/issues/17#issuecomment-10758327) in pg adapter when missing schema
+
 # 0.17.1
   * Oct 30, 2012
 
