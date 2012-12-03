@@ -1,4 +1,5 @@
 require 'apartment/railtie' if defined?(Rails)
+require 'active_support/core_ext/module/delegation'
 
 module Apartment
 
