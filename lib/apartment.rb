@@ -16,11 +16,6 @@ module Apartment
       yield self if block_given?
     end
 
-    # Default switch schema to public
-    def schema_to_switch
-      @schema_to_switch || "public"
-    end
-
     # Be careful not to use `return` here so both Proc and lambda can be used without breaking
     def database_names
       @database_names.respond_to?(:call) ? @database_names.call : @database_names
