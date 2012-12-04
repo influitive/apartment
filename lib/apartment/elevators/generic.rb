@@ -10,7 +10,7 @@ module Apartment
       end
 
       def call(env)
-        request = ActionDispatch::Request.new(env)
+        request = Rack::Request.new(env)
 
         database = @processor.call(request)
 
