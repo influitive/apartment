@@ -20,12 +20,12 @@ describe Apartment do
       Apartment.excluded_models.should == excluded_models
     end
 
-    it "should set postgres_schemas" do
+    it "should set use_schemas" do
       Apartment.configure do |config|
         config.excluded_models = []
-        config.use_postgres_schemas = false
+        config.use_schemas = false
       end
-      Apartment.use_postgres_schemas.should be_false
+      Apartment.use_schemas.should be_false
     end
 
     it "should set seed_after_create" do

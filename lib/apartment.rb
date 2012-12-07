@@ -5,7 +5,7 @@ require 'active_support/core_ext/object/blank'
 module Apartment
 
   class << self
-    ACCESSOR_METHODS  = [:use_postgres_schemas, :seed_after_create, :prepend_environment, :append_environment]
+    ACCESSOR_METHODS  = [:use_schemas, :seed_after_create, :prepend_environment, :append_environment]
     WRITER_METHODS    = [:database_names, :excluded_models, :default_schema, :persistent_schemas, :connection_class]
 
     attr_accessor(*ACCESSOR_METHODS)
@@ -43,6 +43,16 @@ module Apartment
     # Reset all the config for Apartment
     def reset
       (ACCESSOR_METHODS + WRITER_METHODS).each{|method| instance_variable_set(:"@#{method}", nil) }
+    end
+
+    def use_postgres_schemas
+      warn "[Deprecation Warning] `use_postgresql_schemas` is now deprecated, please use `use_schemas`"
+      use_schemas
+    end
+
+    def use_postgres_schemas=(to_use_or_not_to_use)
+      warn "[Deprecation Warning] `use_postgresql_schemas=` is now deprecated, please use `use_schemas=`"
+      self.use_schemas = to_use_or_not_to_use
     end
 
   end

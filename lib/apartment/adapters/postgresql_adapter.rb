@@ -3,7 +3,7 @@ module Apartment
   module Database
 
     def self.postgresql_adapter(config)
-      Apartment.use_postgres_schemas ?
+      Apartment.use_schemas ?
         Adapters::PostgresqlSchemaAdapter.new(config) :
         Adapters::PostgresqlAdapter.new(config)
     end

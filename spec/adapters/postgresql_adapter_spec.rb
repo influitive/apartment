@@ -8,7 +8,7 @@ describe Apartment::Adapters::PostgresqlAdapter do
 
   context "using schemas" do
 
-    before{ Apartment.use_postgres_schemas = true }
+    before{ Apartment.use_schemas = true }
 
     # Not sure why, but somehow using let(:database_names) memoizes for the whole example group, not just each test
     def database_names
@@ -23,7 +23,7 @@ describe Apartment::Adapters::PostgresqlAdapter do
 
   context "using databases" do
 
-    before{ Apartment.use_postgres_schemas = false }
+    before{ Apartment.use_schemas = false }
 
     # Not sure why, but somehow using let(:database_names) memoizes for the whole example group, not just each test
     def database_names

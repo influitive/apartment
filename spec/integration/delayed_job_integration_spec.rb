@@ -16,7 +16,7 @@ describe Apartment::Delayed do
     Apartment::Database.stub(:config).and_return config   # Use postgresql database config for this test
 
     Apartment.configure do |config|
-      config.use_postgres_schemas = true
+      config.use_schemas = true
     end
 
     Apartment::Database.create database
