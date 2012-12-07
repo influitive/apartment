@@ -3,7 +3,9 @@ module Apartment
   module Database
 
     def self.mysql2_adapter(config)
-      Adapters::Mysql2Adapter.new config
+      Apartment.use_schemas ?
+        Adapters::Mysql2Adapter.new(config) :
+        Adapters::Mysql2SchemaAdapter.new(config)
     end
   end
 
@@ -26,6 +28,24 @@ module Apartment
         raise DatabaseNotFound, "Cannot find database #{environmentify(database)}"
       end
 
+    end
+
+    class Mysql2SchemaAdapter < AbstractAdapter
+
+    protected
+
+      #   Connect to new database
+      #   Abstract adapter will catch generic ActiveRecord error
+      #   Catch specific adapter errors here
+      #
+      #   @param {String} database Database name
+      #
+      def connect_to_new(database)
+        super
+      rescue Mysql2::Error
+        Apartment::Database.reset
+        raise DatabaseNotFound, "Cannot find database #{environmentify(database)}"
+      end
     end
   end
 end
