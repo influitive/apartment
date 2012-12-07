@@ -1,3 +1,23 @@
+<% if defined?(JRUBY_VERSION) %>
+connections:
+  postgresql:
+    adapter: jdbc
+    username: postgres
+    min_messages: WARNING
+    driver: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/apartment_postgresql_test
+    timeout: 5000
+    pool: 5
+
+  mysql:
+    adapter: jdbc
+    username: root
+    min_messages: WARNING
+    driver: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/apartment_mysql_test
+    timeout: 5000
+    pool: 5
+<% else %>
 connections:
   postgresql:
     adapter: postgresql
@@ -12,3 +32,4 @@ connections:
     database: apartment_mysql_test
     username: root
     password:
+<% end %>
