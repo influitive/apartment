@@ -1,4 +1,6 @@
 require 'apartment/railtie' if defined?(Rails)
+require 'active_support/core_ext/module/delegation'
+require 'active_support/core_ext/object/blank'
 
 module Apartment
 
@@ -14,11 +16,6 @@ module Apartment
     # configure apartment with available options
     def configure
       yield self if block_given?
-    end
-
-    # Default switch schema to public
-    def schema_to_switch
-      @schema_to_switch || "public"
     end
 
     # Be careful not to use `return` here so both Proc and lambda can be used without breaking
