@@ -33,8 +33,6 @@ module Apartment
     # Separate Adapter for Postgresql when using schemas
     class PostgresqlSchemaAdapter < AbstractAdapter
 
-      attr_reader :current_database
-
       #   Drop the database schema
       #
       #   @param {String} database Database (schema) to drop
@@ -79,6 +77,10 @@ module Apartment
       def reset
         @current_database = Apartment.default_schema
         Apartment.connection.schema_search_path = full_search_path
+      end
+
+      def current_database
+        @current_database || Apartment.default_schema
       end
 
     protected
