@@ -14,4 +14,14 @@ describe Apartment::Adapters::Mysql2Adapter do
 
   it_should_behave_like "a generic apartment adapter"
   it_should_behave_like "a db based apartment adapter"
+
+  context "get this shit working" do
+    include Apartment::Spec::AdapterRequirements
+
+    it "should raise an error if database is invalid" do
+      expect {
+        subject.switch 'unknown_database'
+      }.to raise_error(Apartment::DatabaseNotFound)
+    end
+  end
 end
