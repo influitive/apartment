@@ -31,6 +31,7 @@ module Apartment
 
           ActiveRecord::Base.clear_all_connections!
           Apartment::Database.reload!
+          Apartment::Database.config = config
         end
       end
 

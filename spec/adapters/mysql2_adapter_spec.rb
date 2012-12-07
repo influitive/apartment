@@ -3,8 +3,8 @@ require 'apartment/adapters/mysql2_adapter'
 
 describe Apartment::Adapters::Mysql2Adapter do
 
-  let(:config){ Apartment::Test.config['connections']['mysql'] }
-  subject{ Apartment::Database.mysql2_adapter config.symbolize_keys }
+  let(:config){ Apartment::Test.config['connections']['mysql'].symbolize_keys }
+  subject{ Apartment::Database.mysql2_adapter config }
 
   def database_names
     ActiveRecord::Base.connection.execute("SELECT schema_name FROM information_schema.schemata").collect{|row| row[0]}
@@ -12,16 +12,18 @@ describe Apartment::Adapters::Mysql2Adapter do
 
   let(:default_database){ subject.process{ ActiveRecord::Base.connection.current_database } }
 
-  it_should_behave_like "a generic apartment adapter"
-  it_should_behave_like "a connection based apartment adapter"
+  context "using - the equivalent of - schemas" do
+    before { Apartment.use_schemas = true }
 
-  context "get this shit working" do
-    include Apartment::Spec::AdapterRequirements
+    it_should_behave_like "a generic apartment adapter"
 
-    it "should raise an error if database is invalid" do
-      expect {
-        subject.switch 'unknown_database'
-      }.to raise_error(Apartment::DatabaseNotFound)
-    end
   end
+
+  context "using connections" do
+    before { Apartment.use_schemas = false }
+
+    it_should_behave_like "a generic apartment adapter"
+    it_should_behave_like "a connection based apartment adapter"
+  end
+
 end

@@ -6,7 +6,6 @@ shared_examples_for "a connection based apartment adapter" do
   let(:default_database){ subject.process{ ActiveRecord::Base.connection.current_database } }
 
   describe "#init" do
-
     it "should process model exclusions" do
       Apartment.configure do |config|
         config.excluded_models = ["Company"]

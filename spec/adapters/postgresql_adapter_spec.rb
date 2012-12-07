@@ -3,8 +3,8 @@ require 'apartment/adapters/postgresql_adapter'
 
 describe Apartment::Adapters::PostgresqlAdapter do
 
-  let(:config){ Apartment::Test.config['connections']['postgresql'] }
-  subject{ Apartment::Database.postgresql_adapter config.symbolize_keys }
+  let(:config){ Apartment::Test.config['connections']['postgresql'].symbolize_keys }
+  subject{ Apartment::Database.postgresql_adapter config }
 
   context "using schemas" do
 
