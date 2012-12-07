@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-shared_examples_for "a db based apartment adapter" do
+shared_examples_for "a connection based apartment adapter" do
   include Apartment::Spec::AdapterRequirements
 
   let(:default_database){ subject.process{ ActiveRecord::Base.connection.current_database } }

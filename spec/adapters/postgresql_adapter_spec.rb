@@ -21,7 +21,7 @@ describe Apartment::Adapters::PostgresqlAdapter do
     it_should_behave_like "a schema based apartment adapter"
   end
 
-  context "using databases" do
+  context "using connections" do
 
     before{ Apartment.use_schemas = false }
 
@@ -33,6 +33,6 @@ describe Apartment::Adapters::PostgresqlAdapter do
     let(:default_database){ subject.process{ ActiveRecord::Base.connection.current_database } }
 
     it_should_behave_like "a generic apartment adapter"
-    it_should_behave_like "a db based apartment adapter"
+    it_should_behave_like "a connection based apartment adapter"
   end
 end

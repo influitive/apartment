@@ -13,7 +13,7 @@ describe Apartment::Adapters::Mysql2Adapter do
   let(:default_database){ subject.process{ ActiveRecord::Base.connection.current_database } }
 
   it_should_behave_like "a generic apartment adapter"
-  it_should_behave_like "a db based apartment adapter"
+  it_should_behave_like "a connection based apartment adapter"
 
   context "get this shit working" do
     include Apartment::Spec::AdapterRequirements
