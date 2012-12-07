@@ -57,10 +57,11 @@ module Apartment
   end
 
   module Elevators
-    autoload :Generic,    'apartment/elevators/generic'
-    autoload :Subdomain,      'apartment/elevators/subdomain'
-    autoload :FirstSubdomain, 'apartment/elevators/first_subdomain'
-    autoload :Domain,     'apartment/elevators/domain'
+    autoload :Generic,            'apartment/elevators/generic'
+    autoload :Subdomain,          'apartment/elevators/subdomain'
+    autoload :FirstSubdomain,     'apartment/elevators/first_subdomain'
+    autoload :Domain,             'apartment/elevators/domain'
+    autoload :SubdomainAndDomain, 'apartment/elevators/subdomain_and_domain'
   end
 
   module Delayed
