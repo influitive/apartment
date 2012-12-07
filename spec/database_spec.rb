@@ -79,6 +79,16 @@ describe Apartment::Database do
         }.to raise_error
       end
 
+      context "threadsafety" do
+        before { subject.create database }
+
+        it 'has a threadsafe adapter' do
+          subject.switch(database)
+          thread = Thread.new { subject.current_database.should == Apartment.default_schema }
+          thread.join
+          subject.current_database.should == database
+        end
+      end
     end
 
     context "with schemas" do
