@@ -30,6 +30,13 @@ module Apartment
     end
 
     class Mysql2SchemaAdapter < AbstractAdapter
+      attr_reader :default_database
+
+      def initialize(config)
+        @default_database = config[:database]
+
+        super
+      end
 
     protected
 
