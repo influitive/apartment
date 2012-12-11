@@ -46,7 +46,7 @@ module Apartment
 
     protected
 
-      #   Set schema search path to new schema
+      #   Set schema current_database to new db
       #
       def connect_to_new(database)
         return reset if database.nil?
