@@ -38,6 +38,12 @@ module Apartment
         super
       end
 
+      #   Reset current_database to the default_database
+      #
+      def reset
+        connect_to_new(default_database)
+      end
+
     protected
 
       #   Set schema search path to new schema
