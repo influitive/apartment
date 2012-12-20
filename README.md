@@ -164,7 +164,7 @@ of dbs to Apartment.  You can make this dynamic by providing a Proc object to be
 This object should yield an array of string representing each database name.  Example:
 
     # Dynamically get database names to migrate
-    config.database_names = lambda{ Customer.select(:database_name).map(&:database_name) }
+    config.database_names = lambda{ Customer.pluck(:database_name) }
 
     # Use a static list of database names for migrate
     config.database_names = ['db1', 'db2']
