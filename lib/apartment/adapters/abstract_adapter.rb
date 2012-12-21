@@ -43,7 +43,12 @@ module Apartment
           Apartment.connection.current_database
         end
       end
-      alias_method :current, :current_database
+
+      #   Note alias_method here doesn't work with inheritence apparently ??
+      #
+      def current
+        current_database
+      end
 
       #   Drop the database
       #

@@ -9,7 +9,7 @@ module Apartment
       #   @param {String} database Database name
       #
       def drop(database)
-        Apartment.connection.execute("DROP DATABASE #{environmentify(database)}")
+        super(database)
 
       rescue ActiveRecord::StatementInvalid, ActiveRecord::JDBCError
         raise DatabaseNotFound, "The database #{environmentify(database)} cannot be found"
@@ -22,7 +22,7 @@ module Apartment
       #   @param {String} database Database name
       #
       def create_database(database)
-        Apartment.connection.create_database(environmentify(database))
+        super(database)
 
       rescue ActiveRecord::StatementInvalid, ActiveRecord::JDBCError
         raise DatabaseExists, "The database #{environmentify(database)} already exists."
@@ -33,8 +33,7 @@ module Apartment
       #   @param {String} database Database name
       #
       def connect_to_new(database)
-        Apartment.establish_connection multi_tenantify(database)
-        Apartment.connection.active? # call active? to manually check if this connection is valid
+        super(database)
 
       rescue ActiveRecord::StatementInvalid, ActiveRecord::JDBCError
         raise DatabaseNotFound, "The database #{environmentify(database)} cannot be found."

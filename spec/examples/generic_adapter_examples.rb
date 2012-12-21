@@ -95,6 +95,7 @@ shared_examples_for "a generic apartment adapter" do
     it "should return the current db name" do
       subject.switch(db1)
       subject.current_database.should == db1
+      subject.current.should == db1
     end
   end
 end
