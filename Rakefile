@@ -24,7 +24,7 @@ task :default => :spec
 
 namespace :db do
   namespace :test do
-    task :prepare => %w{postgres:drop_db postgres:build_db mysql:drop_db mysql:build_db}
+    task :prepare => %w{postgres:drop_db postgres:build_db mysql:drop_db mysql:build_db sqlserver:drop_db sqlserver:build_db}
   end
 
   desc "copy sample database credential files over if real files don't exist"
@@ -76,6 +76,25 @@ namespace :mysql do
 
 end
 
+namespace :sqlserver do
+  require 'active_record'
+  require "#{File.join(File.dirname(__FILE__), 'spec', 'support', 'config')}"
+
+  desc 'Build the SQL Server test databases'
+  task :build_db do
+    %x{ create database #{sqlserver_config['database']} } rescue "test db already exists"
+    ActiveRecord::Base.establish_connection sqlserver_config
+    ActiveRecord::Migrator.migrate('spec/dummy/db/migrate')
+  end
+
+  desc "drop the SQL Server test database"
+  task :drop_db do
+    puts "dropping database #{sqlserver_config['database']}"
+    %x{ drop database #{sqlserver_config['database']} }
+  end
+
+end
+
 # TODO clean this up
 def config
   Apartment::Test.config['connections']
@@ -87,4 +106,8 @@ end
 
 def my_config
   config['mysql']
+end
+
+def sqlserver_config
+  config['sqlserver']
 end

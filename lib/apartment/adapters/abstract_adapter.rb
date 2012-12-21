@@ -37,7 +37,11 @@ module Apartment
       #   @return {String} current database name
       #
       def current_database
-        Apartment.connection.current_database
+        if @config[:driver] =~ /jtds/ && @config[:adapter].eql?('jdbc')
+          Apartment.connection.database_name
+        else
+          Apartment.connection.current_database
+        end
       end
       alias_method :current, :current_database
 

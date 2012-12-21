@@ -35,10 +35,13 @@ Gem::Specification.new do |s|
     s.add_development_dependency 'jdbc-postgres'
     s.add_development_dependency 'jdbc-mysql'
     s.add_development_dependency 'jdbc-sqlite3'
+    s.add_development_dependency 'jdbc-jtds'
     s.add_development_dependency 'jruby-openssl'
   else
     s.add_development_dependency 'mysql2', '~> 0.3.10'
     s.add_development_dependency 'pg', '>= 0.11.0'
     s.add_development_dependency 'sqlite3'
+    s.add_development_dependency 'tiny_tds'
+    s.add_development_dependency 'activerecord-sqlserver-adapter'
   end
 end

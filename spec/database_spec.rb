@@ -151,4 +151,50 @@ describe Apartment::Database do
     end
 
   end
+
+  # piggybacking off the spec for mysql
+  context "using sqlserver" do
+    # See apartment.yml file in dummy app config
+
+    let(:config){ Apartment::Test.config['connections']['sqlserver'].symbolize_keys }
+
+    before do
+      ActiveRecord::Base.establish_connection config
+      Apartment::Test.load_schema   # load the Rails schema in the public db schema
+      subject.stub(:config).and_return config   # Use mssql database config for this test
+    end
+
+    describe "#adapter" do
+      before do
+        subject.reload!
+      end
+
+      it "should load sqlserver adapter" do
+        subject.adapter
+        Apartment::Adapters::SqlServerAdapter.should be_a(Class)
+      end
+    end
+
+    # TODO this doesn't belong here, but there aren't integration tests currently for mssql
+    # where to put???
+    describe "#exception recovery", :type => :request do
+      let(:database1){ Apartment::Test.next_db }
+
+      before do
+        subject.reload!
+        subject.create database1
+      end
+      after{ subject.drop database1 }
+
+      it "should recover from incorrect database" do
+        session = Capybara::Session.new(:rack_test, Capybara.app)
+        session.visit("http://#{database1}.com")
+        expect {
+          session.visit("http://this-database-should-not-exist.com")
+        }.to raise_error
+        session.visit("http://#{database1}.com")
+      end
+
+    end
+  end
 end

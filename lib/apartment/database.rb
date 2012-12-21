@@ -25,12 +25,13 @@ module Apartment
     def adapter
       @adapter ||= begin
         adapter_method = "#{config[:adapter]}_adapter"
-
         if config[:adapter].eql?('jdbc')
           if config[:driver] =~ /mysql/
             adapter_method = 'jdbc_mysql_adapter'
           elsif config[:driver] =~ /postgresql/
             adapter_method = 'jdbc_postgresql_adapter'
+          elsif config[:driver] =~ /jtds/
+            adapter_method = 'jdbc_sqlserver_adapter'
           end
         end
 
