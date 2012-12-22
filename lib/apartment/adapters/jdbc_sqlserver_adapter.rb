@@ -19,9 +19,9 @@ module Apartment
       #   @param {String} database Database name
       #
       def connect_to_new(database)
-        super
+        super(database)
       rescue DatabaseNotFound
-        Apartment::Database.reset
+        self.reset
         raise DatabaseNotFound, "Cannot find database #{environmentify(database)}"
       end
     end

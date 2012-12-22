@@ -11,7 +11,7 @@ module Apartment
       def drop(database)
         super(database)
 
-      rescue ActiveRecord::StatementInvalid, ActiveRecord::JDBCError
+      rescue DatabaseNotFound, ActiveRecord::JDBCError
         raise DatabaseNotFound, "The database #{environmentify(database)} cannot be found"
       end
 
@@ -24,7 +24,7 @@ module Apartment
       def create_database(database)
         super(database)
 
-      rescue ActiveRecord::StatementInvalid, ActiveRecord::JDBCError
+      rescue DatabaseExists, ActiveRecord::JDBCError
         raise DatabaseExists, "The database #{environmentify(database)} already exists."
       end
 
@@ -35,7 +35,7 @@ module Apartment
       def connect_to_new(database)
         super(database)
 
-      rescue ActiveRecord::StatementInvalid, ActiveRecord::JDBCError
+      rescue DatabaseNotFound, ActiveRecord::JDBCError
         raise DatabaseNotFound, "The database #{environmentify(database)} cannot be found."
       end
 

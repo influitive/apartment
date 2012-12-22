@@ -13,6 +13,7 @@ module Apartment
       def initialize(config, defaults = {})
         @config = config
         @defaults = defaults
+        @current_database = current_database
       end
 
       #   Create a new database, import schema, seed if appropriate
@@ -38,17 +39,12 @@ module Apartment
       #
       def current_database
         if @config[:driver] =~ /jtds/ && @config[:adapter].eql?('jdbc')
-          Apartment.connection.database_name
+          @current_database = Apartment.connection.database_name
         else
-          Apartment.connection.current_database
+          @current_database = Apartment.connection.current_database
         end
       end
-
-      #   Note alias_method here doesn't work with inheritence apparently ??
-      #
-      def current
-        current_database
-      end
+      alias_method :current, :current_database
 
       #   Drop the database
       #
@@ -67,12 +63,12 @@ module Apartment
       #   @param {String?} database Database or schema to connect to
       #
       def process(database = nil)
-        current_db = current_database
+        previous_db = @current_database
         switch(database)
         yield if block_given?
 
       ensure
-        switch(current_db) rescue reset
+        switch(previous_db) rescue reset
       end
 
       #   Establish a new connection for each specific excluded model
