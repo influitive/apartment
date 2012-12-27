@@ -8,11 +8,9 @@ module Apartment
 
       #   @constructor
       #   @param {Hash} config Database config
-      #   @param {Hash} defaults Some default options
       #
-      def initialize(config, defaults = {})
+      def initialize(config)
         @config = config
-        @defaults = defaults
         @current_database = current_database
       end
 
@@ -38,11 +36,7 @@ module Apartment
       #   @return {String} current database name
       #
       def current_database
-        if @config[:driver] =~ /jtds/ && @config[:adapter].eql?('jdbc')
-          @current_database = Apartment.connection.database_name
-        else
-          @current_database = Apartment.connection.current_database
-        end
+        @current_database = Apartment.connection.current_database
       end
       alias_method :current, :current_database
 

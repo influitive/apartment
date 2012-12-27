@@ -23,7 +23,7 @@ module Apartment
     #   @return {subclass of Apartment::AbstractAdapter}
     #
     def adapter
-      @adapter ||= begin
+      Thread.current[:apartment_adapter] ||= begin
         adapter_method = "#{config[:adapter]}_adapter"
         if config[:adapter].eql?('jdbc')
           if config[:driver] =~ /mysql/
@@ -53,7 +53,7 @@ module Apartment
     #   Reset config and adapter so they are regenerated
     #
     def reload!
-      @adapter = nil
+      Thread.current[:apartment_adapter] = nil
       @config = nil
     end
 

@@ -4,6 +4,19 @@ module Apartment
 
     class AbstractJDBCAdapter < AbstractAdapter
 
+      #   Get the current database name
+      #
+      #   @return {String} current database name
+      #
+      def current_database
+        if @config[:driver] =~ /jtds/
+          @current_database = Apartment.connection.database_name
+        else
+          @current_database = super
+        end
+      end
+      alias_method :current, :current_database
+
       #   Drop the database
       #
       #   @param {String} database Database name
