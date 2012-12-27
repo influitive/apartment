@@ -162,16 +162,18 @@ describe Apartment::Database do
 
   end
 
-  # piggybacking off the spec for mysql
   context "using sqlserver" do
     # See apartment.yml file in dummy app config
 
     let(:config){ Apartment::Test.config['connections']['sqlserver'].symbolize_keys }
+    let(:database){ Apartment::Test.next_db }
+    let(:database2){ Apartment::Test.next_db }
 
     before do
+      Apartment.use_schemas = false
       ActiveRecord::Base.establish_connection config
       Apartment::Test.load_schema   # load the Rails schema in the public db schema
-      subject.stub(:config).and_return config   # Use mssql database config for this test
+      subject.stub(:config).and_return config   # Use postgresql database config for this test
     end
 
     describe "#adapter" do
@@ -181,30 +183,27 @@ describe Apartment::Database do
 
       it "should load sqlserver adapter" do
         subject.adapter
-        Apartment::Adapters::SqlServerAdapter.should be_a(Class)
+        Apartment::Adapters::SqlserverAdapter.should be_a(Class)
       end
-    end
 
-    # TODO this doesn't belong here, but there aren't integration tests currently for mssql
-    # where to put???
-    describe "#exception recovery", :type => :request do
-      let(:database1){ Apartment::Test.next_db }
+      it "should raise exception with invalid adapter specified" do
+        subject.stub(:config).and_return config.merge(:adapter => 'unkown')
 
-      before do
-        subject.reload!
-        subject.create database1
-      end
-      after{ subject.drop database1 }
-
-      it "should recover from incorrect database" do
-        session = Capybara::Session.new(:rack_test, Capybara.app)
-        session.visit("http://#{database1}.com")
         expect {
-          session.visit("http://this-database-should-not-exist.com")
+          Apartment::Database.adapter
         }.to raise_error
-        session.visit("http://#{database1}.com")
       end
 
+      context "threadsafety" do
+        before { subject.create database }
+
+        it 'has a threadsafe adapter' do
+          subject.switch(database)
+          thread = Thread.new { subject.current_database.should == Apartment.connection_class.connection.current_database }
+          thread.join
+          subject.current_database.should == database
+        end
+      end
     end
   end
 end
