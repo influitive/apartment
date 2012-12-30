@@ -1,3 +1,10 @@
+# 0.19.0
+  * Dec 29, 2012
+
+  - Apartment is now threadsafe
+  - New postgis adapter [zonpantli]
+  - Removed ActionDispatch dependency for use with Rack apps (regression)
+
 # 0.18.0
   * Nov 27, 2012
 
