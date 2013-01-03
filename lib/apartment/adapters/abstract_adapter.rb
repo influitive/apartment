@@ -11,6 +11,7 @@ module Apartment
       #
       def initialize(config)
         @config = config
+        @current_database = current_database
       end
 
       #   Create a new database, import schema, seed if appropriate
@@ -35,14 +36,9 @@ module Apartment
       #   @return {String} current database name
       #
       def current_database
-        Apartment.connection.current_database
+        @current_database = Apartment.connection.current_database
       end
-
-      #   Note alias_method here doesn't work with inheritence apparently ??
-      #
-      def current
-        current_database
-      end
+      alias_method :current, :current_database
 
       #   Drop the database
       #
@@ -61,12 +57,12 @@ module Apartment
       #   @param {String?} database Database or schema to connect to
       #
       def process(database = nil)
-        current_db = current_database
+        previous_db = @current_database
         switch(database)
         yield if block_given?
 
       ensure
-        switch(current_db) rescue reset
+        switch(previous_db) rescue reset
       end
 
       #   Establish a new connection for each specific excluded model

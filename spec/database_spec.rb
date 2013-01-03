@@ -161,4 +161,49 @@ describe Apartment::Database do
     end
 
   end
+
+  context "using sqlserver" do
+    # See apartment.yml file in dummy app config
+
+    let(:config){ Apartment::Test.config['connections']['sqlserver'].symbolize_keys }
+    let(:database){ Apartment::Test.next_db }
+    let(:database2){ Apartment::Test.next_db }
+
+    before do
+      Apartment.use_schemas = false
+      ActiveRecord::Base.establish_connection config
+      Apartment::Test.load_schema   # load the Rails schema in the public db schema
+      subject.stub(:config).and_return config   # Use postgresql database config for this test
+    end
+
+    describe "#adapter" do
+      before do
+        subject.reload!
+      end
+
+      it "should load sqlserver adapter" do
+        subject.adapter
+        Apartment::Adapters::SqlserverAdapter.should be_a(Class)
+      end
+
+      it "should raise exception with invalid adapter specified" do
+        subject.stub(:config).and_return config.merge(:adapter => 'unkown')
+
+        expect {
+          Apartment::Database.adapter
+        }.to raise_error
+      end
+
+      context "threadsafety" do
+        before { subject.create database }
+
+        it 'has a threadsafe adapter' do
+          subject.switch(database)
+          thread = Thread.new { subject.current_database.should == Apartment.connection_class.connection.current_database }
+          thread.join
+          subject.current_database.should == database
+        end
+      end
+    end
+  end
 end

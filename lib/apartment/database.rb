@@ -25,11 +25,21 @@ module Apartment
     def adapter
       Thread.current[:apartment_adapter] ||= begin
         adapter_method = "#{config[:adapter]}_adapter"
+        if config[:adapter].eql?('jdbc')
+          if config[:driver] =~ /mysql/
+            adapter_method = 'jdbc_mysql_adapter'
+          elsif config[:driver] =~ /postgresql/
+            adapter_method = 'jdbc_postgresql_adapter'
+          elsif config[:driver] =~ /jtds/
+            adapter_method = 'jdbc_sqlserver_adapter'
+          end
+        end
 
         begin
+          require "apartment/adapters/abstract_jdbc_adapter" if config[:adapter].eql?('jdbc')
           require "apartment/adapters/#{adapter_method}"
         rescue LoadError
-          raise "The adapter `#{config[:adapter]}` is not yet supported"
+          raise "The adapter `#{adapter_method}` is not yet supported"
         end
 
         unless respond_to?(adapter_method)
@@ -47,7 +57,7 @@ module Apartment
       @config = nil
     end
 
-  private
+    private
 
     #   Fetch the rails database configuration
     #
