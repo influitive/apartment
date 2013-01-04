@@ -42,9 +42,9 @@ module Apartment
 
     #   Reset config and adapter so they are regenerated
     #
-    def reload!
+    def reload!(config = nil)
       Thread.current[:apartment_adapter] = nil
-      @config = nil
+      @config = config
     end
 
   private
