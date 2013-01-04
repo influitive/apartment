@@ -1,17 +1,20 @@
 require 'apartment/railtie' if defined?(Rails)
-require 'active_support/core_ext/module/delegation'
 require 'active_support/core_ext/object/blank'
+require 'forwardable'
 
 module Apartment
 
   class << self
+
+    extend Forwardable
+
     ACCESSOR_METHODS  = [:use_schemas, :seed_after_create, :prepend_environment, :append_environment]
     WRITER_METHODS    = [:database_names, :excluded_models, :default_schema, :persistent_schemas, :connection_class]
 
     attr_accessor(*ACCESSOR_METHODS)
     attr_writer(*WRITER_METHODS)
 
-    delegate :connection, :establish_connection, to: :connection_class
+    def_delegators :connection_class, :connection, :establish_connection
 
     # configure apartment with available options
     def configure
