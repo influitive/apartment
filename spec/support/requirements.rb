@@ -18,6 +18,7 @@ module Apartment
         before do
           Apartment::Database.reload!(config.symbolize_keys)
           ActiveRecord::Base.establish_connection config
+
           subject.create(db1)
           subject.create(db2)
         end
@@ -33,7 +34,11 @@ module Apartment
           # This is annoying, but for each sublcass that establishes its own connection (ie Company for excluded models for connection based adapters)
           # a separate connection is maintained (clear_all_connections! doesn't appear to deal with these)
           # This causes problems because previous tests that established this connection could F up the next test, so we'll just remove them all for each test :(
-          Apartment.excluded_models.each{|m| Apartment.connection_class.remove_connection(m.constantize) }
+          Apartment.excluded_models.each do |m|
+            klass = m.constantize
+            Apartment.connection_class.remove_connection(klass)
+            klass.reset_table_name
+          end
           ActiveRecord::Base.clear_all_connections!
         end
       end

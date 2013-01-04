@@ -21,6 +21,21 @@ describe Apartment::Adapters::Mysql2Adapter do
       its(:default_database){ should == config[:database] }
     end
 
+    describe "#init" do
+      include Apartment::Spec::AdapterRequirements
+
+      before do
+        Apartment.configure do |config|
+          config.excluded_models = ["Company"]
+        end
+      end
+
+      it "should process model exclusions" do
+        Apartment::Database.init
+
+        Company.table_name.should == "#{default_database}.companies"
+      end
+    end
   end
 
   context "using connections" do
@@ -29,5 +44,4 @@ describe Apartment::Adapters::Mysql2Adapter do
     it_should_behave_like "a generic apartment adapter"
     it_should_behave_like "a connection based apartment adapter"
   end
-
 end
