@@ -5,16 +5,11 @@ shared_examples_for "a connection based apartment adapter" do
 
   let(:default_database){ subject.process{ ActiveRecord::Base.connection.current_database } }
 
-  #  I would have thought that clear_all_connections! would in fact do this...
-  #  TODO look into why this is necessary ???
-  after { Apartment.excluded_models.each{|m| Apartment.connection_class.remove_connection(m.constantize) } }
-
   describe "#init" do
     it "should process model exclusions" do
       Apartment.configure do |config|
         config.excluded_models = ["Company"]
       end
-
       Apartment::Database.init
 
       Company.connection.object_id.should_not == ActiveRecord::Base.connection.object_id
