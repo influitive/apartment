@@ -12,11 +12,3 @@ connections:
     database: apartment_mysql_test
     username: root
     password:
-
-  sqlserver:
-    adapter: sqlserver
-    mode: dblib
-    host: localhost
-    database: apartment_sqlserver_test
-    username: sa
-    password:
