@@ -22,7 +22,6 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
 
 RSpec.configure do |config|
-  config.filter_run_excluding sqlserver: true
 
   config.include RSpec::Integration::CapybaraSessions, :type => :request
 
@@ -35,6 +34,8 @@ RSpec.configure do |config|
   config.after(:each) do
     Apartment.reset
   end
+
+  config.filter_run_excluding sqlserver: true
 
 end
 
