@@ -35,6 +35,8 @@ RSpec.configure do |config|
     Apartment.reset
   end
 
+  config.filter_run_excluding sqlserver: true
+
 end
 
 # Load shared examples, must happen after configure for RSpec 3

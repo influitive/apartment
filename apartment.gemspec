@@ -30,6 +30,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'capybara', '~> 1.0.0'
   s.add_development_dependency 'pg', '>= 0.11.0'
   s.add_development_dependency 'mysql2', '~> 0.3.10'
+  s.add_development_dependency 'tiny_tds'
+  s.add_development_dependency 'activerecord-sqlserver-adapter'
   s.add_development_dependency 'delayed_job', '~> 3.0'
   s.add_development_dependency 'delayed_job_active_record'
 end
