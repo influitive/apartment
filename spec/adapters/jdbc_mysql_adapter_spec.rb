@@ -16,7 +16,7 @@ if defined?(JRUBY_VERSION)
     let(:default_database) { subject.process { ActiveRecord::Base.connection.current_database } }
 
     it_should_behave_like "a generic apartment adapter"
-    it_should_behave_like "a db based apartment adapter"
+    it_should_behave_like "a connection based apartment adapter"
 
   end
 

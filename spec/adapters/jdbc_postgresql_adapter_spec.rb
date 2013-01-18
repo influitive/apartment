@@ -11,7 +11,7 @@ if defined?(JRUBY_VERSION)
 
     context "using schemas" do
 
-      before { Apartment.use_postgres_schemas = true }
+      before { Apartment.use_schemas = true }
 
       # Not sure why, but somehow using let(:database_names) memoizes for the whole example group, not just each test
       def database_names
@@ -26,7 +26,7 @@ if defined?(JRUBY_VERSION)
 
     context "using databases" do
 
-      before { Apartment.use_postgres_schemas = false }
+      before { Apartment.use_schemas = false }
 
       # Not sure why, but somehow using let(:database_names) memoizes for the whole example group, not just each test
       def database_names
@@ -36,7 +36,7 @@ if defined?(JRUBY_VERSION)
       let(:default_database) { subject.process { ActiveRecord::Base.connection.current_database } }
 
       it_should_behave_like "a generic apartment adapter"
-      it_should_behave_like "a db based apartment adapter"
+      it_should_behave_like "a connection based apartment adapter"
 
     end
   end

@@ -10,6 +10,8 @@ describe Apartment::Migrator do
     ActiveRecord::Base.establish_connection config
     Apartment::Database.stub(:config).and_return config   # Use postgresql config for this test
     @original_schema = ActiveRecord::Base.connection.schema_search_path
+    # Necessary because the JDBC adapter returns $user in the search path
+    @original_schema.gsub!(/"\$user",/, '') if defined?(JRUBY_VERSION)
 
     Apartment.configure do |config|
       config.use_schemas = true

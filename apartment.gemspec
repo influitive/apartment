@@ -34,7 +34,7 @@ Gem::Specification.new do |s|
     s.add_development_dependency 'activerecord-jdbc-adapter'
     s.add_development_dependency 'activerecord-jdbcpostgresql-adapter'
     s.add_development_dependency 'activerecord-jdbcmysql-adapter'
-    s.add_development_dependency 'jdbc-postgres'
+    s.add_development_dependency 'jdbc-postgres', '9.2.1002'
     s.add_development_dependency 'jdbc-mysql'
     s.add_development_dependency 'jdbc-sqlite3'
     s.add_development_dependency 'jruby-openssl'
