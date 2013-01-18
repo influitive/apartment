@@ -3,13 +3,13 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 # Configure Rails Environment
 ENV["RAILS_ENV"] = "test"
 
-require File.expand_path("../dummy/config/environment.rb",  __FILE__)
+require File.expand_path("../dummy/config/environment.rb", __FILE__)
 require "rspec/rails"
 require 'capybara/rspec'
 require 'capybara/rails'
 require 'pry'
 
-silence_warnings{ IRB = Pry }
+silence_warnings { IRB = Pry }
 
 ActionMailer::Base.delivery_method = :test
 ActionMailer::Base.perform_deliveries = true

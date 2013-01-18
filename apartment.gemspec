@@ -24,12 +24,23 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'pry', '~> 0.9.9'
   s.add_development_dependency 'rails', '>= 3.1.2'
   s.add_development_dependency 'rake', '~> 0.9.2'
-  s.add_development_dependency 'sqlite3'
   s.add_development_dependency 'rspec', '~> 2.11'
   s.add_development_dependency 'rspec-rails', '~> 2.11'
   s.add_development_dependency 'capybara', '~> 1.0.0'
-  s.add_development_dependency 'pg', '>= 0.11.0'
-  s.add_development_dependency 'mysql2', '~> 0.3.10'
   s.add_development_dependency 'delayed_job', '~> 3.0'
   s.add_development_dependency 'delayed_job_active_record'
+
+  if defined?(JRUBY_VERSION)
+    s.add_development_dependency 'activerecord-jdbc-adapter'
+    s.add_development_dependency 'activerecord-jdbcpostgresql-adapter'
+    s.add_development_dependency 'activerecord-jdbcmysql-adapter'
+    s.add_development_dependency 'jdbc-postgres', '9.2.1002'
+    s.add_development_dependency 'jdbc-mysql'
+    s.add_development_dependency 'jdbc-sqlite3'
+    s.add_development_dependency 'jruby-openssl'
+  else
+    s.add_development_dependency 'mysql2', '~> 0.3.10'
+    s.add_development_dependency 'pg', '>= 0.11.0'
+    s.add_development_dependency 'sqlite3'
+  end
 end

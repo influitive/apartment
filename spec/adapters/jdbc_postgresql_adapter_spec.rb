@@ -1,15 +1,17 @@
-require 'spec_helper'
-require 'apartment/adapters/postgresql_adapter'
+if defined?(JRUBY_VERSION)
 
-describe Apartment::Adapters::PostgresqlAdapter do
-  unless defined?(JRUBY_VERSION)
+  require 'spec_helper'
+  require 'lib/apartment/adapters/jdbc_postgresql_adapter'
 
-    let(:config){ Apartment::Test.config['connections']['postgresql'].symbolize_keys }
-    subject{ Apartment::Database.postgresql_adapter config }
+  describe Apartment::Adapters::JDBCPostgresqlAdapter do
+
+
+    let(:config) { Apartment::Test.config['connections']['postgresql'] }
+    subject { Apartment::Database.jdbc_postgresql_adapter config.symbolize_keys }
 
     context "using schemas" do
 
-      before{ Apartment.use_schemas = true }
+      before { Apartment.use_schemas = true }
 
       # Not sure why, but somehow using let(:database_names) memoizes for the whole example group, not just each test
       def database_names
@@ -22,9 +24,9 @@ describe Apartment::Adapters::PostgresqlAdapter do
       it_should_behave_like "a schema based apartment adapter"
     end
 
-    context "using connections" do
+    context "using databases" do
 
-      before{ Apartment.use_schemas = false }
+      before { Apartment.use_schemas = false }
 
       # Not sure why, but somehow using let(:database_names) memoizes for the whole example group, not just each test
       def database_names
@@ -35,6 +37,7 @@ describe Apartment::Adapters::PostgresqlAdapter do
 
       it_should_behave_like "a generic apartment adapter"
       it_should_behave_like "a connection based apartment adapter"
+
     end
   end
 end

@@ -27,10 +27,19 @@ module Apartment
       Thread.current[:apartment_adapter] ||= begin
         adapter_method = "#{config[:adapter]}_adapter"
 
+        if defined?(JRUBY_VERSION)
+          if config[:adapter] =~ /mysql/
+            adapter_method = 'jdbc_mysql_adapter'
+          elsif config[:adapter] =~ /postgresql/
+            adapter_method = 'jdbc_postgresql_adapter'
+          end
+        end
+
         begin
+          require "apartment/adapters/abstract_jdbc_adapter" if defined?(JRUBY_VERSION)
           require "apartment/adapters/#{adapter_method}"
         rescue LoadError
-          raise "The adapter `#{config[:adapter]}` is not yet supported"
+          raise "The adapter `#{adapter_method}` is not yet supported"
         end
 
         unless respond_to?(adapter_method)
@@ -48,7 +57,7 @@ module Apartment
       @config = config
     end
 
-  private
+    private
 
     #   Fetch the rails database configuration
     #
