@@ -24,7 +24,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'pry', '~> 0.9.9'
   s.add_development_dependency 'rails', '>= 3.1.2'
   s.add_development_dependency 'rake', '~> 0.9.2'
-  s.add_development_dependency 'sqlite3'
   s.add_development_dependency 'rspec', '~> 2.11'
   s.add_development_dependency 'rspec-rails', '~> 2.11'
   s.add_development_dependency 'capybara', '~> 1.0.0'
