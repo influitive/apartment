@@ -13,11 +13,11 @@ describe Apartment::Delayed do
 
     before do
       ActiveRecord::Base.establish_connection config
-      Apartment::Test.load_schema # load the Rails schema in the public db schema
-      Apartment::Database.stub(:config).and_return config # Use postgresql database config for this test
+      Apartment::Test.load_schema   # load the Rails schema in the public db schema
+      Apartment::Database.stub(:config).and_return config   # Use postgresql database config for this test
 
       Apartment.configure do |config|
-        config.use_postgres_schemas = true
+        config.use_schemas = true
       end
 
       Apartment::Database.create database

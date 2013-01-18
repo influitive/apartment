@@ -1,17 +1,15 @@
 require 'spec_helper'
 
-shared_examples_for "a db based apartment adapter" do
+shared_examples_for "a connection based apartment adapter" do
   include Apartment::Spec::AdapterRequirements
 
   let(:default_database){ subject.process{ ActiveRecord::Base.connection.current_database } }
 
   describe "#init" do
-
     it "should process model exclusions" do
       Apartment.configure do |config|
         config.excluded_models = ["Company"]
       end
-
       Apartment::Database.init
 
       Company.connection.object_id.should_not == ActiveRecord::Base.connection.object_id

@@ -8,11 +8,9 @@ module Apartment
 
       #   @constructor
       #   @param {Hash} config Database config
-      #   @param {Hash} defaults Some default options
       #
-      def initialize(config, defaults = {})
+      def initialize(config)
         @config = config
-        @defaults = defaults
       end
 
       #   Create a new database, import schema, seed if appropriate

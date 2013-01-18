@@ -12,7 +12,7 @@ describe Apartment::Migrator do
     @original_schema = ActiveRecord::Base.connection.schema_search_path
 
     Apartment.configure do |config|
-      config.use_postgres_schemas = true
+      config.use_schemas = true
       config.excluded_models = []
       config.database_names = [schema_name]
     end

@@ -89,6 +89,12 @@ shared_examples_for "a generic apartment adapter" do
       subject.switch
       subject.current_database.should == default_database
     end
+
+    it "should raise an error if database is invalid" do
+      expect {
+        subject.switch 'unknown_database'
+      }.to raise_error(Apartment::ApartmentError)
+    end
   end
 
   describe "#current_database" do

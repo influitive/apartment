@@ -55,7 +55,7 @@ describe Apartment::Database do
     let(:database2){ Apartment::Test.next_db }
 
     before do
-      Apartment.use_postgres_schemas = true
+      Apartment.use_schemas = true
       ActiveRecord::Base.establish_connection config
       Apartment::Test.load_schema   # load the Rails schema in the public db schema
       subject.stub(:config).and_return config   # Use postgresql database config for this test
@@ -79,6 +79,16 @@ describe Apartment::Database do
         }.to raise_error
       end
 
+      context "threadsafety" do
+        before { subject.create database }
+
+        it 'has a threadsafe adapter' do
+          subject.switch(database)
+          thread = Thread.new { subject.current_database.should == Apartment.default_schema }
+          thread.join
+          subject.current_database.should == database
+        end
+      end
     end
 
     context "with schemas" do
@@ -86,7 +96,7 @@ describe Apartment::Database do
       before do
         Apartment.configure do |config|
           config.excluded_models = []
-          config.use_postgres_schemas = true
+          config.use_schemas = true
           config.seed_after_create = true
         end
         subject.create database

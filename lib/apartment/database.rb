@@ -1,4 +1,4 @@
-require 'active_support/core_ext/module/delegation'
+require 'forwardable'
 
 module Apartment
 
@@ -7,8 +7,9 @@ module Apartment
   module Database
 
     extend self
+    extend Forwardable
 
-    delegate :create, :current_database, :current, :drop, :process, :process_excluded_models, :reset, :seed, :switch, :to => :adapter
+    def_delegators :adapter, :create, :current_database, :current, :drop, :process, :process_excluded_models, :reset, :seed, :switch
 
     attr_writer :config
 
@@ -23,7 +24,7 @@ module Apartment
     #   @return {subclass of Apartment::AbstractAdapter}
     #
     def adapter
-      @adapter ||= begin
+      Thread.current[:apartment_adapter] ||= begin
         adapter_method = "#{config[:adapter]}_adapter"
 
         if config[:adapter].eql?('jdbc')
@@ -51,9 +52,9 @@ module Apartment
 
     #   Reset config and adapter so they are regenerated
     #
-    def reload!
-      @adapter = nil
-      @config = nil
+    def reload!(config = nil)
+      Thread.current[:apartment_adapter] = nil
+      @config = config
     end
 
     private
