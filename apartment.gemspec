@@ -32,6 +32,8 @@ Gem::Specification.new do |s|
 
   if defined?(JRUBY_VERSION)
     s.add_development_dependency 'activerecord-jdbc-adapter'
+    s.add_development_dependency 'activerecord-jdbcpostgresql-adapter'
+    s.add_development_dependency 'activerecord-jdbcmysql-adapter'
     s.add_development_dependency 'jdbc-postgres'
     s.add_development_dependency 'jdbc-mysql'
     s.add_development_dependency 'jdbc-sqlite3'
