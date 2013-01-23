@@ -4,6 +4,7 @@
 <% if defined?(JRUBY_VERSION) %>
 test:
   adapter: postgresql
+  database: apartment_postgresql_test
   username: postgres
   min_messages: WARNING
   driver: org.postgresql.Driver
@@ -13,6 +14,7 @@ test:
 
 development:
   adapter: postgresql
+  database: apartment_postgresql_development
   username: postgres
   min_messages: WARNING
   driver: org.postgresql.Driver
