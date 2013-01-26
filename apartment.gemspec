@@ -16,7 +16,6 @@ Gem::Specification.new do |s|
   s.homepage = %q{https://github.com/influitive/apartment}
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.7}
 
   s.add_dependency 'activerecord',    '>= 3.1.2'   # must be >= 3.1.2 due to bug in prepared_statements
   s.add_dependency 'rack',            '>= 1.3.6'
