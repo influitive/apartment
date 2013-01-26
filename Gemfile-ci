@@ -2,7 +2,6 @@ source :rubygems
 
 gemspec
 
-gem 'pry', '~> 0.9.9'
 gem 'rake', '~> 0.9'
 gem 'rspec', '~> 2.11'
 gem 'rspec-rails', '~> 2.11'
