@@ -1,3 +1,8 @@
+# 0.19.1
+  * Jan 30, 2013
+
+  - Allow schema.rb import file to be specified in config or skip schema.rb import altogether
+
 # 0.19.0
   * Dec 29, 2012
 
