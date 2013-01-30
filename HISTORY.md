@@ -1,3 +1,8 @@
+# 0.19.2
+  * Jan 30, 2012
+
+  - Database schema file can now be set manually or skipped altogether
+
 # 0.19.0
   * Dec 29, 2012
 
