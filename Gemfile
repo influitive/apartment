@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gemspec
 
+gem 'pry'
 gem 'rails',                    '>= 3.1.2'
 gem 'rake',                     '~> 0.9.2'
 gem 'sqlite3'
