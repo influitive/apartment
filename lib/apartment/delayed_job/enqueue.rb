@@ -1,5 +1,11 @@
 require 'delayed_job'
-require 'apartment/delayed_job/active_record'   # ensure that our AR hooks are loaded when queueing
+require 'yaml'
+
+if YAML.parser.class.name =~ /syck|yecht/i
+  require 'apartment/delayed_job/syck_ext'
+else
+  require 'apartment/delayed_job/psych_ext'
+end
 
 module Apartment
   module Delayed

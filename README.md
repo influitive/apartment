@@ -187,7 +187,10 @@ and test environments.  If you wish to turn this option off in production, you c
 ## Delayed::Job
 
 If using Rails ~> 3.2, you *must* use `delayed_job ~> 3.0`.  It has better Rails 3 support plus has some major changes that affect the serialization of models.
-I haven't been able to get `psych` working whatsoever as the YAML parser, so to get things to work properly, you must explicitly set the parser to `syck` *before* requiring `delayed_job`
+
+### If using Ruby 1.9.3-p362 you MUST use psych as your parser. YAML seems to fall down using syck
+
+### If you're using syck on an earlier version of ruby, here's what you must do (in a rails app for instance)
 This can be done in the `boot.rb` of your rails config *just above* where Bundler requires the gems from the Gemfile.  It will look something like:
 
     require 'rubygems'
