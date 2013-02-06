@@ -1,5 +1,12 @@
+# 0.20.0
+  * Feb 6, 2013
+
+  - Mysql now has a 'schema like' option to perform like Postgresql (default)
+    - This should be significantly more performant than using connections
+  - Psych is now supported for Delayed::Job yaml parsing
+
 # 0.19.2
-  * Jan 30, 2012
+  * Jan 30, 2013
 
   - Database schema file can now be set manually or skipped altogether
 
