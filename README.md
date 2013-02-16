@@ -169,7 +169,7 @@ This object should yield an array of string representing each database name.  Ex
     # Use a static list of database names for migrate
     config.database_names = ['db1', 'db2']
 
-You can then migration your databases using the rake task:
+You can then migrate your databases using the rake task:
 
     rake apartment:migrate
 
