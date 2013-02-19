@@ -118,6 +118,8 @@ If you have some models that should always access the 'root' database, you can s
 
 Note that a string representation of the model name is now the standard so that models are properly constantized when reloaded in development
 
+Rails will always access the 'root' database when accessing these models,  but note that tables will be created in all schemas.  This may not be ideal, but its done this way because otherwise rails wouldn't be able to properly generate the schema.rb file.
+
 ### Postgresql Schemas
 
 **Providing a Different default_schema**
