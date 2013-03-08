@@ -4,7 +4,7 @@ gemspec
 
 gem 'pry'
 gem 'rails',                    '>= 3.1.2'
-gem 'rake',                     '~> 0.9.2'
+gem 'rake',                     '~> 0.9'
 gem 'sqlite3'
 gem 'rspec',                    '~> 2.11'
 gem 'rspec-rails',              '~> 2.11'
