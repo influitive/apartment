@@ -13,3 +13,6 @@ gem 'pg',                       '>= 0.11.0'
 gem 'mysql2',                   '~> 0.3.10'
 gem 'delayed_job',              '~> 3.0'
 gem 'delayed_job_active_record'
+
+gem 'librarian-chef'
+gem 'vagrant-librarian'
