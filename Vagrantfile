@@ -69,7 +69,12 @@ Vagrant::Config.run do |config|
         version: '9.1',
         password: {
           postgres: ''
-        }
+        },
+        pg_hba: [
+          {type: 'local', db: 'all', user: 'all', addr: nil, method: 'trust'},
+          {type: 'host', db: 'all', user: 'all', addr: '127.0.0.1/32', method: 'trust'},
+          {type: 'host', db: 'all', user: 'all', addr: '::1/128', method: 'trust'}
+        ]
       },
       rvm: {
         user_default_ruby: 'ruby-1.9.3-p392',
