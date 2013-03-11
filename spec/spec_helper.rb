@@ -7,9 +7,12 @@ require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 require "rspec/rails"
 require 'capybara/rspec'
 require 'capybara/rails'
-require 'pry'
 
-silence_warnings{ IRB = Pry }
+begin
+  require 'pry'
+  silence_warnings{ IRB = Pry }
+rescue LoadError
+end
 
 ActionMailer::Base.delivery_method = :test
 ActionMailer::Base.perform_deliveries = true
