@@ -188,6 +188,25 @@ and test environments.  If you wish to turn this option off in production, you c
 
 ## Delayed::Job
 
+### Read me before using Delayed::Job!!!
+>   It should be noted that we now consider Delayed::Job usage with Apartment effectively deprecated
+>   It will be stripped out into it's own gem for backwards compatibility, but we've had far too
+>   many problems with it to continue supporting it.
+>
+>   The main problem is that Delayed::Job [monkey](https://github.com/collectiveidea/delayed_job/blob/master/lib/delayed/psych_ext.rb) [patches](https://github.com/collectiveidea/delayed_job/blob/master/lib/delayed/syck_ext.rb) YAML quite a bit, which
+>   forces us to in tern [monkey](https://github.com/influitive/apartment/blob/development/lib/apartment/delayed_job/psych_ext.rb) [patch](https://github.com/influitive/apartment/blob/development/lib/apartment/delayed_job/syck_ext.rb) their monkey patches, which provides
+>   no end of frustrations whenever upgrades are made.
+>
+>   To this end, we recommend you look into other solutions such as Resque or Sidekiq and write
+>   your own hooks to switch db per job. Our aim is to have separate gems for each of these
+>   worker libs and would love it if anyone would like to contribute something to achieve this
+>
+>   If you are hell bent on using `Delayed::Job`, this is what has worked for us in Production
+>
+    gem 'delayed_job', '= 3.0.1' # change at own risk!
+    gem 'delayed_job_active_record', '= 0.3.2' # change at own risk!
+>
+
 If using Rails ~> 3.2, you *must* use `delayed_job ~> 3.0`.  It has better Rails 3 support plus has some major changes that affect the serialization of models.
 
 ### If using Ruby 1.9.3-p362 you MUST use psych as your parser. YAML seems to fall down using syck
