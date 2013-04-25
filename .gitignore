@@ -7,3 +7,5 @@ pkg/*
 *.sw[pno]
 spec/config/database.yml
 spec/dummy/config/database.yml
+cookbooks
+tmp

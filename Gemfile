@@ -1,8 +1,7 @@
-source :rubygems
+source 'http://rubygems.org'
 
 gemspec
 
-gem 'pry', '~> 0.9.9'
 gem 'rake', '~> 0.9'
 gem 'rspec', '~> 2.11'
 gem 'rspec-rails', '~> 2.11'
@@ -22,4 +21,10 @@ platform :jruby do
   gem 'jdbc-postgres', '9.2.1002'
   gem 'jdbc-mysql'
   gem 'jruby-openssl'
+end
+
+group :local do
+  gem 'pry'
+  gem 'librarian-chef'
+  gem 'vagrant-librarian'
 end

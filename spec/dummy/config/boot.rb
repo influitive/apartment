@@ -1,8 +1,5 @@
 require 'rubygems'
 
-require 'yaml'
-YAML::ENGINE.yamler = 'syck'
-
 gemfile = File.expand_path('../../../../Gemfile', __FILE__)
 
 if File.exist?(gemfile)

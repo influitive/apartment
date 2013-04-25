@@ -5,3 +5,4 @@ rvm:
   - jruby-19mode
 gemfile:
   - Gemfile-ci
+bundler_args: --without local --verbose
