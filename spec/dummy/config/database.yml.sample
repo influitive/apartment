@@ -1,6 +1,27 @@
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
+<% if defined?(JRUBY_VERSION) %>
+test:
+  adapter: postgresql
+  database: apartment_postgresql_test
+  username: postgres
+  min_messages: WARNING
+  driver: org.postgresql.Driver
+  url: jdbc:postgresql://localhost:5432/apartment_postgresql_test
+  timeout: 5000
+  pool: 5
+
+development:
+  adapter: postgresql
+  database: apartment_postgresql_development
+  username: postgres
+  min_messages: WARNING
+  driver: org.postgresql.Driver
+  url: jdbc:postgresql://localhost:5432/apartment_postgresql_development
+  timeout: 5000
+  pool: 5
+<% else %>
 test:
   adapter: postgresql
   database: apartment_postgresql_test
@@ -14,3 +35,4 @@ development:
   min_messages: WARNING
   pool: 5
   timeout: 5000
+<% end %>
