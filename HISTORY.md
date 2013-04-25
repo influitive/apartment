@@ -1,3 +1,8 @@
+# 0.21.0
+  * April 24, 2013
+
+  - JDBC support!! [PetrolMan]
+
 # 0.20.0
   * Feb 6, 2013
 
