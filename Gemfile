@@ -26,6 +26,4 @@ end
 
 group :local do
   gem 'pry'
-  gem 'librarian-chef'
-  gem 'vagrant-librarian'
 end
