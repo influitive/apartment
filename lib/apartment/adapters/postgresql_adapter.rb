@@ -89,6 +89,7 @@ module Apartment
       #
       def connect_to_new(database = nil)
         return reset if database.nil?
+        raise ActiveRecord::StatementInvalid.new unless ActiveRecord::Base.connection.schema_exists? database
 
         @current_database = database.to_s
         Apartment.connection.schema_search_path = full_search_path
