@@ -72,13 +72,6 @@ module Apartment
       def process_excluded_models
         # All other models will shared a connection (at Apartment.connection_class) and we can modify at will
         Apartment.excluded_models.each do |excluded_model|
-          # Note that due to rails reloading, we now take string references to classes rather than
-          # actual object references.  This way when we contantize, we always get the proper class reference
-          if excluded_model.is_a? Class
-            warn "[Deprecation Warning] Passing class references to excluded models is now deprecated, please use a string instead"
-            excluded_model = excluded_model.name
-          end
-
           excluded_model.constantize.establish_connection @config
         end
       end
