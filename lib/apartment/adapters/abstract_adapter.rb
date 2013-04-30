@@ -1,9 +1,7 @@
 require 'active_record'
 
 module Apartment
-
   module Adapters
-
     class AbstractAdapter
 
       #   @constructor
@@ -52,7 +50,7 @@ module Apartment
         # Apartment.connection.drop_database   note that drop_database will not throw an exception, so manually execute
         Apartment.connection.execute("DROP DATABASE #{environmentify(database)}" )
 
-      rescue ActiveRecord::StatementInvalid
+      rescue *rescuable_exceptions
         raise DatabaseNotFound, "The database #{environmentify(database)} cannot be found"
       end
 
@@ -118,7 +116,7 @@ module Apartment
       def create_database(database)
         Apartment.connection.create_database( environmentify(database) )
 
-      rescue ActiveRecord::StatementInvalid
+      rescue *rescuable_exceptions
         raise DatabaseExists, "The database #{environmentify(database)} already exists."
       end
 
@@ -130,7 +128,7 @@ module Apartment
         Apartment.establish_connection multi_tenantify(database)
         Apartment.connection.active?   # call active? to manually check if this connection is valid
 
-      rescue ActiveRecord::StatementInvalid
+      rescue *rescuable_exceptions
         raise DatabaseNotFound, "The database #{environmentify(database)} cannot be found."
       end
 
@@ -179,6 +177,17 @@ module Apartment
         end
       end
 
+      #   Exceptions to rescue from on db operations
+      #
+      def rescuable_exceptions
+        [ActiveRecord::StatementInvalid] + [rescue_from].flatten
+      end
+
+      #   Extra exceptions to rescue from
+      #
+      def rescue_from
+        []
+      end
     end
   end
 end
