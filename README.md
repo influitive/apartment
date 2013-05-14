@@ -94,6 +94,18 @@ module My Application
 end
 ```
 
+**Switch on full host using a hash**
+To switch based on full host with a hash to find corresponding database name use the following:
+
+```ruby
+# application.rb
+module My Application
+  class Application < Rails::Application
+    config.middleware.use 'Apartment::Elevators::HostHash', {'example.com' => 'example_database'}
+  end
+end
+```
+
 **Custom Elevator**
 A Generic Elevator exists that allows you to pass a `Proc` (or anything that responds to `call`) to the middleware. This Object will be passed in an `ActionDispatch::Request` object when called for you to do your magic. Apartment will use the return value of this proc to switch to the appropriate database.  Use like so:
 
