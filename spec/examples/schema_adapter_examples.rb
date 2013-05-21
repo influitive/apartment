@@ -48,11 +48,11 @@ shared_examples_for "a schema based apartment adapter" do
 
       subject.create(schema2) do
         @count = User.count
-        connection.schema_search_path.should start_with schema2
+        connection.schema_search_path.should start_with %{"#{schema2}"}
         User.create
       end
 
-      connection.schema_search_path.should_not start_with schema2
+      connection.schema_search_path.should_not start_with %{"#{schema2}"}
 
       subject.process(schema2){ User.count.should == @count + 1 }
     end
@@ -96,13 +96,13 @@ shared_examples_for "a schema based apartment adapter" do
   describe "#process" do
     it "should connect" do
       subject.process(schema1) do
-        connection.schema_search_path.should start_with schema1
+        connection.schema_search_path.should start_with %{"#{schema1}"}
       end
     end
 
     it "should reset" do
       subject.process(schema1)
-      connection.schema_search_path.should start_with public_schema
+      connection.schema_search_path.should start_with %{"#{public_schema}"}
     end
   end
 
@@ -110,14 +110,14 @@ shared_examples_for "a schema based apartment adapter" do
     it "should reset connection" do
       subject.switch(schema1)
       subject.reset
-      connection.schema_search_path.should start_with public_schema
+      connection.schema_search_path.should start_with %{"#{public_schema}"}
     end
 
     context "with default_schema", :default_schema => true do
       it "should reset to the default schema" do
         subject.switch(schema1)
         subject.reset
-        connection.schema_search_path.should start_with default_schema
+        connection.schema_search_path.should start_with %{"#{default_schema}"}
       end
     end
 
@@ -128,13 +128,13 @@ shared_examples_for "a schema based apartment adapter" do
       end
 
       it "maintains the persistent schemas in the schema_search_path" do
-        connection.schema_search_path.should end_with persistent_schemas.join(', ')
+        connection.schema_search_path.should end_with persistent_schemas.map { |schema| %{"#{schema}"} }.join(', ')
       end
 
       context "with default_schema", :default_schema => true do
         it "prioritizes the switched schema to front of schema_search_path" do
           subject.reset # need to re-call this as the default_schema wasn't set at the time that the above reset ran
-          connection.schema_search_path.should start_with default_schema
+          connection.schema_search_path.should start_with %{"#{default_schema}"}
         end
       end
     end
@@ -143,12 +143,12 @@ shared_examples_for "a schema based apartment adapter" do
   describe "#switch" do
     it "should connect to new schema" do
       subject.switch(schema1)
-      connection.schema_search_path.should start_with schema1
+      connection.schema_search_path.should start_with %{"#{schema1}"}
     end
 
     it "should reset connection if database is nil" do
       subject.switch
-      connection.schema_search_path.should == public_schema
+      connection.schema_search_path.should == %{"#{public_schema}"}
     end
 
     it "should raise an error if schema is invalid" do
@@ -166,7 +166,7 @@ shared_examples_for "a schema based apartment adapter" do
           subject.switch(db)
         }.to_not raise_error
 
-        connection.schema_search_path.should start_with db.to_s
+        connection.schema_search_path.should start_with %{"#{db.to_s}"}
       end
 
       after{ subject.drop(db) }
@@ -182,7 +182,7 @@ shared_examples_for "a schema based apartment adapter" do
       end
 
       it "should still switch to the switched schema" do
-        connection.schema_search_path.should start_with schema1
+        connection.schema_search_path.should start_with %{"#{schema1}"}
       end
     end
 
@@ -191,11 +191,11 @@ shared_examples_for "a schema based apartment adapter" do
       before{ subject.switch(schema1) }
 
       it "maintains the persistent schemas in the schema_search_path" do
-        connection.schema_search_path.should end_with persistent_schemas.join(', ')
+        connection.schema_search_path.should end_with persistent_schemas.map { |schema| %{"#{schema}"} }.join(', ')
       end
 
       it "prioritizes the switched schema to front of schema_search_path" do
-        connection.schema_search_path.should start_with schema1
+        connection.schema_search_path.should start_with %{"#{schema1}"}
       end
     end
   end
