@@ -13,6 +13,7 @@ gem 'delayed_job_active_record'
 platform :ruby do
   gem 'mysql2', '~> 0.3.10'
   gem 'pg',     '>= 0.11.0'
+  gem 'sqlite3'
 end
 
 platform :jruby do
