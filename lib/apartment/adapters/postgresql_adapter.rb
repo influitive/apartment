@@ -96,8 +96,8 @@ module Apartment
       #   Generate the final search path to set including persistent_schemas
       #
       def full_search_path
-        persistent_schemas = Apartment.persistent_schemas.join(', ')
-        @current_database.to_s + (persistent_schemas.empty? ? "" : ", #{persistent_schemas}")
+        persistent_schemas = Apartment.persistent_schemas.map { |schema| %{"#{schema}"} }.join(', ')
+        %{"#{@current_database.to_s}"} + (persistent_schemas.empty? ? "" : ", #{persistent_schemas}")
       end
     end
   end
