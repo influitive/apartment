@@ -34,4 +34,8 @@ connections:
     database: apartment_mysql_test
     username: root
     password:
+
+  sqlite:
+    adapter: sqlite3
+    database: <%= File.expand_path('../spec/dummy/db', __FILE__) %>/default.sqlite3
 <% end %>
