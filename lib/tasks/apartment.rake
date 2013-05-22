@@ -1,5 +1,17 @@
 apartment_namespace = namespace :apartment do
 
+  desc "Create all multi-tenant databases"
+  task :create => 'db:migrate' do
+    database_names.each do |db|
+      begin
+        puts("Creating #{db} database")
+        quietly { Apartment::Database.create(db) }
+      rescue Apartment::DatabaseExists, Apartment::SchemaExists => e
+        puts e.message
+      end
+    end
+  end
+
   desc "Migrate all multi-tenant databases"
   task :migrate => 'db:migrate' do
 
