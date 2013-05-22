@@ -3,19 +3,27 @@ apartment_namespace = namespace :apartment do
   desc "Migrate all multi-tenant databases"
   task :migrate => 'db:migrate' do
 
-    Apartment.database_names.each do |db|
-      puts("Migrating #{db} database")
-      Apartment::Migrator.migrate db
+    database_names.each do |db|
+      begin
+        puts("Migrating #{db} database")
+        Apartment::Migrator.migrate db
+      rescue Apartment::DatabaseNotFound, Apartment::SchemaNotFound => e
+        puts e.message
+      end
     end
   end
 
   desc "Seed all multi-tenant databases"
-  task :seed => 'db:seed' do
+  task :seed => :environment do
 
-    Apartment.database_names.each do |db|
-      puts("Seeding #{db} database")
-      Apartment::Database.process(db) do
-        Apartment::Database.seed
+    database_names.each do |db|
+      begin
+        puts("Seeding #{db} database")
+        Apartment::Database.process(db) do
+          Apartment::Database.seed
+        end
+      rescue Apartment::DatabaseNotFound, Apartment::SchemaNotFound => e
+        puts e.message
       end
     end
   end
@@ -24,9 +32,13 @@ apartment_namespace = namespace :apartment do
   task :rollback => 'db:rollback' do
     step = ENV['STEP'] ? ENV['STEP'].to_i : 1
 
-    Apartment.database_names.each do |db|
-      puts("Rolling back #{db} database")
-      Apartment::Migrator.rollback db, step
+    database_names.each do |db|
+      begin
+        puts("Rolling back #{db} database")
+        Apartment::Migrator.rollback db, step
+      rescue Apartment::DatabaseNotFound, Apartment::SchemaNotFound => e
+        puts e.message
+      end
     end
   end
 
@@ -37,9 +49,13 @@ apartment_namespace = namespace :apartment do
       version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
       raise 'VERSION is required' unless version
 
-      Apartment.database_names.each do |db|
-        puts("Migrating #{db} database up")
-        Apartment::Migrator.run :up, db, version
+      database_names.each do |db|
+        begin
+          puts("Migrating #{db} database up")
+          Apartment::Migrator.run :up, db, version
+        rescue Apartment::DatabaseNotFound, Apartment::SchemaNotFound => e
+          puts e.message
+        end
       end
     end
 
@@ -48,9 +64,13 @@ apartment_namespace = namespace :apartment do
       version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
       raise 'VERSION is required' unless version
 
-      Apartment.database_names.each do |db|
-        puts("Migrating #{db} database down")
-        Apartment::Migrator.run :down, db, version
+      database_names.each do |db|
+        begin
+          puts("Migrating #{db} database down")
+          Apartment::Migrator.run :down, db, version
+        rescue Apartment::DatabaseNotFound, Apartment::SchemaNotFound => e
+          puts e.message
+        end
       end
     end
 
@@ -67,4 +87,7 @@ apartment_namespace = namespace :apartment do
 
   end
 
+  def database_names
+    ENV['DB'] ? ENV['DB'].split(',').map { |s| s.strip } : Apartment.database_names
+  end
 end
