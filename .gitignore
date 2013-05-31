@@ -9,3 +9,4 @@ spec/config/database.yml
 spec/dummy/config/database.yml
 cookbooks
 tmp
+spec/dummy/db/*.sqlite3
