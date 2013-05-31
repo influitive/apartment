@@ -1,3 +1,9 @@
+# 0.21.1
+  * May 31, 2013
+
+  - Clearing the AR::QueryCache after switching databases.
+    - Fixes issue with stale model being loaded for schema adapters
+
 # 0.21.0
   * April 24, 2013
 
