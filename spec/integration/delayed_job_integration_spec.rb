@@ -43,18 +43,28 @@ describe Apartment::Delayed do
         user.database.should == database
       end
 
-      it "should not overwrite any previous after_initialize declarations" do
-        User.class_eval do
-          after_find :set_name
+      context 'when there are defined callbacks' do
+        before do
+          User.class_eval do
+            after_find :set_name
 
-          def set_name
-            self.name = "Some Name"
+            def set_name
+              self.name = "Some Name"
+            end
           end
         end
 
-        user = User.first
-        user.database.should == database
-        user.name.should == "Some Name"
+        after do
+          User.class_eval do
+            reset_callbacks :find
+          end
+        end
+
+        it "should not overwrite any previous after_initialize declarations" do
+          user = User.first
+          user.database.should == database
+          user.name.should == "Some Name"
+        end
       end
 
       it "should set the db on a new record before it saves" do

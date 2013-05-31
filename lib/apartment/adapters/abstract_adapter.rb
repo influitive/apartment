@@ -90,7 +90,9 @@ module Apartment
         # Just connect to default db and return
         return reset if database.nil?
 
-        connect_to_new(database)
+        connect_to_new(database).tap do
+          ActiveRecord::Base.connection.clear_query_cache
+        end
       end
 
       #   Load the rails seed file into the db
