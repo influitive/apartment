@@ -57,7 +57,7 @@ module Apartment
       def connect_to_new(database)
         return reset if database.nil?
 
-        Apartment.connection.execute "use #{database}"
+        Apartment.connection.execute "use #{environmentify(database)}"
 
       rescue ActiveRecord::StatementInvalid
         Apartment::Database.reset
