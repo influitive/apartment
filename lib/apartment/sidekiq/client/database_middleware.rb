@@ -3,7 +3,7 @@ module Apartment
     module Client
       class DatabaseMiddleware
         def call(worker_class, item, queue)
-          item["apartment"] = Apartment::Database.current_database
+          item["apartment"] ||= Apartment::Database.current_database
           yield
         end
       end
