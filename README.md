@@ -281,7 +281,7 @@ All jobs *must* stored in the global (public) namespace, so add it to the list o
 config.excluded_models = ["Delayed::Job"]
 ```
 
-## Development
+## Contributing
 
 * In both `spec/dummy/config` and `spec/config`, you will see `database.yml.sample` files
   * Copy them into the same directory but with the name `database.yml`
@@ -289,6 +289,8 @@ config.excluded_models = ["Delayed::Job"]
 * Rake tasks (see the Rakefile) will help you setup your dbs necessary to run tests
 * Please issue pull requests to the `development` branch.  All development happens here, master is used for releases
 * Ensure that your code is accompanied with tests.  No code will be merged without tests
+
+* If you're looking to help, check out the TODO file for some upcoming changes I'd like to implement in Apartment.
 
 ## License
 
