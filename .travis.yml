@@ -3,5 +3,5 @@ rvm:
   - 1.9.2
   - 1.9.3
   - 2.0.0
-  - jruby-19mode
+  - jruby-19mode-1.7.4
 bundler_args: --without local --verbose
