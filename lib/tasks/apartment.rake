@@ -26,7 +26,7 @@ apartment_namespace = namespace :apartment do
   end
 
   desc "Seed all multi-tenant databases"
-  task :seed => :environment do
+  task :seed => 'db:seed' do
 
     database_names.each do |db|
       begin
