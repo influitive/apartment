@@ -80,6 +80,7 @@ module Apartment
     autoload :Subdomain,      'apartment/elevators/subdomain'
     autoload :FirstSubdomain, 'apartment/elevators/first_subdomain'
     autoload :Domain,     'apartment/elevators/domain'
+    autoload :HostHash,     'apartment/elevators/host_hash'
   end
 
   module Delayed
