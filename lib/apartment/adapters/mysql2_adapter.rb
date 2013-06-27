@@ -41,7 +41,7 @@ module Apartment
       #   Reset current_database to the default_database
       #
       def reset
-        connect_to_new(default_database)
+        Apartment.connection.execute "use #{default_database}"
       end
 
       #   Set the table_name to always use the default database for excluded models
@@ -57,7 +57,7 @@ module Apartment
       def connect_to_new(database)
         return reset if database.nil?
 
-        Apartment.connection.execute "use #{database}"
+        Apartment.connection.execute "use #{environmentify(database)}"
 
       rescue ActiveRecord::StatementInvalid
         Apartment::Database.reset
