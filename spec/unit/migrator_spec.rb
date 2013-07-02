@@ -34,8 +34,8 @@ describe Apartment::Migrator do
 
       describe "#migrate" do
         it "should connect to new db, then reset when done" do
-          ActiveRecord::Base.connection.should_receive(:schema_search_path=).with(schema_name).once
-          ActiveRecord::Base.connection.should_receive(:schema_search_path=).with(@original_schema).once
+          ActiveRecord::Base.connection.should_receive(:schema_search_path=).with(%{"#{schema_name}"}).once
+          ActiveRecord::Base.connection.should_receive(:schema_search_path=).with(%{"#{@original_schema}"}).once
           Apartment::Migrator.migrate(schema_name)
         end
 
@@ -49,8 +49,8 @@ describe Apartment::Migrator do
         context "up" do
 
           it "should connect to new db, then reset when done" do
-            ActiveRecord::Base.connection.should_receive(:schema_search_path=).with(schema_name).once
-            ActiveRecord::Base.connection.should_receive(:schema_search_path=).with(@original_schema).once
+            ActiveRecord::Base.connection.should_receive(:schema_search_path=).with(%{"#{schema_name}"}).once
+            ActiveRecord::Base.connection.should_receive(:schema_search_path=).with(%{"#{@original_schema}"}).once
             Apartment::Migrator.run(:up, schema_name, version)
           end
 
@@ -63,8 +63,8 @@ describe Apartment::Migrator do
         describe "down" do
 
           it "should connect to new db, then reset when done" do
-            ActiveRecord::Base.connection.should_receive(:schema_search_path=).with(schema_name).once
-            ActiveRecord::Base.connection.should_receive(:schema_search_path=).with(@original_schema).once
+            ActiveRecord::Base.connection.should_receive(:schema_search_path=).with(%{"#{schema_name}"}).once
+            ActiveRecord::Base.connection.should_receive(:schema_search_path=).with(%{"#{@original_schema}"}).once
             Apartment::Migrator.run(:down, schema_name, version)
           end
 
