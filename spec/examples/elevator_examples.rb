@@ -4,10 +4,10 @@ shared_examples_for "an apartment elevator" do
 
   context "single request" do
     it "should switch the db" do
-      ActiveRecord::Base.connection.schema_search_path.should_not == database1
+      ActiveRecord::Base.connection.schema_search_path.should_not == %{"#{database1}"}
 
       visit(domain1)
-      ActiveRecord::Base.connection.schema_search_path.should == database1
+      ActiveRecord::Base.connection.schema_search_path.should == %{"#{database1}"}
     end
   end
 

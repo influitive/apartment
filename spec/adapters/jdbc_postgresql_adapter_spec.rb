@@ -18,7 +18,7 @@ if defined?(JRUBY_VERSION)
         ActiveRecord::Base.connection.execute("SELECT nspname FROM pg_namespace;").collect { |row| row['nspname'] }
       end
 
-      let(:default_database) { subject.process { ActiveRecord::Base.connection.schema_search_path } }
+      let(:default_database) { subject.process { ActiveRecord::Base.connection.schema_search_path.gsub('"', '') } }
 
       it_should_behave_like "a generic apartment adapter"
       it_should_behave_like "a schema based apartment adapter"
