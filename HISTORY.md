@@ -1,3 +1,14 @@
+# 0.22.0
+  * June 9, 2013
+
+  - Numerous bug fixes:
+    - Mysql reset could connect to wrong database [eric88]
+    - Postgresql schema names weren't quoted properly [gdott9]
+    - Fixed error message on SchemaNotFound in `process`
+  - HostHash elevator allows mapping host based on hash contents [gdott9]
+  - Official Sidekiq support with the [apartment-sidekiq gem](https://github.com/influitive/apartment-sidekiq)
+
+
 # 0.21.1
   * May 31, 2013
 
