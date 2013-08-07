@@ -191,6 +191,20 @@ schema_search_path: "public,hstore"
 
 This would be for a config with `default_schema` set to `public` and `persistent_schemas` set to `['hstore']`
 
+Another way that we've successfully configured hstore for our applications is to add it into the
+postgresql template1 database so that every db that gets created has it by default.
+
+You can do so using a command like so
+
+```bash
+psql -U postgres -d template1 -c "CREATE SCHEMA hstore AUTHORIZATION some_username;"
+psql -U postgres -d template1 -c "CREATE EXTENSION IF NOT EXISTS hstore SCHEMA hstore;"
+```
+
+The *ideal* setup would actually be to install `hstore` into the `public` schema and leave the public
+schema in the `search_path` at all times. We won't be able to do this though until public doesn't
+also contain the tenanted tables, which is an open issue with no real milestone to be completed.
+Happy to accept PR's on the matter.
 
 ### Managing Migrations
 
