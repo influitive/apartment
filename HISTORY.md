@@ -1,3 +1,10 @@
+# 0.22.1
+  * August 21, 2013
+
+  - Fix bug where if your ruby process importing the database schema is run
+    from a directory other than the app root, Apartment wouldn't know what
+    schema_migrations to insert into the database (Rails only)
+
 # 0.22.0
   * June 9, 2013
 
