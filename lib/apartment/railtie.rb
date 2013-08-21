@@ -16,6 +16,8 @@ module Apartment
         config.prepend_environment = false
         config.append_environment = false
       end
+
+      ActiveRecord::Migrator.migrations_paths = Rails.application.paths['db/migrate'].to_a
     end
 
     #   Hook into ActionDispatch::Reloader to ensure Apartment is properly initialized
