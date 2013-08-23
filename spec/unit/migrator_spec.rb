@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'apartment/migrator'
 
 describe Apartment::Migrator do
 

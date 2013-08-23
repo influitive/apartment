@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'apartment/elevators/domain'
 
 describe Apartment::Elevators::Domain do
 
@@ -20,7 +21,5 @@ describe Apartment::Elevators::Domain do
       elevator = Apartment::Elevators::Domain.new(nil)
       elevator.parse_database_name(request).should be_nil
     end
-
   end
-
 end

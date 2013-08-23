@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'apartment/elevators/subdomain'
 
 describe Apartment::Elevators::Subdomain do
 
@@ -14,7 +15,5 @@ describe Apartment::Elevators::Subdomain do
       elevator = Apartment::Elevators::Subdomain.new(nil)
       elevator.parse_database_name(request).should be_nil
     end
-
   end
-
 end

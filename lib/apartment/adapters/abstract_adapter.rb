@@ -1,5 +1,3 @@
-require 'active_record'
-
 module Apartment
   module Adapters
     class AbstractAdapter

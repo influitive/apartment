@@ -1,5 +1,4 @@
 module Apartment
-
   class Reloader
 
     #   Middleware used in development to init Apartment for each request
@@ -18,7 +17,5 @@ module Apartment
       Database.init
       @app.call(env)
     end
-
   end
-
 end

@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'apartment/elevators/host_hash'
 
 describe Apartment::Elevators::HostHash do
 
@@ -20,7 +21,5 @@ describe Apartment::Elevators::HostHash do
       elevator = Apartment::Elevators::HostHash.new(nil, 'example.com' => 'example_database')
       expect { elevator.parse_database_name(request) }.to raise_error(Apartment::DatabaseNotFound)
     end
-
   end
-
 end

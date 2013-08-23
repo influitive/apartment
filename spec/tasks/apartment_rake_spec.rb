@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'rake'
+require 'apartment/migrator'
 
 describe "apartment rake tasks" do
 

@@ -1,4 +1,6 @@
 require 'rails'
+require 'apartment/database'
+require 'apartment/reloader'
 
 module Apartment
   class Railtie < Rails::Railtie
@@ -50,8 +52,6 @@ module Apartment
       console do
         require 'apartment/console'
       end
-
     end
-
   end
 end

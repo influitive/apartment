@@ -3,7 +3,6 @@
 require "apartment/adapters/postgresql_adapter"
 
 module Apartment
-
   module Database
 
     def self.postgis_adapter(config)

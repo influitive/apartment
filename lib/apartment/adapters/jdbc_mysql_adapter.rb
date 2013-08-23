@@ -1,3 +1,5 @@
+require "apartment/adapters/abstract_jdbc_adapter"
+
 module Apartment
 
   module Database

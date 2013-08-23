@@ -1,3 +1,6 @@
+require 'rack/request'
+require 'apartment/database'
+
 module Apartment
   module Elevators
     #   Provides a rack based db switching solution based on request

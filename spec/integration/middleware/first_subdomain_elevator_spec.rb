@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'apartment/elevators/first_subdomain'
 
 describe Apartment::Elevators::FirstSubdomain do
   describe "subdomain" do

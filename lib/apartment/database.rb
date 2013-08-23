@@ -1,7 +1,6 @@
 require 'forwardable'
 
 module Apartment
-
   #   The main entry point to Apartment functions
   #
   module Database
@@ -36,7 +35,6 @@ module Apartment
         end
 
         begin
-          require "apartment/adapters/abstract_jdbc_adapter" if defined?(JRUBY_VERSION)
           require "apartment/adapters/#{adapter_method}"
         rescue LoadError
           raise "The adapter `#{adapter_method}` is not yet supported"
@@ -64,7 +62,5 @@ module Apartment
     def config
       @config ||= Rails.configuration.database_configuration[Rails.env].symbolize_keys
     end
-
   end
-
 end

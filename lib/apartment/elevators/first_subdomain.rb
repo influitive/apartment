@@ -1,3 +1,5 @@
+require 'apartment/elevators/subdomain'
+
 module Apartment
   module Elevators
     # Provides a rack based db switching solution based on the first subdomain

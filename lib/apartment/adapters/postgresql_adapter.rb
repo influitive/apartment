@@ -1,5 +1,6 @@
-module Apartment
+require 'apartment/adapters/abstract_adapter'
 
+module Apartment
   module Database
 
     def self.postgresql_adapter(config)
@@ -10,7 +11,6 @@ module Apartment
   end
 
   module Adapters
-
     # Default adapter when not using Postgresql Schemas
     class PostgresqlAdapter < AbstractAdapter
 

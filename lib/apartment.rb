@@ -1,6 +1,8 @@
 require 'apartment/railtie' if defined?(Rails)
 require 'active_support/core_ext/object/blank'
 require 'forwardable'
+require 'active_record'
+require 'apartment/database'
 
 module Apartment
 
@@ -63,28 +65,9 @@ module Apartment
       warn "[Deprecation Warning] `use_postgresql_schemas=` is now deprecated, please use `use_schemas=`"
       self.use_schemas = to_use_or_not_to_use
     end
-
-  end
-
-  autoload :Database, 'apartment/database'
-  autoload :Migrator, 'apartment/migrator'
-  autoload :Reloader, 'apartment/reloader'
-
-  module Adapters
-    autoload :AbstractAdapter, 'apartment/adapters/abstract_adapter'
-    # Specific adapters will be loaded dynamically based on adapter in config
-  end
-
-  module Elevators
-    autoload :Generic,    'apartment/elevators/generic'
-    autoload :Subdomain,      'apartment/elevators/subdomain'
-    autoload :FirstSubdomain, 'apartment/elevators/first_subdomain'
-    autoload :Domain,     'apartment/elevators/domain'
-    autoload :HostHash,     'apartment/elevators/host_hash'
   end
 
   module Delayed
-
     autoload :Requirements, 'apartment/delayed_job/requirements'
 
     module Job
@@ -112,5 +95,4 @@ module Apartment
 
   # Raised when an ActiveRecord object does not have the required database field on it
   class DJSerializationError < ApartmentError; end
-
 end

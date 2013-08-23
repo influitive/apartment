@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'apartment/elevators/domain'
 
 describe Apartment::Elevators::Domain, :elevator => true do
 

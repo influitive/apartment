@@ -1,3 +1,5 @@
+require 'apartment/migrator'
+
 apartment_namespace = namespace :apartment do
 
   desc "Create all multi-tenant databases"

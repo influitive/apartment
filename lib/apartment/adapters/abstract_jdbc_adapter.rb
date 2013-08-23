@@ -1,3 +1,5 @@
+require 'apartment/adapters/abstract_adapter'
+
 module Apartment
   module Adapters
     class AbstractJDBCAdapter < AbstractAdapter

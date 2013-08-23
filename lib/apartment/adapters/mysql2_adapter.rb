@@ -1,5 +1,6 @@
-module Apartment
+require 'apartment/adapters/abstract_adapter'
 
+module Apartment
   module Database
 
     def self.mysql2_adapter(config)
@@ -10,7 +11,6 @@ module Apartment
   end
 
   module Adapters
-
     class Mysql2Adapter < AbstractAdapter
 
     protected

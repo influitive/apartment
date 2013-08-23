@@ -14,6 +14,8 @@ module Dummy
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
+    require 'apartment/elevators/subdomain'
+    require 'apartment/elevators/domain'
 
     config.middleware.use 'Apartment::Elevators::Subdomain'
     config.middleware.use 'Apartment::Elevators::Domain'

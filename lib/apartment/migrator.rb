@@ -1,5 +1,6 @@
-module Apartment
+require 'apartment/database'
 
+module Apartment
   module Migrator
 
     extend self
