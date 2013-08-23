@@ -59,14 +59,14 @@ describe Apartment do
       end
 
       it "should return the invoked proc if appropriate" do
-        dbs = lambda{ Company.scoped }
+        dbs = lambda{ Company.all }
 
         Apartment.configure do |config|
           config.excluded_models = []
           config.database_names = dbs
         end
 
-        Apartment.database_names.should == Company.scoped
+        Apartment.database_names.should == Company.all
       end
     end
 

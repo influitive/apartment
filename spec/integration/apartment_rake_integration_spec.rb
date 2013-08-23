@@ -22,7 +22,7 @@ describe "apartment rake tasks" do
   before do
     Apartment.configure do |config|
       config.excluded_models = ["Company"]
-      config.database_names = lambda{ Company.scoped.collect(&:database) }
+      config.database_names = lambda{ Company.pluck(:database) }
     end
 
     # fix up table name of shared/excluded models
