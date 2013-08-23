@@ -238,74 +238,7 @@ config.prepend_environment = !Rails.env.production?
 ```
 
 ## Delayed::Job
-
-### Read me before using Delayed::Job!!!
->   It should be noted that we now consider Delayed::Job usage with Apartment effectively deprecated
->   It will be stripped out into it's own gem for backwards compatibility, but we've had far too
->   many problems with it to continue supporting it.
->
->   The main problem is that Delayed::Job [monkey](https://github.com/collectiveidea/delayed_job/blob/master/lib/delayed/psych_ext.rb) [patches](https://github.com/collectiveidea/delayed_job/blob/master/lib/delayed/syck_ext.rb) YAML quite a bit, which
->   forces us to in tern [monkey](https://github.com/influitive/apartment/blob/development/lib/apartment/delayed_job/psych_ext.rb) [patch](https://github.com/influitive/apartment/blob/development/lib/apartment/delayed_job/syck_ext.rb) their monkey patches, which provides
->   no end of frustrations whenever upgrades are made.
->
->   To this end, we recommend you look into other solutions such as Resque or Sidekiq and write
->   your own hooks to switch db per job. Our aim is to have separate gems for each of these
->   worker libs and would love it if anyone would like to contribute something to achieve this
->
->   If you are hell bent on using `Delayed::Job`, this is what has worked for us in Production
->
->  ```ruby
->  gem 'delayed_job', '= 3.0.1' # change at own risk!
->  gem 'delayed_job_active_record', '= 0.3.2' # change at own risk!
->  ```
->
-
-If using Rails ~> 3.2, you *must* use `delayed_job ~> 3.0`.  It has better Rails 3 support plus has some major changes that affect the serialization of models.
-
-### If using Ruby 1.9.3-p362 you MUST use psych as your parser. YAML seems to fall down using syck
-
-### If you're using syck on an earlier version of ruby, here's what you must do (in a rails app for instance)
-This can be done in the `boot.rb` of your rails config *just above* where Bundler requires the gems from the Gemfile.  It will look something like:
-
-```ruby
-require 'rubygems'
-require 'yaml'
-YAML::ENGINE.yamler = 'syck'
-
-# Set up gems listed in the Gemfile.
-gemfile = File.expand_path('../../Gemfile', __FILE__)
-# ...
-```
-
-In order to make ActiveRecord models play nice with DJ and Apartment, include `Apartment::Delayed::Requirements` in any model that is being serialized by DJ.  Also ensure that the `database` attribute (provided by Apartment::Delayed::Requirements) is set on this model *before* it is serialized, to ensure that when it is fetched again, it is done so in the proper Apartment db context.  For example:
-
-```ruby
-class SomeModel < ActiveRecord::Base
-  include Apartment::Delayed::Requirements
-end
-```
-
-Any classes that are being used as a Delayed::Job Job need to include the `Apartment::Delayed::Job::Hooks` module into the class.  This ensures that when a job runs, it switches to the appropriate tenant before performing its task.  It is also required (manually at the moment) that you set a `@database` attribute on your job so the hooks know what tennant to switch to
-
-```ruby
-class SomeDJ
-  include Apartment::Delayed::Job::Hooks
-
-  def initialize
-    @database = Apartment::Database.current_database
-  end
-
-  def perform
-    # do some stuff (will automatically switch to @database before performing and switch back after)
-  end
-end
-```
-
-All jobs *must* stored in the global (public) namespace, so add it to the list of excluded models:
-
-```ruby
-config.excluded_models = ["Delayed::Job"]
-```
+### Has been removed... See apartment-sidekiq for a better backgrounding experience
 
 ## Contributing
 

@@ -24,11 +24,6 @@
     think about Tenants. I proprose that we deprecate the `Apartment::Database` constant in favour of `Apartment::Tenant` for a nicer abstraction. See
     http://myronmars.to/n/dev-blog/2011/09/deprecating-constants-and-classes-in-ruby for ideas on how to achieve this.
 
-3.  `Delayed::Job` has proven to be an absolute P.I.T.A. It's YAML hacks are beyond reproach and require further hacks in order to work properly.
-    I want to completely remove the Delayed::Job dependency from Apartment and make an `apartment-delayed-job` gem that can be worked on independently
-    (and hopefully eventually deprecated). To this end, I've started an `apartment-sidekiq` gem and would love to see an `apartment-resque` gem to deal
-    with those background workers from a multi-tenant perspective also.
-
 4.  Apartment::Database.process should be deprecated in favour of just passing an optional block to `switch`
 
 5.  Migrations right now can be a bit of a pain. Apartment currently migrates a single tenant completely up to date, then goes onto the next. If one of these

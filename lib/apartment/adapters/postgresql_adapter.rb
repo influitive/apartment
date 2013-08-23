@@ -48,7 +48,6 @@ module Apartment
             # Ensure that if a schema *was* set, we override
             table_name = klass.table_name.split('.', 2).last
 
-            # Not sure why, but Delayed::Job somehow ignores table_name_prefix...  so we'll just manually set table name instead
             klass.table_name = "#{Apartment.default_schema}.#{table_name}"
           end
         end

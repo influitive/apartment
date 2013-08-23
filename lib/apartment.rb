@@ -67,14 +67,6 @@ module Apartment
     end
   end
 
-  module Delayed
-    autoload :Requirements, 'apartment/delayed_job/requirements'
-
-    module Job
-      autoload :Hooks, 'apartment/delayed_job/hooks'
-    end
-  end
-
   # Exceptions
   class ApartmentError < StandardError; end
 
