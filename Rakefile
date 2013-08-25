@@ -2,6 +2,8 @@ require 'bundler' rescue 'You must `gem install bundler` and `bundle install` to
 Bundler.setup
 Bundler::GemHelper.install_tasks
 
+require 'appraisal'
+
 require "rspec"
 require "rspec/core/rake_task"
 
