@@ -9,27 +9,24 @@
 # from scratch. The latter is a flawed and unsustainable approach (the more migrations
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
-# It's strongly recommended that you check this file into your version control system.
+# It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20111202022214) do
+ActiveRecord::Schema.define(:version => 20111202022214) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
-  create_table "books", force: true do |t|
+  create_table "books", :force => true do |t|
     t.string   "name"
     t.integer  "pages"
     t.datetime "published"
   end
 
-  create_table "companies", force: true do |t|
+  create_table "companies", :force => true do |t|
     t.boolean "dummy"
     t.string  "database"
   end
 
-  create_table "delayed_jobs", force: true do |t|
-    t.integer  "priority",   default: 0
-    t.integer  "attempts",   default: 0
+  create_table "delayed_jobs", :force => true do |t|
+    t.integer  "priority",   :default => 0
+    t.integer  "attempts",   :default => 0
     t.text     "handler"
     t.text     "last_error"
     t.datetime "run_at"
@@ -41,9 +38,9 @@ ActiveRecord::Schema.define(version: 20111202022214) do
     t.string   "queue"
   end
 
-  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
+  add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
 
-  create_table "users", force: true do |t|
+  create_table "users", :force => true do |t|
     t.string   "name"
     t.datetime "birthdate"
     t.string   "sex"
