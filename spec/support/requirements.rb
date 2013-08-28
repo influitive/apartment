@@ -37,8 +37,10 @@ module Apartment
           Apartment.excluded_models.each do |m|
             klass = m.constantize
             Apartment.connection_class.remove_connection(klass)
+            klass.clear_all_connections!
             klass.reset_table_name
           end
+
           ActiveRecord::Base.clear_all_connections!
         end
       end

@@ -38,6 +38,11 @@ RSpec.configure do |config|
     Apartment.reset
   end
 
+  # Somewhat brutal hack so that rails 4 postgres extensions don't modify this file
+  config.after(:suite) do
+    `git checkout -- spec/dummy/db/schema.rb`
+  end
+
 end
 
 # Load shared examples, must happen after configure for RSpec 3
