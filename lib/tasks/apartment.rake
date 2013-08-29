@@ -1,10 +1,11 @@
 require 'apartment/migrator'
+require 'parallel'
 
 apartment_namespace = namespace :apartment do
 
   desc "Create all multi-tenant databases"
   task :create => 'db:migrate' do
-    database_names.each do |db|
+    each_db do |db|
       begin
         puts("Creating #{db} database")
         quietly { Apartment::Database.create(db) }
@@ -17,7 +18,7 @@ apartment_namespace = namespace :apartment do
   desc "Migrate all multi-tenant databases"
   task :migrate => 'db:migrate' do
 
-    database_names.each do |db|
+    each_db do |db|
       begin
         puts("Migrating #{db} database")
         Apartment::Migrator.migrate db
@@ -30,7 +31,7 @@ apartment_namespace = namespace :apartment do
   desc "Seed all multi-tenant databases"
   task :seed => 'db:seed' do
 
-    database_names.each do |db|
+    each_db do |db|
       begin
         puts("Seeding #{db} database")
         Apartment::Database.process(db) do
@@ -46,7 +47,7 @@ apartment_namespace = namespace :apartment do
   task :rollback => 'db:rollback' do
     step = ENV['STEP'] ? ENV['STEP'].to_i : 1
 
-    database_names.each do |db|
+    each_db do |db|
       begin
         puts("Rolling back #{db} database")
         Apartment::Migrator.rollback db, step
@@ -63,7 +64,7 @@ apartment_namespace = namespace :apartment do
       version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
       raise 'VERSION is required' unless version
 
-      database_names.each do |db|
+      each_db do |db|
         begin
           puts("Migrating #{db} database up")
           Apartment::Migrator.run :up, db, version
@@ -78,7 +79,7 @@ apartment_namespace = namespace :apartment do
       version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
       raise 'VERSION is required' unless version
 
-      database_names.each do |db|
+      each_db do |db|
         begin
           puts("Migrating #{db} database down")
           Apartment::Migrator.run :down, db, version
@@ -99,6 +100,13 @@ apartment_namespace = namespace :apartment do
       end
     end
 
+  end
+
+  def each_db(&block)
+    Parallel.each(database_names, :in_threads=>Apartment.parallel_migration_threads) do |db|
+      ActiveRecord::Base.connection.reconnect!
+      block.call(db)
+    end
   end
 
   def database_names
