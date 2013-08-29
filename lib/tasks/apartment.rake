@@ -1,4 +1,5 @@
 require 'apartment/migrator'
+require 'parallel'
 
 apartment_namespace = namespace :apartment do
 
@@ -29,7 +30,7 @@ apartment_namespace = namespace :apartment do
   desc "Migrate all tenants"
   task :migrate do
     warn_if_tenants_empty
-    tenants.each do |tenant|
+    each_tenant do |tenant|
       begin
         puts("Migrating #{tenant} tenant")
         Apartment::Migrator.migrate tenant
@@ -43,7 +44,7 @@ apartment_namespace = namespace :apartment do
   task :seed do
     warn_if_tenants_empty
 
-    tenants.each do |tenant|
+    each_tenant do |tenant|
       begin
         puts("Seeding #{tenant} tenant")
         Apartment::Tenant.switch(tenant) do
@@ -61,7 +62,7 @@ apartment_namespace = namespace :apartment do
 
     step = ENV['STEP'] ? ENV['STEP'].to_i : 1
 
-    tenants.each do |tenant|
+    each_tenant do |tenant|
       begin
         puts("Rolling back #{tenant} tenant")
         Apartment::Migrator.rollback tenant, step
@@ -79,7 +80,7 @@ apartment_namespace = namespace :apartment do
       version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
       raise 'VERSION is required' unless version
 
-      tenants.each do |tenant|
+      each_tenant do |tenant|
         begin
           puts("Migrating #{tenant} tenant up")
           Apartment::Migrator.run :up, tenant, version
@@ -96,7 +97,7 @@ apartment_namespace = namespace :apartment do
       version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
       raise 'VERSION is required' unless version
 
-      tenants.each do |tenant|
+      each_tenant do |tenant|
         begin
           puts("Migrating #{tenant} tenant down")
           Apartment::Migrator.run :down, tenant, version
@@ -115,6 +116,12 @@ apartment_namespace = namespace :apartment do
         apartment_namespace['rollback'].invoke
         apartment_namespace['migrate'].invoke
       end
+    end
+  end
+
+  def each_tenant(&block)
+    Parallel.each(tenants, in_threads: Apartment.parallel_migration_threads) do |tenant|
+      block.call(tenant)
     end
   end
 
