@@ -1,10 +1,9 @@
 require 'spec_helper'
 require 'apartment/adapters/mysql2_adapter'
 
-describe Apartment::Adapters::Mysql2Adapter do
+describe Apartment::Adapters::Mysql2Adapter, database: :mysql do
   unless defined?(JRUBY_VERSION)
 
-    let(:config){ Apartment::Test.config['connections']['mysql'].symbolize_keys }
     subject(:adapter){ Apartment::Database.mysql2_adapter config }
 
     def database_names

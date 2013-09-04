@@ -1,10 +1,9 @@
 require 'spec_helper'
 require 'apartment/adapters/postgresql_adapter'
 
-describe Apartment::Adapters::PostgresqlAdapter do
+describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
   unless defined?(JRUBY_VERSION)
 
-    let(:config){ Apartment::Test.config['connections']['postgresql'].symbolize_keys }
     subject{ Apartment::Database.postgresql_adapter config }
 
     context "using schemas" do

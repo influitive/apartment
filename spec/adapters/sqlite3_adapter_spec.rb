@@ -1,10 +1,9 @@
 require 'spec_helper'
 require 'apartment/adapters/sqlite3_adapter'
 
-describe Apartment::Adapters::Sqlite3Adapter do
+describe Apartment::Adapters::Sqlite3Adapter, database: :sqlite do
   unless defined?(JRUBY_VERSION)
 
-    let(:config){ Apartment::Test.config['connections']['sqlite'].symbolize_keys }
     subject{ Apartment::Database.sqlite3_adapter config }
 
     context "using connections" do

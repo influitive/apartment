@@ -13,7 +13,7 @@ describe Apartment::Reloader do
 
     it "should initialize apartment when called" do
       Company.table_name.should_not include('public.')
-      subject.call(mock('env'))
+      subject.call(double('env'))
       Company.table_name.should include('public.')
     end
   end

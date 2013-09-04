@@ -3,10 +3,8 @@ if defined?(JRUBY_VERSION)
   require 'spec_helper'
   require 'lib/apartment/adapters/jdbc_mysql_adapter'
 
-  describe Apartment::Adapters::JDBCMysqlAdapter do
+  describe Apartment::Adapters::JDBCMysqlAdapter, database: :mysql do
 
-
-    let(:config) { Apartment::Test.config['connections']['mysql'] }
     subject { Apartment::Database.jdbc_mysql_adapter config.symbolize_keys }
 
     def database_names

@@ -4,7 +4,7 @@ describe Apartment do
 
   describe "#config" do
 
-    let(:excluded_models){ [Company] }
+    let(:excluded_models){ ["Company"] }
 
     it "should yield the Apartment object" do
       Apartment.configure do |config|

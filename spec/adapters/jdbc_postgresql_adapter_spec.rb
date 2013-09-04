@@ -3,10 +3,8 @@ if defined?(JRUBY_VERSION)
   require 'spec_helper'
   require 'lib/apartment/adapters/jdbc_postgresql_adapter'
 
-  describe Apartment::Adapters::JDBCPostgresqlAdapter do
+  describe Apartment::Adapters::JDBCPostgresqlAdapter, database: :postgresql do
 
-
-    let(:config) { Apartment::Test.config['connections']['postgresql'] }
     subject { Apartment::Database.jdbc_postgresql_adapter config.symbolize_keys }
 
     context "using schemas" do
