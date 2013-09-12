@@ -10,12 +10,17 @@ module Apartment
           let(:db2){ Apartment::Test.next_db }
           let(:connection){ ActiveRecord::Base.connection }
 
-          before(:each) do
-            Apartment::Database.reload!(config.symbolize_keys)
+          # This around ensures that we run these hooks before and after
+          # any before/after hooks defined in individual tests
+          # Otherwise these actually get run after test defined hooks
+          around(:each) do |example|
+            # before
+            Apartment::Database.reload!(config)
             ActiveRecord::Base.establish_connection config
-          end
 
-          after(:each) do
+            example.run
+
+            # after
             Rails.configuration.database_configuration = {}
             ActiveRecord::Base.clear_all_connections!
 

@@ -1,14 +1,9 @@
 require 'spec_helper'
 
 describe Apartment::Database do
-  context "using mysql" do
-    # See apartment.yml file in dummy app config
-
-    let(:config){ Apartment::Test.config['connections']['mysql'].symbolize_keys }
+  context "using mysql", database: :mysql do
 
     before do
-      ActiveRecord::Base.establish_connection config
-      Apartment::Test.load_schema   # load the Rails schema in the public db schema
       subject.stub(:config).and_return config   # Use mysql database config for this test
     end
 
@@ -23,27 +18,24 @@ describe Apartment::Database do
       end
     end
 
-    # TODO this doesn't belong here, but there aren't integration tests currently for mysql
-    # where to put???
-    describe "#exception recovery", :type => :request do
-      let(:database1){ Apartment::Test.next_db }
+    # # TODO this doesn't belong here, but there aren't integration tests currently for mysql
+    # # where to put???
+    # describe "#exception recovery", :type => :request do
+    #   before do
+    #     subject.reload!
+    #     subject.create db1
+    #   end
+    #   after{ subject.drop db1 }
 
-      before do
-        subject.reload!
-        subject.create database1
-      end
-      after{ subject.drop database1 }
-
-      it "should recover from incorrect database" do
-        session = Capybara::Session.new(:rack_test, Capybara.app)
-        session.visit("http://#{database1}.com")
-        expect {
-          session.visit("http://this-database-should-not-exist.com")
-        }.to raise_error
-        session.visit("http://#{database1}.com")
-      end
-
-    end
+    #   it "should recover from incorrect database" do
+    #     session = Capybara::Session.new(:rack_test, Capybara.app)
+    #     session.visit("http://#{db1}.com")
+    #     expect {
+    #       session.visit("http://this-database-should-not-exist.com")
+    #     }.to raise_error
+    #     session.visit("http://#{db1}.com")
+    #   end
+    # end
     
     context "with prefix and schemas" do
       describe "#create" do
@@ -52,6 +44,7 @@ describe Apartment::Database do
             config.prepend_environment = true
             config.use_schemas = true
           end
+
           subject.reload!(config) # switch to Mysql2SchemaAdapter
         end
         
@@ -64,18 +57,9 @@ describe Apartment::Database do
     end
   end
 
-  context "using postgresql" do
-
-    # See apartment.yml file in dummy app config
-
-    let(:config){ Apartment::Test.config['connections']['postgresql'].symbolize_keys }
-    let(:database){ Apartment::Test.next_db }
-    let(:database2){ Apartment::Test.next_db }
-
+  context "using postgresql", database: :postgresql do
     before do
       Apartment.use_schemas = true
-      ActiveRecord::Base.establish_connection config
-      Apartment::Test.load_schema   # load the Rails schema in the public db schema
       subject.stub(:config).and_return config   # Use postgresql database config for this test
     end
 
@@ -90,7 +74,7 @@ describe Apartment::Database do
       end
 
       it "should raise exception with invalid adapter specified" do
-        subject.stub(:config).and_return config.merge(:adapter => 'unkown')
+        subject.stub(:config).and_return config.merge(:adapter => 'unknown')
 
         expect {
           Apartment::Database.adapter
@@ -98,13 +82,14 @@ describe Apartment::Database do
       end
 
       context "threadsafety" do
-        before { subject.create database }
+        before { subject.create db1 }
+        after { subject.drop db1 }
 
         it 'has a threadsafe adapter' do
-          subject.switch(database)
+          subject.switch(db1)
           thread = Thread.new { subject.current_database.should == Apartment.default_schema }
           thread.join
-          subject.current_database.should == database
+          subject.current_database.should == db1
         end
       end
     end
@@ -117,14 +102,14 @@ describe Apartment::Database do
           config.use_schemas = true
           config.seed_after_create = true
         end
-        subject.create database
+        subject.create db1
       end
 
-      after{ subject.drop database }
+      after{ subject.drop db1 }
 
       describe "#create" do
         it "should seed data" do
-          subject.switch database
+          subject.switch db1
           User.count.should be > 0
         end
       end
@@ -135,20 +120,20 @@ describe Apartment::Database do
 
         context "creating models" do
 
-          before{ subject.create database2 }
-          after{ subject.drop database2 }
+          before{ subject.create db2 }
+          after{ subject.drop db2 }
 
           it "should create a model instance in the current schema" do
-            subject.switch database2
+            subject.switch db2
             db2_count = User.count + x.times{ User.create }
 
-            subject.switch database
+            subject.switch db1
             db_count = User.count + x.times{ User.create }
 
-            subject.switch database2
+            subject.switch db2
             User.count.should == db2_count
 
-            subject.switch database
+            subject.switch db1
             User.count.should == db_count
           end
         end
@@ -166,17 +151,14 @@ describe Apartment::Database do
             subject.reset # ensure we're on public schema
             count = Company.count + x.times{ Company.create }
 
-            subject.switch database
+            subject.switch db1
             x.times{ Company.create }
             Company.count.should == count + x
             subject.reset
             Company.count.should == count + x
           end
         end
-
       end
-
     end
-
   end
 end

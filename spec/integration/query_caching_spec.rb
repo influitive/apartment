@@ -1,24 +1,28 @@
 require 'spec_helper'
 
 describe 'query caching' do
+  let(:db_names) { [db1, db2] }
+
   before do
     Apartment.configure do |config|
       config.excluded_models = ["Company"]
       config.database_names = lambda{ Company.pluck(:database) }
+      config.use_schemas = true
     end
+
+    Apartment::Database.reload!(config)
 
     db_names.each do |db_name|
       Apartment::Database.create(db_name)
-      Company.create :database => db_name
+      Company.create database: db_name
     end
   end
 
   after do
     db_names.each{ |db| Apartment::Database.drop(db) }
+    Apartment::Database.reset
     Company.delete_all
   end
-
-  let(:db_names) { 2.times.map{ Apartment::Test.next_db } }
 
   it 'clears the ActiveRecord::QueryCache after switching databases' do
     db_names.each do |db_name|

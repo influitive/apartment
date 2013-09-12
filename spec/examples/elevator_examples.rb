@@ -4,17 +4,17 @@ shared_examples_for "an apartment elevator" do
 
   context "single request" do
     it "should switch the db" do
-      ActiveRecord::Base.connection.schema_search_path.should_not == %{"#{database1}"}
+      ActiveRecord::Base.connection.schema_search_path.should_not == %{"#{db1}"}
 
       visit(domain1)
-      ActiveRecord::Base.connection.schema_search_path.should == %{"#{database1}"}
+      ActiveRecord::Base.connection.schema_search_path.should == %{"#{db1}"}
     end
   end
 
   context "simultaneous requests" do
 
-    let!(:c1_user_count) { api.process(database1){ (2 + rand(2)).times{ User.create } } }
-    let!(:c2_user_count) { api.process(database2){ (c1_user_count + 2).times{ User.create } } }
+    let!(:c1_user_count) { api.process(db1){ (2 + rand(2)).times{ User.create } } }
+    let!(:c2_user_count) { api.process(db2){ (c1_user_count + 2).times{ User.create } } }
 
     it "should fetch the correct user count for each session based on the elevator processor" do
       visit(domain1)

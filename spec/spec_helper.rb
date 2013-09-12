@@ -26,14 +26,8 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
 RSpec.configure do |config|
 
-  config.include RSpec::Integration::CapybaraSessions, :type => :request
+  config.include RSpec::Integration::CapybaraSessions, type: :request
   config.include Apartment::Spec::Setup
-
-  config.before(:all) do
-    # Ensure that each test starts with a clean connection
-    # Necessary as some tests will leak things like current_schema into the next test
-    ActiveRecord::Base.clear_all_connections!
-  end
 
   # Somewhat brutal hack so that rails 4 postgres extensions don't modify this file
   config.after(:suite) do

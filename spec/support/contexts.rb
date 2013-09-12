@@ -16,28 +16,24 @@ shared_context "with default schema", :default_schema => true do
 end
 
 # Some default setup for elevator specs
-shared_context "elevators", :elevator => true do
-   let(:company1)  { mock_model(Company, :database => Apartment::Test.next_db).as_null_object }
-   let(:company2)  { mock_model(Company, :database => Apartment::Test.next_db).as_null_object }
+shared_context "elevators", elevator: true do
+  let(:company1)  { mock_model(Company, database: db1).as_null_object }
+  let(:company2)  { mock_model(Company, database: db2).as_null_object }
 
-   let(:database1) { company1.database }
-   let(:database2) { company2.database }
+  let(:api)       { Apartment::Database }
 
-   let(:api)       { Apartment::Database }
+  before do
+    Apartment.reset # reset all config
+    Apartment.seed_after_create = false
+    Apartment.use_schemas = true
+    api.reload!(config)
+    api.create(db1)
+    api.create(db2)
+  end
 
-   before do
-     Apartment.reset # reset all config
-     Apartment.seed_after_create = false
-     Apartment.use_schemas = true
-     api.reload! # reload adapter
-
-     api.create(database1)
-     api.create(database2)
-   end
-
-   after do
-     api.drop(database1)
-     api.drop(database2)
+  after do
+    api.drop(db1)
+    api.drop(db2)
   end
 end
 
