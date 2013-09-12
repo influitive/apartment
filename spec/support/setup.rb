@@ -21,8 +21,10 @@ module Apartment
 
             Apartment.excluded_models.each do |model|
               klass = model.constantize
+              
+              Apartment.connection_class.remove_connection(klass)
               klass.clear_all_connections!
-              ActiveSupport::Dependencies.remove_constant(model)
+              klass.reset_table_name
             end
 
             Apartment.reset
