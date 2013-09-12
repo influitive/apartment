@@ -17,15 +17,12 @@ module Apartment
 
           after(:each) do
             Rails.configuration.database_configuration = {}
-            ActiveRecord::Base.connection_pool.automatic_reconnect = false
-            ActiveRecord::Base.connection_pool.disconnect!
-            ActiveRecord::Base.connection_pool.automatic_reconnect = true
+            ActiveRecord::Base.clear_all_connections!
 
             Apartment.excluded_models.each do |model|
               klass = model.constantize
-              klass.connection_pool.automatic_reconnect = false
-              klass.connection_pool.disconnect!
-              klass.connection_pool.automatic_reconnect = true
+              klass.clear_all_connections!
+              ActiveSupport::Dependencies.remove_constant(model)
             end
 
             Apartment.reset
