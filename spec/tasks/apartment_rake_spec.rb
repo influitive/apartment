@@ -22,6 +22,10 @@ describe "apartment rake tasks" do
     ENV['VERSION'] = nil    # linux users reported env variable carrying on between tests
   end
 
+  after(:all) do
+    Apartment::Test.load_schema
+  end
+
   let(:version){ '1234' }
 
   context 'database migration' do
@@ -113,7 +117,5 @@ describe "apartment rake tasks" do
         @rake['apartment:rollback'].invoke
       end
     end
-
   end
-
 end

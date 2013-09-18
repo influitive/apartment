@@ -1,33 +1,33 @@
 require 'spec_helper'
 require 'rake'
 
-describe "apartment rake tasks" do
+describe "apartment rake tasks", database: :postgresql do
 
   before do
     @rake = Rake::Application.new
     Rake.application = @rake
     Dummy::Application.load_tasks
 
-    # somehow this misc.rake file gets lost in the shuffle
-    # it defines a `rails_env` task that our db:migrate depends on
-    # No idea why, but during the tests, we somehow lose this tasks, so we get an error when testing migrations
-    # This is STUPID!
-    load "rails/tasks/misc.rake"
-  end
+    # rails tasks running F up the schema...
+    Rake::Task.define_task('db:migrate')
+    Rake::Task.define_task('db:seed')
+    Rake::Task.define_task('db:rollback')
+    Rake::Task.define_task('db:migrate:up')
+    Rake::Task.define_task('db:migrate:down')
+    Rake::Task.define_task('db:migrate:redo')
 
-  after do
-    Rake.application = nil
-  end
-
-  before do
     Apartment.configure do |config|
+      config.use_schemas = true
       config.excluded_models = ["Company"]
       config.database_names = lambda{ Company.pluck(:database) }
     end
+    Apartment::Database.reload!(config)
 
     # fix up table name of shared/excluded models
     Company.table_name = 'public.companies'
   end
+
+  after { Rake.application = nil }
 
   context "with x number of databases" do
 
@@ -49,7 +49,7 @@ describe "apartment rake tasks" do
 
     describe "#migrate" do
       it "should migrate all databases" do
-        Apartment::Migrator.should_receive(:migrate).exactly(company_count).times
+        ActiveRecord::Migrator.should_receive(:migrate).exactly(company_count+1).times
 
         @rake['apartment:migrate'].invoke
       end
@@ -57,12 +57,9 @@ describe "apartment rake tasks" do
 
     describe "#rollback" do
       it "should rollback all dbs" do
-        db_names.each do |name|
-          Apartment::Migrator.should_receive(:rollback).with(name, anything)
-        end
+        ActiveRecord::Migrator.should_receive(:rollback).exactly(company_count+1).times
 
         @rake['apartment:rollback'].invoke
-        @rake['apartment:migrate'].invoke   # migrate again so that our next test 'seed' can run (requires migrations to be complete)
       end
     end
 
@@ -73,6 +70,5 @@ describe "apartment rake tasks" do
         @rake['apartment:seed'].invoke
       end
     end
-
   end
 end

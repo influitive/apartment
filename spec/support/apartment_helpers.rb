@@ -25,8 +25,10 @@ module Apartment
       ActiveRecord::Base.connection.execute("CREATE SCHEMA #{schema}")
     end
 
-    def load_schema
-      silence_stream(STDOUT){ load(Rails.root.join('db', 'schema.rb')) }
+    def load_schema(version = 3)
+      file = File.expand_path("../../schemas/v#{version}.rb", __FILE__)
+
+      silence_stream(STDOUT){ load(file) }
     end
 
     def migrate

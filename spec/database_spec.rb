@@ -27,16 +27,16 @@ describe Apartment::Database do
       end
       after{ subject.drop db1 }
 
-      it "should recover from incorrect database" do
-        session = Capybara::Session.new(:rack_test, Capybara.app)
-        session.visit("http://#{db1}.com")
-        expect {
-          session.visit("http://this-database-should-not-exist.com")
-        }.to raise_error
-        session.visit("http://#{db1}.com")
-      end
+      # it "should recover from incorrect database" do
+      #   session = Capybara::Session.new(:rack_test, Capybara.app)
+      #   session.visit("http://#{db1}.com")
+      #   expect {
+      #     session.visit("http://this-database-should-not-exist.com")
+      #   }.to raise_error
+      #   session.visit("http://#{db1}.com")
+      # end
     end
-    
+
     context "with prefix and schemas" do
       describe "#create" do
         before do
@@ -47,9 +47,9 @@ describe Apartment::Database do
 
           subject.reload!(config) # switch to Mysql2SchemaAdapter
         end
-        
+
         after { subject.drop "db_with_prefix" rescue nil }
-        
+
         it "should create a new database" do
           subject.create "db_with_prefix"
         end

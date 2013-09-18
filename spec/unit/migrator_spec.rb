@@ -1,9 +1,8 @@
 require 'spec_helper'
 require 'apartment/migrator'
 
-describe Apartment::Migrator do
+describe Apartment::Migrator, database: :postgresql do
 
-  let(:config){ Apartment::Test.config['connections']['postgresql'].symbolize_keys }
   let(:schema_name){ Apartment::Test.next_db }
   let(:version){ 20110613152810 }     # note this is brittle!  I've literally just taken the version of the one migration I made...  don't change this version
 
@@ -29,8 +28,10 @@ describe Apartment::Migrator do
     Apartment::Test.drop_schema(schema_name)
   end
 
-  context "postgresql" do
+  # reset db
+  after(:all){ Apartment::Test.load_schema }
 
+  context "postgresql" do
     context "using schemas" do
 
       describe "#migrate" do
@@ -86,5 +87,4 @@ describe Apartment::Migrator do
       end
     end
   end
-
 end
