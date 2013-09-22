@@ -75,7 +75,7 @@ In house, we use the subdomain elevator, which analyzes the subdomain of the req
 
 ```ruby
 # application.rb
-module My Application
+module MyApplication
   class Application < Rails::Application
     config.middleware.use 'Apartment::Elevators::Subdomain'
   end
@@ -87,7 +87,7 @@ To switch based on full domain (excluding subdomains *ie 'www'* and top level do
 
 ```ruby
 # application.rb
-module My Application
+module MyApplication
   class Application < Rails::Application
     config.middleware.use 'Apartment::Elevators::Domain'
   end
@@ -99,7 +99,7 @@ To switch based on full host with a hash to find corresponding database name use
 
 ```ruby
 # application.rb
-module My Application
+module MyApplication
   class Application < Rails::Application
     config.middleware.use 'Apartment::Elevators::HostHash', {'example.com' => 'example_database'}
   end
