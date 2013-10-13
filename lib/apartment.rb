@@ -54,7 +54,13 @@ module Apartment
     def database_schema_file
       return @database_schema_file if defined?(@database_schema_file)
 
-      @database_schema_file = Rails.root.join('db', 'schema.rb')
+      if defined?(Rails)
+        @database_schema_file = if schema_format == :sql
+          Rails.root.join('db', 'structure.sql')
+        else
+          Rails.root.join('db', 'schema.rb')
+        end
+      end
     end
 
     # Reset all the config for Apartment
