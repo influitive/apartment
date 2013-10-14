@@ -65,7 +65,7 @@ namespace :mysql do
 
   desc 'Build the MySQL test databases'
   task :build_db do
-    %x{ mysqladmin -u #{my_config['username']} create #{my_config['database']} } rescue "test db already exists"
+    %x{ mysqladmin -u #{my_config['username']} --password=#{my_config['password']} create #{my_config['database']} } rescue "test db already exists"
     ActiveRecord::Base.establish_connection my_config
     ActiveRecord::Migrator.migrate('spec/dummy/db/migrate')
   end
@@ -73,7 +73,7 @@ namespace :mysql do
   desc "drop the MySQL test database"
   task :drop_db do
     puts "dropping database #{my_config['database']}"
-    %x{ mysqladmin -u #{my_config['username']} drop #{my_config['database']} --force}
+    %x{ mysqladmin -u #{my_config['username']} --password=#{my_config['password']} drop #{my_config['database']} --force}
   end
 
 end
