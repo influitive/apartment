@@ -147,6 +147,8 @@ module Apartment
       #   Import the database schema
       #
       def import_database_schema
+        return if Apartment.database_schema_file.nil?
+
         ActiveRecord::Schema.verbose = false    # do not log schema load output.
         if Apartment.schema_format == :sql
           raise ApartmentError, "Using the :sql schema format is not supported when using Postgres schemas." if Apartment.use_postgres_schemas
