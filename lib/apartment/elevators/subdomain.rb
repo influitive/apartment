@@ -4,9 +4,20 @@ module Apartment
     #   Assumes that database name should match subdomain
     #
     class Subdomain < Generic
+      cattr_accessor :excluded_subdomains do
+        []
+      end
 
       def parse_database_name(request)
-        database = subdomain(request.host)
+        request_subdomain = subdomain(request.host)
+
+        # If the domain acquired is set to be exlcluded, set the database to whatever is currently
+        # next in line in the schema search path.
+        database = if @@excluded_subdomains.include?(request_subdomain)
+          nil
+        else
+          request_subdomain
+        end
 
         database.present? && database || nil
       end
