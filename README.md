@@ -82,6 +82,15 @@ module My Application
 end
 ```
 
+If you want to exclude a domain, for example if you don't want your application to treate www like a subdomain, in an initializer in your application, you can set the following:
+
+```ruby
+# config/initializers/apartment/subdomain_exclusions.rb
+Apartment::Elevators::Subdomain.excluded_subdomains = ['www']
+```
+
+This functions much in the same way as Apartment.excluded_models. This example will prevent switching your database when the subdomain is www. Handy for subdomains like: "public", "www", and "admin" :)
+
 **Switch on domain**
 To switch based on full domain (excluding subdomains *ie 'www'* and top level domains *ie '.com'* ) use the following:
 
