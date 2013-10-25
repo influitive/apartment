@@ -21,9 +21,9 @@ describe Apartment::Elevators::Subdomain, :elevator => true do
     it_should_behave_like "an apartment elevator"
 
     it "shouldnt switch the schema if the subdomain is excluded" do
-      ActiveRecord::Base.connection.schema_search_path.should_not == "www"
+      ActiveRecord::Base.connection.schema_search_path.scan(/\w+/).should_not include("www")
       visit(domain_with_excluded_subdomain)
-      ActiveRecord::Base.connection.schema_search_path.should_not == "www"
+      ActiveRecord::Base.connection.schema_search_path.scan(/\w+/).should_not include("www")
     end
 
     after do
