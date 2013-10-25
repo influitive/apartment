@@ -10,14 +10,15 @@ describe Apartment::Elevators::Subdomain, :elevator => true do
   context "With Subdomain Excluded" do
     let(:domain_with_excluded_subdomain) { "http://www.example.com" }
 
-    it_should_behave_like "an apartment elevator"
-
     before do
       Apartment::Elevators::Subdomain.excluded_subdomains = %w(www)
+      # FIXME:
       # This is used because the dummy app includes all three middlewares. The domain middleware specifically
-      # tries to lookup the example schema. I don't know how to go around this.
+      # tries to lookup the example schema and tries to switch to it. I don't know how to go around this.
       Apartment::Database.create("example")
     end
+
+    it_should_behave_like "an apartment elevator"
 
     it "shouldnt switch the schema if the subdomain is excluded" do
       ActiveRecord::Base.connection.schema_search_path.should_not == "www"
