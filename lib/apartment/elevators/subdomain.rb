@@ -4,8 +4,12 @@ module Apartment
     #   Assumes that database name should match subdomain
     #
     class Subdomain < Generic
-      cattr_accessor :excluded_subdomains do
-        []
+      def self.excluded_subdomains
+        @@excluded_subdomains ||= []
+      end
+
+      def self.excluded_subdomains=(args)
+        @@excluded_subdomains = args
       end
 
       def parse_database_name(request)
