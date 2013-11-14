@@ -8,8 +8,8 @@ module Apartment
         @@excluded_subdomains ||= []
       end
 
-      def self.excluded_subdomains=(args)
-        @@excluded_subdomains = args
+      def self.excluded_subdomains=(arg)
+        @@excluded_subdomains = arg
       end
 
       def parse_database_name(request)
@@ -17,7 +17,7 @@ module Apartment
 
         # If the domain acquired is set to be exlcluded, set the database to whatever is currently
         # next in line in the schema search path.
-        database = if @@excluded_subdomains.include?(request_subdomain)
+        database = if self.class.excluded_subdomains.include?(request_subdomain)
           nil
         else
           request_subdomain
