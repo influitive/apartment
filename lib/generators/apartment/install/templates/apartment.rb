@@ -1,3 +1,9 @@
+# Require whichever elevator you're using below here...
+#
+# require 'apartment/elevators/generic'
+# require 'apartment/elevators/domain'
+require 'apartment/elevators/subdomain'
+
 #
 # Apartment Configuration
 #
@@ -5,6 +11,8 @@ Apartment.configure do |config|
 
   # these models will not be multi-tenanted,
   # but remain in the global (public) namespace
+  # Note that ActiveRecord::SessionStore::Session is just an example
+  # you may not even use the AR Session Store, in which case you'd remove that line
   config.excluded_models = %w{
     ActiveRecord::SessionStore::Session
   }
