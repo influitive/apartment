@@ -5,8 +5,8 @@ module Apartment
 
     def self.jdbc_postgresql_adapter(config)
       Apartment.use_schemas ?
-          Adapters::JDBCPostgresqlSchemaAdapter.new(config) :
-          Adapters::JDBCPostgresqlAdapter.new(config)
+        Adapters::JDBCPostgresqlSchemaAdapter.new(config) :
+        Adapters::JDBCPostgresqlAdapter.new(config)
     end
   end
 
@@ -17,7 +17,7 @@ module Apartment
 
     protected
 
-      def create_database(database)
+      def create_tenant(database)
         # There is a bug in activerecord-jdbcpostgresql-adapter (1.2.5) that will cause
         # an exception if no options are passed into the create_database call.
         Apartment.connection.create_database(environmentify(database), { :thisisahack => '' })

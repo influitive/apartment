@@ -14,7 +14,7 @@ module Apartment
       #   @param {String} database Database name
       #
       def create(database)
-        create_database(database)
+        create_tenant(database)
 
         process(database) do
           import_database_schema
@@ -106,7 +106,7 @@ module Apartment
       #
       #   @param {String} database Database name
       #
-      def create_database(database)
+      def create_tenant(database)
         Apartment.connection.create_database( environmentify(database) )
 
       rescue *rescuable_exceptions

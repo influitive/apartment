@@ -83,7 +83,7 @@ module Apartment
 
       #   Create the new schema
       #
-      def create_database(database)
+      def create_tenant(database)
         Apartment.connection.execute(%{CREATE SCHEMA "#{database}"})
 
       rescue *rescuable_exceptions

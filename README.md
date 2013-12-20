@@ -19,6 +19,15 @@ Add the following to your Gemfile:
 gem 'apartment'
 ```
 
+Then generate your `Apartment` config file using
+
+```ruby
+bundle exec rails generate apartment:install
+```
+
+This will create a `config/initializers/apartment.rb` initializer file.
+Configure as needed using the docs below.
+
 That's all you need to set up the Apartment libraries. If you want to switch databases
 on a per-user basis, look under "Usage - Switching databases per request", below.
 
@@ -69,6 +78,17 @@ database, call switch with no arguments.
 
 You can have Apartment route to the appropriate database by adding some Rack middleware.
 Apartment can support many different "Elevators" that can take care of this routing to your data.
+
+The initializer above will generate the appropriate code for the Subdomain elevator
+by default. You can see this in `config/initializers/apartment.rb` after running
+that generator. If you're *not* using the generator, you can specify your
+elevator below. Note that in this case you will **need** to require the elevator
+manually in your `application.rb` like so
+
+```ruby
+# config/application.rb
+require 'apartment/elevators/subdomain' # or 'domain' or 'generic'
+```
 
 **Switch on subdomain**
 In house, we use the subdomain elevator, which analyzes the subdomain of the request and switches to a database schema of the same name. It can be used like so:

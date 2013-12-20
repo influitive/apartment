@@ -26,7 +26,7 @@ module Apartment
         File.basename(Apartment.connection.instance_variable_get(:@config)[:database], '.sqlite3')
       end
 
-      protected
+    protected
 
       def connect_to_new(database)
         raise DatabaseNotFound,
@@ -35,7 +35,7 @@ module Apartment
         super database_file(database)
       end
 
-      def create_database(database)
+      def create_tenant(database)
         raise DatabaseExists,
           "The database #{environmentify(database)} already exists." if File.exists?(database_file(database))
 
