@@ -1,6 +1,7 @@
 *.gem
 .bundle
 *.lock
+gemfiles/*.lock
 pkg/*
 *.log
 .idea
