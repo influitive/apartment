@@ -8,7 +8,7 @@ apartment_namespace = namespace :apartment do
       begin
         puts("Creating #{db} database")
         quietly { Apartment::Database.create(db) }
-      rescue Apartment::DatabaseExists, Apartment::SchemaExists => e
+      rescue Apartment::TenantExists => e
         puts e.message
       end
     end
@@ -21,7 +21,7 @@ apartment_namespace = namespace :apartment do
       begin
         puts("Migrating #{db} database")
         Apartment::Migrator.migrate db
-      rescue Apartment::DatabaseNotFound, Apartment::SchemaNotFound => e
+      rescue Apartment::TenantNotFound => e
         puts e.message
       end
     end
@@ -36,7 +36,7 @@ apartment_namespace = namespace :apartment do
         Apartment::Database.process(db) do
           Apartment::Database.seed
         end
-      rescue Apartment::DatabaseNotFound, Apartment::SchemaNotFound => e
+      rescue Apartment::TenantNotFound => e
         puts e.message
       end
     end
@@ -50,7 +50,7 @@ apartment_namespace = namespace :apartment do
       begin
         puts("Rolling back #{db} database")
         Apartment::Migrator.rollback db, step
-      rescue Apartment::DatabaseNotFound, Apartment::SchemaNotFound => e
+      rescue Apartment::TenantNotFound => e
         puts e.message
       end
     end
@@ -67,7 +67,7 @@ apartment_namespace = namespace :apartment do
         begin
           puts("Migrating #{db} database up")
           Apartment::Migrator.run :up, db, version
-        rescue Apartment::DatabaseNotFound, Apartment::SchemaNotFound => e
+        rescue Apartment::TenantNotFound => e
           puts e.message
         end
       end
@@ -82,7 +82,7 @@ apartment_namespace = namespace :apartment do
         begin
           puts("Migrating #{db} database down")
           Apartment::Migrator.run :down, db, version
-        rescue Apartment::DatabaseNotFound, Apartment::SchemaNotFound => e
+        rescue Apartment::TenantNotFound => e
           puts e.message
         end
       end

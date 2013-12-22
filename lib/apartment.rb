@@ -68,23 +68,26 @@ module Apartment
   end
 
   # Exceptions
-  class ApartmentError < StandardError; end
+  ApartmentError = Class.new(StandardError)
 
   # Raised when apartment cannot find the adapter specified in <tt>config/database.yml</tt>
-  class AdapterNotFound < ApartmentError; end
+  AdapterNotFound = Class.new(ApartmentError)
+
+  # Tenant specified is unknown
+  TenantNotFound = Class.new(ApartmentError)
 
   # Raised when database cannot find the specified database
-  class DatabaseNotFound < ApartmentError; end
-
-  # Raised when trying to create a database that already exists
-  class DatabaseExists < ApartmentError; end
+  DatabaseNotFound = Class.new(TenantNotFound)
 
   # Raised when database cannot find the specified schema
-  class SchemaNotFound < ApartmentError; end
+  SchemaNotFound = Class.new(TenantNotFound)
+
+  # The Tenant attempting to be created already exists
+  TenantExists = Class.new(ApartmentError)
+
+  # Raised when trying to create a database that already exists
+  DatabaseExists = Class.new(TenantExists)
 
   # Raised when trying to create a schema that already exists
-  class SchemaExists < ApartmentError; end
-
-  # Raised when an ActiveRecord object does not have the required database field on it
-  class DJSerializationError < ApartmentError; end
+  SchemaExists = Class.new(TenantExists)
 end
