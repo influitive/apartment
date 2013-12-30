@@ -1,9 +1,0 @@
-machine:
-  ruby:
-    version: 1.9.3-p194
-
-test:
-  override:
-    - bundle exec rake spec:
-        environment:
-          RAILS_ENV: test
