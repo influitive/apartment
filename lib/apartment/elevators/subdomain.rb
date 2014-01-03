@@ -2,30 +2,30 @@ require 'apartment/elevators/generic'
 
 module Apartment
   module Elevators
-    #   Provides a rack based db switching solution based on subdomains
-    #   Assumes that database name should match subdomain
+    #   Provides a rack based tenant switching solution based on subdomains
+    #   Assumes that tenant name should match subdomain
     #
     class Subdomain < Generic
       def self.excluded_subdomains
-        @@excluded_subdomains ||= []
+        @excluded_subdomains ||= []
       end
 
       def self.excluded_subdomains=(arg)
-        @@excluded_subdomains = arg
+        @excluded_subdomains = arg
       end
 
       def parse_database_name(request)
         request_subdomain = subdomain(request.host)
 
-        # If the domain acquired is set to be exlcluded, set the database to whatever is currently
+        # If the domain acquired is set to be excluded, set the tenant to whatever is currently
         # next in line in the schema search path.
-        database = if self.class.excluded_subdomains.include?(request_subdomain)
+        tenant = if self.class.excluded_subdomains.include?(request_subdomain)
           nil
         else
           request_subdomain
         end
 
-        database.present? && database || nil
+        tenant.presence
       end
 
     private
