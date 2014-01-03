@@ -18,10 +18,9 @@ describe Apartment::Elevators::Subdomain do
   end
 
   describe "#call" do
-    it "switches to the correct tenant" do
-      Apartment::Database.should_receive(:switch).with('foo')
-
-      elevator.call('HTTP_HOST' => 'foo.bar.com')
+    it "switches to the proper tenant" do
+      Apartment::Database.should_receive(:switch).with('tenant1')
+      elevator.call('HTTP_HOST' => 'tenant1.example.com')
     end
 
     it "ignores excluded subdomains" do

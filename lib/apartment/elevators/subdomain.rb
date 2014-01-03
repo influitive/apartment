@@ -28,7 +28,7 @@ module Apartment
         tenant.presence
       end
 
-    private
+    protected
 
       # *Almost* a direct ripoff of ActionDispatch::Request subdomain methods
 
