@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rake',         '~> 0.9'
   s.add_development_dependency 'rspec',        '~> 2.11'
   s.add_development_dependency 'rspec-rails',  '~> 2.11'
+  s.add_development_dependency 'guard-rspec'
   s.add_development_dependency 'capybara',     '~> 1.0.0'
 
   if defined?(JRUBY_VERSION)
