@@ -1,3 +1,9 @@
+# 0.23.0
+  * August 21, 2013
+
+  - Subdomain Elevator now allows for exclusions
+  - Delayed::Job has been completely removed
+
 # 0.22.1
   * August 21, 2013
 
