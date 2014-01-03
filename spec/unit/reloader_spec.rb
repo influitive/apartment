@@ -13,7 +13,7 @@ describe Apartment::Reloader do
       Company.reset_table_name  # ensure we're clean
     end
 
-    subject{ Apartment::Reloader.new(mock("Rack::Application", :call => nil)) }
+    subject{ Apartment::Reloader.new(double("Rack::Application", :call => nil)) }
 
     it "should initialize apartment when called" do
       Company.table_name.should_not include('public.')
