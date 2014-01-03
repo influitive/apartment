@@ -256,6 +256,17 @@ You can then migrate your databases using the rake task:
 This basically invokes `Apartment::Database.migrate(#{db_name})` for each database name supplied
 from `Apartment.database_names`
 
+#### Parallel Migrations
+
+Apartment supports parallelizing migrations into multiple threads when
+you have a large number of tenants. By default, parallel migrations is
+turned off. You can enable this by setting `parallel_migration_threads` to 
+the number of threads you want to use in your initializer.
+
+Keep in mind that because migrations are going to access the database,
+the number of threads indicated here should be less than the pool size
+that Rails will use to connect to your database.
+
 ### Handling Environments
 
 By default, when not using postgresql schemas, Apartment will prepend the environment to the database name
