@@ -4,7 +4,7 @@ require 'apartment/elevators/generic'
 describe Apartment::Elevators::Generic do
 
   class MyElevator < described_class
-    def parse_database_name(*)
+    def parse_tenant_name(*)
       'tenant2'
     end
   end
@@ -20,7 +20,7 @@ describe Apartment::Elevators::Generic do
       elevator.call('HTTP_HOST' => 'foo.bar.com')
     end
 
-    it "raises if parse_database_name not implemented" do
+    it "raises if parse_tenant_name not implemented" do
       expect {
         elevator.call('HTTP_HOST' => 'foo.bar.com')
       }.to raise_error(RuntimeError)

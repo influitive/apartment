@@ -14,7 +14,7 @@ module Apartment
         @excluded_subdomains = arg
       end
 
-      def parse_database_name(request)
+      def parse_tenant_name(request)
         request_subdomain = subdomain(request.host)
 
         # If the domain acquired is set to be excluded, set the tenant to whatever is currently

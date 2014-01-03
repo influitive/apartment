@@ -11,7 +11,7 @@ module Apartment
         @hash = hash
       end
 
-      def parse_database_name(request)
+      def parse_tenant_name(request)
         raise DatabaseNotFound,
           "Cannot find database for host #{request.host}" unless @hash.has_key?(request.host)
 

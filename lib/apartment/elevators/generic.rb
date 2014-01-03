@@ -3,13 +3,13 @@ require 'apartment/database'
 
 module Apartment
   module Elevators
-    #   Provides a rack based db switching solution based on request
+    #   Provides a rack based tenant switching solution based on request
     #
     class Generic
 
       def initialize(app, processor = nil)
         @app = app
-        @processor = processor || method(:parse_database_name)
+        @processor = processor || method(:parse_tenant_name)
       end
 
       def call(env)
@@ -23,6 +23,11 @@ module Apartment
       end
 
       def parse_database_name(request)
+        warn "[DEPRECATED] - Use #parse_tenant_name"
+        parse_tenant_name(request)
+      end
+
+      def parse_tenant_name(request)
         raise "Override"
       end
     end
