@@ -28,6 +28,19 @@ shared_examples_for "a schema based apartment adapter" do
 
         Company.table_name.should == "#{default_schema}.companies"
       end
+
+      it 'sets the search_path correctly' do
+        Apartment::Database.init
+
+        User.connection.schema_search_path.should =~ %r|#{default_schema}|
+      end
+    end
+
+    context "persistent_schemas", :persistent_schemas => true do
+      it "sets the persistent schemas in the schema_search_path" do
+        Apartment::Database.init
+        connection.schema_search_path.should end_with persistent_schemas.map { |schema| %{"#{schema}"} }.join(', ')
+      end
     end
   end
 

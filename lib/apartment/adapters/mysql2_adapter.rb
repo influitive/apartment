@@ -33,9 +33,10 @@ module Apartment
       attr_reader :default_database
 
       def initialize(config)
-        @default_database = config[:database]
-
         super
+
+        @default_database = config[:database]
+        reset
       end
 
       #   Reset current_database to the default_database

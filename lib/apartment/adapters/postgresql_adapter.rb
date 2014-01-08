@@ -24,6 +24,12 @@ module Apartment
     # Separate Adapter for Postgresql when using schemas
     class PostgresqlSchemaAdapter < AbstractAdapter
 
+      def initialize(config)
+        super
+
+        reset
+      end
+
       #   Drop the database schema
       #
       #   @param {String} database Database (schema) to drop
