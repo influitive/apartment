@@ -1,3 +1,8 @@
+# 0.23.1
+  * January 8, 2014
+
+  - Schema adapters now initialize with default and persistent schemas
+
 # 0.23.0
   * August 21, 2013
 
