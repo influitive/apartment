@@ -9,7 +9,7 @@ module Apartment
 
       def initialize(app, processor = nil)
         @app = app
-        @processor = processor || method(:parse_tenant_name)
+        @processor = processor || parse_method
       end
 
       def call(env)
@@ -23,12 +23,25 @@ module Apartment
       end
 
       def parse_database_name(request)
-        warn "[DEPRECATED] - Use #parse_tenant_name"
+        deprecation_warning
         parse_tenant_name(request)
       end
 
       def parse_tenant_name(request)
         raise "Override"
+      end
+
+      def parse_method
+        if self.class.instance_methods(false).include? :parse_database_name
+          deprecation_warning
+          method(:parse_database_name)
+        else
+          method(:parse_tenant_name)
+        end
+      end
+
+      def deprecation_warning
+        warn "[DEPRECATED::Apartment] Use #parse_tenant_name instead of #parse_database_name -> #{self.class.name}"
       end
     end
   end
