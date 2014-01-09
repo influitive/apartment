@@ -1,7 +1,13 @@
+# 0 23.2
+  * January 9, 2014
+
+  - Increased visibility of #parse_database_name warning
+
 # 0.23.1
   * January 8, 2014
 
   - Schema adapters now initialize with default and persistent schemas
+  - Deprecated Apartment::Elevators#parse_database_name
 
 # 0.23.0
   * August 21, 2013
