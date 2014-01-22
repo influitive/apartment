@@ -53,6 +53,9 @@ other databases, the database will be created as a new DB within the system.
 When you create a new database, all migrations will be run against that database, so it will be
 up to date when create returns.
 
+You can configure the `schema_format` used to create a new database. The options are `:ruby` (the default) and `:sql`. For `:ruby` the 'db/schema.rb' file is used, and for `:sql` the 'db/structure.sql' is used.
+When used within Rails the setting is assigned from the configured schema format set in 'application.rb' so there is no need to duplicate the configuration setting.
+
 #### Notes on PostgreSQL
 
 PostgreSQL works slightly differently than other databases when creating a new DB. If you
@@ -61,6 +64,8 @@ provides better performance, and allows Apartment to work on systems like Heroku
 would not allow a full new database to be created.
 
 One can optionally use the full database creation instead if they want, though this is not recommended
+
+The `:sql` schema format cannot be used when PostgreSQL schemas are used, since the `structure.sql` file sets the schema search path.
 
 ### Switching Databases
 

@@ -17,6 +17,7 @@ module Apartment
         config.seed_after_create = false
         config.prepend_environment = false
         config.append_environment = false
+        config.schema_format = Rails.application.config.active_record.schema_format
       end
 
       ActiveRecord::Migrator.migrations_paths = Rails.application.paths['db/migrate'].to_a

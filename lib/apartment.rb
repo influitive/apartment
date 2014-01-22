@@ -11,7 +11,7 @@ module Apartment
     extend Forwardable
 
     ACCESSOR_METHODS  = [:use_schemas, :seed_after_create, :prepend_environment, :append_environment]
-    WRITER_METHODS    = [:database_names, :database_schema_file, :excluded_models, :default_schema, :persistent_schemas, :connection_class]
+    WRITER_METHODS    = [:database_names, :database_schema_file, :excluded_models, :default_schema, :persistent_schemas, :connection_class, :schema_format]
 
     attr_accessor(*ACCESSOR_METHODS)
     attr_writer(*WRITER_METHODS)
@@ -45,10 +45,22 @@ module Apartment
       @connection_class || ActiveRecord::Base
     end
 
+    # Schema format :ruby or :sql
+    # as per http://guides.rubyonrails.org/configuring.html#configuring-rails-components
+    def schema_format
+      @schema_format || :ruby
+    end
+
     def database_schema_file
       return @database_schema_file if defined?(@database_schema_file)
 
-      @database_schema_file = Rails.root.join('db', 'schema.rb')
+      if defined?(Rails)
+        @database_schema_file = if schema_format == :sql
+          Rails.root.join('db', 'structure.sql')
+        else
+          Rails.root.join('db', 'schema.rb')
+        end
+      end
     end
 
     # Reset all the config for Apartment
