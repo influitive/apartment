@@ -14,6 +14,14 @@ module Apartment
     # Default adapter when not using Postgresql Schemas
     class PostgresqlAdapter < AbstractAdapter
 
+      def drop(database)
+        # Apartment.connection.drop_database note that drop_database will not throw an exception, so manually execute
+        Apartment.connection.execute(%{DROP DATABASE "#{database}"})
+
+      rescue *rescuable_exceptions
+        raise DatabaseNotFound, "The database #{database} cannot be found"
+      end
+
     private
 
       def rescue_from
