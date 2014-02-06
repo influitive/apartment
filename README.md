@@ -2,7 +2,7 @@
 [![Code Climate](https://codeclimate.com/github/influitive/apartment.png)](https://codeclimate.com/github/influitive/apartment)
 [![Build Status](https://secure.travis-ci.org/influitive/apartment.png?branch=development)](http://travis-ci.org/influitive/apartment)
 
-*Multitenancy for Rails 3 and ActiveRecord*
+*Multitenancy for Rails and ActiveRecord*
 
 Apartment provides tools to help you deal with multiple databases in your Rails
 application. If you need to have certain data sequestered based on account or company,
@@ -11,7 +11,7 @@ but still allow some data to exist in a common database, Apartment can help.
 
 ## Installation
 
-### Rails 3
+### Rails
 
 Add the following to your Gemfile:
 
