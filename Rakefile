@@ -13,13 +13,18 @@ RSpec::Core::RakeTask.new(:spec => %w{ db:copy_credentials db:test:prepare }) do
 end
 
 namespace :spec do
-
   [:tasks, :unit, :adapters, :integration].each do |type|
     RSpec::Core::RakeTask.new(type => :spec) do |spec|
       spec.pattern = "spec/#{type}/**/*_spec.rb"
     end
   end
+end
 
+task :console do
+  require 'pry'
+  require 'apartment'
+  ARGV.clear
+  Pry.start
 end
 
 task :default => :spec
