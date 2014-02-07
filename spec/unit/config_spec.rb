@@ -36,6 +36,13 @@ describe Apartment do
       Apartment.seed_after_create.should be_true
     end
 
+    it "should set tld_length" do
+      Apartment.configure do |config|
+        config.tld_length = 2
+      end
+      Apartment.tld_length.should == 2
+    end
+
     context "databases" do
       it "should return object if it doesnt respond_to call" do
         database_names = ['users', 'companies']
