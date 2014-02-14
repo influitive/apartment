@@ -164,7 +164,7 @@ end
 
 ### Excluding models
 
-If you have some models that should always access the 'root' database, you can specify this by configuring Apartment using `Apartment.configure`.  This will yield a config object for you.  You can set excluded models like so:
+If you have some models that should always access the 'public' database, you can specify this by configuring Apartment using `Apartment.configure`.  This will yield a config object for you.  You can set excluded models like so:
 
 ```ruby
 config.excluded_models = ["User", "Company"]        # these models will not be multi-tenanted, but remain in the global (public) namespace
@@ -172,7 +172,10 @@ config.excluded_models = ["User", "Company"]        # these models will not be m
 
 Note that a string representation of the model name is now the standard so that models are properly constantized when reloaded in development
 
-Rails will always access the 'root' database when accessing these models,  but note that tables will be created in all schemas.  This may not be ideal, but its done this way because otherwise rails wouldn't be able to properly generate the schema.rb file.
+Rails will always access the 'public' database when accessing these models,  but note that tables will be created in all schemas.  This may not be ideal, but its done this way because otherwise rails wouldn't be able to properly generate the schema.rb file.
+
+> **NOTE - Many-To-Many Excluded Models:**
+> Since model exclusions must come from referencing a real ActiveRecord model, `has_and_belongs_to_many` is NOT supported. In order to achieve a many-to-many relationship for excluded models, you MUST use `has_many :through`. This way you can reference the join model in the excluded models configuration.
 
 ### Postgresql Schemas
 
