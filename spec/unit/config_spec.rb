@@ -45,24 +45,24 @@ describe Apartment do
 
     context "databases" do
       it "should return object if it doesnt respond_to call" do
-        database_names = ['users', 'companies']
+        tenant_names = ['users', 'companies']
 
         Apartment.configure do |config|
           config.excluded_models = []
-          config.database_names = database_names
+          config.tenant_names = tenant_names
         end
-        Apartment.database_names.should == database_names
+        Apartment.tenant_names.should == tenant_names
       end
 
       it "should invoke the proc if appropriate" do
-        database_names = lambda{ ['users', 'users'] }
-        database_names.should_receive(:call)
+        tenant_names = lambda{ ['users', 'users'] }
+        tenant_names.should_receive(:call)
 
         Apartment.configure do |config|
           config.excluded_models = []
-          config.database_names = database_names
+          config.tenant_names = tenant_names
         end
-        Apartment.database_names
+        Apartment.tenant_names
       end
 
       it "should return the invoked proc if appropriate" do
@@ -70,10 +70,10 @@ describe Apartment do
 
         Apartment.configure do |config|
           config.excluded_models = []
-          config.database_names = dbs
+          config.tenant_names = dbs
         end
 
-        Apartment.database_names.should == Company.all
+        Apartment.tenant_names.should == Company.all
       end
     end
 

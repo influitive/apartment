@@ -11,7 +11,7 @@ module Apartment
     extend Forwardable
 
     ACCESSOR_METHODS  = [:use_schemas, :seed_after_create, :prepend_environment, :append_environment]
-    WRITER_METHODS    = [:database_names, :database_schema_file, :excluded_models, :default_schema, :persistent_schemas, :connection_class, :tld_length]
+    WRITER_METHODS    = [:tenant_names, :database_schema_file, :excluded_models, :default_schema, :persistent_schemas, :connection_class, :tld_length]
 
     attr_accessor(*ACCESSOR_METHODS)
     attr_writer(*WRITER_METHODS)
@@ -24,8 +24,8 @@ module Apartment
     end
 
     # Be careful not to use `return` here so both Proc and lambda can be used without breaking
-    def database_names
-      @database_names.respond_to?(:call) ? @database_names.call : @database_names
+    def tenant_names
+      @tenant_names.respond_to?(:call) ? @tenant_names.call : @tenant_names
     end
 
     # Default to empty array
@@ -58,6 +58,16 @@ module Apartment
     # Reset all the config for Apartment
     def reset
       (ACCESSOR_METHODS + WRITER_METHODS).each{|method| remove_instance_variable(:"@#{method}") if instance_variable_defined?(:"@#{method}") }
+    end
+
+    def database_names
+      warn "[Deprecation Warning] `database_names` is now deprecated, please use `tenant_names`"
+      tenant_names
+    end
+
+    def database_names=(names)
+      warn "[Deprecation Warning] `database_names=` is now deprecated, please use `tenant_names=`"
+      self.tenant_names=(names)
     end
 
     def use_postgres_schemas

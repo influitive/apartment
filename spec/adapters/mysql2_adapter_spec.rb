@@ -6,19 +6,19 @@ describe Apartment::Adapters::Mysql2Adapter, database: :mysql do
 
     subject(:adapter){ Apartment::Database.mysql2_adapter config }
 
-    def database_names
+    def tenant_names
       ActiveRecord::Base.connection.execute("SELECT schema_name FROM information_schema.schemata").collect { |row| row[0] }
     end
 
-    let(:default_database) { subject.process { ActiveRecord::Base.connection.current_database } }
+    let(:default_tenant) { subject.process { ActiveRecord::Base.connection.current_database } }
 
     context "using - the equivalent of - schemas" do
       before { Apartment.use_schemas = true }
 
       it_should_behave_like "a generic apartment adapter"
 
-      describe "#default_database" do
-        its(:default_database){ should == config[:database] }
+      describe "#default_tenant" do
+        its(:default_tenant){ should == config[:database] }
       end
 
       describe "#init" do
@@ -33,7 +33,7 @@ describe Apartment::Adapters::Mysql2Adapter, database: :mysql do
         it "should process model exclusions" do
           Apartment::Database.init
 
-          Company.table_name.should == "#{default_database}.companies"
+          Company.table_name.should == "#{default_tenant}.companies"
         end
       end
     end

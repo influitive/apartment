@@ -15,38 +15,38 @@ module Apartment
         super
       end
 
-      def drop(database)
+      def drop(tenant)
         raise DatabaseNotFound,
-          "The database #{environmentify(database)} cannot be found." unless File.exists?(database_file(database))
+          "The tenant #{environmentify(tenant)} cannot be found." unless File.exists?(database_file(tenant))
 
-        File.delete(database_file(database))
+        File.delete(database_file(tenant))
       end
 
-      def current_database
+      def current_tenant
         File.basename(Apartment.connection.instance_variable_get(:@config)[:database], '.sqlite3')
       end
 
     protected
 
-      def connect_to_new(database)
+      def connect_to_new(tenant)
         raise DatabaseNotFound,
-          "The database #{environmentify(database)} cannot be found." unless File.exists?(database_file(database))
+          "The tenant #{environmentify(tenant)} cannot be found." unless File.exists?(database_file(tenant))
 
-        super database_file(database)
+        super database_file(tenant)
       end
 
-      def create_tenant(database)
+      def create_tenant(tenant)
         raise DatabaseExists,
-          "The database #{environmentify(database)} already exists." if File.exists?(database_file(database))
+          "The tenant #{environmentify(tenant)} already exists." if File.exists?(database_file(tenant))
 
-        f = File.new(database_file(database), File::CREAT)
+        f = File.new(database_file(tenant), File::CREAT)
         f.close
       end
 
-      private
+    private
 
-      def database_file(database)
-        "#{@default_dir}/#{database}.sqlite3"
+      def database_file(tenant)
+        "#{@default_dir}/#{tenant}.sqlite3"
       end
     end
   end

@@ -14,8 +14,8 @@ shared_examples_for "a generic apartment adapter" do
   describe "#create" do
 
     it "should create the new databases" do
-      database_names.should include(db1)
-      database_names.should include(db2)
+      tenant_names.should include(db1)
+      tenant_names.should include(db2)
     end
 
     it "should load schema.rb to new schema" do
@@ -31,11 +31,11 @@ shared_examples_for "a generic apartment adapter" do
 
       subject.create(db2) do
         @count = User.count
-        subject.current_database.should == db2
+        subject.current_tenant.should == db2
         User.create
       end
 
-      subject.current_database.should_not == db2
+      subject.current_tenant.should_not == db2
 
       subject.process(db2){ User.count.should == @count + 1 }
     end
@@ -44,25 +44,25 @@ shared_examples_for "a generic apartment adapter" do
   describe "#drop" do
     it "should remove the db" do
       subject.drop db1
-      database_names.should_not include(db1)
+      tenant_names.should_not include(db1)
     end
   end
 
   describe "#process" do
     it "should connect" do
       subject.process(db1) do
-        subject.current_database.should == db1
+        subject.current_tenant.should == db1
       end
     end
 
     it "should reset" do
       subject.process(db1)
-      subject.current_database.should == default_database
+      subject.current_tenant.should == default_tenant
     end
 
-    # We're often finding when using Apartment in tests, the `current_database` (ie the previously connect to db)
+    # We're often finding when using Apartment in tests, the `current_tenant` (ie the previously connect to db)
     # gets dropped, but process will try to return to that db in a test.  We should just reset if it doesn't exist
-    it "should not throw exception if current_database is no longer accessible" do
+    it "should not throw exception if current_tenant is no longer accessible" do
       subject.switch(db2)
 
       expect {
@@ -75,19 +75,19 @@ shared_examples_for "a generic apartment adapter" do
     it "should reset connection" do
       subject.switch(db1)
       subject.reset
-      subject.current_database.should == default_database
+      subject.current_tenant.should == default_tenant
     end
   end
 
   describe "#switch" do
     it "should connect to new db" do
       subject.switch(db1)
-      subject.current_database.should == db1
+      subject.current_tenant.should == db1
     end
 
     it "should reset connection if database is nil" do
       subject.switch
-      subject.current_database.should == default_database
+      subject.current_tenant.should == default_tenant
     end
 
     it "should raise an error if database is invalid" do
@@ -97,10 +97,10 @@ shared_examples_for "a generic apartment adapter" do
     end
   end
 
-  describe "#current_database" do
+  describe "#current_tenant" do
     it "should return the current db name" do
       subject.switch(db1)
-      subject.current_database.should == db1
+      subject.current_tenant.should == db1
       subject.current.should == db1
     end
   end

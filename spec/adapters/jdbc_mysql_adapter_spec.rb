@@ -7,15 +7,13 @@ if defined?(JRUBY_VERSION)
 
     subject { Apartment::Database.jdbc_mysql_adapter config.symbolize_keys }
 
-    def database_names
+    def tenant_names
       ActiveRecord::Base.connection.execute("SELECT schema_name FROM information_schema.schemata").collect { |row| row['schema_name'] }
     end
 
-    let(:default_database) { subject.process { ActiveRecord::Base.connection.current_database } }
+    let(:default_tenant) { subject.process { ActiveRecord::Base.connection.current_database } }
 
     it_should_behave_like "a generic apartment adapter"
     it_should_behave_like "a connection based apartment adapter"
-
   end
-
 end
