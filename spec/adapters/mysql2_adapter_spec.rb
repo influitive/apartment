@@ -6,7 +6,7 @@ describe Apartment::Adapters::Mysql2Adapter, database: :mysql do
 
     subject(:adapter){ Apartment::Database.mysql2_adapter config }
 
-    def database_names
+    def tenant_names
       ActiveRecord::Base.connection.execute("SELECT schema_name FROM information_schema.schemata").collect { |row| row[0] }
     end
 

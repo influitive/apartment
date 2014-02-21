@@ -19,7 +19,7 @@ describe "apartment rake tasks", database: :postgresql do
     Apartment.configure do |config|
       config.use_schemas = true
       config.excluded_models = ["Company"]
-      config.database_names = lambda{ Company.pluck(:database) }
+      config.tenant_names = lambda{ Company.pluck(:database) }
     end
     Apartment::Database.reload!(config)
 

@@ -4,7 +4,7 @@ apartment_namespace = namespace :apartment do
 
   desc "Create all multi-tenant databases"
   task create: 'db:migrate' do
-    database_names.each do |db|
+    tenants.each do |db|
       begin
         puts("Creating #{db} database")
         quietly { Apartment::Database.create(db) }
@@ -16,7 +16,7 @@ apartment_namespace = namespace :apartment do
 
   desc "Migrate all multi-tenant databases"
   task :migrate do
-    database_names.each do |db|
+    tenants.each do |db|
       begin
         puts("Migrating #{db} database")
         Apartment::Migrator.migrate db
@@ -28,7 +28,7 @@ apartment_namespace = namespace :apartment do
 
   desc "Seed all multi-tenant databases"
   task :seed do
-    database_names.each do |db|
+    tenants.each do |db|
       begin
         puts("Seeding #{db} database")
         Apartment::Database.process(db) do
@@ -44,7 +44,7 @@ apartment_namespace = namespace :apartment do
   task :rollback do
     step = ENV['STEP'] ? ENV['STEP'].to_i : 1
 
-    database_names.each do |db|
+    tenants.each do |db|
       begin
         puts("Rolling back #{db} database")
         Apartment::Migrator.rollback db, step
@@ -60,7 +60,7 @@ apartment_namespace = namespace :apartment do
       version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
       raise 'VERSION is required' unless version
 
-      database_names.each do |db|
+      tenants.each do |db|
         begin
           puts("Migrating #{db} database up")
           Apartment::Migrator.run :up, db, version
@@ -75,7 +75,7 @@ apartment_namespace = namespace :apartment do
       version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
       raise 'VERSION is required' unless version
 
-      database_names.each do |db|
+      tenants.each do |db|
         begin
           puts("Migrating #{db} database down")
           Apartment::Migrator.run :down, db, version
@@ -97,7 +97,7 @@ apartment_namespace = namespace :apartment do
     end
   end
 
-  def database_names
-    ENV['DB'] ? ENV['DB'].split(',').map { |s| s.strip } : Apartment.database_names
+  def tenants
+    ENV['DB'] ? ENV['DB'].split(',').map { |s| s.strip } : Apartment.tenant_names
   end
 end

@@ -11,8 +11,8 @@ if defined?(JRUBY_VERSION)
 
       before { Apartment.use_schemas = true }
 
-      # Not sure why, but somehow using let(:database_names) memoizes for the whole example group, not just each test
-      def database_names
+      # Not sure why, but somehow using let(:tenant_names) memoizes for the whole example group, not just each test
+      def tenant_names
         ActiveRecord::Base.connection.execute("SELECT nspname FROM pg_namespace;").collect { |row| row['nspname'] }
       end
 
@@ -26,8 +26,8 @@ if defined?(JRUBY_VERSION)
 
       before { Apartment.use_schemas = false }
 
-      # Not sure why, but somehow using let(:database_names) memoizes for the whole example group, not just each test
-      def database_names
+      # Not sure why, but somehow using let(:tenant_names) memoizes for the whole example group, not just each test
+      def tenant_names
         connection.execute("select datname from pg_database;").collect { |row| row['datname'] }
       end
 
