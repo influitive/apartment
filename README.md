@@ -4,9 +4,9 @@
 
 *Multitenancy for Rails and ActiveRecord*
 
-Apartment provides tools to help you deal with multiple databases in your Rails
+Apartment provides tools to help you deal with multiple tenants in your Rails
 application. If you need to have certain data sequestered based on account or company,
-but still allow some data to exist in a common database, Apartment can help.
+but still allow some data to exist in a common tenant, Apartment can help.
 
 
 ## Installation
@@ -28,8 +28,8 @@ bundle exec rails generate apartment:install
 This will create a `config/initializers/apartment.rb` initializer file.
 Configure as needed using the docs below.
 
-That's all you need to set up the Apartment libraries. If you want to switch databases
-on a per-user basis, look under "Usage - Switching databases per request", below.
+That's all you need to set up the Apartment libraries. If you want to switch tenants
+on a per-user basis, look under "Usage - Switching tenants per request", below.
 
 > NOTE: If using [postgresl schemas](http://www.postgresql.org/docs/9.0/static/ddl-schemas.html) you must use:
 >
@@ -37,46 +37,46 @@ on a per-user basis, look under "Usage - Switching databases per request", below
 
 ## Usage
 
-### Creating new Databases
+### Creating new Tenants
 
-Before you can switch to a new apartment database, you will need to create it. Whenever
-you need to create a new database, you can run the following command:
+Before you can switch to a new apartment tenant, you will need to create it. Whenever
+you need to create a new tenant, you can run the following command:
 
 ```ruby
-Apartment::Database.create('database_name')
+Apartment::Database.create('tenant_name')
 ```
 
-If you're using the [prepend environment](https://github.com/influitive/apartment#handling-environments) config option or you AREN'T using Postgresql Schemas, this will create a database in the following format: "#{environment}\_database_name".
+If you're using the [prepend environment](https://github.com/influitive/apartment#handling-environments) config option or you AREN'T using Postgresql Schemas, this will create a tenant in the following format: "#{environment}\_tenant_name".
 In the case of a sqlite database, this will be created in your 'db/' folder. With
-other databases, the database will be created as a new DB within the system.
+other databases, the tenant will be created as a new DB within the system.
 
-When you create a new database, all migrations will be run against that database, so it will be
+When you create a new tenant, all migrations will be run against that tenant, so it will be
 up to date when create returns.
 
 #### Notes on PostgreSQL
 
-PostgreSQL works slightly differently than other databases when creating a new DB. If you
-are using PostgreSQL, Apartment by default will set up a new **schema** and migrate into there. This
-provides better performance, and allows Apartment to work on systems like Heroku, which
+PostgreSQL works slightly differently than other databases when creating a new tenant. If you
+are using PostgreSQL, Apartment by default will set up a new [schema](http://www.postgresql.org/docs/9.3/static/ddl-schemas.html)
+and migrate into there. This provides better performance, and allows Apartment to work on systems like Heroku, which
 would not allow a full new database to be created.
 
 One can optionally use the full database creation instead if they want, though this is not recommended
 
-### Switching Databases
+### Switching Tenants
 
-To switch databases using Apartment, use the following command:
+To switch tenants using Apartment, use the following command:
 
 ```ruby
-Apartment::Database.switch('database_name')
+Apartment::Database.switch('tenant_name')
 ```
 
-When switch is called, all requests coming to ActiveRecord will be routed to the database
+When switch is called, all requests coming to ActiveRecord will be routed to the tenant
 you specify (with the exception of excluded models, see below). To return to the 'root'
-database, call switch with no arguments.
+tenant, call switch with no arguments.
 
-### Switching Databases per request
+### Switching Tenants per request
 
-You can have Apartment route to the appropriate database by adding some Rack middleware.
+You can have Apartment route to the appropriate tenant by adding some Rack middleware.
 Apartment can support many different "Elevators" that can take care of this routing to your data.
 
 The initializer above will generate the appropriate code for the Subdomain elevator
@@ -91,7 +91,7 @@ require 'apartment/elevators/subdomain' # or 'domain' or 'generic'
 ```
 
 **Switch on subdomain**
-In house, we use the subdomain elevator, which analyzes the subdomain of the request and switches to a database schema of the same name. It can be used like so:
+In house, we use the subdomain elevator, which analyzes the subdomain of the request and switches to a tenant schema of the same name. It can be used like so:
 
 ```ruby
 # application.rb
@@ -109,7 +109,7 @@ If you want to exclude a domain, for example if you don't want your application 
 Apartment::Elevators::Subdomain.excluded_subdomains = ['www']
 ```
 
-This functions much in the same way as Apartment.excluded_models. This example will prevent switching your database when the subdomain is www. Handy for subdomains like: "public", "www", and "admin" :)
+This functions much in the same way as Apartment.excluded_models. This example will prevent switching your tenant when the subdomain is www. Handy for subdomains like: "public", "www", and "admin" :)
 
 **Switch on domain**
 To switch based on full domain (excluding subdomains *ie 'www'* and top level domains *ie '.com'* ) use the following:
@@ -124,19 +124,19 @@ end
 ```
 
 **Switch on full host using a hash**
-To switch based on full host with a hash to find corresponding database name use the following:
+To switch based on full host with a hash to find corresponding tenant name use the following:
 
 ```ruby
 # application.rb
 module MyApplication
   class Application < Rails::Application
-    config.middleware.use 'Apartment::Elevators::HostHash', {'example.com' => 'example_database'}
+    config.middleware.use 'Apartment::Elevators::HostHash', {'example.com' => 'example_tenant'}
   end
 end
 ```
 
 **Custom Elevator**
-A Generic Elevator exists that allows you to pass a `Proc` (or anything that responds to `call`) to the middleware. This Object will be passed in an `ActionDispatch::Request` object when called for you to do your magic. Apartment will use the return value of this proc to switch to the appropriate database.  Use like so:
+A Generic Elevator exists that allows you to pass a `Proc` (or anything that responds to `call`) to the middleware. This Object will be passed in an `ActionDispatch::Request` object when called for you to do your magic. Apartment will use the return value of this proc to switch to the appropriate tenant.  Use like so:
 
 ```ruby
 # application.rb
@@ -164,7 +164,7 @@ end
 
 ### Excluding models
 
-If you have some models that should always access the 'public' database, you can specify this by configuring Apartment using `Apartment.configure`.  This will yield a config object for you.  You can set excluded models like so:
+If you have some models that should always access the 'public' tenant, you can specify this by configuring Apartment using `Apartment.configure`.  This will yield a config object for you.  You can set excluded models like so:
 
 ```ruby
 config.excluded_models = ["User", "Company"]        # these models will not be multi-tenanted, but remain in the global (public) namespace
@@ -172,7 +172,7 @@ config.excluded_models = ["User", "Company"]        # these models will not be m
 
 Note that a string representation of the model name is now the standard so that models are properly constantized when reloaded in development
 
-Rails will always access the 'public' database when accessing these models,  but note that tables will be created in all schemas.  This may not be ideal, but its done this way because otherwise rails wouldn't be able to properly generate the schema.rb file.
+Rails will always access the 'public' tenant when accessing these models,  but note that tables will be created in all schemas.  This may not be ideal, but its done this way because otherwise rails wouldn't be able to properly generate the schema.rb file.
 
 > **NOTE - Many-To-Many Excluded Models:**
 > Since model exclusions must come from referencing a real ActiveRecord model, `has_and_belongs_to_many` is NOT supported. In order to achieve a many-to-many relationship for excluded models, you MUST use `has_many :through`. This way you can reference the join model in the excluded models configuration.
@@ -240,7 +240,7 @@ Happy to accept PR's on the matter.
 
 ### Managing Migrations
 
-In order to migrate all of your databases (or posgresql schemas) you need to provide a list
+In order to migrate all of your tenants (or posgresql schemas) you need to provide a list
 of dbs to Apartment.  You can make this dynamic by providing a Proc object to be called on migrations.
 This object should yield an array of string representing each tenant name.  Example:
 
@@ -252,12 +252,18 @@ config.tenant_names = lambda{ Customer.pluck(:tenant_name) }
 config.tenant_names = ['tenant1', 'tenant2']
 ```
 
-You can then migrate your databases using the rake task:
+You can then migrate your tenants using the normal rake task:
 
-    rake apartment:migrate
+```ruby
+rake db:migrate
+```
 
+Assuming you've required the `apartment/tasks/enhancements` file in your Apartment initializer.
 This basically invokes `Apartment::Database.migrate(#{tenant_name})` for each tenant name supplied
 from `Apartment.tenant_names`
+
+Note that if you haven't required the aforementioned file, you instead need to run `rake apartment:migrate`.
+This however will migrate ONLY the tenants, NOT the public schema, so you'd need to do this yourself.
 
 ### Handling Environments
 
