@@ -25,7 +25,7 @@ module Apartment
 
     #   Hook into ActionDispatch::Reloader to ensure Apartment is properly initialized
     #   Note that this doens't entirely work as expected in Development, because this is called before classes are reloaded
-    #   See the above middleware/console declarations below to help with this.  Hope to fix that soon.
+    #   See the middleware/console declarations below to help with this. Hope to fix that soon.
     #
     config.to_prepare do
       Apartment::Database.init
@@ -36,6 +36,7 @@ module Apartment
     #
     rake_tasks do
       load 'tasks/apartment.rake'
+      require 'apartment/tasks/enhancements' if Apartment.db_migrate_tenants
     end
 
     #

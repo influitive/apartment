@@ -258,12 +258,12 @@ You can then migrate your tenants using the normal rake task:
 rake db:migrate
 ```
 
-Assuming you've required the `apartment/tasks/enhancements` file in your Apartment initializer.
 This basically invokes `Apartment::Database.migrate(#{tenant_name})` for each tenant name supplied
 from `Apartment.tenant_names`
 
-Note that if you haven't required the aforementioned file, you instead need to run `rake apartment:migrate`.
-This however will migrate ONLY the tenants, NOT the public schema, so you'd need to do this yourself.
+Note that you can disable the default migrating of all tenants with `db:migrate` by setting
+`Apartment.db_migrate_tenants = false` in your `Rakefile`. Note this must be done
+*before* the rake tasks are loaded. ie. before `YourApp::Application.load_tasks` is called
 
 ### Handling Environments
 
