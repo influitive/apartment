@@ -1,3 +1,9 @@
+# 0.24.1
+  * February 21, 2014
+
+  - requiring `apartment/tasks/enhancements` in an initializer doesn't work
+  - One can disable tenant migrations using `Apartment.db_migrate_tenants = false` in the Rakefile
+
 # 0.24
   * February 21, 2014 (In honour of the Women's Gold Medal in Hockey at Sochi)
 
