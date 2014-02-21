@@ -9,13 +9,15 @@ require 'apartment/elevators/subdomain'
 #
 Apartment.configure do |config|
 
-  # these models will not be multi-tenanted,
+  # These models will not be multi-tenanted,
   # but remain in the global (public) namespace
-  # Note that ActiveRecord::SessionStore::Session is just an example
-  # you may not even use the AR Session Store, in which case you'd remove that line
-  config.excluded_models = %w{
-    ActiveRecord::SessionStore::Session
-  }
+  #
+  # An example might be a Customer or Tenant model that stores each tenant information
+  # ex:
+  #
+  # config.excluded_models = %w{Tenant}
+  #
+  config.excluded_models = %w{}
 
   # use postgres schemas?
   config.use_schemas = true
@@ -29,7 +31,6 @@ Apartment.configure do |config|
 
   # supply list of database names for migrations to run on
   config.database_names = lambda{ ToDo_Tenant_Or_User_Model.pluck :database }
-
 end
 
 ##
@@ -42,3 +43,7 @@ end
 # Rails.application.config.middleware.use 'Apartment::Elevators::Domain'
 
 Rails.application.config.middleware.use 'Apartment::Elevators::Subdomain'
+
+##
+# Rake enhancements so that db:migrate etc... also runs migrations on all tenants
+require 'apartment/tasks/enhancements'
