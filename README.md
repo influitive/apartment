@@ -258,7 +258,7 @@ You can then migrate your tenants using the normal rake task:
 rake db:migrate
 ```
 
-This basically invokes `Apartment::Database.migrate(#{tenant_name})` for each tenant name supplied
+This just invokes `Apartment::Database.migrate(#{tenant_name})` for each tenant name supplied
 from `Apartment.tenant_names`
 
 Note that you can disable the default migrating of all tenants with `db:migrate` by setting
