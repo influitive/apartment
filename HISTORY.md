@@ -1,4 +1,15 @@
-# 0 23.2
+# 0.24
+  * February 21, 2014 (In honour of the Women's Gold Medal in Hockey at Sochi)
+
+  - [BREAKING CHANGE] `apartment:migrate` task no longer depends on `db:migrate`
+    - Instead, you can `require 'apartment/tasks/enhancements'` in your Apartment initializer
+    - This will enhance `rake db:migrate` to also run `apartment:migrate`
+    - You can now forget about ever running `apartment:migrate` again
+  - Numerous deprecations for things referencing the word 'database'
+    - This is an ongoing effort to completely replace 'database' with 'tenant' as a better abstraction
+    - Note the obvious `Apartment::Database` still exists but will hopefully become `Apartment::Tenant` soon
+
+# 0.23.2
   * January 9, 2014
 
   - Increased visibility of #parse_database_name warning
