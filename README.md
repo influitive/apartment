@@ -246,10 +246,10 @@ This object should yield an array of string representing each database name.  Ex
 
 ```ruby
 # Dynamically get database names to migrate
-config.database_names = lambda{ Customer.pluck(:database_name) }
+config.tenant_names = lambda{ Customer.pluck(:database_name) }
 
 # Use a static list of database names for migrate
-config.database_names = ['db1', 'db2']
+config.tenant_names = ['db1', 'db2']
 ```
 
 You can then migrate your databases using the rake task:
@@ -257,7 +257,7 @@ You can then migrate your databases using the rake task:
     rake apartment:migrate
 
 This basically invokes `Apartment::Database.migrate(#{db_name})` for each database name supplied
-from `Apartment.database_names`
+from `Apartment.tenant_names`
 
 ### Handling Environments
 

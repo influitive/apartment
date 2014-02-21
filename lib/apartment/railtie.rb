@@ -13,7 +13,7 @@ module Apartment
       Apartment.configure do |config|
         config.excluded_models = []
         config.use_schemas = true
-        config.database_names = []
+        config.tenant_names = []
         config.seed_after_create = false
         config.prepend_environment = false
         config.append_environment = false

@@ -14,8 +14,8 @@ shared_examples_for "a generic apartment adapter" do
   describe "#create" do
 
     it "should create the new databases" do
-      database_names.should include(db1)
-      database_names.should include(db2)
+      tenant_names.should include(db1)
+      tenant_names.should include(db2)
     end
 
     it "should load schema.rb to new schema" do
@@ -44,7 +44,7 @@ shared_examples_for "a generic apartment adapter" do
   describe "#drop" do
     it "should remove the db" do
       subject.drop db1
-      database_names.should_not include(db1)
+      tenant_names.should_not include(db1)
     end
   end
 

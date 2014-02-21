@@ -76,7 +76,7 @@ shared_examples_for "a schema based apartment adapter" do
         expect {
           subject.create(db)
         }.to_not raise_error
-        database_names.should include(db.to_s)
+        tenant_names.should include(db.to_s)
       end
 
       after{ subject.drop(db) }
@@ -99,7 +99,7 @@ shared_examples_for "a schema based apartment adapter" do
         expect {
           subject.drop(db)
         }.to_not raise_error
-        database_names.should_not include(db.to_s)
+        tenant_names.should_not include(db.to_s)
       end
 
       after { subject.drop(db) rescue nil }
