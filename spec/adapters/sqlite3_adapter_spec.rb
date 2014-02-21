@@ -12,7 +12,7 @@ describe Apartment::Adapters::Sqlite3Adapter, database: :sqlite do
         Dir.glob("#{db_dir}/*.sqlite3").map { |file| File.basename(file, '.sqlite3') }
       end
 
-      let(:default_database) do
+      let(:default_tenant) do
         subject.process { File.basename(Apartment::Test.config['connections']['sqlite']['database'], '.sqlite3') }
       end
 

@@ -15,37 +15,37 @@ module Apartment
 
     protected
 
-      #   Connect to new database
+      #   Connect to new tenant
       #   Abstract adapter will catch generic ActiveRecord error
       #   Catch specific adapter errors here
       #
-      #   @param {String} database Database name
+      #   @param {String} tenant Tenant name
       #
-      def connect_to_new(database = nil)
+      def connect_to_new(tenant = nil)
         super
       rescue Mysql2::Error
         Apartment::Database.reset
-        raise DatabaseNotFound, "Cannot find database #{environmentify(database)}"
+        raise DatabaseNotFound, "Cannot find tenant #{environmentify(tenant)}"
       end
     end
 
     class Mysql2SchemaAdapter < AbstractAdapter
-      attr_reader :default_database
+      attr_reader :default_tenant
 
       def initialize(config)
         super
 
-        @default_database = config[:database]
+        @default_tenant = config[:database]
         reset
       end
 
-      #   Reset current_database to the default_database
+      #   Reset current_tenant to the default_tenant
       #
       def reset
-        Apartment.connection.execute "use #{default_database}"
+        Apartment.connection.execute "use #{default_tenant}"
       end
 
-      #   Set the table_name to always use the default database for excluded models
+      #   Set the table_name to always use the default tenant for excluded models
       #
       def process_excluded_models
         Apartment.excluded_models.each{ |model| process_excluded_model(model) }
@@ -53,16 +53,16 @@ module Apartment
 
     protected
 
-      #   Set schema current_database to new db
+      #   Set schema current_tenant to new db
       #
-      def connect_to_new(database)
-        return reset if database.nil?
+      def connect_to_new(tenant)
+        return reset if tenant.nil?
 
-        Apartment.connection.execute "use #{environmentify(database)}"
+        Apartment.connection.execute "use #{environmentify(tenant)}"
 
       rescue ActiveRecord::StatementInvalid
         Apartment::Database.reset
-        raise DatabaseNotFound, "Cannot find database #{environmentify(database)}"
+        raise DatabaseNotFound, "Cannot find tenant #{environmentify(tenant)}"
       end
 
       def process_excluded_model(model)
@@ -74,7 +74,7 @@ module Apartment
           # Ensure that if a schema *was* set, we override
           table_name = klass.table_name.split('.', 2).last
 
-          klass.table_name = "#{default_database}.#{table_name}"
+          klass.table_name = "#{default_tenant}.#{table_name}"
         end
       end
     end

@@ -87,9 +87,9 @@ describe Apartment::Database do
 
         it 'has a threadsafe adapter' do
           subject.switch(db1)
-          thread = Thread.new { subject.current_database.should == Apartment.default_schema }
+          thread = Thread.new { subject.current_tenant.should == Apartment.default_schema }
           thread.join
-          subject.current_database.should == db1
+          subject.current_tenant.should == db1
         end
       end
     end
