@@ -17,20 +17,20 @@ module Apartment
 
     protected
 
-      def create_tenant(database)
+      def create_tenant(tenant)
         # There is a bug in activerecord-jdbcpostgresql-adapter (1.2.5) that will cause
         # an exception if no options are passed into the create_database call.
-        Apartment.connection.create_database(environmentify(database), { :thisisahack => '' })
+        Apartment.connection.create_database(environmentify(tenant), { :thisisahack => '' })
 
       rescue *rescuable_exceptions
-        raise DatabaseExists, "The database #{environmentify(database)} already exists."
+        raise DatabaseExists, "The tenant #{environmentify(tenant)} already exists."
       end
 
       #   Return a new config that is multi-tenanted
       #
-      def multi_tenantify(database)
+      def multi_tenantify(tenant)
         @config.clone.tap do |config|
-          config[:url] = "#{config[:url].gsub(/(\S+)\/.+$/, '\1')}/#{environmentify(database)}"
+          config[:url] = "#{config[:url].gsub(/(\S+)\/.+$/, '\1')}/#{environmentify(tenant)}"
         end
       end
 
@@ -46,11 +46,11 @@ module Apartment
 
       #   Set schema search path to new schema
       #
-      def connect_to_new(database = nil)
-        return reset if database.nil?
-        raise ActiveRecord::StatementInvalid.new("Could not find schema #{database}") unless Apartment.connection.all_schemas.include? database.to_s
+      def connect_to_new(tenant = nil)
+        return reset if tenant.nil?
+        raise ActiveRecord::StatementInvalid.new("Could not find schema #{tenant}") unless Apartment.connection.all_schemas.include? tenant.to_s
 
-        @current_database = database.to_s
+        @current_tenant = tenant.to_s
         Apartment.connection.schema_search_path = full_search_path
 
       rescue ActiveRecord::StatementInvalid, ActiveRecord::JDBCError

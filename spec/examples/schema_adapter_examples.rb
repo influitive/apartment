@@ -5,7 +5,7 @@ shared_examples_for "a schema based apartment adapter" do
 
   let(:schema1){ db1 }
   let(:schema2){ db2 }
-  let(:public_schema){ default_database }
+  let(:public_schema){ default_tenant }
 
   describe "#init" do
 
@@ -213,17 +213,17 @@ shared_examples_for "a schema based apartment adapter" do
     end
   end
 
-  describe "#current_database" do
+  describe "#current_tenant" do
     it "should return the current schema name" do
       subject.switch(schema1)
-      subject.current_database.should == schema1
+      subject.current_tenant.should == schema1
       subject.current.should == schema1
     end
 
     context "persistent_schemas", :persistent_schemas => true do
       it "should exlude persistent_schemas" do
         subject.switch(schema1)
-        subject.current_database.should == schema1
+        subject.current_tenant.should == schema1
         subject.current.should == schema1
       end
     end

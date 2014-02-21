@@ -14,12 +14,12 @@ module Apartment
     # Default adapter when not using Postgresql Schemas
     class PostgresqlAdapter < AbstractAdapter
 
-      def drop(database)
+      def drop(tenant)
         # Apartment.connection.drop_database note that drop_database will not throw an exception, so manually execute
-        Apartment.connection.execute(%{DROP DATABASE "#{database}"})
+        Apartment.connection.execute(%{DROP DATABASE "#{tenant}"})
 
       rescue *rescuable_exceptions
-        raise DatabaseNotFound, "The database #{database} cannot be found"
+        raise DatabaseNotFound, "The tenant #{tenant} cannot be found"
       end
 
     private
@@ -38,15 +38,15 @@ module Apartment
         reset
       end
 
-      #   Drop the database schema
+      #   Drop the tenant
       #
-      #   @param {String} database Database (schema) to drop
+      #   @param {String} tenant Database (schema) to drop
       #
-      def drop(database)
-        Apartment.connection.execute(%{DROP SCHEMA "#{database}" CASCADE})
+      def drop(tenant)
+        Apartment.connection.execute(%{DROP SCHEMA "#{tenant}" CASCADE})
 
       rescue *rescuable_exceptions
-        raise SchemaNotFound, "The schema #{database.inspect} cannot be found."
+        raise SchemaNotFound, "The schema #{tenant.inspect} cannot be found."
       end
 
       #   Reset search path to default search_path
@@ -72,36 +72,36 @@ module Apartment
       #   @return {String} default schema search path
       #
       def reset
-        @current_database = Apartment.default_schema
+        @current_tenant = Apartment.default_schema
         Apartment.connection.schema_search_path = full_search_path
       end
 
-      def current_database
-        @current_database || Apartment.default_schema
+      def current_tenant
+        @current_tenant || Apartment.default_schema
       end
 
     protected
 
       #   Set schema search path to new schema
       #
-      def connect_to_new(database = nil)
-        return reset if database.nil?
-        raise ActiveRecord::StatementInvalid.new("Could not find schema #{database}") unless Apartment.connection.schema_exists? database
+      def connect_to_new(tenant = nil)
+        return reset if tenant.nil?
+        raise ActiveRecord::StatementInvalid.new("Could not find schema #{tenant}") unless Apartment.connection.schema_exists? tenant
 
-        @current_database = database.to_s
+        @current_tenant = tenant.to_s
         Apartment.connection.schema_search_path = full_search_path
 
       rescue *rescuable_exceptions
-        raise SchemaNotFound, "One of the following schema(s) is invalid: #{database}, #{full_search_path}"
+        raise SchemaNotFound, "One of the following schema(s) is invalid: #{tenant}, #{full_search_path}"
       end
 
       #   Create the new schema
       #
-      def create_tenant(database)
-        Apartment.connection.execute(%{CREATE SCHEMA "#{database}"})
+      def create_tenant(tenant)
+        Apartment.connection.execute(%{CREATE SCHEMA "#{tenant}"})
 
       rescue *rescuable_exceptions
-        raise SchemaExists, "The schema #{database} already exists."
+        raise SchemaExists, "The schema #{tenant} already exists."
       end
 
     private
@@ -111,9 +111,9 @@ module Apartment
       def full_search_path
         persistent_schemas.map(&:inspect).join(", ")
       end
-      
+
       def persistent_schemas
-        [@current_database, Apartment.persistent_schemas].flatten
+        [@current_tenant, Apartment.persistent_schemas].flatten
       end
     end
   end

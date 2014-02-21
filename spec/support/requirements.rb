@@ -7,11 +7,9 @@ module Apartment
     #
     #
     module AdapterRequirements
-
       extend ActiveSupport::Concern
 
       included do
-
         before do
           subject.create(db1)
           subject.create(db2)
@@ -27,12 +25,11 @@ module Apartment
         end
       end
 
-      %w{subject tenant_names default_database}.each do |method|
+      %w{subject tenant_names default_tenant}.each do |method|
         define_method method do
           raise "You must define a `#{method}` method in your host group"
         end unless defined?(method)
       end
-
     end
   end
 end

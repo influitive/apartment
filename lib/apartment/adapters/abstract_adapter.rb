@@ -9,14 +9,14 @@ module Apartment
         @config = config
       end
 
-      #   Create a new database, import schema, seed if appropriate
+      #   Create a new tenant, import schema, seed if appropriate
       #
-      #   @param {String} database Database name
+      #   @param {String} tenant Tenant name
       #
-      def create(database)
-        create_tenant(database)
+      def create(tenant)
+        create_tenant(tenant)
 
-        process(database) do
+        process(tenant) do
           import_database_schema
 
           # Seed data if appropriate
@@ -26,43 +26,52 @@ module Apartment
         end
       end
 
-      #   Get the current database name
+      #   Get the current tenant name
       #
-      #   @return {String} current database name
+      #   @return {String} current tenant name
       #
       def current_database
+        warn "[Deprecation Warning] `current_database` is now deprecated, please use `current_tenant`"
+        current_tenant
+      end
+
+      #   Get the current tenant name
+      #
+      #   @return {String} current tenant name
+      #
+      def current_tenant
         Apartment.connection.current_database
       end
 
       #   Note alias_method here doesn't work with inheritence apparently ??
       #
       def current
-        current_database
+        current_tenant
       end
 
-      #   Drop the database
+      #   Drop the tenant
       #
-      #   @param {String} database Database name
+      #   @param {String} tenant Database name
       #
-      def drop(database)
+      def drop(tenant)
         # Apartment.connection.drop_database   note that drop_database will not throw an exception, so manually execute
-        Apartment.connection.execute("DROP DATABASE #{environmentify(database)}" )
+        Apartment.connection.execute("DROP DATABASE #{environmentify(tenant)}" )
 
       rescue *rescuable_exceptions
-        raise DatabaseNotFound, "The database #{environmentify(database)} cannot be found"
+        raise DatabaseNotFound, "The tenant #{environmentify(tenant)} cannot be found"
       end
 
-      #   Connect to db, do your biz, switch back to previous db
+      #   Connect to tenant, do your biz, switch back to previous tenant
       #
-      #   @param {String?} database Database or schema to connect to
+      #   @param {String?} tenant Database or schema to connect to
       #
-      def process(database = nil)
-        current_db = current_database
-        switch(database)
+      def process(tenant = nil)
+        previous_tenant = current_tenant
+        switch(tenant)
         yield if block_given?
 
       ensure
-        switch(current_db) rescue reset
+        switch(previous_tenant) rescue reset
       end
 
       #   Establish a new connection for each specific excluded model
@@ -74,7 +83,7 @@ module Apartment
         end
       end
 
-      #   Reset the database connection to the default
+      #   Reset the tenant connection to the default
       #
       def reset
         Apartment.establish_connection @config
@@ -82,13 +91,13 @@ module Apartment
 
       #   Switch to new connection (or schema if appopriate)
       #
-      #   @param {String} database Database name
+      #   @param {String} tenant Database name
       #
-      def switch(database = nil)
+      def switch(tenant = nil)
         # Just connect to default db and return
-        return reset if database.nil?
+        return reset if tenant.nil?
 
-        connect_to_new(database).tap do
+        connect_to_new(tenant).tap do
           ActiveRecord::Base.connection.clear_query_cache
         end
       end
@@ -102,45 +111,45 @@ module Apartment
 
     protected
 
-      #   Create the database
+      #   Create the tenant
       #
-      #   @param {String} database Database name
+      #   @param {String} tenant Database name
       #
-      def create_tenant(database)
-        Apartment.connection.create_database( environmentify(database) )
+      def create_tenant(tenant)
+        Apartment.connection.create_database( environmentify(tenant) )
 
       rescue *rescuable_exceptions
-        raise DatabaseExists, "The database #{environmentify(database)} already exists."
+        raise DatabaseExists, "The tenant #{environmentify(tenant)} already exists."
       end
 
-      #   Connect to new database
+      #   Connect to new tenant
       #
-      #   @param {String} database Database name
+      #   @param {String} tenant Database name
       #
-      def connect_to_new(database)
-        Apartment.establish_connection multi_tenantify(database)
+      def connect_to_new(tenant)
+        Apartment.establish_connection multi_tenantify(tenant)
         Apartment.connection.active?   # call active? to manually check if this connection is valid
 
       rescue *rescuable_exceptions
-        raise DatabaseNotFound, "The database #{environmentify(database)} cannot be found."
+        raise DatabaseNotFound, "The tenant #{environmentify(tenant)} cannot be found."
       end
 
       #   Prepend the environment if configured and the environment isn't already there
       #
-      #   @param {String} database Database name
-      #   @return {String} database name with Rails environment *optionally* prepended
+      #   @param {String} tenant Database name
+      #   @return {String} tenant name with Rails environment *optionally* prepended
       #
-      def environmentify(database)
-        unless database.include?(Rails.env)
+      def environmentify(tenant)
+        unless tenant.include?(Rails.env)
           if Apartment.prepend_environment
-            "#{Rails.env}_#{database}"
+            "#{Rails.env}_#{tenant}"
           elsif Apartment.append_environment
-            "#{database}_#{Rails.env}"
+            "#{tenant}_#{Rails.env}"
           else
-            database
+            tenant
           end
         else
-          database
+          tenant
         end
       end
 
@@ -154,9 +163,9 @@ module Apartment
 
       #   Return a new config that is multi-tenanted
       #
-      def multi_tenantify(database)
+      def multi_tenantify(tenant)
         @config.clone.tap do |config|
-          config[:database] = environmentify(database)
+          config[:database] = environmentify(tenant)
         end
       end
 

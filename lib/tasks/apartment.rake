@@ -2,36 +2,36 @@ require 'apartment/migrator'
 
 apartment_namespace = namespace :apartment do
 
-  desc "Create all multi-tenant databases"
+  desc "Create all tenants"
   task create: 'db:migrate' do
-    tenants.each do |db|
+    tenants.each do |tenant|
       begin
-        puts("Creating #{db} database")
-        quietly { Apartment::Database.create(db) }
+        puts("Creating #{tenant} tenant")
+        quietly { Apartment::Database.create(tenant) }
       rescue Apartment::TenantExists => e
         puts e.message
       end
     end
   end
 
-  desc "Migrate all multi-tenant databases"
+  desc "Migrate all tenants"
   task :migrate do
-    tenants.each do |db|
+    tenants.each do |tenant|
       begin
-        puts("Migrating #{db} database")
-        Apartment::Migrator.migrate db
+        puts("Migrating #{tenant} tenant")
+        Apartment::Migrator.migrate tenant
       rescue Apartment::TenantNotFound => e
         puts e.message
       end
     end
   end
 
-  desc "Seed all multi-tenant databases"
+  desc "Seed all tenants"
   task :seed do
-    tenants.each do |db|
+    tenants.each do |tenant|
       begin
-        puts("Seeding #{db} database")
-        Apartment::Database.process(db) do
+        puts("Seeding #{tenant} tenant")
+        Apartment::Database.process(tenant) do
           Apartment::Database.seed
         end
       rescue Apartment::TenantNotFound => e
@@ -40,14 +40,14 @@ apartment_namespace = namespace :apartment do
     end
   end
 
-  desc "Rolls the schema back to the previous version (specify steps w/ STEP=n) across all multi-tenant dbs."
+  desc "Rolls the migration back to the previous version (specify steps w/ STEP=n) across all tenants."
   task :rollback do
     step = ENV['STEP'] ? ENV['STEP'].to_i : 1
 
-    tenants.each do |db|
+    tenants.each do |tenant|
       begin
-        puts("Rolling back #{db} database")
-        Apartment::Migrator.rollback db, step
+        puts("Rolling back #{tenant} tenant")
+        Apartment::Migrator.rollback tenant, step
       rescue Apartment::TenantNotFound => e
         puts e.message
       end
@@ -55,37 +55,37 @@ apartment_namespace = namespace :apartment do
   end
 
   namespace :migrate do
-    desc 'Runs the "up" for a given migration VERSION across all multi-tenant dbs.'
+    desc 'Runs the "up" for a given migration VERSION across all tenants.'
     task :up do
       version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
       raise 'VERSION is required' unless version
 
-      tenants.each do |db|
+      tenants.each do |tenant|
         begin
-          puts("Migrating #{db} database up")
-          Apartment::Migrator.run :up, db, version
+          puts("Migrating #{tenant} tenant up")
+          Apartment::Migrator.run :up, tenant, version
         rescue Apartment::TenantNotFound => e
           puts e.message
         end
       end
     end
 
-    desc 'Runs the "down" for a given migration VERSION across all multi-tenant dbs.'
+    desc 'Runs the "down" for a given migration VERSION across all tenants.'
     task :down do
       version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
       raise 'VERSION is required' unless version
 
-      tenants.each do |db|
+      tenants.each do |tenant|
         begin
-          puts("Migrating #{db} database down")
-          Apartment::Migrator.run :down, db, version
+          puts("Migrating #{tenant} tenant down")
+          Apartment::Migrator.run :down, tenant, version
         rescue Apartment::TenantNotFound => e
           puts e.message
         end
       end
     end
 
-    desc  'Rolls back the database one migration and re migrate up (options: STEP=x, VERSION=x).'
+    desc  'Rolls back the tenant one migration and re migrate up (options: STEP=x, VERSION=x).'
     task :redo do
       if ENV['VERSION']
         apartment_namespace['migrate:down'].invoke

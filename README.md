@@ -224,7 +224,7 @@ schema_search_path: "public,hstore"
 This would be for a config with `default_schema` set to `public` and `persistent_schemas` set to `['hstore']`
 
 Another way that we've successfully configured hstore for our applications is to add it into the
-postgresql template1 database so that every db that gets created has it by default.
+postgresql template1 database so that every tenant that gets created has it by default.
 
 You can do so using a command like so
 
@@ -242,26 +242,26 @@ Happy to accept PR's on the matter.
 
 In order to migrate all of your databases (or posgresql schemas) you need to provide a list
 of dbs to Apartment.  You can make this dynamic by providing a Proc object to be called on migrations.
-This object should yield an array of string representing each database name.  Example:
+This object should yield an array of string representing each tenant name.  Example:
 
 ```ruby
-# Dynamically get database names to migrate
-config.tenant_names = lambda{ Customer.pluck(:database_name) }
+# Dynamically get tenant names to migrate
+config.tenant_names = lambda{ Customer.pluck(:tenant_name) }
 
-# Use a static list of database names for migrate
-config.tenant_names = ['db1', 'db2']
+# Use a static list of tenant names for migrate
+config.tenant_names = ['tenant1', 'tenant2']
 ```
 
 You can then migrate your databases using the rake task:
 
     rake apartment:migrate
 
-This basically invokes `Apartment::Database.migrate(#{db_name})` for each database name supplied
+This basically invokes `Apartment::Database.migrate(#{tenant_name})` for each tenant name supplied
 from `Apartment.tenant_names`
 
 ### Handling Environments
 
-By default, when not using postgresql schemas, Apartment will prepend the environment to the database name
+By default, when not using postgresql schemas, Apartment will prepend the environment to the tenant name
 to ensure there is no conflict between your environments.  This is mainly for the benefit of your development
 and test environments.  If you wish to turn this option off in production, you could do something like:
 
