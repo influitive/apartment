@@ -1,3 +1,8 @@
+# 0.24.2
+  * February 24, 2014
+
+  - Better warnings if `apartment:migrate` is run
+
 # 0.24.1
   * February 21, 2014
 
