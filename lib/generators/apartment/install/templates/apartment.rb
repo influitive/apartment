@@ -9,6 +9,11 @@ require 'apartment/elevators/subdomain'
 #
 Apartment.configure do |config|
 
+  # Determines whether db:migrations will automatically
+  # run apartment migrations or not. Defautls to false
+  #
+  # config.db_migrate_tenants = true
+
   # These models will not be multi-tenanted,
   # but remain in the global (public) namespace
   #
@@ -43,7 +48,3 @@ end
 # Rails.application.config.middleware.use 'Apartment::Elevators::Domain'
 
 Rails.application.config.middleware.use 'Apartment::Elevators::Subdomain'
-
-##
-# Rake enhancements so that db:migrate etc... also runs migrations on all tenants
-require 'apartment/tasks/enhancements'

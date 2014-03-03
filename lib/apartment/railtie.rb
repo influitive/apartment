@@ -11,6 +11,7 @@ module Apartment
     #
     config.before_initialize do
       Apartment.configure do |config|
+        config.db_migrate_tenants = false
         config.excluded_models = []
         config.use_schemas = true
         config.tenant_names = []
@@ -18,9 +19,8 @@ module Apartment
         config.prepend_environment = false
         config.append_environment = false
         config.tld_length = 1
+        config.migration_path = "#{Rails.root}/db/apartment/migrate"
       end
-
-      ActiveRecord::Migrator.migrations_paths = Rails.application.paths['db/migrate'].to_a
     end
 
     #   Hook into ActionDispatch::Reloader to ensure Apartment is properly initialized

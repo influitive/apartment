@@ -2,8 +2,10 @@ require 'apartment/migrator'
 
 apartment_namespace = namespace :apartment do
 
+  task :init => ['environment', 'db:load_config']
+
   desc "Create all tenants"
-  task create: 'db:migrate' do
+  task create: :init do
     tenants.each do |tenant|
       begin
         puts("Creating #{tenant} tenant")
@@ -15,8 +17,8 @@ apartment_namespace = namespace :apartment do
   end
 
   desc "Migrate all tenants"
-  task :migrate do
-    warn_if_tenants_empty
+  task migrate: :init do
+    err_if_tenants_empty
 
     tenants.each do |tenant|
       begin
@@ -29,8 +31,8 @@ apartment_namespace = namespace :apartment do
   end
 
   desc "Seed all tenants"
-  task :seed do
-    warn_if_tenants_empty
+  task seed: :init do
+    err_if_tenants_empty
 
     tenants.each do |tenant|
       begin
@@ -45,8 +47,8 @@ apartment_namespace = namespace :apartment do
   end
 
   desc "Rolls the migration back to the previous version (specify steps w/ STEP=n) across all tenants."
-  task :rollback do
-    warn_if_tenants_empty
+  task rollback: :init do
+    err_if_tenants_empty
 
     step = ENV['STEP'] ? ENV['STEP'].to_i : 1
 
@@ -60,10 +62,75 @@ apartment_namespace = namespace :apartment do
     end
   end
 
+  namespace :tenant do
+    desc "Migrate a single tenant: required paramter TENANT=name"
+    task :migrate,[:tenant] => :init do |t, args|
+      tenant = args.tenant || ENV['TENANT']
+
+      err_if_tenants_empty
+      raise 'TENANT is required' unless tenant
+      raise "TENANT #{tenant} is unknown" if !tenants.include?(tenant)
+
+      begin
+        puts("Migrating #{tenant} tenant")
+        Apartment::Migrator.migrate tenant 
+      rescue Apartment::TenantNotFound => e
+        puts e.message
+      end
+    end
+
+    desc "Rolls the migration back to the previous version (specify steps w/ STEP=n) for one TENANT."
+    task :rollback,[:tenant, :step] => :init do |t, args|
+      tenant = args.tenant || ENV['TENANT']
+      step = args.step || ENV['STEP'] ? ENV['STEP'].to_i : 1
+
+      err_if_tenants_empty
+      raise 'TENANT is required' unless tenant
+      raise "TENANT #{tenant} is unknown" if !tenants.include?(tenant)
+
+      begin
+        puts("Rolling back #{tenant} tenant")
+        Apartment::Migrator.rollback tenant, step
+      rescue Apartment::TenantNotFound => e
+        puts e.message
+      end
+    end
+
+    desc 'Create a db/schema.rb file that can be portably used against any DB supported by AR'
+    task :dump, [:tenant] => ['environment', 'db:load_config'] do |t, args|
+
+      tenant = args.tenant || ENV['TENANT']
+
+      err_if_tenants_empty
+      raise 'TENANT is required' unless tenant
+      raise "TENANT #{tenant} is unknown" if !tenants.include?(tenant)
+
+      Apartment::Database.dump(tenant)
+
+      # apartment_namespace['dump'].reenable
+    end
+
+    # desc 'Load a schema.rb file into the database'
+    # task :load,[:tenant] => ['environment', 'db:load_config'] do |t, args|
+    #   tenant = args.tenant || ENV['TENANT']
+
+    #   err_if_tenants_empty
+    #   raise 'TENANT is required' unless tenant
+    #   raise "TENANT #{tenant} is unknown" if !tenants.include?(tenant)
+
+    #   puts "apartment:tenant:load(#{tenant})"
+
+    #   Apartment::Database.load(tenant)
+    # end
+
+  end
+
+
   namespace :migrate do
+
     desc 'Runs the "up" for a given migration VERSION across all tenants.'
-    task :up do
-      warn_if_tenants_empty
+    task up: :init do
+      err_if_tenants_empty
 
       version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
       raise 'VERSION is required' unless version
@@ -79,8 +146,8 @@ apartment_namespace = namespace :apartment do
     end
 
     desc 'Runs the "down" for a given migration VERSION across all tenants.'
-    task :down do
-      warn_if_tenants_empty
+    task down: :init do
+      err_if_tenants_empty
 
       version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
       raise 'VERSION is required' unless version
@@ -96,7 +163,7 @@ apartment_namespace = namespace :apartment do
     end
 
     desc  'Rolls back the tenant one migration and re migrate up (options: STEP=x, VERSION=x).'
-    task :redo do
+    task redo: :init do
       if ENV['VERSION']
         apartment_namespace['migrate:down'].invoke
         apartment_namespace['migrate:up'].invoke
@@ -111,17 +178,7 @@ apartment_namespace = namespace :apartment do
     ENV['DB'] ? ENV['DB'].split(',').map { |s| s.strip } : Apartment.tenant_names || []
   end
 
-  def warn_if_tenants_empty
-    if tenants.empty?
-      puts <<-WARNING
-        [WARNING] - The list of tenants to migrate appears to be empty. This could mean a few things:
-
-          1. You may not have created any, in which case you can ignore this message
-          2. You've run `apartment:migrate` directly without loading the Rails environment
-            * `apartment:migrate` is now deprecated. Tenants will automatically be migrated with `db:migrate`
-
-        Note that your tenants currently haven't been migrated. You'll need to run `db:migrate` to rectify this.
-      WARNING
-    end
+  def err_if_tenants_empty
+    raise "tenants is empty" if tenants.empty?
   end
 end
