@@ -1,3 +1,8 @@
+# 0.24.3
+  * March 5, 2014
+
+  - Rake enhancements weren't removed from the generator template
+
 # 0.24.2
   * February 24, 2014
 
