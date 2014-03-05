@@ -43,7 +43,3 @@ end
 # Rails.application.config.middleware.use 'Apartment::Elevators::Domain'
 
 Rails.application.config.middleware.use 'Apartment::Elevators::Subdomain'
-
-##
-# Rake enhancements so that db:migrate etc... also runs migrations on all tenants
-require 'apartment/tasks/enhancements'
