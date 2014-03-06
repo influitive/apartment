@@ -133,18 +133,18 @@ module Apartment
       end
 
       def persistent_schemas
-
         case Apartment.persistent_schemas
           when Proc
             result = Apartment.persistent_schemas.call(@current_tenant)
           when Hash 
-            result = Apartment.persistent_schemas[@current_tenant] 
+            result = Apartment.persistent_schemas[@current_tenant]
+          when Array
+            result = Apartment.persistent_schemas 
           when String
             result = Apartment.persistent_schemas.split(',')
           when NilClass
             return [@current_tenant]
         end
-
         [@current_tenant, result].flatten.uniq
       end
     end

@@ -28,7 +28,10 @@ Apartment.configure do |config|
   config.use_schemas = true
 
   # configure persistent schemas (E.g. hstore )
+  # config.persistent_schemas = 'foo'
   # config.persistent_schemas = %w{ hstore }
+  # config.persistent_schemas = {'fruit' => ['vegtables', 'public']}
+  # config.persistent_schemas = lambda{|tenant| tenant.gsub('_cc\z', '_ak')}
 
   # add the Rails environment to database names?
   # config.prepend_environment = true
