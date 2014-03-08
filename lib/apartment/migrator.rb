@@ -14,8 +14,8 @@ module Apartment
         ActiveRecord::Migrator.migrate(migration_paths(database), version) do |migration|
           ENV["SCOPE"].blank? || (ENV["SCOPE"] == migration.scope)
         end
-        Database.dump(database)
       end
+      dump_schema(database)
     end
 
     # Migrate up/down to a specific version
@@ -23,8 +23,8 @@ module Apartment
       ensure_schema_migrations_table_exists(database)
       Database.process(database) do
         ActiveRecord::Migrator.run(direction, migration_paths(database), version)
-        Database.dump(database)
       end
+      dump_schema(database)
     end
 
     # rollback latest migration `step` number of times
@@ -32,8 +32,8 @@ module Apartment
       ensure_schema_migrations_table_exists(database)
       Database.process(database) do
         ActiveRecord::Migrator.rollback(migration_paths(database), step)
-        Database.dump(database)
       end
+      dump_schema(database)
     end
 
     private
@@ -41,6 +41,13 @@ module Apartment
     def ensure_schema_migrations_table_exists(database)
       Database.process(database, true) do
         ActiveRecord::SchemaMigration.create_table
+      end
+    end
+
+    def dump_schema(database)
+      puts "dump_schema(#{database})"
+      Database.process(database, true) do
+        Database.dump(database)
       end
     end
 
