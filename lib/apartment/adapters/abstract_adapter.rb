@@ -65,9 +65,9 @@ module Apartment
       #
       #   @param {String?} tenant Database or schema to connect to
       #
-      def process(tenant = nil)
+      def process(tenant = nil, exclusive = false)
         previous_tenant = current_tenant
-        switch(tenant)
+        switch(tenant, exclusive)
         yield if block_given?
 
       ensure
@@ -93,11 +93,11 @@ module Apartment
       #
       #   @param {String} tenant Database name
       #
-      def switch(tenant = nil)
+      def switch(tenant = nil, exclusive = false)
         # Just connect to default db and return
         return reset if tenant.nil?
 
-        connect_to_new(tenant).tap do
+        connect_to_new(tenant, exclusive).tap do
           ActiveRecord::Base.connection.clear_query_cache
         end
       end
@@ -126,7 +126,7 @@ module Apartment
       #
       #   @param {String} tenant Database name
       #
-      def connect_to_new(tenant)
+      def connect_to_new(tenant, exclusive = false)
         Apartment.establish_connection multi_tenantify(tenant)
         Apartment.connection.active?   # call active? to manually check if this connection is valid
 

@@ -49,6 +49,22 @@ module Apartment
         raise SchemaNotFound, "The schema #{tenant.inspect} cannot be found."
       end
 
+      def load(tenant)
+        # require 'active_record/schema_dumper'
+        # filename = File.join(Apartment.migration_path, "#{tenant}_schema.rb")
+        # File.open(filename, "w:utf-8") do |file|
+        #   ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, file)
+        # end
+      end
+
+      def dump(tenant)
+        require 'active_record/schema_dumper'
+        filename = File.join(Apartment.migration_path, "..", "#{tenant}_schema.rb")
+        File.open(filename, "w:utf-8") do |file|
+          ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, file)
+        end
+      end
+
       #   Reset search path to default search_path
       #   Set the table_name to always use the default namespace for excluded models
       #
@@ -84,12 +100,16 @@ module Apartment
 
       #   Set schema search path to new schema
       #
-      def connect_to_new(tenant = nil)
+      def connect_to_new(tenant = nil, exclusive = false)
         return reset if tenant.nil?
         raise ActiveRecord::StatementInvalid.new("Could not find schema #{tenant}") unless Apartment.connection.schema_exists? tenant
 
         @current_tenant = tenant.to_s
-        Apartment.connection.schema_search_path = full_search_path
+        if exclusive
+          Apartment.connection.schema_search_path = @current_tenant
+        else
+          Apartment.connection.schema_search_path = full_search_path
+        end
 
       rescue *rescuable_exceptions
         raise SchemaNotFound, "One of the following schema(s) is invalid: #{tenant}, #{full_search_path}"
@@ -113,7 +133,19 @@ module Apartment
       end
 
       def persistent_schemas
-        [@current_tenant, Apartment.persistent_schemas].flatten
+        case Apartment.persistent_schemas
+          when Proc
+            result = Apartment.persistent_schemas.call(@current_tenant)
+          when Hash 
+            result = Apartment.persistent_schemas[@current_tenant]
+          when Array
+            result = Apartment.persistent_schemas 
+          when String
+            result = Apartment.persistent_schemas.split(',')
+          when NilClass
+            return [@current_tenant]
+        end
+        [@current_tenant, result].flatten.uniq
       end
     end
   end

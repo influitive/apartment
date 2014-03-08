@@ -9,6 +9,11 @@ require 'apartment/elevators/subdomain'
 #
 Apartment.configure do |config|
 
+  # Determines whether db:migrations will automatically
+  # run apartment migrations or not. Defautls to false
+  #
+  # config.db_migrate_tenants = true
+
   # These models will not be multi-tenanted,
   # but remain in the global (public) namespace
   #
@@ -23,7 +28,10 @@ Apartment.configure do |config|
   config.use_schemas = true
 
   # configure persistent schemas (E.g. hstore )
+  # config.persistent_schemas = 'foo'
   # config.persistent_schemas = %w{ hstore }
+  # config.persistent_schemas = {'fruit' => ['vegtables', 'public']}
+  # config.persistent_schemas = lambda{|tenant| tenant.gsub('_cc\z', '_ak')}
 
   # add the Rails environment to database names?
   # config.prepend_environment = true
