@@ -7,7 +7,8 @@ module Apartment
 
     # Migrate to latest
     def migrate(database)
-      Database.process(database, true) do
+      ensure_schema_migrations_table_exists(database)
+      Database.process(database) do
         version = ENV["VERSION"] ? ENV["VERSION"].to_i : nil
 
         ActiveRecord::Migrator.migrate(migration_paths(database), version) do |migration|
@@ -19,7 +20,8 @@ module Apartment
 
     # Migrate up/down to a specific version
     def run(direction, database, version)
-      Database.process(database, true) do
+      ensure_schema_migrations_table_exists(database)
+      Database.process(database) do
         ActiveRecord::Migrator.run(direction, migration_paths(database), version)
         Database.dump(database)
       end
@@ -27,13 +29,20 @@ module Apartment
 
     # rollback latest migration `step` number of times
     def rollback(database, step = 1)
-      Database.process(database, true) do
+      ensure_schema_migrations_table_exists(database)
+      Database.process(database) do
         ActiveRecord::Migrator.rollback(migration_paths(database), step)
         Database.dump(database)
       end
     end
 
     private
+
+    def ensure_schema_migrations_table_exists(database)
+      Database.process(database, true) do
+        ActiveRecord::SchemaMigration.create_table
+      end
+    end
 
     def migration_paths(tenant)
       paths = [Apartment.migration_path]
