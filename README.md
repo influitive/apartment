@@ -242,9 +242,9 @@ Happy to accept PR's on the matter.
 Apartment can be forced to use raw SQL dumps insted of `schema.rb` for creating new schemas. Use this when you are using some extra features in postgres that can't be respresented in `schema.rb`, like materialized views etc.
 
 This only applies while using postgres adapter and `config.use_schemas` is set to `true`.
-(Note: this option doesn't use `db/structure.sql`, it creates SQL dump by executing `pg_dump` by itself.)
+(Note: this option doesn't use `db/structure.sql`, it creates SQL dump by executing `pg_dump`)
 
-Enable this options with:
+Enable this option with:
 ```ruby
 config.use_sql = true
 ```
