@@ -238,6 +238,18 @@ schema in the `search_path` at all times. We won't be able to do this though unt
 also contain the tenanted tables, which is an open issue with no real milestone to be completed.
 Happy to accept PR's on the matter.
 
+**Creating new schemas by using raw SQL dumps**
+Apartment can be forced to use raw SQL dumps insted of `schema.rb` for creating new schemas. Use this when you are using some extra features in postgres that can't be respresented in `schema.rb`, like materialized views etc.
+
+This only applies while using postgres adapter and `config.use_schemas` is set to `true`.
+(Note: this option doesn't use `db/structure.sql`, it creates SQL dump by executing `pg_dump` by itself.)
+
+Enable this options with:
+```ruby
+config.use_sql = true
+```
+
+
 ### Managing Migrations
 
 In order to migrate all of your tenants (or posgresql schemas) you need to provide a list
