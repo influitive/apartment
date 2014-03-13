@@ -144,7 +144,7 @@ module Apartment
 
       #   Dump postgres default schema
       #
-      #   @return {String} raw SQL with schema dump
+      #   @return {String} raw SQL contaning only postgres schema dump
       #
       def pg_dump_schema
         dbname = ActiveRecord::Base.connection_config[:database]
@@ -163,7 +163,7 @@ module Apartment
 
       #   Dump data from schema_migrations table
       #
-      #   @return {String} raw SQL inserts with data from schema_migrations
+      #   @return {String} raw SQL contaning inserts with data from schema_migrations
       #
       def pg_dump_schema_migrations_data
         `pg_dump -a --inserts -t schema_migrations -n #{Apartment.default_schema} bithub_development`
