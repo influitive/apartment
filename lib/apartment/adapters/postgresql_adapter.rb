@@ -174,7 +174,7 @@ module Apartment
       #   @return {String} patched raw SQL dump
       #
       def patch_search_path(sql)
-        search_path = "SET search_path = #{self.current_tenant}, pg_catalog;"
+        search_path = "SET search_path = #{self.current_tenant}, #{Apartment.default_schema};"
 
         sql
           .split("\n")
