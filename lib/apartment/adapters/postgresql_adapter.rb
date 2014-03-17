@@ -121,6 +121,11 @@ module Apartment
     # Another Adapter for Postgresql when using schemas and SQL
     class PostgresqlSchemaFromSqlAdapter < PostgresqlSchemaAdapter
 
+      PSQL_DUMP_BLACKLISTED_STATEMENTS= [
+        /SET search_path/i,   # overridden later
+        /SET lock_timeout/i   # new in postgresql 9.3
+      ]
+
       def import_database_schema
         clone_pg_schema
         copy_schema_migrations
@@ -178,9 +183,15 @@ module Apartment
 
         sql
           .split("\n")
-          .reject {|line| line.starts_with? "SET search_path"}
+          .select {|line| check_input_against_regexps(line, PSQL_DUMP_BLACKLISTED_STATEMENTS).empty?}
           .prepend(search_path)
           .join("\n")
+      end
+
+      #   Checks if any of regexps matches against input
+      #
+      def check_input_against_regexps(input, regexps)
+        regexps.select {|c| input.match c}
       end
 
       #   Collect table names from AR Models
