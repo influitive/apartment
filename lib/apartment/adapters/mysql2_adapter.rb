@@ -67,10 +67,6 @@ module Apartment
 
       def process_excluded_model(model)
         model.constantize.tap do |klass|
-          # some models (such as delayed_job) seem to load and cache their column names before this,
-          # so would never get the default prefix, so reset first
-          klass.reset_column_information
-
           # Ensure that if a schema *was* set, we override
           table_name = klass.table_name.split('.', 2).last
 
