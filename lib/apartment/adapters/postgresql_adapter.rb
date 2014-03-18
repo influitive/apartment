@@ -4,9 +4,10 @@ module Apartment
   module Database
 
     def self.postgresql_adapter(config)
-      Apartment.use_schemas ?
-        Adapters::PostgresqlSchemaAdapter.new(config) :
-        Adapters::PostgresqlAdapter.new(config)
+      adapter = Adapters::PostgresqlAdapter
+      adapter = Adapters::PostgresqlSchemaAdapter if Apartment.use_schemas
+      adapter = Adapters::PostgresqlSchemaFromSqlAdapter if Apartment.use_sql && Apartment.use_schemas
+      adapter.new(config)
     end
   end
 
@@ -116,5 +117,93 @@ module Apartment
         [@current_tenant, Apartment.persistent_schemas].flatten
       end
     end
+
+    # Another Adapter for Postgresql when using schemas and SQL
+    class PostgresqlSchemaFromSqlAdapter < PostgresqlSchemaAdapter
+
+      PSQL_DUMP_BLACKLISTED_STATEMENTS= [
+        /SET search_path/i,   # overridden later
+        /SET lock_timeout/i   # new in postgresql 9.3
+      ]
+
+      def import_database_schema
+        clone_pg_schema
+        copy_schema_migrations
+      end
+
+    private
+
+      # Clone default schema into new schema named after current tenant
+      #
+      def clone_pg_schema
+        pg_schema_sql = patch_search_path(pg_dump_schema)
+        Apartment.connection.execute(pg_schema_sql)
+      end
+
+      # Copy data from schema_migrations into new schema
+      #
+      def copy_schema_migrations
+        pg_migrations_data = patch_search_path(pg_dump_schema_migrations_data)
+        Apartment.connection.execute(pg_migrations_data)
+      end
+
+      #   Dump postgres default schema
+      #
+      #   @return {String} raw SQL contaning only postgres schema dump
+      #
+      def pg_dump_schema
+        dbname = ActiveRecord::Base.connection_config[:database]
+        default_schema = Apartment.default_schema
+
+        # Skip excluded tables? :/
+        # excluded_tables =
+        #   collect_table_names(Apartment.excluded_models)
+        #   .map! {|t| "-T #{t}"}
+        #   .join(' ')
+
+        # `pg_dump -s -x -O -n #{default_schema} #{excluded_tables} #{dbname}`
+
+        `pg_dump -s -x -O -n #{default_schema} #{dbname}`
+      end
+
+      #   Dump data from schema_migrations table
+      #
+      #   @return {String} raw SQL contaning inserts with data from schema_migrations
+      #
+      def pg_dump_schema_migrations_data
+        `pg_dump -a --inserts -t schema_migrations -n #{Apartment.default_schema} bithub_development`
+      end
+
+      #   Remove "SET search_path ..." line from SQL dump and prepend search_path set to current tenant
+      #
+      #   @return {String} patched raw SQL dump
+      #
+      def patch_search_path(sql)
+        search_path = "SET search_path = #{self.current_tenant}, #{Apartment.default_schema};"
+
+        sql
+          .split("\n")
+          .select {|line| check_input_against_regexps(line, PSQL_DUMP_BLACKLISTED_STATEMENTS).empty?}
+          .prepend(search_path)
+          .join("\n")
+      end
+
+      #   Checks if any of regexps matches against input
+      #
+      def check_input_against_regexps(input, regexps)
+        regexps.select {|c| input.match c}
+      end
+
+      #   Collect table names from AR Models
+      #
+      def collect_table_names(models)
+        models.map do |m|
+          m.constantize.table_name
+        end
+      end
+
+    end
+
+
   end
 end

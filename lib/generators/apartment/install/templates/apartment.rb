@@ -22,6 +22,9 @@ Apartment.configure do |config|
   # use postgres schemas?
   config.use_schemas = true
 
+  # use raw SQL dumps for creating postgres schemas? (only appies with use_schemas set to true)
+  #config.use_sql = true
+
   # configure persistent schemas (E.g. hstore )
   # config.persistent_schemas = %w{ hstore }
 
