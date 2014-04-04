@@ -148,18 +148,15 @@ module Apartment
       #   @return {String} raw SQL contaning only postgres schema dump
       #
       def pg_dump_schema
-        dbname = ActiveRecord::Base.connection_config[:database]
-        default_schema = Apartment.default_schema
-
         # Skip excluded tables? :/
         # excluded_tables =
         #   collect_table_names(Apartment.excluded_models)
         #   .map! {|t| "-T #{t}"}
         #   .join(' ')
 
-        # `pg_dump -s -x -O -n #{default_schema} #{excluded_tables} #{dbname}`
+        cmd = build_pg_dump "-s -x -O -n #{Apartment.default_schema}"
 
-        `pg_dump -s -x -O -n #{default_schema} #{dbname}`
+        `#{cmd}`
       end
 
       #   Dump data from schema_migrations table
@@ -167,7 +164,9 @@ module Apartment
       #   @return {String} raw SQL contaning inserts with data from schema_migrations
       #
       def pg_dump_schema_migrations_data
-        `pg_dump -a --inserts -t schema_migrations -n #{Apartment.default_schema} bithub_development`
+        cmd = build_pg_dump "-a --inserts -t schema_migrations -n #{Apartment.default_schema}"
+
+        `#{cmd}`
       end
 
       #   Remove "SET search_path ..." line from SQL dump and prepend search_path set to current tenant
@@ -198,8 +197,30 @@ module Apartment
         end
       end
 
-    end
+      #   Build pg_dump command with host, dbname, user and password
+      #
+      #   @return {String} raw pg_dump command containg connection params and db name
+      #
+      def build_pg_dump(switches="")
 
+        # read database config
+        db_config = Rails.configuration.database_configuration.fetch Rails.env
+        db_name = db_config['database']
+        db_host = db_config['socket'] || db_config['host'] || 'localhost'
+        db_port = db_config['port'] || "5432"
+        db_user = db_config['user']
+        db_pwd  = db_config['password']
+
+        # build command
+        cmd_env      = db_pwd ? "PGPASSWORD=#{db_pwd}" : ""
+        cmd_host     = "-h #{db_host}"
+        cmd_port     = "-p #{db_port}"
+        cmd_user     = db_user ? "-U #{db_user}" : ""
+
+        "#{cmd_env} pg_dump #{cmd_host} #{cmd_user} #{switches} #{db_name}"
+      end
+
+    end
 
   end
 end
