@@ -1,8 +1,5 @@
-require 'bundler' rescue 'You must `gem install bundler` and `bundle install` to run rake tasks'
-Bundler.setup
-Bundler::GemHelper.install_tasks
-
-require 'appraisal'
+require "rubygems"
+require "bundler/setup"
 
 require "rspec"
 require "rspec/core/rake_task"
