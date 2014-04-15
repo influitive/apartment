@@ -63,6 +63,7 @@ end
 
 namespace :mysql do
   require 'active_record'
+  require 'mysql2'
   require "#{File.join(File.dirname(__FILE__), 'spec', 'support', 'config')}"
 
   desc 'Build the MySQL test databases'
