@@ -206,7 +206,7 @@ module Apartment
         # read database config
         db_config = Rails.configuration.database_configuration.fetch Rails.env
         db_name = db_config['database']
-        db_host = db_config['socket'] || db_config['host'] || 'localhost'
+        db_host = db_config['socket'] ? File.dirname(db_config['socket']) : db_config['host'] || 'localhost'
         db_port = db_config['port'] || "5432"
         db_user = db_config['user']
         db_pwd  = db_config['password']
