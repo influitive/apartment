@@ -60,7 +60,8 @@ module Apartment
     #   Fetch the rails database configuration
     #
     def config
-      @config ||= Rails.configuration.database_configuration[Rails.env].symbolize_keys
+      @config ||= (ActiveRecord::Base.configurations[Rails.env] ||
+                    Rails.application.config.database_configuration[Rails.env]).symbolize_keys
     end
   end
 end
