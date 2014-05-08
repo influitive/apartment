@@ -148,13 +148,23 @@ module Apartment
       #   @return {String} raw SQL contaning only postgres schema dump
       #
       def pg_dump_schema
-        # Skip excluded tables? :/
-        # excluded_tables =
-        #   collect_table_names(Apartment.excluded_models)
-        #   .map! {|t| "-T #{t}"}
-        #   .join(' ')
 
-        cmd = build_pg_dump "-s -x -O -n #{Apartment.default_schema}"
+        # Tables from excluded models aren't copied to newly created
+        # tenant/schema due to possible issue with foreign keys.
+
+        # (issue occurs when FK on 'tableA' refrences 'tableB', 'tableA' is
+        #  within tenant schema, 'tableB' is within excluded model in public
+        #  schema. In that case FK on 'tenant.tableA' references to
+        #  non-existing row in 'tenant.tableB', but should ref. to
+        #  'public.tableB', that's why tables from excluded models shouldn't
+        #  be copied to tenant schemes.)
+
+        excluded_tables =
+          collect_table_names(Apartment.excluded_models)
+          .map! {|t| "-T #{t}"}
+          .join(' ')
+
+        cmd = build_pg_dump "-s -x -O #{excluded_tables} -n #{Apartment.default_schema}"
 
         `#{cmd}`
       end
