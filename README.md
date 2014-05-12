@@ -221,7 +221,7 @@ schema_search_path: "public,hstore"
 ...
 ```
 
-This would be for a config with `default_schema` set to `public` and `persistent_schemas` set to `['hstore']`
+This would be for a config with `default_schema` set to `public` and `persistent_schemas` set to `['hstore']`. **Note**: This doesn't work if you use Heroku because for each deploy, Heroku regenerates `database.yml` completely different and your predefined `schema_search_path` will be deleted. ActiveRecord's `schema_search_path` will be the default `\"$user\",public`.
 
 Another way that we've successfully configured hstore for our applications is to add it into the
 postgresql template1 database so that every tenant that gets created has it by default.
