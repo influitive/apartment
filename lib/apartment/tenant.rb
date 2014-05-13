@@ -3,7 +3,7 @@ require 'forwardable'
 module Apartment
   #   The main entry point to Apartment functions
   #
-  module Database
+  module Tenant
 
     extend self
     extend Forwardable
@@ -63,5 +63,11 @@ module Apartment
       @config ||= (ActiveRecord::Base.configurations[Rails.env] ||
                     Rails.application.config.database_configuration[Rails.env]).symbolize_keys
     end
+  end
+
+  def self.const_missing(const_name)
+    super unless const_name == :Database
+    warn "`Apartment::Database` has been deprecated. Use `Apartment::Tenant` instead."
+    Tenant
   end
 end

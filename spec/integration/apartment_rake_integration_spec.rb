@@ -21,7 +21,7 @@ describe "apartment rake tasks", database: :postgresql do
       config.excluded_models = ["Company"]
       config.tenant_names = lambda{ Company.pluck(:database) }
     end
-    Apartment::Database.reload!(config)
+    Apartment::Tenant.reload!(config)
 
     # fix up table name of shared/excluded models
     Company.table_name = 'public.companies'
@@ -37,13 +37,13 @@ describe "apartment rake tasks", database: :postgresql do
 
     before do
       db_names.collect do |db_name|
-        Apartment::Database.create(db_name)
+        Apartment::Tenant.create(db_name)
         Company.create :database => db_name
       end
     end
 
     after do
-      db_names.each{ |db| Apartment::Database.drop(db) }
+      db_names.each{ |db| Apartment::Tenant.drop(db) }
       Company.delete_all
     end
 
@@ -65,7 +65,7 @@ describe "apartment rake tasks", database: :postgresql do
 
     describe "apartment:seed" do
       it "should seed all databases" do
-        Apartment::Database.should_receive(:seed).exactly(company_count).times
+        Apartment::Tenant.should_receive(:seed).exactly(company_count).times
 
         @rake['apartment:seed'].invoke
       end

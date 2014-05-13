@@ -1,7 +1,7 @@
 require 'apartment/adapters/postgresql_adapter'
 
 module Apartment
-  module Database
+  module Tenant
 
     def self.jdbc_postgresql_adapter(config)
       Apartment.use_schemas ?

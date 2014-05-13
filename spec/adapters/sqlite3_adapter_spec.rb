@@ -4,7 +4,7 @@ require 'apartment/adapters/sqlite3_adapter'
 describe Apartment::Adapters::Sqlite3Adapter, database: :sqlite do
   unless defined?(JRUBY_VERSION)
 
-    subject{ Apartment::Database.sqlite3_adapter config }
+    subject{ Apartment::Tenant.sqlite3_adapter config }
 
     context "using connections" do
       def tenant_names

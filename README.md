@@ -43,7 +43,7 @@ Before you can switch to a new apartment tenant, you will need to create it. Whe
 you need to create a new tenant, you can run the following command:
 
 ```ruby
-Apartment::Database.create('tenant_name')
+Apartment::Tenant.create('tenant_name')
 ```
 
 If you're using the [prepend environment](https://github.com/influitive/apartment#handling-environments) config option or you AREN'T using Postgresql Schemas, this will create a tenant in the following format: "#{environment}\_tenant_name".
@@ -67,7 +67,7 @@ One can optionally use the full database creation instead if they want, though t
 To switch tenants using Apartment, use the following command:
 
 ```ruby
-Apartment::Database.switch('tenant_name')
+Apartment::Tenant.switch('tenant_name')
 ```
 
 When switch is called, all requests coming to ActiveRecord will be routed to the tenant
@@ -186,7 +186,7 @@ By default, ActiveRecord will use `"$user", public` as the default `schema_searc
 config.default_schema = "some_other_schema"
 ```
 
-With that set, all excluded models will use this schema as the table name prefix instead of `public` and `reset` on `Apartment::Database` will return to this schema also
+With that set, all excluded models will use this schema as the table name prefix instead of `public` and `reset` on `Apartment::Tenant` will return to this schema also
 
 **Persistent Schemas**
 Apartment will normally just switch the `schema_search_path` whole hog to the one passed in.  This can lead to problems if you want other schemas to always be searched as well.  Enter `persistent_schemas`.  You can configure a list of other schemas that will always remain in the search path, while the default gets swapped out:
@@ -270,7 +270,7 @@ You can then migrate your tenants using the normal rake task:
 rake db:migrate
 ```
 
-This just invokes `Apartment::Database.migrate(#{tenant_name})` for each tenant name supplied
+This just invokes `Apartment::Tenant.migrate(#{tenant_name})` for each tenant name supplied
 from `Apartment.tenant_names`
 
 Note that you can disable the default migrating of all tenants with `db:migrate` by setting

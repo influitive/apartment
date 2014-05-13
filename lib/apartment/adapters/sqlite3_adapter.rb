@@ -1,7 +1,7 @@
 require 'apartment/adapters/abstract_adapter'
 
 module Apartment
-  module Database
+  module Tenant
     def self.sqlite3_adapter(config)
       Adapters::Sqlite3Adapter.new(config)
     end

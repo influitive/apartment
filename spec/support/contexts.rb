@@ -20,7 +20,7 @@ shared_context "elevators", elevator: true do
   let(:company1)  { mock_model(Company, database: db1).as_null_object }
   let(:company2)  { mock_model(Company, database: db2).as_null_object }
 
-  let(:api)       { Apartment::Database }
+  let(:api)       { Apartment::Tenant }
 
   before do
     Apartment.reset # reset all config
