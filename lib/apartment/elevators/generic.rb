@@ -1,5 +1,5 @@
 require 'rack/request'
-require 'apartment/database'
+require 'apartment/tenant'
 
 module Apartment
   module Elevators
@@ -17,7 +17,7 @@ module Apartment
 
         database = @processor.call(request)
 
-        Apartment::Database.switch database if database
+        Apartment::Tenant.switch database if database
 
         @app.call(env)
       end

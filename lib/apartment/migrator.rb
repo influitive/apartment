@@ -1,4 +1,4 @@
-require 'apartment/database'
+require 'apartment/tenant'
 
 module Apartment
   module Migrator

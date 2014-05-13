@@ -3,7 +3,8 @@
 require "apartment/adapters/postgresql_adapter"
 
 module Apartment
-  module Database
+  module Tenant
+
     def self.postgis_adapter(config)
       postgresql_adapter(config)
     end

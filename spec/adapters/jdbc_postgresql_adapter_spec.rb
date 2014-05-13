@@ -5,7 +5,7 @@ if defined?(JRUBY_VERSION)
 
   describe Apartment::Adapters::JDBCPostgresqlAdapter, database: :postgresql do
 
-    subject { Apartment::Database.jdbc_postgresql_adapter config.symbolize_keys }
+    subject { Apartment::Tenant.jdbc_postgresql_adapter config.symbolize_keys }
 
     context "using schemas" do
 

@@ -1,7 +1,7 @@
 require 'apartment/adapters/abstract_adapter'
 
 module Apartment
-  module Database
+  module Tenant
 
     def self.mysql2_adapter(config)
       Apartment.use_schemas ?
@@ -24,7 +24,7 @@ module Apartment
       def connect_to_new(tenant = nil)
         super
       rescue Mysql2::Error
-        Apartment::Database.reset
+        Apartment::Tenant.reset
         raise DatabaseNotFound, "Cannot find tenant #{environmentify(tenant)}"
       end
     end
@@ -61,7 +61,7 @@ module Apartment
         Apartment.connection.execute "use #{environmentify(tenant)}"
 
       rescue ActiveRecord::StatementInvalid
-        Apartment::Database.reset
+        Apartment::Tenant.reset
         raise DatabaseNotFound, "Cannot find tenant #{environmentify(tenant)}"
       end
 

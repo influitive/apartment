@@ -10,7 +10,7 @@ shared_examples_for "a connection based apartment adapter" do
       Apartment.configure do |config|
         config.excluded_models = ["Company"]
       end
-      Apartment::Database.init
+      Apartment::Tenant.init
 
       Company.connection.object_id.should_not == ActiveRecord::Base.connection.object_id
     end

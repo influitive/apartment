@@ -2,7 +2,7 @@ require "apartment/adapters/abstract_jdbc_adapter"
 
 module Apartment
 
-  module Database
+  module Tenant
     def self.jdbc_mysql_adapter(config)
       Adapters::JDBCMysqlAdapter.new config
     end
@@ -22,7 +22,7 @@ module Apartment
       def connect_to_new(database)
         super
       rescue DatabaseNotFound
-        Apartment::Database.reset
+        Apartment::Tenant.reset
         raise DatabaseNotFound, "Cannot find database #{environmentify(database)}"
       end
     end

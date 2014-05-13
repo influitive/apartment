@@ -4,7 +4,7 @@ require 'apartment/adapters/postgresql_adapter'
 describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
   unless defined?(JRUBY_VERSION)
 
-    subject{ Apartment::Database.postgresql_adapter config }
+    subject{ Apartment::Tenant.postgresql_adapter config }
 
     context "using schemas with schema.rb" do
 

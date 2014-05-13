@@ -19,9 +19,9 @@
 
     This should ensure that going forward nothing breaks, and we should *ideally* be able to randomize the test order
 
-2.  `Apartment::Database` is the wrong abstraction. When dealing with a multi-tenanted system, users shouldn't thing about 'Databases', they should
+2.  <del>`Apartment::Database` is the wrong abstraction. When dealing with a multi-tenanted system, users shouldn't thing about 'Databases', they should
     think about Tenants. I proprose that we deprecate the `Apartment::Database` constant in favour of `Apartment::Tenant` for a nicer abstraction. See
-    http://myronmars.to/n/dev-blog/2011/09/deprecating-constants-and-classes-in-ruby for ideas on how to achieve this.
+    http://myronmars.to/n/dev-blog/2011/09/deprecating-constants-and-classes-in-ruby for ideas on how to achieve this.</del>
 
 4.  Apartment::Database.process should be deprecated in favour of just passing a block to `switch`
 5.  Apartment::Database.switch should be renamed to switch! to indicate that using it on its own has side effects

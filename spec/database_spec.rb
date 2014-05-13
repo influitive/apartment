@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Apartment::Database do
+describe Apartment::Tenant do
   context "using mysql", database: :mysql do
 
     before do
@@ -77,7 +77,7 @@ describe Apartment::Database do
         subject.stub(:config).and_return config.merge(:adapter => 'unknown')
 
         expect {
-          Apartment::Database.adapter
+          Apartment::Tenant.adapter
         }.to raise_error
       end
 

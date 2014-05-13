@@ -1,5 +1,5 @@
 require 'rails'
-require 'apartment/database'
+require 'apartment/tenant'
 require 'apartment/reloader'
 
 module Apartment
@@ -28,7 +28,7 @@ module Apartment
     #   See the middleware/console declarations below to help with this. Hope to fix that soon.
     #
     config.to_prepare do
-      Apartment::Database.init
+      Apartment::Tenant.init
     end
 
     #
@@ -50,7 +50,7 @@ module Apartment
         app.config.middleware.use "Apartment::Reloader"
       end
 
-      # Overrides reload! to also call Apartment::Database.init as well so that the reloaded classes have the proper table_names
+      # Overrides reload! to also call Apartment::Tenant.init as well so that the reloaded classes have the proper table_names
       console do
         require 'apartment/console'
       end

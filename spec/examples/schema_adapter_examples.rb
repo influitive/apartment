@@ -16,7 +16,7 @@ shared_examples_for "a schema based apartment adapter" do
     end
 
     it "should process model exclusions" do
-      Apartment::Database.init
+      Apartment::Tenant.init
 
       Company.table_name.should == "public.companies"
     end
@@ -24,13 +24,13 @@ shared_examples_for "a schema based apartment adapter" do
     context "with a default_schema", :default_schema => true do
 
       it "should set the proper table_name on excluded_models" do
-        Apartment::Database.init
+        Apartment::Tenant.init
 
         Company.table_name.should == "#{default_schema}.companies"
       end
 
       it 'sets the search_path correctly' do
-        Apartment::Database.init
+        Apartment::Tenant.init
 
         User.connection.schema_search_path.should =~ %r|#{default_schema}|
       end
@@ -38,7 +38,7 @@ shared_examples_for "a schema based apartment adapter" do
 
     context "persistent_schemas", :persistent_schemas => true do
       it "sets the persistent schemas in the schema_search_path" do
-        Apartment::Database.init
+        Apartment::Tenant.init
         connection.schema_search_path.should end_with persistent_schemas.map { |schema| %{"#{schema}"} }.join(', ')
       end
     end

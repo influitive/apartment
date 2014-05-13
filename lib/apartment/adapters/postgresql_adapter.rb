@@ -1,7 +1,7 @@
 require 'apartment/adapters/abstract_adapter'
 
 module Apartment
-  module Database
+  module Tenant
 
     def self.postgresql_adapter(config)
       adapter = Adapters::PostgresqlAdapter

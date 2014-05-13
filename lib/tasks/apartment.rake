@@ -7,7 +7,7 @@ apartment_namespace = namespace :apartment do
     tenants.each do |tenant|
       begin
         puts("Creating #{tenant} tenant")
-        quietly { Apartment::Database.create(tenant) }
+        quietly { Apartment::Tenant.create(tenant) }
       rescue Apartment::TenantExists => e
         puts e.message
       end
@@ -35,8 +35,8 @@ apartment_namespace = namespace :apartment do
     tenants.each do |tenant|
       begin
         puts("Seeding #{tenant} tenant")
-        Apartment::Database.process(tenant) do
-          Apartment::Database.seed
+        Apartment::Tenant.process(tenant) do
+          Apartment::Tenant.seed
         end
       rescue Apartment::TenantNotFound => e
         puts e.message

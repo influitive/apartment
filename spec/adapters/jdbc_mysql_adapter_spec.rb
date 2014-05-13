@@ -5,7 +5,7 @@ if defined?(JRUBY_VERSION)
 
   describe Apartment::Adapters::JDBCMysqlAdapter, database: :mysql do
 
-    subject { Apartment::Database.jdbc_mysql_adapter config.symbolize_keys }
+    subject { Apartment::Tenant.jdbc_mysql_adapter config.symbolize_keys }
 
     def tenant_names
       ActiveRecord::Base.connection.execute("SELECT schema_name FROM information_schema.schemata").collect { |row| row['schema_name'] }
