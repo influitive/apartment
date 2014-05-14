@@ -179,7 +179,7 @@ Rails will always access the 'public' tenant when accessing these models,  but n
 
 ### Postgresql Schemas
 
-**Providing a Different default_schema**
+## Providing a Different default_schema
 By default, ActiveRecord will use `"$user", public` as the default `schema_search_path`. This can be modified if you wish to use a different default schema be setting:
 
 ```ruby
@@ -188,49 +188,92 @@ config.default_schema = "some_other_schema"
 
 With that set, all excluded models will use this schema as the table name prefix instead of `public` and `reset` on `Apartment::Database` will return to this schema also
 
-**Persistent Schemas**
+## Persistent Schemas
 Apartment will normally just switch the `schema_search_path` whole hog to the one passed in.  This can lead to problems if you want other schemas to always be searched as well.  Enter `persistent_schemas`.  You can configure a list of other schemas that will always remain in the search path, while the default gets swapped out:
 
 ```ruby
 config.persistent_schemas = ['some', 'other', 'schemas']
 ```
 
-This has numerous useful applications.  [Hstore](http://www.postgresql.org/docs/9.1/static/hstore.html), for instance, is a popular storage engine for Postgresql.  In order to use Hstore, you have to install it to a specific schema and have that always in the `schema_search_path`.  This could be achieved like so:
+# Installing Extensions into Persistent Schemas
+Persistent Schemas have numerous useful applications.  [Hstore](http://www.postgresql.org/docs/9.1/static/hstore.html), for instance, is a popular storage engine for Postgresql.  In order to use extensions such as Hstore, you have to install it to a specific schema and have that always in the `schema_search_path`.  
+
+When using extensions, keep in mind:
+* Extensions can only be installed into one schema per database, so we will want to install it into a schema that is always available in the `schema_search_path`
+* The schema and extension need to be created in the database *before* they are referenced in migrations, database.yml or apartment. 
+* There does not seem to be a way to create the schema and extension using standard rails migrations. 
+* Rails db:test:prepare deletes and recreates the database, so it needs to be easy for the extension schema to be recreated here.
+
+** 1. Ensure the extensions schema is created when the database is created **
 
 ```ruby
-# NOTE do not do this in a migration, must be done
-# manually before you configure apartment with hstore
-# In a rake task, or on the console...
-ActiveRecord::Base.connection.execute("CREATE SCHEMA hstore; CREATE EXTENSION HSTORE SCHEMA hstore")
+# lib/tasks/db_enhancements.rake
 
-# configure Apartment to maintain the `hstore` schema in the `schema_search_path`
-config.persistent_schemas = ['hstore']
+####### Important information ####################
+# This file is used to setup a shared extensions #
+# within a dedicated schema. This gives us the   #
+# advantage of only needing to enable extensions #
+# in one place.                                  #
+#                                                #
+# This task should be run AFTER db:create but    #
+# BEFORE db:migrate.                             #
+##################################################
+
+
+namespace :db do
+  desc 'Also create shared_extensions Schema'
+  task :extensions => :environment  do
+    # Create Schema
+    ActiveRecord::Base.connection.execute 'CREATE SCHEMA IF NOT EXISTS shared_extensions;'
+    # Enable Hstore
+    ActiveRecord::Base.connection.execute 'CREATE EXTENSION IF NOT EXISTS HSTORE SCHEMA shared_extensions;'
+    # Enable UUID-OSSP
+    ActiveRecord::Base.connection.execute 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp" SCHEMA shared_extensions;'
+  end
+end
+
+Rake::Task["db:create"].enhance do
+  Rake::Task["db:extensions"].invoke
+end
+
+Rake::Task["db:test:purge"].enhance do
+  Rake::Task["db:extensions"].invoke
+end
 ```
 
-There are a few caveats to be aware of when using `hstore`.  First off, the hstore schema and extension creation need to be done manually *before* you reference it in any way in your migrations, database.yml or apartment.  This is an unfortunate manual step, but I haven't found a way around it.  You can achieve this from the command line using something like:
+** 2. Ensure the schema is in Rails' default connection **
 
-    rails r 'ActiveRecord::Base.connection.execute("CREATE SCHEMA hstore; CREATE EXTENSION HSTORE SCHEMA hstore")'
-
-Next, your `database.yml` file must mimic what you've set for your default and persistent schemas in Apartment.  When you run migrataions with Rails, it won't know about the hstore schema because Apartment isn't injected into the default connection, it's done on a per-request basis, therefore Rails doesn't know about `hstore` during migrations.  To do so, add the following to your `database.yml` for all environments
+Next, your `database.yml` file must mimic what you've set for your default and persistent schemas in Apartment.  When you run migrataions with Rails, it won't know about the extensions schema because Apartment isn't injected into the default connection, it's done on a per-request basis, therefore Rails doesn't know about `hstore` or `uuid-ossp` during migrations.  To do so, add the following to your `database.yml` for all environments
 
 ```yaml
 # database.yml
 ...
 adapter: postgresql
-schema_search_path: "public,hstore"
+schema_search_path: "public,shared_extensions"
 ...
 ```
 
-This would be for a config with `default_schema` set to `public` and `persistent_schemas` set to `['hstore']`. **Note**: This only works on Heroku with [Rails 4.1+](https://devcenter.heroku.com/changelog-items/427). For older Rails versions Heroku regenerates a completely different `database.yml` for each deploy and your predefined `schema_search_path` will be deleted. ActiveRecord's `schema_search_path` will be the default `\"$user\",public`.
+This would be for a config with `default_schema` set to `public` and `persistent_schemas` set to `['shared_extensions']`. **Note**: This only works on Heroku with [Rails 4.1+](https://devcenter.heroku.com/changelog-items/427). For older Rails versions Heroku regenerates a completely different `database.yml` for each deploy and your predefined `schema_search_path` will be deleted. ActiveRecord's `schema_search_path` will be the default `\"$user\",public`.
 
+** 3. Ensure the schema is in the apartment config **
+```ruby
+# config/initializers/apartment.rb
+...
+config.persistent_schemas = ['shared_extensions']
+...
+```
+
+** Alternative: Creating schema by default **
 Another way that we've successfully configured hstore for our applications is to add it into the
 postgresql template1 database so that every tenant that gets created has it by default.
+
+One caveat with this approach is that it can interfere with other projects in development using the same extensions and template, but not using apartment with this approach.
 
 You can do so using a command like so
 
 ```bash
-psql -U postgres -d template1 -c "CREATE SCHEMA hstore AUTHORIZATION some_username;"
-psql -U postgres -d template1 -c "CREATE EXTENSION IF NOT EXISTS hstore SCHEMA hstore;"
+psql -U postgres -d template1 -c "CREATE SCHEMA shared_extensions AUTHORIZATION some_username;"
+psql -U postgres -d template1 -c "CREATE EXTENSION IF NOT EXISTS hstore SCHEMA shared_extensions;"
 ```
 
 The *ideal* setup would actually be to install `hstore` into the `public` schema and leave the public
@@ -238,7 +281,7 @@ schema in the `search_path` at all times. We won't be able to do this though unt
 also contain the tenanted tables, which is an open issue with no real milestone to be completed.
 Happy to accept PR's on the matter.
 
-**Creating new schemas by using raw SQL dumps**
+** Alternative: Creating new schemas by using raw SQL dumps **
 Apartment can be forced to use raw SQL dumps insted of `schema.rb` for creating new schemas. Use this when you are using some extra features in postgres that can't be respresented in `schema.rb`, like materialized views etc.
 
 This only applies while using postgres adapter and `config.use_schemas` is set to `true`.
