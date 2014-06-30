@@ -13,7 +13,7 @@ describe Apartment::Adapters::Mysql2Adapter, database: :mysql do
     let(:default_tenant) { subject.process { ActiveRecord::Base.connection.current_database } }
 
     context "using - the equivalent of - schemas" do
-      before { Apartment.use_schemas = true }
+      before { Apartment.use_mysql2_swap_connection_pool_strategy = false }
 
       it_should_behave_like "a generic apartment adapter"
 
@@ -39,7 +39,7 @@ describe Apartment::Adapters::Mysql2Adapter, database: :mysql do
     end
 
     context "using connections" do
-      before { Apartment.use_schemas = false }
+      before { Apartment.use_mysql2_swap_connection_pool_strategy = true }
 
       it_should_behave_like "a generic apartment adapter"
       it_should_behave_like "a connection based apartment adapter"

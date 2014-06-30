@@ -74,6 +74,21 @@ When switch is called, all requests coming to ActiveRecord will be routed to the
 you specify (with the exception of excluded models, see below). To return to the 'root'
 tenant, call switch with no arguments.
 
+#### Notes on MySQL
+
+By default, Apartment switches between tenants on MySQL databases by using the `USE [DATABASE]` statement.
+Previously, switching was done by swapping out the ActiveRecord connection pool when not using schemas. However this resulted in many abandoned connections as the MySQl2 gem does not actually send the MySQL quit signal when
+disconnecting in an attempt to re-use socket connections.
+
+If you do require the *old* swap behaviour, you can use the following config option (but keep in mind you will
+get lots of abandoned connections with the current MySQL2 gem!):
+
+```ruby
+Apartment.configure do |config|
+  config.use_mysql2_swap_connection_pool_strategy = true
+end
+```
+
 ### Switching Tenants per request
 
 You can have Apartment route to the appropriate tenant by adding some Rack middleware.
@@ -196,12 +211,12 @@ config.persistent_schemas = ['some', 'other', 'schemas']
 ```
 
 ### Installing Extensions into Persistent Schemas
-Persistent Schemas have numerous useful applications.  [Hstore](http://www.postgresql.org/docs/9.1/static/hstore.html), for instance, is a popular storage engine for Postgresql.  In order to use extensions such as Hstore, you have to install it to a specific schema and have that always in the `schema_search_path`.  
+Persistent Schemas have numerous useful applications.  [Hstore](http://www.postgresql.org/docs/9.1/static/hstore.html), for instance, is a popular storage engine for Postgresql.  In order to use extensions such as Hstore, you have to install it to a specific schema and have that always in the `schema_search_path`.
 
 When using extensions, keep in mind:
 * Extensions can only be installed into one schema per database, so we will want to install it into a schema that is always available in the `schema_search_path`
-* The schema and extension need to be created in the database *before* they are referenced in migrations, database.yml or apartment. 
-* There does not seem to be a way to create the schema and extension using standard rails migrations. 
+* The schema and extension need to be created in the database *before* they are referenced in migrations, database.yml or apartment.
+* There does not seem to be a way to create the schema and extension using standard rails migrations.
 * Rails db:test:prepare deletes and recreates the database, so it needs to be easy for the extension schema to be recreated here.
 
 #### 1. Ensure the extensions schema is created when the database is created
