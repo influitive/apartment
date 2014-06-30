@@ -4,32 +4,35 @@ module Apartment
   module Database
 
     def self.mysql2_adapter(config)
-      Apartment.use_schemas ?
-        Adapters::Mysql2SchemaAdapter.new(config) :
+      Apartment.use_mysql2_swap_connection_pool_strategy ?
+        Adapters::SwapConnectionPoolStrategy::Mysql2Adapter.new(config) :
         Adapters::Mysql2Adapter.new(config)
     end
   end
 
   module Adapters
-    class Mysql2Adapter < AbstractAdapter
 
-    protected
+    module SwapConnectionPoolStrategy
+      class Mysql2Adapter < AbstractAdapter
 
-      #   Connect to new tenant
-      #   Abstract adapter will catch generic ActiveRecord error
-      #   Catch specific adapter errors here
-      #
-      #   @param {String} tenant Tenant name
-      #
-      def connect_to_new(tenant = nil)
-        super
-      rescue Mysql2::Error
-        Apartment::Database.reset
-        raise DatabaseNotFound, "Cannot find tenant #{environmentify(tenant)}"
+      protected
+
+        #   Connect to new tenant
+        #   Abstract adapter will catch generic ActiveRecord error
+        #   Catch specific adapter errors here
+        #
+        #   @param {String} tenant Tenant name
+        #
+        def connect_to_new(tenant = nil)
+          super
+        rescue Mysql2::Error
+          Apartment::Database.reset
+          raise DatabaseNotFound, "Cannot find tenant #{environmentify(tenant)}"
+        end
       end
     end
 
-    class Mysql2SchemaAdapter < AbstractAdapter
+    class Mysql2Adapter < AbstractAdapter
       attr_reader :default_tenant
 
       def initialize(config)

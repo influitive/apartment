@@ -25,7 +25,7 @@ describe Apartment do
         config.excluded_models = []
         config.use_schemas = false
       end
-      Apartment.use_schemas.should be_false
+      Apartment.use_schemas.should be false
     end
 
     it "should set seed_after_create" do
@@ -33,7 +33,7 @@ describe Apartment do
         config.excluded_models = []
         config.seed_after_create = true
       end
-      Apartment.seed_after_create.should be_true
+      Apartment.seed_after_create.should be true
     end
 
     it "should set tld_length" do
