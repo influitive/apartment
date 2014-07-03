@@ -182,7 +182,7 @@ module Apartment
       #   Exceptions to rescue from on db operations
       #
       def rescuable_exceptions
-        [ActiveRecord::StatementInvalid] + [rescue_from].flatten
+        [ActiveRecord::ActiveRecordError] + [rescue_from].flatten
       end
 
       #   Extra exceptions to rescue from
