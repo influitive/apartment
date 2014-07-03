@@ -148,8 +148,6 @@ module Apartment
       #   @return {String} raw SQL contaning only postgres schema dump
       #
       def pg_dump_schema
-        dbname = ActiveRecord::Base.connection_config[:database]
-        default_schema = Apartment.default_schema
 
         # Skip excluded tables? :/
         # excluded_tables =
@@ -167,7 +165,7 @@ module Apartment
       #   @return {String} raw SQL contaning inserts with data from schema_migrations
       #
       def pg_dump_schema_migrations_data
-        `pg_dump -a --inserts -t schema_migrations -n #{Apartment.default_schema} bithub_development`
+        `pg_dump -a --inserts -t schema_migrations -n #{default_schema} #{dbname}`
       end
 
       #   Remove "SET search_path ..." line from SQL dump and prepend search_path set to current tenant
@@ -196,6 +194,18 @@ module Apartment
         models.map do |m|
           m.constantize.table_name
         end
+      end
+
+      # Convenience method for current database name
+      #
+      def dbname 
+        ActiveRecord::Base.connection_config[:database]
+      end
+
+      # Convenience method for the default schema
+      #
+      def default_schema 
+        Apartment.default_schema
       end
 
     end
