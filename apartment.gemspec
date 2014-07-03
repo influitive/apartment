@@ -18,6 +18,22 @@ Gem::Specification.new do |s|
   s.homepage = %q{https://github.com/influitive/apartment}
   s.licenses = ["MIT"]
 
+  s.post_install_message = <<-MSG
+  ********************************
+
+  Apartment Deprecation Warning
+
+  `Apartment::Database` has been deprecated in favour of `Apartment::Tenant`.
+  Please update your application to use the new constant as it is a more
+  appropriate abstraction.
+
+  To further this, DatabaseNotFound, SchemaNotFound, DatabaseExists and
+  SchemaExists exceptions will all be removed, you should instead use
+  TenantNotFound and TenantExists to catch any exceptions.
+
+  ********************************
+  MSG
+
   s.add_dependency 'activerecord',    '>= 3.1.2', '< 4.2'   # must be >= 3.1.2 due to bug in prepared_statements
   s.add_dependency 'rack',            '>= 1.3.6'
 
