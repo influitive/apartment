@@ -253,7 +253,15 @@ schema_search_path: "public,shared_extensions"
 ...
 ```
 
-This would be for a config with `default_schema` set to `public` and `persistent_schemas` set to `['shared_extensions']`. **Note**: This only works on Heroku with [Rails 4.1+](https://devcenter.heroku.com/changelog-items/427). For older Rails versions Heroku regenerates a completely different `database.yml` for each deploy and your predefined `schema_search_path` will be deleted. ActiveRecord's `schema_search_path` will be the default `\"$user\",public`.
+This would be for a config with `default_schema` set to `public` and `persistent_schemas` set to `['shared_extensions']`. **Note**: This only works on Heroku with [Rails 4.1+](https://devcenter.heroku.com/changelog-items/427). For apps that use older Rails versions hosted on Heroku, the only way to properly setup is to start with a fresh PostgreSQL instance:
+
+1. Append `?schema_search_path=public,hstore` to your `DATABASE_URL` environment variable, by this you don't have to revise the `database.yml` file (which is impossible since Heroku regenerates a completely different and immutable `database.yml` of its own on each deploy)
+2. Run `heroku pg:psql` from your command line
+3. And then `DROP EXTENSION hstore;` (**Note:** This will drop all columns that use `hstore` type, so proceed with caution; only do this with a fresh PostgreSQL instance)
+4. Next: `CREATE SCHEMA IF NOT EXISTS hstore;`
+5. Finally: `CREATE EXTENSION IF NOT EXISTS hstore SCHEMA hstore;` and hit enter (`\q` to exit)
+
+To double check, login to the console of your Heroku app and see if `Apartment.connection.default_search_path` is `public,hstore`
 
 #### 3. Ensure the schema is in the apartment config
 ```ruby
