@@ -1,4 +1,9 @@
 # 0.25.0
+  * July 17, 2014
+
+  - Fixed a few vestiges of Apartment::Database
+
+# 0.25.0
   * July 3, 2014
 
   - [BREAKING CHANGE] - `Apartment::Database` is not deprecated in favour of
