@@ -1,4 +1,4 @@
-# 0.25.0
+# 0.25.1
   * July 17, 2014
 
   - Fixed a few vestiges of Apartment::Database
