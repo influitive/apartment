@@ -17,7 +17,12 @@ module Apartment
 
         database = @processor.call(request)
 
-        Apartment::Tenant.switch database if database
+        begin
+          Apartment::Tenant.switch database if database
+        rescue Apartment::SchemaNotFound => e
+          # Remove the subdomain
+          return redirect_to_full_site(request)
+        end
 
         @app.call(env)
       end
@@ -42,6 +47,10 @@ module Apartment
 
       def deprecation_warning
         warn "[DEPRECATED::Apartment] Use #parse_tenant_name instead of #parse_database_name -> #{self.class.name}"
+      end
+      
+      def redirect_to_full_site(request)
+        [301, {"Location" => request.url.sub(/\/\/(.+?)\./i, "//")}, self]
       end
     end
   end
