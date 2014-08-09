@@ -31,7 +31,7 @@ module Apartment
       #   @return {String} current tenant name
       #
       def current_database
-        warn "[Deprecation Warning] `current_database` is now deprecated, please use `current_tenant`"
+        ActiveSupport::Deprecation.warn "[Deprecation Warning] `current_database` is now deprecated, please use `current_tenant`"
         current_tenant
       end
 

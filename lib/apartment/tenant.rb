@@ -66,8 +66,11 @@ module Apartment
   end
 
   def self.const_missing(const_name)
-    super unless const_name == :Database
-    warn "`Apartment::Database` has been deprecated. Use `Apartment::Tenant` instead."
-    Tenant
+    if const_name == :Database
+      ActiveSupport::Deprecation.warn "`Apartment::Database` has been deprecated. Use `Apartment::Tenant` instead."
+      Tenant
+    else
+      super
+    end
   end
 end

@@ -41,7 +41,7 @@ module Apartment
       end
 
       def deprecation_warning
-        warn "[DEPRECATED::Apartment] Use #parse_tenant_name instead of #parse_database_name -> #{self.class.name}"
+        ActiveSupport::Deprecation.warn "[DEPRECATED::Apartment] Use #parse_tenant_name instead of #parse_database_name -> #{self.class.name}"
       end
     end
   end

@@ -69,22 +69,22 @@ module Apartment
     end
 
     def database_names
-      warn "[Deprecation Warning] `database_names` is now deprecated, please use `tenant_names`"
+      ActiveSupport::Deprecation.warn "[Deprecation Warning] `database_names` is now deprecated, please use `tenant_names`"
       tenant_names
     end
 
     def database_names=(names)
-      warn "[Deprecation Warning] `database_names=` is now deprecated, please use `tenant_names=`"
+      ActiveSupport::Deprecation.warn "[Deprecation Warning] `database_names=` is now deprecated, please use `tenant_names=`"
       self.tenant_names=(names)
     end
 
     def use_postgres_schemas
-      warn "[Deprecation Warning] `use_postgresql_schemas` is now deprecated, please use `use_schemas`"
+      ActiveSupport::Deprecation.warn "[Deprecation Warning] `use_postgresql_schemas` is now deprecated, please use `use_schemas`"
       use_schemas
     end
 
     def use_postgres_schemas=(to_use_or_not_to_use)
-      warn "[Deprecation Warning] `use_postgresql_schemas=` is now deprecated, please use `use_schemas=`"
+      ActiveSupport::Deprecation.warn "[Deprecation Warning] `use_postgresql_schemas=` is now deprecated, please use `use_schemas=`"
       self.use_schemas = to_use_or_not_to_use
     end
   end
