@@ -1,13 +1,13 @@
 module Apartment
-	module Deprecation
+  module Deprecation
 
-		def warn(message)
-			begin
-				ActiveSupport::Deprecation.warn message
-			rescue
-				warn message
-			end
-		end
+    def self.warn(message)
+      begin
+        ActiveSupport::Deprecation.warn message
+      rescue
+        warn message
+      end
+    end
 
-	end
+  end
 end
