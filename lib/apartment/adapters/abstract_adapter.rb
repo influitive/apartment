@@ -1,3 +1,5 @@
+require 'apartment/deprecation'
+
 module Apartment
   module Adapters
     class AbstractAdapter
@@ -31,7 +33,7 @@ module Apartment
       #   @return {String} current tenant name
       #
       def current_database
-        ActiveSupport::Deprecation.warn "[Deprecation Warning] `current_database` is now deprecated, please use `current_tenant`"
+        Apartment::Deprecation.warn "[Deprecation Warning] `current_database` is now deprecated, please use `current_tenant`"
         current_tenant
       end
 

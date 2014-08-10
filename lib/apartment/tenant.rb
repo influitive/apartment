@@ -1,4 +1,5 @@
 require 'forwardable'
+require 'apartment/deprecation'
 
 module Apartment
   #   The main entry point to Apartment functions
@@ -67,7 +68,7 @@ module Apartment
 
   def self.const_missing(const_name)
     if const_name == :Database
-      ActiveSupport::Deprecation.warn "`Apartment::Database` has been deprecated. Use `Apartment::Tenant` instead."
+      Apartment::Deprecation.warn "`Apartment::Database` has been deprecated. Use `Apartment::Tenant` instead."
       Tenant
     else
       super

@@ -1,5 +1,6 @@
 require 'rack/request'
 require 'apartment/tenant'
+require 'apartment/deprecation'
 
 module Apartment
   module Elevators
@@ -41,7 +42,7 @@ module Apartment
       end
 
       def deprecation_warning
-        ActiveSupport::Deprecation.warn "[DEPRECATED::Apartment] Use #parse_tenant_name instead of #parse_database_name -> #{self.class.name}"
+        Apartment::Deprecation.warn "[DEPRECATED::Apartment] Use #parse_tenant_name instead of #parse_database_name -> #{self.class.name}"
       end
     end
   end
