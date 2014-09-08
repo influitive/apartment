@@ -1,3 +1,8 @@
+# 0.25.2
+  * Sept 8, 2014
+
+  - Heroku fix on `assets:precompile` - pull/169 [rabbitt]
+
 # 0.25.1
   * July 17, 2014
 
