@@ -24,7 +24,7 @@ describe Apartment::Elevators::HostHash do
 
   describe "#call" do
     it "switches to the proper tenant" do
-      Apartment::Tenant.should_receive(:switch).with('example_tenant')
+      Apartment::Tenant.should_receive(:switch!).with('example_tenant')
 
       elevator.call('HTTP_HOST' => 'example.com')
     end

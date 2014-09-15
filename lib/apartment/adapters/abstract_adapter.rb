@@ -69,11 +69,11 @@ module Apartment
       #
       def process(tenant = nil)
         previous_tenant = current_tenant
-        switch(tenant)
+        switch!(tenant)
         yield if block_given?
 
       ensure
-        switch(previous_tenant) rescue reset
+        switch!(previous_tenant) rescue reset
       end
 
       #   Establish a new connection for each specific excluded model
@@ -95,7 +95,7 @@ module Apartment
       #
       #   @param {String} tenant Database name
       #
-      def switch(tenant = nil)
+      def switch!(tenant = nil)
         # Just connect to default db and return
         return reset if tenant.nil?
 

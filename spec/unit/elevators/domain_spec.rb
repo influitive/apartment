@@ -24,7 +24,7 @@ describe Apartment::Elevators::Domain do
 
   describe "#call" do
     it "switches to the proper tenant" do
-      Apartment::Tenant.should_receive(:switch).with('example')
+      Apartment::Tenant.should_receive(:switch!).with('example')
 
       elevator.call('HTTP_HOST' => 'www.example.com')
     end

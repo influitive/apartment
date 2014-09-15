@@ -63,7 +63,7 @@ shared_examples_for "a generic apartment adapter" do
     # We're often finding when using Apartment in tests, the `current_tenant` (ie the previously connect to db)
     # gets dropped, but process will try to return to that db in a test.  We should just reset if it doesn't exist
     it "should not throw exception if current_tenant is no longer accessible" do
-      subject.switch(db2)
+      subject.switch!(db2)
 
       expect {
         subject.process(db1){ subject.drop(db2) }
@@ -73,33 +73,33 @@ shared_examples_for "a generic apartment adapter" do
 
   describe "#reset" do
     it "should reset connection" do
-      subject.switch(db1)
+      subject.switch!(db1)
       subject.reset
       subject.current_tenant.should == default_tenant
     end
   end
 
-  describe "#switch" do
+  describe "#switch!" do
     it "should connect to new db" do
-      subject.switch(db1)
+      subject.switch!(db1)
       subject.current_tenant.should == db1
     end
 
     it "should reset connection if database is nil" do
-      subject.switch
+      subject.switch!
       subject.current_tenant.should == default_tenant
     end
 
     it "should raise an error if database is invalid" do
       expect {
-        subject.switch 'unknown_database'
+        subject.switch! 'unknown_database'
       }.to raise_error(Apartment::ApartmentError)
     end
   end
 
   describe "#current_tenant" do
     it "should return the current db name" do
-      subject.switch(db1)
+      subject.switch!(db1)
       subject.current_tenant.should == db1
       subject.current.should == db1
     end
