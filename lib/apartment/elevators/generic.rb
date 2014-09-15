@@ -18,7 +18,7 @@ module Apartment
 
         database = @processor.call(request)
 
-        Apartment::Tenant.switch database if database
+        Apartment::Tenant.switch! database if database
 
         @app.call(env)
       end

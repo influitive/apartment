@@ -15,7 +15,7 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
         ActiveRecord::Base.connection.execute("SELECT nspname FROM pg_namespace;").collect { |row| row['nspname'] }
       end
 
-      let(:default_tenant) { subject.process { ActiveRecord::Base.connection.schema_search_path.gsub('"', '') } }
+      let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.schema_search_path.gsub('"', '') } }
 
       it_should_behave_like "a generic apartment adapter"
       it_should_behave_like "a schema based apartment adapter"
@@ -30,7 +30,7 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
         ActiveRecord::Base.connection.execute("SELECT nspname FROM pg_namespace;").collect { |row| row['nspname'] }
       end
 
-      let(:default_tenant) { subject.process { ActiveRecord::Base.connection.schema_search_path.gsub('"', '') } }
+      let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.schema_search_path.gsub('"', '') } }
 
       it_should_behave_like "a generic apartment adapter"
       it_should_behave_like "a schema based apartment adapter"
@@ -45,7 +45,7 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
         connection.execute("select datname from pg_database;").collect { |row| row['datname'] }
       end
 
-      let(:default_tenant) { subject.process { ActiveRecord::Base.connection.current_database } }
+      let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.current_database } }
 
       it_should_behave_like "a generic apartment adapter"
       it_should_behave_like "a connection based apartment adapter"

@@ -67,7 +67,7 @@ One can optionally use the full database creation instead if they want, though t
 To switch tenants using Apartment, use the following command:
 
 ```ruby
-Apartment::Tenant.switch('tenant_name')
+Apartment::Tenant.switch!('tenant_name')
 ```
 
 When switch is called, all requests coming to ActiveRecord will be routed to the tenant
@@ -196,12 +196,12 @@ config.persistent_schemas = ['some', 'other', 'schemas']
 ```
 
 ### Installing Extensions into Persistent Schemas
-Persistent Schemas have numerous useful applications.  [Hstore](http://www.postgresql.org/docs/9.1/static/hstore.html), for instance, is a popular storage engine for Postgresql.  In order to use extensions such as Hstore, you have to install it to a specific schema and have that always in the `schema_search_path`.  
+Persistent Schemas have numerous useful applications.  [Hstore](http://www.postgresql.org/docs/9.1/static/hstore.html), for instance, is a popular storage engine for Postgresql.  In order to use extensions such as Hstore, you have to install it to a specific schema and have that always in the `schema_search_path`.
 
 When using extensions, keep in mind:
 * Extensions can only be installed into one schema per database, so we will want to install it into a schema that is always available in the `schema_search_path`
-* The schema and extension need to be created in the database *before* they are referenced in migrations, database.yml or apartment. 
-* There does not seem to be a way to create the schema and extension using standard rails migrations. 
+* The schema and extension need to be created in the database *before* they are referenced in migrations, database.yml or apartment.
+* There does not seem to be a way to create the schema and extension using standard rails migrations.
 * Rails db:test:prepare deletes and recreates the database, so it needs to be easy for the extension schema to be recreated here.
 
 #### 1. Ensure the extensions schema is created when the database is created

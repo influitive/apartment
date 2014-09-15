@@ -86,7 +86,7 @@ describe Apartment::Tenant do
         after { subject.drop db1 }
 
         it 'has a threadsafe adapter' do
-          subject.switch(db1)
+          subject.switch!(db1)
           thread = Thread.new { subject.current_tenant.should == Apartment.default_schema }
           thread.join
           subject.current_tenant.should == db1
@@ -109,12 +109,12 @@ describe Apartment::Tenant do
 
       describe "#create" do
         it "should seed data" do
-          subject.switch db1
+          subject.switch! db1
           User.count.should be > 0
         end
       end
 
-      describe "#switch" do
+      describe "#switch!" do
 
         let(:x){ rand(3) }
 
@@ -124,16 +124,16 @@ describe Apartment::Tenant do
           after{ subject.drop db2 }
 
           it "should create a model instance in the current schema" do
-            subject.switch db2
+            subject.switch! db2
             db2_count = User.count + x.times{ User.create }
 
-            subject.switch db1
+            subject.switch! db1
             db_count = User.count + x.times{ User.create }
 
-            subject.switch db2
+            subject.switch! db2
             User.count.should == db2_count
 
-            subject.switch db1
+            subject.switch! db1
             User.count.should == db_count
           end
         end
@@ -151,7 +151,7 @@ describe Apartment::Tenant do
             subject.reset # ensure we're on public schema
             count = Company.count + x.times{ Company.create }
 
-            subject.switch db1
+            subject.switch! db1
             x.times{ Company.create }
             Company.count.should == count + x
             subject.reset

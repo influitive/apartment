@@ -35,7 +35,7 @@ apartment_namespace = namespace :apartment do
     tenants.each do |tenant|
       begin
         puts("Seeding #{tenant} tenant")
-        Apartment::Tenant.process(tenant) do
+        Apartment::Tenant.switch(tenant) do
           Apartment::Tenant.seed
         end
       rescue Apartment::TenantNotFound => e
