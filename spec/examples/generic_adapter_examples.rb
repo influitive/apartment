@@ -19,7 +19,7 @@ shared_examples_for "a generic apartment adapter" do
     end
 
     it "should load schema.rb to new schema" do
-      subject.process(db1) do
+      subject.switch(db1) do
         connection.tables.should include('companies')
       end
     end
@@ -37,7 +37,7 @@ shared_examples_for "a generic apartment adapter" do
 
       subject.current_tenant.should_not == db2
 
-      subject.process(db2){ User.count.should == @count + 1 }
+      subject.switch(db2){ User.count.should == @count + 1 }
     end
   end
 
@@ -48,25 +48,25 @@ shared_examples_for "a generic apartment adapter" do
     end
   end
 
-  describe "#process" do
+  describe "#switch" do
     it "should connect" do
-      subject.process(db1) do
+      subject.switch(db1) do
         subject.current_tenant.should == db1
       end
     end
 
     it "should reset" do
-      subject.process(db1)
+      subject.switch(db1)
       subject.current_tenant.should == default_tenant
     end
 
     # We're often finding when using Apartment in tests, the `current_tenant` (ie the previously connect to db)
-    # gets dropped, but process will try to return to that db in a test.  We should just reset if it doesn't exist
+    # gets dropped, but switch will try to return to that db in a test.  We should just reset if it doesn't exist
     it "should not throw exception if current_tenant is no longer accessible" do
       subject.switch!(db2)
 
       expect {
-        subject.process(db1){ subject.drop(db2) }
+        subject.switch(db1){ subject.drop(db2) }
       }.to_not raise_error
     end
   end

@@ -18,7 +18,7 @@ module Apartment
       def create(tenant)
         create_tenant(tenant)
 
-        process(tenant) do
+        switch(tenant) do
           import_database_schema
 
           # Seed data if appropriate
@@ -67,7 +67,7 @@ module Apartment
       #
       #   @param {String?} tenant Database or schema to connect to
       #
-      def process(tenant = nil)
+      def switch(tenant = nil)
         previous_tenant = current_tenant
         switch!(tenant)
         yield if block_given?

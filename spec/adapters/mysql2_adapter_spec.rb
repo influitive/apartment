@@ -10,7 +10,7 @@ describe Apartment::Adapters::Mysql2Adapter, database: :mysql do
       ActiveRecord::Base.connection.execute("SELECT schema_name FROM information_schema.schemata").collect { |row| row[0] }
     end
 
-    let(:default_tenant) { subject.process { ActiveRecord::Base.connection.current_database } }
+    let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.current_database } }
 
     context "using - the equivalent of - schemas" do
       before { Apartment.use_schemas = true }

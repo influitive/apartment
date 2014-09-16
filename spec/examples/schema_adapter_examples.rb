@@ -67,7 +67,7 @@ shared_examples_for "a schema based apartment adapter" do
 
       connection.schema_search_path.should_not start_with %{"#{schema2}"}
 
-      subject.process(schema2){ User.count.should == @count + 1 }
+      subject.switch(schema2){ User.count.should == @count + 1 }
     end
 
     context "numeric database names" do
@@ -106,15 +106,15 @@ shared_examples_for "a schema based apartment adapter" do
     end
   end
 
-  describe "#process" do
+  describe "#switch" do
     it "should connect" do
-      subject.process(schema1) do
+      subject.switch(schema1) do
         connection.schema_search_path.should start_with %{"#{schema1}"}
       end
     end
 
     it "should reset" do
-      subject.process(schema1)
+      subject.switch(schema1)
       connection.schema_search_path.should start_with %{"#{public_schema}"}
     end
   end

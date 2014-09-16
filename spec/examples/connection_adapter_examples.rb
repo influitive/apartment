@@ -3,7 +3,7 @@ require 'spec_helper'
 shared_examples_for "a connection based apartment adapter" do
   include Apartment::Spec::AdapterRequirements
 
-  let(:default_tenant){ subject.process{ ActiveRecord::Base.connection.current_database } }
+  let(:default_tenant){ subject.switch{ ActiveRecord::Base.connection.current_database } }
 
   describe "#init" do
     it "should process model exclusions" do
