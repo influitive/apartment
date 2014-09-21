@@ -107,14 +107,11 @@ shared_examples_for "a schema based apartment adapter" do
   end
 
   describe "#switch" do
-    it "should connect" do
+    it "connects and resets" do
       subject.switch(schema1) do
         connection.schema_search_path.should start_with %{"#{schema1}"}
       end
-    end
 
-    it "should reset" do
-      subject.switch(schema1)
       connection.schema_search_path.should start_with %{"#{public_schema}"}
     end
   end

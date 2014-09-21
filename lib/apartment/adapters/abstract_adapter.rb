@@ -63,17 +63,43 @@ module Apartment
         raise DatabaseNotFound, "The tenant #{environmentify(tenant)} cannot be found"
       end
 
+      #   Switch to new connection (or schema if appopriate)
+      #
+      #   @param {String} tenant Database name
+      #
+      def switch!(tenant = nil)
+        # Just connect to default db and return
+        return reset if tenant.nil?
+
+        connect_to_new(tenant).tap do
+          ActiveRecord::Base.connection.clear_query_cache
+        end
+      end
+
       #   Connect to tenant, do your biz, switch back to previous tenant
       #
       #   @param {String?} tenant Database or schema to connect to
       #
       def switch(tenant = nil)
-        previous_tenant = current_tenant
-        switch!(tenant)
-        yield if block_given?
+        if block_given?
+          begin
+            previous_tenant = current_tenant
+            switch!(tenant)
+            yield
 
-      ensure
-        switch!(previous_tenant) rescue reset
+          ensure
+            switch!(previous_tenant) rescue reset
+          end
+        else
+          Apartment::Deprecation.warn("[Deprecation Warning] `switch` now requires a block reset to the default tenant after the block. Please use `switch!` instead if you don't want this")
+          switch!(tenant)
+        end
+      end
+
+      #   [Deprecated]
+      def process(tenant = nil, &block)
+        Apartment::Deprecation.warn("[Deprecation Warning] `process` is now deprecated. Please use `switch`")
+        switch(tenant, &block)
       end
 
       #   Establish a new connection for each specific excluded model
@@ -89,19 +115,6 @@ module Apartment
       #
       def reset
         Apartment.establish_connection @config
-      end
-
-      #   Switch to new connection (or schema if appopriate)
-      #
-      #   @param {String} tenant Database name
-      #
-      def switch!(tenant = nil)
-        # Just connect to default db and return
-        return reset if tenant.nil?
-
-        connect_to_new(tenant).tap do
-          ActiveRecord::Base.connection.clear_query_cache
-        end
       end
 
       #   Load the rails seed file into the db
