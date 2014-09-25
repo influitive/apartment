@@ -34,6 +34,9 @@ Apartment.configure do |config|
 
   # supply list of database names for migrations to run on
   config.tenant_names = lambda{ ToDo_Tenant_Or_User_Model.pluck :database }
+
+  # Specify a connection other than ActiveRecord::Base for apartment to use (only needed if your models are using a different connection)
+  # config.connection_class = ActiveRecord::Base
 end
 
 ##
