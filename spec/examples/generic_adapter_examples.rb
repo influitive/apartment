@@ -117,4 +117,30 @@ shared_examples_for "a generic apartment adapter" do
       subject.current.should == db1
     end
   end
+
+  describe "#all" do
+    it "iterates over all tenants by default" do
+      result = []
+      Apartment.tenant_names = [db2, db1]
+
+      subject.all do |tenant|
+        result << tenant
+        expect(subject.current).to eq(tenant)
+      end
+
+      expect(result).to eq([db2, db1])
+    end
+
+    it "iterates over the given tenants" do
+      result = []
+      Apartment.tenant_names = [db2]
+
+      subject.all([db2]) do |tenant|
+        result << tenant
+        expect(subject.current).to eq(tenant)
+      end
+
+      expect(result).to eq([db2])
+    end
+  end
 end

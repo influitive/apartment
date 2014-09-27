@@ -102,6 +102,14 @@ module Apartment
         switch(tenant, &block)
       end
 
+      #   Iterate over all tenants, switch to tenant and yield tenant name
+      #
+      def all(tenants = Apartment.tenant_names)
+        tenants.each do |tenant|
+          switch(tenant){ yield tenant }
+        end
+      end
+
       #   Establish a new connection for each specific excluded model
       #
       def process_excluded_models
