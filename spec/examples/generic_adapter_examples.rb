@@ -118,12 +118,12 @@ shared_examples_for "a generic apartment adapter" do
     end
   end
 
-  describe "#all" do
-    it "iterates over all tenants by default" do
+  describe "#each" do
+    it "iterates over each tenant by default" do
       result = []
       Apartment.tenant_names = [db2, db1]
 
-      subject.all do |tenant|
+      subject.each do |tenant|
         result << tenant
         expect(subject.current).to eq(tenant)
       end
@@ -135,7 +135,7 @@ shared_examples_for "a generic apartment adapter" do
       result = []
       Apartment.tenant_names = [db2]
 
-      subject.all([db2]) do |tenant|
+      subject.each([db2]) do |tenant|
         result << tenant
         expect(subject.current).to eq(tenant)
       end

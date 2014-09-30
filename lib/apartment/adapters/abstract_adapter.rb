@@ -104,7 +104,7 @@ module Apartment
 
       #   Iterate over all tenants, switch to tenant and yield tenant name
       #
-      def all(tenants = Apartment.tenant_names)
+      def each(tenants = Apartment.tenant_names)
         tenants.each do |tenant|
           switch(tenant){ yield tenant }
         end
