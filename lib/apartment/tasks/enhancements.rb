@@ -1,26 +1,36 @@
 # Require this file to append Apartment rake tasks to ActiveRecord db rake tasks
 # Enabled by default in the initializer
 
-Rake::Task["db:migrate"].enhance do
-  Rake::Task["apartment:migrate"].invoke
+module Apartment
+  class RakeTaskEnhancer
+    
+    TASKS = %w(db:migrate db:rollback db:migrate:up db:migrate:down db:migrate:redo db:seed)
+    
+    # This is a bit convoluted, but helps solve problems when using Apartment within an engine
+    # See spec/integration/use_within_an_engine.rb
+    
+    class << self
+      def enhance!
+        TASKS.each do |name|
+          task = Rake::Task[name]
+          task.enhance do
+            if should_enhance?
+              enhance_task(task)
+            end
+          end
+        end
+      end
+    
+      def should_enhance?
+        Apartment.db_migrate_tenants
+      end
+    
+      def enhance_task(task)
+        Rake::Task[task.name.sub(/db:/, 'apartment:')].invoke
+      end
+    end
+    
+  end
 end
 
-Rake::Task["db:rollback"].enhance do
-  Rake::Task["apartment:rollback"].invoke
-end
-
-Rake::Task["db:migrate:up"].enhance do
-  Rake::Task["apartment:migrate:up"].invoke
-end
-
-Rake::Task["db:migrate:down"].enhance do
-  Rake::Task["apartment:migrate:down"].invoke
-end
-
-Rake::Task["db:migrate:redo"].enhance do
-  Rake::Task["apartment:migrate:redo"].invoke
-end
-
-Rake::Task["db:seed"].enhance do
-  Rake::Task["apartment:seed"].invoke
-end
+Apartment::RakeTaskEnhancer.enhance!
