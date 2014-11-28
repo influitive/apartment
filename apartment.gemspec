@@ -27,10 +27,6 @@ Gem::Specification.new do |s|
   Please update your application to use the new constant as it is a more
   appropriate abstraction.
 
-  To further this, DatabaseNotFound, SchemaNotFound, DatabaseExists and
-  SchemaExists exceptions will all be removed, you should instead use
-  TenantNotFound and TenantExists to catch any exceptions.
-
   ********************************
   MSG
 

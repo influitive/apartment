@@ -60,7 +60,7 @@ module Apartment
         Apartment.connection.execute("DROP DATABASE #{environmentify(tenant)}" )
 
       rescue *rescuable_exceptions
-        raise DatabaseNotFound, "The tenant #{environmentify(tenant)} cannot be found"
+        raise TenantNotFound, "The tenant #{environmentify(tenant)} cannot be found"
       end
 
       #   Switch to new connection (or schema if appopriate)
@@ -142,7 +142,7 @@ module Apartment
         Apartment.connection.create_database( environmentify(tenant) )
 
       rescue *rescuable_exceptions
-        raise DatabaseExists, "The tenant #{environmentify(tenant)} already exists."
+        raise TenantExists, "The tenant #{environmentify(tenant)} already exists."
       end
 
       #   Connect to new tenant
@@ -154,7 +154,7 @@ module Apartment
         Apartment.connection.active?   # call active? to manually check if this connection is valid
 
       rescue *rescuable_exceptions
-        raise DatabaseNotFound, "The tenant #{environmentify(tenant)} cannot be found."
+        raise TenantNotFound, "The tenant #{environmentify(tenant)} cannot be found."
       end
 
       #   Prepend the environment if configured and the environment isn't already there

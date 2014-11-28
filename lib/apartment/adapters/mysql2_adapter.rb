@@ -25,7 +25,7 @@ module Apartment
         super
       rescue Mysql2::Error
         Apartment::Tenant.reset
-        raise DatabaseNotFound, "Cannot find tenant #{environmentify(tenant)}"
+        raise TenantNotFound, "Cannot find tenant #{environmentify(tenant)}"
       end
     end
 
@@ -62,7 +62,7 @@ module Apartment
 
       rescue ActiveRecord::StatementInvalid
         Apartment::Tenant.reset
-        raise DatabaseNotFound, "Cannot find tenant #{environmentify(tenant)}"
+        raise TenantNotFound, "Cannot find tenant #{environmentify(tenant)}"
       end
 
       def process_excluded_model(model)

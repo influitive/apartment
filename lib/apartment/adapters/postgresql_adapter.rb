@@ -20,7 +20,7 @@ module Apartment
         Apartment.connection.execute(%{DROP DATABASE "#{tenant}"})
 
       rescue *rescuable_exceptions
-        raise DatabaseNotFound, "The tenant #{tenant} cannot be found"
+        raise TenantNotFound, "The tenant #{tenant} cannot be found"
       end
 
     private
@@ -47,7 +47,7 @@ module Apartment
         Apartment.connection.execute(%{DROP SCHEMA "#{tenant}" CASCADE})
 
       rescue *rescuable_exceptions
-        raise SchemaNotFound, "The schema #{tenant.inspect} cannot be found."
+        raise TenantNotFound, "The schema #{tenant.inspect} cannot be found."
       end
 
       #   Reset search path to default search_path
@@ -89,7 +89,7 @@ module Apartment
         Apartment.connection.schema_search_path = full_search_path
 
       rescue *rescuable_exceptions
-        raise SchemaNotFound, "One of the following schema(s) is invalid: #{tenant}, #{full_search_path}"
+        raise TenantNotFound, "One of the following schema(s) is invalid: \"#{tenant}\" #{full_search_path}"
       end
 
       #   Create the new schema
@@ -98,7 +98,7 @@ module Apartment
         Apartment.connection.execute(%{CREATE SCHEMA "#{tenant}"})
 
       rescue *rescuable_exceptions
-        raise SchemaExists, "The schema #{tenant} already exists."
+        raise TenantExists, "The schema #{tenant} already exists."
       end
 
     private
@@ -198,13 +198,13 @@ module Apartment
 
       # Convenience method for current database name
       #
-      def dbname 
+      def dbname
         ActiveRecord::Base.connection_config[:database]
       end
 
       # Convenience method for the default schema
       #
-      def default_schema 
+      def default_schema
         Apartment.default_schema
       end
 

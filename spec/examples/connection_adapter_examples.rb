@@ -20,7 +20,7 @@ shared_examples_for "a connection based apartment adapter" do
     it "should raise an error for unknown database" do
       expect {
         subject.drop 'unknown_database'
-      }.to raise_error(Apartment::DatabaseNotFound)
+      }.to raise_error(Apartment::TenantNotFound)
     end
   end
 
@@ -28,7 +28,7 @@ shared_examples_for "a connection based apartment adapter" do
     it "should raise an error if database is invalid" do
       expect {
         subject.switch! 'unknown_database'
-      }.to raise_error(Apartment::DatabaseNotFound)
+      }.to raise_error(Apartment::TenantNotFound)
     end
   end
 end

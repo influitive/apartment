@@ -99,18 +99,6 @@ module Apartment
   # Tenant specified is unknown
   TenantNotFound = Class.new(ApartmentError)
 
-  # Raised when database cannot find the specified database
-  DatabaseNotFound = Class.new(TenantNotFound)
-
-  # Raised when database cannot find the specified schema
-  SchemaNotFound = Class.new(TenantNotFound)
-
   # The Tenant attempting to be created already exists
   TenantExists = Class.new(ApartmentError)
-
-  # Raised when trying to create a database that already exists
-  DatabaseExists = Class.new(TenantExists)
-
-  # Raised when trying to create a schema that already exists
-  SchemaExists = Class.new(TenantExists)
 end

@@ -23,7 +23,7 @@ module Apartment
         Apartment.connection.create_database(environmentify(tenant), { :thisisahack => '' })
 
       rescue *rescuable_exceptions
-        raise DatabaseExists, "The tenant #{environmentify(tenant)} already exists."
+        raise TenantExists, "The tenant #{environmentify(tenant)} already exists."
       end
 
       #   Return a new config that is multi-tenanted
@@ -54,7 +54,7 @@ module Apartment
         Apartment.connection.schema_search_path = full_search_path
 
       rescue ActiveRecord::StatementInvalid, ActiveRecord::JDBCError
-        raise SchemaNotFound, "One of the following schema(s) is invalid: #{full_search_path}"
+        raise TenantNotFound, "One of the following schema(s) is invalid: #{full_search_path}"
       end
 
     private

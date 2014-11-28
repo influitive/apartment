@@ -88,7 +88,7 @@ shared_examples_for "a schema based apartment adapter" do
     it "should raise an error for unknown database" do
       expect {
         subject.drop "unknown_database"
-      }.to raise_error(Apartment::SchemaNotFound)
+      }.to raise_error(Apartment::TenantNotFound)
     end
 
     context "numeric database names" do
@@ -164,7 +164,7 @@ shared_examples_for "a schema based apartment adapter" do
     it "should raise an error if schema is invalid" do
       expect {
         subject.switch! 'unknown_schema'
-      }.to raise_error(Apartment::SchemaNotFound)
+      }.to raise_error(Apartment::TenantNotFound)
     end
 
     context "numeric databases" do
