@@ -43,7 +43,7 @@ module Apartment
         reset
       end
 
-      #   Reset current_tenant to the default_tenant
+      #   Reset current tenant to the default_tenant
       #
       def reset
         Apartment.connection.execute "use #{default_tenant}"
@@ -57,7 +57,7 @@ module Apartment
 
     protected
 
-      #   Set schema current_tenant to new db
+      #   Connect to new tenant
       #
       def connect_to_new(tenant)
         return reset if tenant.nil?

@@ -210,17 +210,15 @@ shared_examples_for "a schema based apartment adapter" do
     end
   end
 
-  describe "#current_tenant" do
+  describe "#current" do
     it "should return the current schema name" do
       subject.switch!(schema1)
-      subject.current_tenant.should == schema1
       subject.current.should == schema1
     end
 
     context "persistent_schemas", :persistent_schemas => true do
       it "should exlude persistent_schemas" do
         subject.switch!(schema1)
-        subject.current_tenant.should == schema1
         subject.current.should == schema1
       end
     end

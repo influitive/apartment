@@ -34,8 +34,8 @@ module Apartment
       #   @return {String} current tenant name
       #
       def current_database
-        Apartment::Deprecation.warn "[Deprecation Warning] `current_database` is now deprecated, please use `current_tenant`"
-        current_tenant
+        Apartment::Deprecation.warn "[Deprecation Warning] `current_database` is now deprecated, please use `current`"
+        current
       end
 
       #   Get the current tenant name
@@ -43,13 +43,14 @@ module Apartment
       #   @return {String} current tenant name
       #
       def current_tenant
-        Apartment.connection.current_database
+        Apartment::Deprecation.warn "[Deprecation Warning] `current_tenant` is now deprecated, please use `current`"
+        current
       end
 
       #   Note alias_method here doesn't work with inheritence apparently ??
       #
       def current
-        current_tenant
+        Apartment.connection.current_database
       end
 
       #   Return the original public tenant
@@ -92,7 +93,7 @@ module Apartment
       def switch(tenant = nil)
         if block_given?
           begin
-            previous_tenant = current_tenant
+            previous_tenant = current
             switch!(tenant)
             yield
 

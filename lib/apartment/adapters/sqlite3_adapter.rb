@@ -22,7 +22,7 @@ module Apartment
         File.delete(database_file(tenant))
       end
 
-      def current_tenant
+      def current
         File.basename(Apartment.connection.instance_variable_get(:@config)[:database], '.sqlite3')
       end
 

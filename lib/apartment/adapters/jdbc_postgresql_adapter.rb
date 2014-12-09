@@ -50,7 +50,7 @@ module Apartment
         return reset if tenant.nil?
         raise ActiveRecord::StatementInvalid.new("Could not find schema #{tenant}") unless Apartment.connection.all_schemas.include? tenant.to_s
 
-        @current_tenant = tenant.to_s
+        @current = tenant.to_s
         Apartment.connection.schema_search_path = full_search_path
 
       rescue ActiveRecord::StatementInvalid, ActiveRecord::JDBCError

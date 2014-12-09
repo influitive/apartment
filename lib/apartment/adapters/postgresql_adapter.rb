@@ -69,12 +69,12 @@ module Apartment
       #   @return {String} default schema search path
       #
       def reset
-        @current_tenant = default_tenant
+        @current = default_tenant
         Apartment.connection.schema_search_path = full_search_path
       end
 
-      def current_tenant
-        @current_tenant || default_tenant
+      def current
+        @current || default_tenant
       end
 
     protected
@@ -85,7 +85,7 @@ module Apartment
         return reset if tenant.nil?
         raise ActiveRecord::StatementInvalid.new("Could not find schema #{tenant}") unless Apartment.connection.schema_exists? tenant
 
-        @current_tenant = tenant.to_s
+        @current = tenant.to_s
         Apartment.connection.schema_search_path = full_search_path
 
       rescue *rescuable_exceptions
@@ -110,7 +110,7 @@ module Apartment
       end
 
       def persistent_schemas
-        [@current_tenant, Apartment.persistent_schemas].flatten
+        [@current, Apartment.persistent_schemas].flatten
       end
     end
 
@@ -173,7 +173,7 @@ module Apartment
       #   @return {String} patched raw SQL dump
       #
       def patch_search_path(sql)
-        search_path = "SET search_path = #{self.current_tenant}, #{default_tenant};"
+        search_path = "SET search_path = #{current}, #{default_tenant};"
 
         sql
           .split("\n")
