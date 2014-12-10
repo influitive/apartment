@@ -37,7 +37,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rake',         '~> 0.9'
   s.add_development_dependency 'rspec-rails',  '~> 2.14'
   s.add_development_dependency 'guard-rspec',  '~> 4.2'
-  s.add_development_dependency 'capybara',     '~> 1.0.0'
+  s.add_development_dependency 'capybara',     '~> 2.0'
 
   if defined?(JRUBY_VERSION)
     s.add_development_dependency 'activerecord-jdbc-adapter'

@@ -26,7 +26,7 @@ module Apartment
 
             Apartment.excluded_models.each do |model|
               klass = model.constantize
-              
+
               Apartment.connection_class.remove_connection(klass)
               klass.clear_all_connections!
               klass.reset_table_name
@@ -39,7 +39,7 @@ module Apartment
       end
 
       def database_config
-        db = example.metadata.fetch(:database, :postgresql)
+        db = RSpec.current_example.metadata.fetch(:database, :postgresql)
         Apartment::Test.config['connections'][db.to_s].symbolize_keys
       end
     end

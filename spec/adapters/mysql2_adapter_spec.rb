@@ -18,7 +18,9 @@ describe Apartment::Adapters::Mysql2Adapter, database: :mysql do
       it_should_behave_like "a generic apartment adapter"
 
       describe "#default_tenant" do
-        its(:default_tenant){ should == config[:database] }
+        it "is set to the original db from config" do
+          expect(subject.default_tenant).to eq(config[:database])
+        end
       end
 
       describe "#init" do
