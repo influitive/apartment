@@ -43,8 +43,10 @@ module Apartment
     end
 
     def default_schema
-      @default_schema || "public"
+      @default_schema || "public" # TODO 'public' is postgres specific
     end
+    alias :default_tenant :default_schema
+    alias :default_tenant= :default_schema=
 
     def persistent_schemas
       @persistent_schemas || []

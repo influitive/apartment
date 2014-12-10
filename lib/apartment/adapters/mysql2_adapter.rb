@@ -30,8 +30,6 @@ module Apartment
     end
 
     class Mysql2SchemaAdapter < AbstractAdapter
-      attr_reader :default_tenant
-
       def initialize(config)
         super
 

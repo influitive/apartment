@@ -3,6 +3,7 @@ require 'apartment/deprecation'
 module Apartment
   module Adapters
     class AbstractAdapter
+      attr_writer :default_tenant
 
       #   @constructor
       #   @param {Hash} config Database config
@@ -50,6 +51,15 @@ module Apartment
       def current
         current_tenant
       end
+
+      #   Return the original public tenant
+      #
+      #   @return {String} default tenant name
+      #
+      def default_tenant
+        @default_tenant || Apartment.default_tenant
+      end
+      alias :default_schema :default_tenant # TODO deprecate default_schema
 
       #   Drop the tenant
       #

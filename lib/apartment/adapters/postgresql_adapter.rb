@@ -59,7 +59,7 @@ module Apartment
             # Ensure that if a schema *was* set, we override
             table_name = klass.table_name.split('.', 2).last
 
-            klass.table_name = "#{Apartment.default_schema}.#{table_name}"
+            klass.table_name = "#{default_tenant}.#{table_name}"
           end
         end
       end
@@ -69,12 +69,12 @@ module Apartment
       #   @return {String} default schema search path
       #
       def reset
-        @current_tenant = Apartment.default_schema
+        @current_tenant = default_tenant
         Apartment.connection.schema_search_path = full_search_path
       end
 
       def current_tenant
-        @current_tenant || Apartment.default_schema
+        @current_tenant || default_tenant
       end
 
     protected
@@ -155,9 +155,9 @@ module Apartment
         #   .map! {|t| "-T #{t}"}
         #   .join(' ')
 
-        # `pg_dump -s -x -O -n #{default_schema} #{excluded_tables} #{dbname}`
+        # `pg_dump -s -x -O -n #{default_tenant} #{excluded_tables} #{dbname}`
 
-        `pg_dump -s -x -O -n #{default_schema} #{dbname}`
+        `pg_dump -s -x -O -n #{default_tenant} #{dbname}`
       end
 
       #   Dump data from schema_migrations table
@@ -165,7 +165,7 @@ module Apartment
       #   @return {String} raw SQL contaning inserts with data from schema_migrations
       #
       def pg_dump_schema_migrations_data
-        `pg_dump -a --inserts -t schema_migrations -n #{default_schema} #{dbname}`
+        `pg_dump -a --inserts -t schema_migrations -n #{default_tenant} #{dbname}`
       end
 
       #   Remove "SET search_path ..." line from SQL dump and prepend search_path set to current tenant
@@ -173,7 +173,7 @@ module Apartment
       #   @return {String} patched raw SQL dump
       #
       def patch_search_path(sql)
-        search_path = "SET search_path = #{self.current_tenant}, #{Apartment.default_schema};"
+        search_path = "SET search_path = #{self.current_tenant}, #{default_tenant};"
 
         sql
           .split("\n")
@@ -201,15 +201,6 @@ module Apartment
       def dbname
         ActiveRecord::Base.connection_config[:database]
       end
-
-      # Convenience method for the default schema
-      #
-      def default_schema
-        Apartment.default_schema
-      end
-
     end
-
-
   end
 end
