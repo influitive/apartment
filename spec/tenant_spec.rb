@@ -3,26 +3,19 @@ require 'spec_helper'
 describe Apartment::Tenant do
   context "using mysql", database: :mysql do
 
-    before do
-      subject.stub(:config).and_return config   # Use mysql database config for this test
-    end
+    before { subject.reload!(config) }
 
     describe "#adapter" do
-      before do
-        subject.reload!
-      end
-
       it "should load mysql adapter" do
         subject.adapter
-        Apartment::Adapters::Mysql2Adapter.should be_a(Class)
+        expect(Apartment::Adapters::Mysql2Adapter).to be_a(Class)
       end
     end
 
     # TODO this doesn't belong here, but there aren't integration tests currently for mysql
     # where to put???
-    describe "#exception recovery", :type => :request do
+    describe "exception recovery", :type => :request do
       before do
-        subject.reload!
         subject.create db1
       end
       after{ subject.drop db1 }
@@ -37,6 +30,7 @@ describe Apartment::Tenant do
       # end
     end
 
+    # TODO re-organize these tests
     context "with prefix and schemas" do
       describe "#create" do
         before do
@@ -45,7 +39,7 @@ describe Apartment::Tenant do
             config.use_schemas = true
           end
 
-          subject.reload!(config) # switch to Mysql2SchemaAdapter
+          subject.reload!(config)
         end
 
         after { subject.drop "db_with_prefix" rescue nil }
@@ -60,21 +54,17 @@ describe Apartment::Tenant do
   context "using postgresql", database: :postgresql do
     before do
       Apartment.use_schemas = true
-      subject.stub(:config).and_return config   # Use postgresql database config for this test
+      subject.reload!(config)
     end
 
     describe "#adapter" do
-      before do
-        subject.reload!
-      end
-
       it "should load postgresql adapter" do
         subject.adapter
         Apartment::Adapters::PostgresqlAdapter.should be_a(Class)
       end
 
-      it "should raise exception with invalid adapter specified" do
-        subject.stub(:config).and_return config.merge(:adapter => 'unknown')
+      it "raises exception with invalid adapter specified" do
+        subject.reload!(config.merge(adapter: 'unknown'))
 
         expect {
           Apartment::Tenant.adapter
@@ -83,7 +73,7 @@ describe Apartment::Tenant do
 
       context "threadsafety" do
         before { subject.create db1 }
-        after { subject.drop db1 }
+        after  { subject.drop   db1 }
 
         it 'has a threadsafe adapter' do
           subject.switch!(db1)
@@ -94,8 +84,8 @@ describe Apartment::Tenant do
       end
     end
 
+    # TODO above spec are also with use_schemas=true
     context "with schemas" do
-
       before do
         Apartment.configure do |config|
           config.excluded_models = []

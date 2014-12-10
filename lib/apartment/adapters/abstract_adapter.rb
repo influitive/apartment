@@ -63,7 +63,7 @@ module Apartment
 
       #   Drop the tenant
       #
-      #   @param {String} tenant Database name
+      #   @param {String} tenant name
       #
       def drop(tenant)
         # Apartment.connection.drop_database   note that drop_database will not throw an exception, so manually execute
@@ -73,12 +73,11 @@ module Apartment
         raise TenantNotFound, "The tenant #{environmentify(tenant)} cannot be found"
       end
 
-      #   Switch to new connection (or schema if appopriate)
+      #   Switch to a new tenant
       #
-      #   @param {String} tenant Database name
+      #   @param {String} tenant name
       #
       def switch!(tenant = nil)
-        # Just connect to default db and return
         return reset if tenant.nil?
 
         connect_to_new(tenant).tap do
@@ -88,7 +87,7 @@ module Apartment
 
       #   Connect to tenant, do your biz, switch back to previous tenant
       #
-      #   @param {String?} tenant Database or schema to connect to
+      #   @param {String?} tenant to connect to
       #
       def switch(tenant = nil)
         if block_given?
@@ -215,7 +214,7 @@ module Apartment
       #   Exceptions to rescue from on db operations
       #
       def rescuable_exceptions
-        [ActiveRecord::ActiveRecordError] + [rescue_from].flatten
+        [ActiveRecord::ActiveRecordError] + Array(rescue_from)
       end
 
       #   Extra exceptions to rescue from

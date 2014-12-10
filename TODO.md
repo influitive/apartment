@@ -40,3 +40,12 @@
 
 9.  This one is pretty lofty, but I'd also like to abstract out the fact that Apartment uses ActiveRecord. With the new DataMapper coming out soon and other popular
     DBMS's (ie. mongo, couch etc...), it'd be nice if Apartment could be the de-facto interface for multi-tenancy on these systems.
+
+
+===================
+
+Quick TODOs
+
+1. `default_tenant` should be up to the adapter, not the Apartment class, deprecate `default_schema`
+2. deprecation.rb rescues everything, we have a hard dependency on ActiveSupport so this is unnecessary
+3.
