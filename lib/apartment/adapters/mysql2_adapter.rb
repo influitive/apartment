@@ -13,6 +13,12 @@ module Apartment
   module Adapters
     class Mysql2Adapter < AbstractAdapter
 
+      def initialize(config)
+        super
+
+        @default_tenant = config[:database]
+      end
+
     protected
 
       #   Connect to new tenant
