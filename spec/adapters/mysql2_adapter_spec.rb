@@ -4,13 +4,13 @@ require 'apartment/adapters/mysql2_adapter'
 describe Apartment::Adapters::Mysql2Adapter, database: :mysql do
   unless defined?(JRUBY_VERSION)
 
-    subject(:adapter){ Apartment::Database.mysql2_adapter config }
+    subject(:adapter){ Apartment::Tenant.mysql2_adapter config }
 
     def tenant_names
       ActiveRecord::Base.connection.execute("SELECT schema_name FROM information_schema.schemata").collect { |row| row[0] }
     end
 
-    let(:default_tenant) { subject.process { ActiveRecord::Base.connection.current_database } }
+    let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.current_database } }
 
     context "using - the equivalent of - schemas" do
       before { Apartment.use_schemas = true }
@@ -18,7 +18,9 @@ describe Apartment::Adapters::Mysql2Adapter, database: :mysql do
       it_should_behave_like "a generic apartment adapter"
 
       describe "#default_tenant" do
-        its(:default_tenant){ should == config[:database] }
+        it "is set to the original db from config" do
+          expect(subject.default_tenant).to eq(config[:database])
+        end
       end
 
       describe "#init" do
@@ -31,7 +33,7 @@ describe Apartment::Adapters::Mysql2Adapter, database: :mysql do
         end
 
         it "should process model exclusions" do
-          Apartment::Database.init
+          Apartment::Tenant.init
 
           Company.table_name.should == "#{default_tenant}.companies"
         end

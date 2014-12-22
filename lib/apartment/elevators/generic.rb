@@ -1,5 +1,6 @@
 require 'rack/request'
-require 'apartment/database'
+require 'apartment/tenant'
+require 'apartment/deprecation'
 
 module Apartment
   module Elevators
@@ -17,7 +18,7 @@ module Apartment
 
         database = @processor.call(request)
 
-        Apartment::Database.switch database if database
+        Apartment::Tenant.switch! database if database
 
         @app.call(env)
       end
@@ -41,7 +42,7 @@ module Apartment
       end
 
       def deprecation_warning
-        warn "[DEPRECATED::Apartment] Use #parse_tenant_name instead of #parse_database_name -> #{self.class.name}"
+        Apartment::Deprecation.warn "[DEPRECATED::Apartment] Use #parse_tenant_name instead of #parse_database_name -> #{self.class.name}"
       end
     end
   end

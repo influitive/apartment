@@ -4,4 +4,8 @@ source "http://rubygems.org"
 
 gem "rails", "~> 3.2"
 
-gemspec :path=>"../"
+group :local do
+  gem "pry"
+end
+
+gemspec :path => "../"

@@ -1,28 +1,21 @@
 require 'spec_helper'
 
-describe Apartment::Database do
+describe Apartment::Tenant do
   context "using mysql", database: :mysql do
 
-    before do
-      subject.stub(:config).and_return config   # Use mysql database config for this test
-    end
+    before { subject.reload!(config) }
 
     describe "#adapter" do
-      before do
-        subject.reload!
-      end
-
       it "should load mysql adapter" do
         subject.adapter
-        Apartment::Adapters::Mysql2Adapter.should be_a(Class)
+        expect(Apartment::Adapters::Mysql2Adapter).to be_a(Class)
       end
     end
 
     # TODO this doesn't belong here, but there aren't integration tests currently for mysql
     # where to put???
-    describe "#exception recovery", :type => :request do
+    describe "exception recovery", :type => :request do
       before do
-        subject.reload!
         subject.create db1
       end
       after{ subject.drop db1 }
@@ -37,6 +30,7 @@ describe Apartment::Database do
       # end
     end
 
+    # TODO re-organize these tests
     context "with prefix and schemas" do
       describe "#create" do
         before do
@@ -45,7 +39,7 @@ describe Apartment::Database do
             config.use_schemas = true
           end
 
-          subject.reload!(config) # switch to Mysql2SchemaAdapter
+          subject.reload!(config)
         end
 
         after { subject.drop "db_with_prefix" rescue nil }
@@ -60,42 +54,38 @@ describe Apartment::Database do
   context "using postgresql", database: :postgresql do
     before do
       Apartment.use_schemas = true
-      subject.stub(:config).and_return config   # Use postgresql database config for this test
+      subject.reload!(config)
     end
 
     describe "#adapter" do
-      before do
-        subject.reload!
-      end
-
       it "should load postgresql adapter" do
         subject.adapter
         Apartment::Adapters::PostgresqlAdapter.should be_a(Class)
       end
 
-      it "should raise exception with invalid adapter specified" do
-        subject.stub(:config).and_return config.merge(:adapter => 'unknown')
+      it "raises exception with invalid adapter specified" do
+        subject.reload!(config.merge(adapter: 'unknown'))
 
         expect {
-          Apartment::Database.adapter
+          Apartment::Tenant.adapter
         }.to raise_error
       end
 
       context "threadsafety" do
         before { subject.create db1 }
-        after { subject.drop db1 }
+        after  { subject.drop   db1 }
 
         it 'has a threadsafe adapter' do
-          subject.switch(db1)
-          thread = Thread.new { subject.current_tenant.should == Apartment.default_schema }
+          subject.switch!(db1)
+          thread = Thread.new { subject.current.should == Apartment.default_tenant }
           thread.join
-          subject.current_tenant.should == db1
+          subject.current.should == db1
         end
       end
     end
 
+    # TODO above spec are also with use_schemas=true
     context "with schemas" do
-
       before do
         Apartment.configure do |config|
           config.excluded_models = []
@@ -109,12 +99,12 @@ describe Apartment::Database do
 
       describe "#create" do
         it "should seed data" do
-          subject.switch db1
+          subject.switch! db1
           User.count.should be > 0
         end
       end
 
-      describe "#switch" do
+      describe "#switch!" do
 
         let(:x){ rand(3) }
 
@@ -124,16 +114,16 @@ describe Apartment::Database do
           after{ subject.drop db2 }
 
           it "should create a model instance in the current schema" do
-            subject.switch db2
+            subject.switch! db2
             db2_count = User.count + x.times{ User.create }
 
-            subject.switch db1
+            subject.switch! db1
             db_count = User.count + x.times{ User.create }
 
-            subject.switch db2
+            subject.switch! db2
             User.count.should == db2_count
 
-            subject.switch db1
+            subject.switch! db1
             User.count.should == db_count
           end
         end
@@ -151,7 +141,7 @@ describe Apartment::Database do
             subject.reset # ensure we're on public schema
             count = Company.count + x.times{ Company.create }
 
-            subject.switch db1
+            subject.switch! db1
             x.times{ Company.create }
             Company.count.should == count + x
             subject.reset

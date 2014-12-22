@@ -11,20 +11,20 @@ describe Apartment::Elevators::HostHash do
       elevator.parse_tenant_name(request).should == 'example_tenant'
     end
 
-    it "raises DatabaseNotFound exception if there is no host" do
+    it "raises TenantNotFound exception if there is no host" do
       request = ActionDispatch::Request.new('HTTP_HOST' => '')
-      expect { elevator.parse_tenant_name(request) }.to raise_error(Apartment::DatabaseNotFound)
+      expect { elevator.parse_tenant_name(request) }.to raise_error(Apartment::TenantNotFound)
     end
 
-    it "raises DatabaseNotFound exception if there is no database associated to current host" do
+    it "raises TenantNotFound exception if there is no database associated to current host" do
       request = ActionDispatch::Request.new('HTTP_HOST' => 'example2.com')
-      expect { elevator.parse_tenant_name(request) }.to raise_error(Apartment::DatabaseNotFound)
+      expect { elevator.parse_tenant_name(request) }.to raise_error(Apartment::TenantNotFound)
     end
   end
 
   describe "#call" do
     it "switches to the proper tenant" do
-      Apartment::Database.should_receive(:switch).with('example_tenant')
+      Apartment::Tenant.should_receive(:switch!).with('example_tenant')
 
       elevator.call('HTTP_HOST' => 'example.com')
     end

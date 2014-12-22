@@ -4,7 +4,7 @@ require 'apartment/adapters/sqlite3_adapter'
 describe Apartment::Adapters::Sqlite3Adapter, database: :sqlite do
   unless defined?(JRUBY_VERSION)
 
-    subject{ Apartment::Database.sqlite3_adapter config }
+    subject{ Apartment::Tenant.sqlite3_adapter config }
 
     context "using connections" do
       def tenant_names
@@ -13,7 +13,7 @@ describe Apartment::Adapters::Sqlite3Adapter, database: :sqlite do
       end
 
       let(:default_tenant) do
-        subject.process { File.basename(Apartment::Test.config['connections']['sqlite']['database'], '.sqlite3') }
+        subject.switch { File.basename(Apartment::Test.config['connections']['sqlite']['database'], '.sqlite3') }
       end
 
       it_should_behave_like "a generic apartment adapter"

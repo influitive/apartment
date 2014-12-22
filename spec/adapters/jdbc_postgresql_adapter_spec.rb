@@ -5,7 +5,7 @@ if defined?(JRUBY_VERSION)
 
   describe Apartment::Adapters::JDBCPostgresqlAdapter, database: :postgresql do
 
-    subject { Apartment::Database.jdbc_postgresql_adapter config.symbolize_keys }
+    subject { Apartment::Tenant.jdbc_postgresql_adapter config.symbolize_keys }
 
     context "using schemas" do
 
@@ -16,7 +16,7 @@ if defined?(JRUBY_VERSION)
         ActiveRecord::Base.connection.execute("SELECT nspname FROM pg_namespace;").collect { |row| row['nspname'] }
       end
 
-      let(:default_tenant) { subject.process { ActiveRecord::Base.connection.schema_search_path.gsub('"', '') } }
+      let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.schema_search_path.gsub('"', '') } }
 
       it_should_behave_like "a generic apartment adapter"
       it_should_behave_like "a schema based apartment adapter"
@@ -31,7 +31,7 @@ if defined?(JRUBY_VERSION)
         connection.execute("select datname from pg_database;").collect { |row| row['datname'] }
       end
 
-      let(:default_tenant) { subject.process { ActiveRecord::Base.connection.current_database } }
+      let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.current_database } }
 
       it_should_behave_like "a generic apartment adapter"
       it_should_behave_like "a connection based apartment adapter"

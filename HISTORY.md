@@ -1,3 +1,21 @@
+# 0.25.2
+  * Sept 8, 2014
+
+  - Heroku fix on `assets:precompile` - pull/169 [rabbitt]
+
+# 0.25.1
+  * July 17, 2014
+
+  - Fixed a few vestiges of Apartment::Database
+
+# 0.25.0
+  * July 3, 2014
+
+  - [BREAKING CHANGE] - `Apartment::Database` is not deprecated in favour of
+    `Apartment::Tenant`
+  - ActiveRecord (and Rails) 4.1 now supported
+  - A new sql based adapter that dumps the schema using sql
+
 # 0.24.3
   * March 5, 2014
 

@@ -1,7 +1,7 @@
 require 'apartment/adapters/abstract_adapter'
 
 module Apartment
-  module Database
+  module Tenant
 
     def self.mysql2_adapter(config)
       Apartment.use_schemas ?
@@ -12,6 +12,12 @@ module Apartment
 
   module Adapters
     class Mysql2Adapter < AbstractAdapter
+
+      def initialize(config)
+        super
+
+        @default_tenant = config[:database]
+      end
 
     protected
 
@@ -24,14 +30,12 @@ module Apartment
       def connect_to_new(tenant = nil)
         super
       rescue Mysql2::Error
-        Apartment::Database.reset
-        raise DatabaseNotFound, "Cannot find tenant #{environmentify(tenant)}"
+        Apartment::Tenant.reset
+        raise TenantNotFound, "Cannot find tenant #{environmentify(tenant)}"
       end
     end
 
     class Mysql2SchemaAdapter < AbstractAdapter
-      attr_reader :default_tenant
-
       def initialize(config)
         super
 
@@ -39,7 +43,7 @@ module Apartment
         reset
       end
 
-      #   Reset current_tenant to the default_tenant
+      #   Reset current tenant to the default_tenant
       #
       def reset
         Apartment.connection.execute "use #{default_tenant}"
@@ -53,7 +57,7 @@ module Apartment
 
     protected
 
-      #   Set schema current_tenant to new db
+      #   Connect to new tenant
       #
       def connect_to_new(tenant)
         return reset if tenant.nil?
@@ -61,8 +65,8 @@ module Apartment
         Apartment.connection.execute "use #{environmentify(tenant)}"
 
       rescue ActiveRecord::StatementInvalid
-        Apartment::Database.reset
-        raise DatabaseNotFound, "Cannot find tenant #{environmentify(tenant)}"
+        Apartment::Tenant.reset
+        raise TenantNotFound, "Cannot find tenant #{environmentify(tenant)}"
       end
 
       def process_excluded_model(model)

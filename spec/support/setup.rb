@@ -15,7 +15,7 @@ module Apartment
           # Otherwise these actually get run after test defined hooks
           around(:each) do |example|
             # before
-            Apartment::Database.reload!(config)
+            Apartment::Tenant.reload!(config)
             ActiveRecord::Base.establish_connection config
 
             example.run
@@ -26,20 +26,20 @@ module Apartment
 
             Apartment.excluded_models.each do |model|
               klass = model.constantize
-              
+
               Apartment.connection_class.remove_connection(klass)
               klass.clear_all_connections!
               klass.reset_table_name
             end
 
             Apartment.reset
-            Apartment::Database.reload!
+            Apartment::Tenant.reload!
           end
         end
       end
 
       def database_config
-        db = example.metadata.fetch(:database, :postgresql)
+        db = RSpec.current_example.metadata.fetch(:database, :postgresql)
         Apartment::Test.config['connections'][db.to_s].symbolize_keys
       end
     end

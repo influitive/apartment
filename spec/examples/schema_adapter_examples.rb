@@ -16,7 +16,7 @@ shared_examples_for "a schema based apartment adapter" do
     end
 
     it "should process model exclusions" do
-      Apartment::Database.init
+      Apartment::Tenant.init
 
       Company.table_name.should == "public.companies"
     end
@@ -24,13 +24,13 @@ shared_examples_for "a schema based apartment adapter" do
     context "with a default_schema", :default_schema => true do
 
       it "should set the proper table_name on excluded_models" do
-        Apartment::Database.init
+        Apartment::Tenant.init
 
         Company.table_name.should == "#{default_schema}.companies"
       end
 
       it 'sets the search_path correctly' do
-        Apartment::Database.init
+        Apartment::Tenant.init
 
         User.connection.schema_search_path.should =~ %r|#{default_schema}|
       end
@@ -38,7 +38,7 @@ shared_examples_for "a schema based apartment adapter" do
 
     context "persistent_schemas", :persistent_schemas => true do
       it "sets the persistent schemas in the schema_search_path" do
-        Apartment::Database.init
+        Apartment::Tenant.init
         connection.schema_search_path.should end_with persistent_schemas.map { |schema| %{"#{schema}"} }.join(', ')
       end
     end
@@ -67,7 +67,7 @@ shared_examples_for "a schema based apartment adapter" do
 
       connection.schema_search_path.should_not start_with %{"#{schema2}"}
 
-      subject.process(schema2){ User.count.should == @count + 1 }
+      subject.switch(schema2){ User.count.should == @count + 1 }
     end
 
     context "numeric database names" do
@@ -88,7 +88,7 @@ shared_examples_for "a schema based apartment adapter" do
     it "should raise an error for unknown database" do
       expect {
         subject.drop "unknown_database"
-      }.to raise_error(Apartment::SchemaNotFound)
+      }.to raise_error(Apartment::TenantNotFound)
     end
 
     context "numeric database names" do
@@ -106,29 +106,26 @@ shared_examples_for "a schema based apartment adapter" do
     end
   end
 
-  describe "#process" do
-    it "should connect" do
-      subject.process(schema1) do
+  describe "#switch" do
+    it "connects and resets" do
+      subject.switch(schema1) do
         connection.schema_search_path.should start_with %{"#{schema1}"}
       end
-    end
 
-    it "should reset" do
-      subject.process(schema1)
       connection.schema_search_path.should start_with %{"#{public_schema}"}
     end
   end
 
   describe "#reset" do
     it "should reset connection" do
-      subject.switch(schema1)
+      subject.switch!(schema1)
       subject.reset
       connection.schema_search_path.should start_with %{"#{public_schema}"}
     end
 
     context "with default_schema", :default_schema => true do
       it "should reset to the default schema" do
-        subject.switch(schema1)
+        subject.switch!(schema1)
         subject.reset
         connection.schema_search_path.should start_with %{"#{default_schema}"}
       end
@@ -136,7 +133,7 @@ shared_examples_for "a schema based apartment adapter" do
 
     context "persistent_schemas", :persistent_schemas => true do
       before do
-        subject.switch(schema1)
+        subject.switch!(schema1)
         subject.reset
       end
 
@@ -153,21 +150,21 @@ shared_examples_for "a schema based apartment adapter" do
     end
   end
 
-  describe "#switch" do
+  describe "#switch!" do
     it "should connect to new schema" do
-      subject.switch(schema1)
+      subject.switch!(schema1)
       connection.schema_search_path.should start_with %{"#{schema1}"}
     end
 
     it "should reset connection if database is nil" do
-      subject.switch
+      subject.switch!
       connection.schema_search_path.should == %{"#{public_schema}"}
     end
 
     it "should raise an error if schema is invalid" do
       expect {
-        subject.switch 'unknown_schema'
-      }.to raise_error(Apartment::SchemaNotFound)
+        subject.switch! 'unknown_schema'
+      }.to raise_error(Apartment::TenantNotFound)
     end
 
     context "numeric databases" do
@@ -176,7 +173,7 @@ shared_examples_for "a schema based apartment adapter" do
       it "should connect to them" do
         subject.create(db)
         expect {
-          subject.switch(db)
+          subject.switch!(db)
         }.to_not raise_error
 
         connection.schema_search_path.should start_with %{"#{db.to_s}"}
@@ -187,7 +184,7 @@ shared_examples_for "a schema based apartment adapter" do
 
     describe "with default_schema specified", :default_schema => true do
       before do
-        subject.switch(schema1)
+        subject.switch!(schema1)
       end
 
       it "should switch out the default schema rather than public" do
@@ -201,7 +198,7 @@ shared_examples_for "a schema based apartment adapter" do
 
     context "persistent_schemas", :persistent_schemas => true do
 
-      before{ subject.switch(schema1) }
+      before{ subject.switch!(schema1) }
 
       it "maintains the persistent schemas in the schema_search_path" do
         connection.schema_search_path.should end_with persistent_schemas.map { |schema| %{"#{schema}"} }.join(', ')
@@ -213,17 +210,15 @@ shared_examples_for "a schema based apartment adapter" do
     end
   end
 
-  describe "#current_tenant" do
+  describe "#current" do
     it "should return the current schema name" do
-      subject.switch(schema1)
-      subject.current_tenant.should == schema1
+      subject.switch!(schema1)
       subject.current.should == schema1
     end
 
     context "persistent_schemas", :persistent_schemas => true do
       it "should exlude persistent_schemas" do
-        subject.switch(schema1)
-        subject.current_tenant.should == schema1
+        subject.switch!(schema1)
         subject.current.should == schema1
       end
     end

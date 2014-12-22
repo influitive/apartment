@@ -2,7 +2,8 @@ require 'apartment/railtie' if defined?(Rails)
 require 'active_support/core_ext/object/blank'
 require 'forwardable'
 require 'active_record'
-require 'apartment/database'
+require 'apartment/tenant'
+require 'apartment/deprecation'
 
 module Apartment
 
@@ -42,8 +43,10 @@ module Apartment
     end
 
     def default_schema
-      @default_schema || "public"
+      @default_schema || "public" # TODO 'public' is postgres specific
     end
+    alias :default_tenant :default_schema
+    alias :default_tenant= :default_schema=
 
     def persistent_schemas
       @persistent_schemas || []
@@ -69,22 +72,22 @@ module Apartment
     end
 
     def database_names
-      warn "[Deprecation Warning] `database_names` is now deprecated, please use `tenant_names`"
+      Apartment::Deprecation.warn "[Deprecation Warning] `database_names` is now deprecated, please use `tenant_names`"
       tenant_names
     end
 
     def database_names=(names)
-      warn "[Deprecation Warning] `database_names=` is now deprecated, please use `tenant_names=`"
+      Apartment::Deprecation.warn "[Deprecation Warning] `database_names=` is now deprecated, please use `tenant_names=`"
       self.tenant_names=(names)
     end
 
     def use_postgres_schemas
-      warn "[Deprecation Warning] `use_postgresql_schemas` is now deprecated, please use `use_schemas`"
+      Apartment::Deprecation.warn "[Deprecation Warning] `use_postgresql_schemas` is now deprecated, please use `use_schemas`"
       use_schemas
     end
 
     def use_postgres_schemas=(to_use_or_not_to_use)
-      warn "[Deprecation Warning] `use_postgresql_schemas=` is now deprecated, please use `use_schemas=`"
+      Apartment::Deprecation.warn "[Deprecation Warning] `use_postgresql_schemas=` is now deprecated, please use `use_schemas=`"
       self.use_schemas = to_use_or_not_to_use
     end
   end
@@ -98,18 +101,6 @@ module Apartment
   # Tenant specified is unknown
   TenantNotFound = Class.new(ApartmentError)
 
-  # Raised when database cannot find the specified database
-  DatabaseNotFound = Class.new(TenantNotFound)
-
-  # Raised when database cannot find the specified schema
-  SchemaNotFound = Class.new(TenantNotFound)
-
   # The Tenant attempting to be created already exists
   TenantExists = Class.new(ApartmentError)
-
-  # Raised when trying to create a database that already exists
-  DatabaseExists = Class.new(TenantExists)
-
-  # Raised when trying to create a schema that already exists
-  SchemaExists = Class.new(TenantExists)
 end

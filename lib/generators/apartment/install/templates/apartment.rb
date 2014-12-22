@@ -22,7 +22,7 @@ Apartment.configure do |config|
   # use postgres schemas?
   config.use_schemas = true
 
-  # use raw SQL dumps for creating postgres schemas? (only appies with use_schemas set to true)
+  # use raw SQL dumps for creating postgres schemas? (only applies with use_schemas set to true)
   #config.use_sql = true
 
   # configure persistent schemas (E.g. hstore )
@@ -34,6 +34,9 @@ Apartment.configure do |config|
 
   # supply list of database names for migrations to run on
   config.tenant_names = lambda{ ToDo_Tenant_Or_User_Model.pluck :database }
+
+  # Specify a connection other than ActiveRecord::Base for apartment to use (only needed if your models are using a different connection)
+  # config.connection_class = ActiveRecord::Base
 end
 
 ##

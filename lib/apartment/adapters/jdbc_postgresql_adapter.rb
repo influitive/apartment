@@ -1,7 +1,7 @@
 require 'apartment/adapters/postgresql_adapter'
 
 module Apartment
-  module Database
+  module Tenant
 
     def self.jdbc_postgresql_adapter(config)
       Apartment.use_schemas ?
@@ -23,7 +23,7 @@ module Apartment
         Apartment.connection.create_database(environmentify(tenant), { :thisisahack => '' })
 
       rescue *rescuable_exceptions
-        raise DatabaseExists, "The tenant #{environmentify(tenant)} already exists."
+        raise TenantExists, "The tenant #{environmentify(tenant)} already exists."
       end
 
       #   Return a new config that is multi-tenanted
@@ -50,11 +50,11 @@ module Apartment
         return reset if tenant.nil?
         raise ActiveRecord::StatementInvalid.new("Could not find schema #{tenant}") unless Apartment.connection.all_schemas.include? tenant.to_s
 
-        @current_tenant = tenant.to_s
+        @current = tenant.to_s
         Apartment.connection.schema_search_path = full_search_path
 
       rescue ActiveRecord::StatementInvalid, ActiveRecord::JDBCError
-        raise SchemaNotFound, "One of the following schema(s) is invalid: #{full_search_path}"
+        raise TenantNotFound, "One of the following schema(s) is invalid: #{full_search_path}"
       end
 
     private
