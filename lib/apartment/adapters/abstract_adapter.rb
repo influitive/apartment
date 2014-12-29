@@ -82,7 +82,7 @@ module Apartment
         return reset if tenant.nil?
 
         connect_to_new(tenant).tap do
-          ActiveRecord::Base.connection.clear_query_cache
+          Apartment.connection.clear_query_cache
         end
       end
 
