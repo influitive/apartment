@@ -149,15 +149,24 @@ module Apartment
       #
       def pg_dump_schema
 
-        # Skip excluded tables? :/
-        # excluded_tables =
-        #   collect_table_names(Apartment.excluded_models)
-        #   .map! {|t| "-T #{t}"}
-        #   .join(' ')
+        # Tables from excluded models aren't copied to newly created
+        # tenant/schema due to possible issue with foreign keys.
 
-        # `pg_dump -s -x -O -n #{default_tenant} #{excluded_tables} #{dbname}`
+        # (issue occurs when FK on 'tableA' refrences 'tableB', 'tableA' is
+        #  within tenant schema, 'tableB' is within excluded model in public
+        #  schema. In that case FK on 'tenant.tableA' references to
+        #  non-existing row in 'tenant.tableB', but should ref. to
+        #  'public.tableB', that's why tables from excluded models shouldn't
+        #  be copied to tenant schemes.)
 
-        `pg_dump -s -x -O -n #{default_tenant} #{dbname}`
+        excluded_tables =
+          collect_table_names(Apartment.excluded_models)
+          .map! {|t| "-T #{t}"}
+          .join(' ')
+
+        cmd = build_pg_dump "-s -x -O #{excluded_tables} -n #{Apartment.default_schema}"
+
+        `#{cmd}`
       end
 
       #   Dump data from schema_migrations table
@@ -165,7 +174,9 @@ module Apartment
       #   @return {String} raw SQL contaning inserts with data from schema_migrations
       #
       def pg_dump_schema_migrations_data
-        `pg_dump -a --inserts -t schema_migrations -n #{default_tenant} #{dbname}`
+        cmd = build_pg_dump "-a --inserts -t schema_migrations -n #{Apartment.default_schema}"
+
+        `#{cmd}`
       end
 
       #   Remove "SET search_path ..." line from SQL dump and prepend search_path set to current tenant
@@ -196,11 +207,30 @@ module Apartment
         end
       end
 
-      # Convenience method for current database name
+      #   Build pg_dump command with host, dbname, user and password
       #
-      def dbname
-        ActiveRecord::Base.connection_config[:database]
+      #   @return {String} raw pg_dump command containg connection params and db name
+      #
+      def build_pg_dump(switches="")
+
+        # read database config
+        db_config = Rails.configuration.database_configuration.fetch Rails.env
+        db_name = db_config['database']
+        db_host = db_config['socket'] ? File.dirname(db_config['socket']) : db_config['host'] || 'localhost'
+        db_port = db_config['port'] || "5432"
+        db_user = db_config['user']
+        db_pwd  = db_config['password']
+
+        # build command
+        cmd_env      = db_pwd ? "PGPASSWORD=#{db_pwd}" : ""
+        cmd_host     = "-h #{db_host}"
+        cmd_port     = "-p #{db_port}"
+        cmd_user     = db_user ? "-U #{db_user}" : ""
+
+        "#{cmd_env} pg_dump #{cmd_host} #{cmd_user} #{switches} #{db_name}"
       end
+
     end
+
   end
 end
