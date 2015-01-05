@@ -148,6 +148,29 @@ module MyApplication
 end
 ```
 
+Your other option is to subclass the Generic elevator and implement your own
+switching mechanism. This is exactly how the other elevators work. Look at
+the `subdomain.rb` elevator to get an idea of how this should work. Basically
+all you need to do is subclass the generic elevator and implement your own
+`parse_tenant_name` method that will ultimately return the name of the tenant
+based on the request being made. It *could* look something like this:
+
+```ruby
+# app/middleware/my_custom_elevator.rb
+class MyCustomElevator < Apartment::Elevators::Generic
+
+  # @return {String} - The tenant to switch to
+  def parse_tenant_name(request)
+    # request is an instance of Rack::Request
+
+    # example: look up some tenant from the db based on this request
+    tenant_name = SomeModel.from_request(request)
+
+    return tenant_name
+  end
+end
+```
+
 ## Config
 
 The following config options should be set up in a Rails initializer such as:
