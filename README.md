@@ -259,7 +259,7 @@ This would be for a config with `default_schema` set to `public` and `persistent
 2. Run `heroku pg:psql` from your command line
 3. And then `DROP EXTENSION hstore;` (**Note:** This will drop all columns that use `hstore` type, so proceed with caution; only do this with a fresh PostgreSQL instance)
 4. Next: `CREATE SCHEMA IF NOT EXISTS hstore;`
-5. Finally: `CREATE EXTENSION IF NOT EXISTS hstore SCHEMA hstore;` and hit enter (`\q` to exit)
+5. Finally: `CREATE EXTENSION IF NOT EXISTS hstore SCHEMA public;` and hit enter (`\q` to exit)
 
 To double check, login to the console of your Heroku app and see if `Apartment.connection.default_search_path` is `public,hstore`
 
