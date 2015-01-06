@@ -1,7 +1,4 @@
 --colour
 --format documentation
 --tty
---order random:33420
-
-<% # --order random:33420 works for Jruby ALL Rails %>
-<% # --order random:29482 fails for Jruby Rails 4.0, 4.2 %>
+--order random
