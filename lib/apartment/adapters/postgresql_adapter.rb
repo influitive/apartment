@@ -199,7 +199,7 @@ module Apartment
       # Convenience method for current database name
       #
       def dbname
-        ActiveRecord::Base.connection_config[:database]
+        Apartment.connection_config[:database]
       end
     end
   end
