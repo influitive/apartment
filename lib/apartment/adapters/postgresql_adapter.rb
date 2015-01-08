@@ -173,7 +173,7 @@ module Apartment
       #   @return {String} patched raw SQL dump
       #
       def patch_search_path(sql)
-        search_path = "SET search_path = #{current}, #{default_tenant};"
+        search_path = "SET search_path = \"#{current}\", #{default_tenant};"
 
         sql
           .split("\n")
