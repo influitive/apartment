@@ -1,3 +1,8 @@
+# 0.26.1
+  * Jan 13, 2015
+
+  - Fixed [schema quoting bug](https://github.com/influitive/apartment/issues/198#issuecomment-69782651) [jonsgreen]
+
 # 0.26.0
   * Jan 5, 2015
 
