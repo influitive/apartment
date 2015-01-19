@@ -157,7 +157,7 @@ module Apartment
 
         # `pg_dump -s -x -O -n #{default_tenant} #{excluded_tables} #{dbname}`
 
-        `pg_dump -s -x -O -n #{default_tenant} #{dbname}`
+        with_pg_env { `pg_dump -s -x -O -n #{default_tenant} #{dbname}` }
       end
 
       #   Dump data from schema_migrations table
@@ -165,7 +165,22 @@ module Apartment
       #   @return {String} raw SQL contaning inserts with data from schema_migrations
       #
       def pg_dump_schema_migrations_data
-        `pg_dump -a --inserts -t schema_migrations -n #{default_tenant} #{dbname}`
+        with_pg_env { `pg_dump -a --inserts -t schema_migrations -n #{default_tenant} #{dbname}` }
+      end
+
+      # Temporary set Postgresql related environment variables if there are in @config
+      #
+      def with_pg_env(&block)
+        pghost, pgport, pguser, pgpassword =  ENV['PGHOST'], ENV['PGPORT'], ENV['PGUSER'], ENV['PGPASSWORD']
+
+        ENV['PGHOST'] = @config[:host] if @config[:host]
+        ENV['PGPORT'] = @config[:port].to_s if @config[:port]
+        ENV['PGUSER'] = @config[:username].to_s if @config[:username]
+        ENV['PGPASSWORD'] = @config[:password].to_s if @config[:password]
+
+        block.call
+      ensure
+        ENV['PGHOST'], ENV['PGPORT'], ENV['PGUSER'], ENV['PGPASSWORD'] = pghost, pgport, pguser, pgpassword
       end
 
       #   Remove "SET search_path ..." line from SQL dump and prepend search_path set to current tenant
