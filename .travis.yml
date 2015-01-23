@@ -17,6 +17,9 @@ env:
   RUBY_GC_MALLOC_LIMIT: 90000000
   RUBY_FREE_MIN: 200000
 matrix:
+  allow_failures:
+    - rvm: jruby-head
   exclude:
     - rvm: 2.2.0
       gemfile: gemfiles/rails_3_2.gemfile
+  fast_finish: true
