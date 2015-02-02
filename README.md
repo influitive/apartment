@@ -31,7 +31,7 @@ Configure as needed using the docs below.
 That's all you need to set up the Apartment libraries. If you want to switch tenants
 on a per-user basis, look under "Usage - Switching tenants per request", below.
 
-> NOTE: If using [postgresl schemas](http://www.postgresql.org/docs/9.0/static/ddl-schemas.html) you must use:
+> NOTE: If using [postgresql schemas](http://www.postgresql.org/docs/9.0/static/ddl-schemas.html) you must use:
 >
 > * for Rails 3.1.x: _Rails ~> 3.1.2_, it contains a [patch](https://github.com/rails/rails/pull/3232) that makes prepared statements work with multiple schemas
 
@@ -148,6 +148,29 @@ module MyApplication
 end
 ```
 
+Your other option is to subclass the Generic elevator and implement your own
+switching mechanism. This is exactly how the other elevators work. Look at
+the `subdomain.rb` elevator to get an idea of how this should work. Basically
+all you need to do is subclass the generic elevator and implement your own
+`parse_tenant_name` method that will ultimately return the name of the tenant
+based on the request being made. It *could* look something like this:
+
+```ruby
+# app/middleware/my_custom_elevator.rb
+class MyCustomElevator < Apartment::Elevators::Generic
+
+  # @return {String} - The tenant to switch to
+  def parse_tenant_name(request)
+    # request is an instance of Rack::Request
+
+    # example: look up some tenant from the db based on this request
+    tenant_name = SomeModel.from_request(request)
+
+    return tenant_name
+  end
+end
+```
+
 ## Config
 
 The following config options should be set up in a Rails initializer such as:
@@ -243,7 +266,7 @@ end
 
 #### 2. Ensure the schema is in Rails' default connection
 
-Next, your `database.yml` file must mimic what you've set for your default and persistent schemas in Apartment.  When you run migrataions with Rails, it won't know about the extensions schema because Apartment isn't injected into the default connection, it's done on a per-request basis, therefore Rails doesn't know about `hstore` or `uuid-ossp` during migrations.  To do so, add the following to your `database.yml` for all environments
+Next, your `database.yml` file must mimic what you've set for your default and persistent schemas in Apartment.  When you run migrations with Rails, it won't know about the extensions schema because Apartment isn't injected into the default connection, it's done on a per-request basis, therefore Rails doesn't know about `hstore` or `uuid-ossp` during migrations.  To do so, add the following to your `database.yml` for all environments
 
 ```yaml
 # database.yml

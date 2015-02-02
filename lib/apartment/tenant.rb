@@ -9,7 +9,7 @@ module Apartment
     extend self
     extend Forwardable
 
-    def_delegators :adapter, :create, :current_tenant, :current, :current_database, :drop, :switch, :process_excluded_models, :reset, :seed, :switch!
+    def_delegators :adapter, :create, :current_tenant, :current, :current_database, :default_tenant, :drop, :switch, :process_excluded_models, :reset, :seed, :switch!
 
     attr_writer :config
 
@@ -61,8 +61,7 @@ module Apartment
     #   Fetch the rails database configuration
     #
     def config
-      @config ||= (ActiveRecord::Base.configurations[Rails.env] ||
-                    Rails.application.config.database_configuration[Rails.env]).symbolize_keys
+      @config ||= Apartment.connection_config
     end
   end
 

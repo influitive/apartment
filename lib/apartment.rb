@@ -17,7 +17,7 @@ module Apartment
     attr_accessor(*ACCESSOR_METHODS)
     attr_writer(*WRITER_METHODS)
 
-    def_delegators :connection_class, :connection, :establish_connection
+    def_delegators :connection_class, :connection, :connection_config, :establish_connection
 
     # configure apartment with available options
     def configure
@@ -43,8 +43,10 @@ module Apartment
     end
 
     def default_schema
-      @default_schema || "public"
+      @default_schema || "public" # TODO 'public' is postgres specific
     end
+    alias :default_tenant :default_schema
+    alias :default_tenant= :default_schema=
 
     def persistent_schemas
       @persistent_schemas || []
@@ -99,18 +101,6 @@ module Apartment
   # Tenant specified is unknown
   TenantNotFound = Class.new(ApartmentError)
 
-  # Raised when database cannot find the specified database
-  DatabaseNotFound = Class.new(TenantNotFound)
-
-  # Raised when database cannot find the specified schema
-  SchemaNotFound = Class.new(TenantNotFound)
-
   # The Tenant attempting to be created already exists
   TenantExists = Class.new(ApartmentError)
-
-  # Raised when trying to create a database that already exists
-  DatabaseExists = Class.new(TenantExists)
-
-  # Raised when trying to create a schema that already exists
-  SchemaExists = Class.new(TenantExists)
 end

@@ -27,10 +27,6 @@ Gem::Specification.new do |s|
   Please update your application to use the new constant as it is a more
   appropriate abstraction.
 
-  To further this, DatabaseNotFound, SchemaNotFound, DatabaseExists and
-  SchemaExists exceptions will all be removed, you should instead use
-  TenantNotFound and TenantExists to catch any exceptions.
-
   ********************************
   MSG
 
@@ -41,7 +37,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rake',         '~> 0.9'
   s.add_development_dependency 'rspec-rails',  '~> 2.14'
   s.add_development_dependency 'guard-rspec',  '~> 4.2'
-  s.add_development_dependency 'capybara',     '~> 1.0.0'
+  s.add_development_dependency 'capybara',     '~> 2.0'
 
   if defined?(JRUBY_VERSION)
     s.add_development_dependency 'activerecord-jdbc-adapter'

@@ -21,9 +21,9 @@ module Apartment
       #
       def connect_to_new(database)
         super
-      rescue DatabaseNotFound
+      rescue TenantNotFound
         Apartment::Tenant.reset
-        raise DatabaseNotFound, "Cannot find database #{environmentify(database)}"
+        raise TenantNotFound, "Cannot find database #{environmentify(database)}"
       end
     end
   end

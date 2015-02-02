@@ -20,7 +20,7 @@ module Apartment
         Apartment.connection.execute(%{DROP DATABASE "#{tenant}"})
 
       rescue *rescuable_exceptions
-        raise DatabaseNotFound, "The tenant #{tenant} cannot be found"
+        raise TenantNotFound, "The tenant #{tenant} cannot be found"
       end
 
     private
@@ -47,7 +47,7 @@ module Apartment
         Apartment.connection.execute(%{DROP SCHEMA "#{tenant}" CASCADE})
 
       rescue *rescuable_exceptions
-        raise SchemaNotFound, "The schema #{tenant.inspect} cannot be found."
+        raise TenantNotFound, "The schema #{tenant.inspect} cannot be found."
       end
 
       #   Reset search path to default search_path
@@ -59,7 +59,7 @@ module Apartment
             # Ensure that if a schema *was* set, we override
             table_name = klass.table_name.split('.', 2).last
 
-            klass.table_name = "#{Apartment.default_schema}.#{table_name}"
+            klass.table_name = "#{default_tenant}.#{table_name}"
           end
         end
       end
@@ -69,12 +69,12 @@ module Apartment
       #   @return {String} default schema search path
       #
       def reset
-        @current_tenant = Apartment.default_schema
+        @current = default_tenant
         Apartment.connection.schema_search_path = full_search_path
       end
 
-      def current_tenant
-        @current_tenant || Apartment.default_schema
+      def current
+        @current || default_tenant
       end
 
     protected
@@ -85,11 +85,11 @@ module Apartment
         return reset if tenant.nil?
         raise ActiveRecord::StatementInvalid.new("Could not find schema #{tenant}") unless Apartment.connection.schema_exists? tenant
 
-        @current_tenant = tenant.to_s
+        @current = tenant.to_s
         Apartment.connection.schema_search_path = full_search_path
 
       rescue *rescuable_exceptions
-        raise SchemaNotFound, "One of the following schema(s) is invalid: #{tenant}, #{full_search_path}"
+        raise TenantNotFound, "One of the following schema(s) is invalid: \"#{tenant}\" #{full_search_path}"
       end
 
       #   Create the new schema
@@ -98,7 +98,7 @@ module Apartment
         Apartment.connection.execute(%{CREATE SCHEMA "#{tenant}"})
 
       rescue *rescuable_exceptions
-        raise SchemaExists, "The schema #{tenant} already exists."
+        raise TenantExists, "The schema #{tenant} already exists."
       end
 
     private
@@ -110,7 +110,7 @@ module Apartment
       end
 
       def persistent_schemas
-        [@current_tenant, Apartment.persistent_schemas].flatten
+        [@current, Apartment.persistent_schemas].flatten
       end
     end
 
@@ -156,9 +156,9 @@ module Apartment
         #   .map! {|t| "-T #{t}"}
         #   .join(' ')
 
-        # `pg_dump -s -x -O -n #{default_schema} #{excluded_tables} #{dbname}`
+        # `pg_dump -s -x -O -n #{default_tenant} #{excluded_tables} #{dbname}`
 
-        `pg_dump -s -x -O -n #{default_schema} #{dbname}`
+        `pg_dump -s -x -O -n #{default_tenant} #{dbname}`
       end
 
       #   Dump data from schema_migrations table
@@ -166,7 +166,7 @@ module Apartment
       #   @return {String} raw SQL contaning inserts with data from schema_migrations
       #
       def pg_dump_schema_migrations_data
-        `pg_dump -a --inserts -t schema_migrations -n #{default_schema} #{dbname}`
+        `pg_dump -a --inserts -t schema_migrations -n #{default_tenant} #{dbname}`
       end
 
       #   Remove "SET search_path ..." line from SQL dump and prepend search_path set to current tenant
@@ -174,7 +174,7 @@ module Apartment
       #   @return {String} patched raw SQL dump
       #
       def patch_search_path(sql)
-        search_path = "SET search_path = \"#{current}\", #{default_schema};"
+        search_path = "SET search_path = \"#{current}\", #{default_tenant};"
 
         excluded_tables = Apartment.excluded_models.map{ |model| model.constantize.table_name }.uniq
         sql
@@ -218,13 +218,7 @@ module Apartment
       # Convenience method for current database name
       #
       def dbname
-        ActiveRecord::Base.connection_config[:database]
-      end
-
-      # Convenience method for the default schema
-      #
-      def default_schema
-        Apartment.default_schema
+        Apartment.connection_config[:database]
       end
     end
   end
