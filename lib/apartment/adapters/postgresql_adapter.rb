@@ -174,7 +174,8 @@ module Apartment
       #   @return {String} patched raw SQL dump
       #
       def patch_search_path(sql)
-        search_path = "SET search_path = #{self.current_tenant}, #{Apartment.default_schema};"
+        search_path = "SET search_path = \"#{current}\", #{default_schema};"
+
         excluded_tables = Apartment.excluded_models.map{ |model| model.constantize.table_name }.uniq
         sql
           .split("\n")
@@ -189,7 +190,7 @@ module Apartment
       def format_foreign_key_constraints line, excluded_tables
         if line.match(/ADD CONSTRAINT .* FOREIGN KEY/)
           table_name = line[/REFERENCES (.*)\(/, 1]
-          new_table_name = "#{Apartment.default_schema}.#{table_name}"
+          new_table_name = "#{default_schema}.#{table_name}"
           if excluded_tables.include?(new_table_name)
             line.gsub("REFERENCES #{table_name}", "REFERENCES #{new_table_name}")
           else
@@ -216,18 +217,15 @@ module Apartment
 
       # Convenience method for current database name
       #
-      def dbname 
+      def dbname
         ActiveRecord::Base.connection_config[:database]
       end
 
       # Convenience method for the default schema
       #
-      def default_schema 
+      def default_schema
         Apartment.default_schema
       end
-
     end
-
-
   end
 end

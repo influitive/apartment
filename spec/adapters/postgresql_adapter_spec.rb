@@ -34,6 +34,12 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
 
       it_should_behave_like "a generic apartment adapter"
       it_should_behave_like "a schema based apartment adapter"
+
+      it 'allows for dashes in the schema name' do
+        expect { Apartment::Tenant.create('has-dashes') }.to_not raise_error
+      end
+
+      after { Apartment::Tenant.drop('has-dashes') if Apartment.connection.schema_exists? 'has-dashes' }
     end
 
     context "using connections" do
