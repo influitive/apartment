@@ -23,14 +23,19 @@ Gem::Specification.new do |s|
 
   Apartment Deprecation Warning
 
-  `Apartment::Database` has been deprecated in favour of `Apartment::Tenant`.
-  Please update your application to use the new constant as it is a more
-  appropriate abstraction.
+  `Apartment::Tenant.process` has been deprecated in favour of `Apartment::Tenant.switch`.
+  You must now always pass a block to `switch`.
+
+  To get the previous `switch` behaviour where you can switch to a tenant
+  without a block, use `Apartment::Tenant.switch!`.
+  This is to indicate that your call actually has a side affect of changing
+  the scope of your queries to that tenant.
 
   ********************************
   MSG
 
-  s.add_dependency 'activerecord',    '>= 3.1.2', '< 5.0'   # must be >= 3.1.2 due to bug in prepared_statements
+  # must be >= 3.1.2 due to bug in prepared_statements
+  s.add_dependency 'activerecord',    '>= 3.1.2', '< 5.0'
   s.add_dependency 'rack',            '>= 1.3.6'
 
   s.add_development_dependency 'appraisal'
