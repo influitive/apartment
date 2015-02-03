@@ -1,3 +1,3 @@
 module Apartment
-  VERSION = "0.26.1"
+  VERSION = "1.0.0"
 end
