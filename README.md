@@ -331,11 +331,19 @@ of dbs to Apartment.  You can make this dynamic by providing a Proc object to be
 This object should yield an array of string representing each tenant name.  Example:
 
 ```ruby
-# Dynamically get tenant names to migrate
-config.tenant_names = lambda{ Customer.pluck(:tenant_name) }
+# aplication.rb
+module MyApplication
+  class Application < Rails::Application
+  
+    # Dynamically get tenant names to migrate
+    config.tenant_names = lambda{ Customer.pluck(:tenant_name) }
 
-# Use a static list of tenant names for migrate
-config.tenant_names = ['tenant1', 'tenant2']
+    # OR
+
+    # Use a static list of tenant names for migrate
+    config.tenant_names = ['tenant1', 'tenant2']
+  end
+end
 ```
 
 You can then migrate your tenants using the normal rake task:
