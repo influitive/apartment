@@ -326,7 +326,7 @@ config.use_sql = true
 
 ### Managing Migrations
 
-In order to migrate all of your tenants (or posgresql schemas) you need to provide a list
+In order to migrate all of your tenants (or postgresql schemas) you need to provide a list
 of dbs to Apartment.  You can make this dynamic by providing a Proc object to be called on migrations.
 This object should yield an array of string representing each tenant name.  Example:
 
