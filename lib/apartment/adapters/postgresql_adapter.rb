@@ -5,33 +5,13 @@ module Apartment
 
     def self.postgresql_adapter(config)
       adapter = Adapters::PostgresqlAdapter
-      adapter = Adapters::PostgresqlSchemaAdapter if Apartment.use_schemas
-      adapter = Adapters::PostgresqlSchemaFromSqlAdapter if Apartment.use_sql && Apartment.use_schemas
+      adapter = Adapters::PostgresqlFromSqlAdapter if Apartment.use_sql
       adapter.new(config)
     end
   end
 
   module Adapters
-    # Default adapter when not using Postgresql Schemas
     class PostgresqlAdapter < AbstractAdapter
-
-      def drop(tenant)
-        # Apartment.connection.drop_database note that drop_database will not throw an exception, so manually execute
-        Apartment.connection.execute(%{DROP DATABASE "#{tenant}"})
-
-      rescue *rescuable_exceptions
-        raise TenantNotFound, "The tenant #{tenant} cannot be found"
-      end
-
-    private
-
-      def rescue_from
-        PGError
-      end
-    end
-
-    # Separate Adapter for Postgresql when using schemas
-    class PostgresqlSchemaAdapter < AbstractAdapter
 
       def initialize(config)
         super
@@ -114,8 +94,8 @@ module Apartment
       end
     end
 
-    # Another Adapter for Postgresql when using schemas and SQL
-    class PostgresqlSchemaFromSqlAdapter < PostgresqlSchemaAdapter
+    # Another Adapter for Postgresql when using SQL
+    class PostgresqlFromSqlAdapter < PostgresqlAdapter
 
       PSQL_DUMP_BLACKLISTED_STATEMENTS= [
         /SET search_path/i,   # overridden later

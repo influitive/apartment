@@ -20,14 +20,6 @@ describe Apartment do
       Apartment.excluded_models.should == excluded_models
     end
 
-    it "should set use_schemas" do
-      Apartment.configure do |config|
-        config.excluded_models = []
-        config.use_schemas = false
-      end
-      Apartment.use_schemas.should be false
-    end
-
     it "should set seed_after_create" do
       Apartment.configure do |config|
         config.excluded_models = []

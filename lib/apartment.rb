@@ -81,14 +81,12 @@ module Apartment
       self.tenant_names=(names)
     end
 
-    def use_postgres_schemas
-      Apartment::Deprecation.warn "[Deprecation Warning] `use_postgresql_schemas` is now deprecated, please use `use_schemas`"
-      use_schemas
+    def use_schemas
+      Apartment::Deprecation.warn "[Deprecation Warning] `use_schemas` is no longer a valid option. use_schemas=true is now the only valid default behaviour."
     end
 
-    def use_postgres_schemas=(to_use_or_not_to_use)
-      Apartment::Deprecation.warn "[Deprecation Warning] `use_postgresql_schemas=` is now deprecated, please use `use_schemas=`"
-      self.use_schemas = to_use_or_not_to_use
+    def use_schemas=(to_use_or_not_to_use)
+      Apartment::Deprecation.warn "[Deprecation Warning] `use_schemas=` is no longer a valid option. use_schemas=true is now the only valid default behaviour."
     end
   end
 
