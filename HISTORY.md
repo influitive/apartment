@@ -1,3 +1,11 @@
+# 1.0.0
+  * Feb 3, 2015
+
+  - [BREAKING CHANGE] `Apartment::Tenant.process` is deprecated in favour of `Apartment::Tenant.switch`
+  - [BREAKING CHANGE] `Apartment::Tenant.switch` without a block is deprecated in favour of `Apartment::Tenant.switch!`
+  - Raise proper `TenantNotFound`, `TenantExists` exceptions
+  - Deprecate old `SchemaNotFound`, `DatabaseNotFound` exceptions
+
 # 0.26.1
   * Jan 13, 2015
 
