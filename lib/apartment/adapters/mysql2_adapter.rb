@@ -46,7 +46,7 @@ module Apartment
       #   Reset current tenant to the default_tenant
       #
       def reset
-        Apartment.connection.execute "use #{default_tenant}"
+        Apartment.connection.execute "use `#{default_tenant}`"
       end
 
       #   Set the table_name to always use the default tenant for excluded models
@@ -62,7 +62,7 @@ module Apartment
       def connect_to_new(tenant)
         return reset if tenant.nil?
 
-        Apartment.connection.execute "use #{environmentify(tenant)}"
+        Apartment.connection.execute "use `#{environmentify(tenant)}`"
 
       rescue ActiveRecord::StatementInvalid
         Apartment::Tenant.reset
