@@ -1,3 +1,8 @@
+# 1.0.1
+  * April 28, 2015
+
+  - Fix `Apartment::Deprecation` which was rescuing all exceptions
+
 # 1.0.0
   * Feb 3, 2015
 
