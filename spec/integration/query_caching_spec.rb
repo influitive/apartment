@@ -7,7 +7,6 @@ describe 'query caching' do
     Apartment.configure do |config|
       config.excluded_models = ["Company"]
       config.tenant_names = lambda{ Company.pluck(:database) }
-      config.use_schemas = true
     end
 
     Apartment::Tenant.reload!(config)

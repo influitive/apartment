@@ -25,7 +25,6 @@ shared_context "elevators", elevator: true do
   before do
     Apartment.reset # reset all config
     Apartment.seed_after_create = false
-    Apartment.use_schemas = true
     api.reload!(config)
     api.create(db1)
     api.create(db2)

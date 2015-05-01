@@ -5,7 +5,6 @@ module Apartment
 
     def reset
       Apartment.excluded_models = nil
-      Apartment.use_schemas = nil
       Apartment.seed_after_create = nil
       Apartment.default_schema = nil
     end

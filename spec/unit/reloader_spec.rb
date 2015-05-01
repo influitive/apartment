@@ -7,7 +7,6 @@ describe Apartment::Reloader do
     before do
       Apartment.configure do |config|
         config.excluded_models = ["Company"]
-        config.use_schemas = true
       end
       Apartment::Tenant.reload!(config)
       Company.reset_table_name  # ensure we're clean

@@ -36,7 +36,6 @@ describe Apartment::Tenant do
         before do
           Apartment.configure do |config|
             config.prepend_environment = true
-            config.use_schemas = true
           end
 
           subject.reload!(config)
@@ -53,7 +52,6 @@ describe Apartment::Tenant do
 
   context "using postgresql", database: :postgresql do
     before do
-      Apartment.use_schemas = true
       subject.reload!(config)
     end
 
@@ -84,12 +82,10 @@ describe Apartment::Tenant do
       end
     end
 
-    # TODO above spec are also with use_schemas=true
-    context "with schemas" do
+    context "method behaviour" do
       before do
         Apartment.configure do |config|
           config.excluded_models = []
-          config.use_schemas = true
           config.seed_after_create = true
         end
         subject.create db1

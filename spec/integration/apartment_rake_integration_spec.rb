@@ -17,7 +17,6 @@ describe "apartment rake tasks", database: :postgresql do
     Rake::Task.define_task('db:migrate:redo')
 
     Apartment.configure do |config|
-      config.use_schemas = true
       config.excluded_models = ["Company"]
       config.tenant_names = lambda{ Company.pluck(:database) }
     end
