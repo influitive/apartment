@@ -150,5 +150,34 @@ describe Apartment::Tenant do
         end
       end
     end
+
+    context "seed paths" do
+      before do
+        Apartment.configure do |config|
+          config.excluded_models = []
+          config.use_schemas = true
+          config.seed_after_create = true
+        end
+      end
+
+      after{ subject.drop db1 }
+
+      it 'should seed from default path' do
+        subject.create db1
+        subject.switch! db1
+        User.count.should eq(3)
+        User.first.name.should eq('Some User 0')
+      end
+
+      it 'should seed from custom path' do
+        Apartment.configure do |config|
+          config.seed_data_file = "#{Rails.root}/db/seeds/import.rb"
+        end
+        subject.create db1
+        subject.switch! db1
+        User.count.should eq(6)
+        User.first.name.should eq('Different User 0')
+      end
+    end
   end
 end
