@@ -5,6 +5,7 @@ describe Apartment do
   describe "#config" do
 
     let(:excluded_models){ ["Company"] }
+    let(:seed_data_file_path){ "#{Rails.root}/db/seeds/import.rb" }
 
     it "should yield the Apartment object" do
       Apartment.configure do |config|
@@ -26,6 +27,13 @@ describe Apartment do
         config.use_schemas = false
       end
       Apartment.use_schemas.should be false
+    end
+
+    it "should set seed_data_file" do
+      Apartment.configure do |config|
+        config.seed_data_file = seed_data_file_path
+      end
+      Apartment.seed_data_file.should eq(seed_data_file_path)
     end
 
     it "should set seed_after_create" do
