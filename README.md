@@ -49,6 +49,9 @@ on a per-user basis, look under "Usage - Switching tenants per request", below.
 > * for Rails 3.1.x: _Rails ~> 3.1.2_, it contains a [patch](https://github.com/rails/rails/pull/3232) that makes prepared statements work with multiple schemas
 
 ## Usage
+### Video Tutorial
+How to separate your application data into different accounts or companies.
+[GoRails #47](https://gorails.com/episodes/multitenancy-with-apartment)
 
 ### Creating new Tenants
 
