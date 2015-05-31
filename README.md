@@ -300,7 +300,7 @@ This would be for a config with `default_schema` set to `public` and `persistent
 4. Next: `CREATE SCHEMA IF NOT EXISTS hstore;`
 5. Finally: `CREATE EXTENSION IF NOT EXISTS hstore SCHEMA hstore;` and hit enter (`\q` to exit)
 
-To double check, login to the console of your Heroku app and see if `Apartment.connection.default_search_path` is `public,hstore`
+To double check, login to the console of your Heroku app and see if `Apartment.connection.schema_search_path` is `public,hstore`
 
 #### 3. Ensure the schema is in the apartment config
 ```ruby
