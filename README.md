@@ -187,6 +187,16 @@ class MyCustomElevator < Apartment::Elevators::Generic
 end
 ```
 
+### Dropping Tenants
+
+To drop tenants using Apartment, use the following command:
+
+```ruby
+Apartment::Tenant.drop('tenant_name')
+```
+
+When method is called, the schema is dropped and all data from itself will be lost. Be careful with this method.
+
 ## Config
 
 The following config options should be set up in a Rails initializer such as:
