@@ -14,7 +14,7 @@ module Apartment
           around(:each) do |example|
 
             def config
-              db = example.metadata.fetch(:database, :postgresql)
+              db = RSpec.current_example.metadata.fetch(:database, :postgresql)
 
               Apartment::Test.config['connections'][db.to_s].symbolize_keys
             end
