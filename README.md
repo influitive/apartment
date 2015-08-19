@@ -21,9 +21,9 @@ this poll, we'd greatly appreciated it.
 > If you're noticing ever growing memory issues (ie growing with each tenant you add)
 > when using Apartment, that's because there's [an issue](https://github.com/rails/rails/issues/19578)
 > with how ActiveRecord maps Postgresql data types into AR data types.
-> This has been patched and will be release for AR 4.2.2. It's apparently hard
+> This has been patched and will be released for AR 4.2.2. It's apparently hard
 > to backport to 4.1 unfortunately.
-> If you want to use this today, you can use our [4.2.1 patched version](https://github.com/influitive/rails/tree/v4.2.1.memfix) on our github account using the code sample below.
+> If you're noticing high memory usage from ActiveRecord with Apartment please upgrade.
 
 ```ruby
 gem 'rails', '4.2.1', github: 'influitive/rails', tag: 'v4.2.1.memfix'
