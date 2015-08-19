@@ -8,6 +8,14 @@ Apartment provides tools to help you deal with multiple tenants in your Rails
 application. If you need to have certain data sequestered based on account or company,
 but still allow some data to exist in a common tenant, Apartment can help.
 
+## HELP!
+
+In order to help drive the direction of development and clean up the codebase, we'd like to take a poll
+on how people are currently using Apartment. If you can take 5 seconds (1 question) to answer
+this poll, we'd greatly appreciated it.
+
+[View Poll](http://www.poll-maker.com/poll391552x4Bfb41a9-15)
+
 ## Excessive Memory Issues on ActiveRecord 4.x
 
 > If you're noticing ever growing memory issues (ie growing with each tenant you add)
