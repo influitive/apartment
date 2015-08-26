@@ -135,6 +135,27 @@ Apartment::Elevators::Subdomain.excluded_subdomains = ['www']
 
 This functions much in the same way as Apartment.excluded_models. This example will prevent switching your tenant when the subdomain is www. Handy for subdomains like: "public", "www", and "admin" :)
 
+**Switch on first subdomain**
+To switch on the first subdomain, which analyzes the chain of subdomains of the request and switches to a tenant schema of the first name in the chain (e.g. owls.birds.animals.com would switch to "owl").  It can be used like so:
+
+```ruby
+# application.rb
+module MyApplication
+  class Application < Rails::Application
+    config.middleware.use 'Apartment::Elevators::FirstSubdomain'
+  end
+end
+```
+
+If you want to exclude a domain, for example if you don't want your application to treate www like a subdomain, in an initializer in your application, you can set the following:
+
+```ruby
+# config/initializers/apartment/subdomain_exclusions.rb
+Apartment::Elevators::FirstSubdomain.excluded_subdomains = ['www']
+```
+
+This functions much in the same way as the Subdomain elevator.
+
 **Switch on domain**
 To switch based on full domain (excluding subdomains *ie 'www'* and top level domains *ie '.com'* ) use the following:
 
