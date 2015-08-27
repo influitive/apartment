@@ -264,7 +264,7 @@ By default, ActiveRecord will use `"$user", public` as the default `schema_searc
 config.default_schema = "some_other_schema"
 ```
 
-With that set, all excluded models will use this schema as the table name prefix instead of `public` and `reset` on `Apartment::Tenant` will return to this schema also
+With that set, all excluded models will use this schema as the table name prefix instead of `public` and `reset` on `Apartment::Tenant` will return to this schema as well.
 
 ## Persistent Schemas
 Apartment will normally just switch the `schema_search_path` whole hog to the one passed in.  This can lead to problems if you want other schemas to always be searched as well.  Enter `persistent_schemas`.  You can configure a list of other schemas that will always remain in the search path, while the default gets swapped out:
