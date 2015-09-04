@@ -85,5 +85,19 @@ describe Apartment do
       end
     end
 
+    context "tenant_name" do
+      it "should return tenant_name as is" do
+        expect(Apartment.tenant_name('name')).to eq 'name'
+      end
+
+      it "should invoke the proc if appropriate" do
+        tenant_name = lambda { |name| "prefix_#{name}" }
+
+        Apartment.configure do |config|
+          config.tenant_name = tenant_name
+        end
+        expect(Apartment.tenant_name("name")).to eq "prefix_name"
+      end
+    end
   end
 end
