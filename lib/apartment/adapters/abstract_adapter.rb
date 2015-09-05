@@ -143,7 +143,7 @@ module Apartment
       end
       alias_method :seed, :seed_data
 
-    protected
+      protected
 
       #   Create the tenant
       #
@@ -168,29 +168,30 @@ module Apartment
         raise TenantNotFound, "The tenant #{environmentify(tenant)} cannot be found."
       end
 
-      #   Prepend the environment if configured and the environment isn't already there
+      #   Process through config.tenant_name if set and Prepend the environment
+      #   if configured and the environment isn't already there.
       #
       #   @param {String} tenant Database name
       #   @return {String} tenant name with Rails environment *optionally* prepended
       #
       def environmentify(tenant)
-        unless tenant.include?(Rails.env)
-          if Apartment.prepend_environment
-            "#{Rails.env}_#{tenant}"
-          elsif Apartment.append_environment
-            "#{tenant}_#{Rails.env}"
-          else
-            tenant
-          end
-        else
-          tenant
+        tenant = Apartment.tenant_name(tenant)
+        environmentify_name(tenant) || tenant
+      end
+
+      def environmentify_name(tenant)
+        return if tenant.include?(Rails.env)
+        if Apartment.prepend_environment
+          "#{Rails.env}_#{tenant}"
+        elsif Apartment.append_environment
+          "#{tenant}_#{Rails.env}"
         end
       end
 
       #   Import the database schema
       #
       def import_database_schema
-        ActiveRecord::Schema.verbose = false    # do not log schema load output.
+        ActiveRecord::Schema.verbose = false # do not log schema load output.
 
         load_or_abort(Apartment.database_schema_file) if Apartment.database_schema_file
       end
@@ -206,7 +207,7 @@ module Apartment
       #   Load a file or abort if it doesn't exists
       #
       def load_or_abort(file)
-        if File.exists?(file)
+        if File.exist?(file)
           load(file)
         else
           abort %{#{file} doesn't exist yet}

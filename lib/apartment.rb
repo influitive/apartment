@@ -12,7 +12,7 @@ module Apartment
     extend Forwardable
 
     ACCESSOR_METHODS  = [:use_schemas, :use_sql, :seed_after_create, :prepend_environment, :append_environment]
-    WRITER_METHODS    = [:tenant_names, :database_schema_file, :excluded_models, :default_schema, :persistent_schemas, :connection_class, :tld_length, :db_migrate_tenants, :seed_data_file]
+    WRITER_METHODS    = [:tenant_names, :tenant_name, :database_schema_file, :excluded_models, :default_schema, :persistent_schemas, :connection_class, :tld_length, :db_migrate_tenants, :seed_data_file]
 
     attr_accessor(*ACCESSOR_METHODS)
     attr_writer(*WRITER_METHODS)
@@ -27,6 +27,10 @@ module Apartment
     # Be careful not to use `return` here so both Proc and lambda can be used without breaking
     def tenant_names
       @tenant_names.respond_to?(:call) ? @tenant_names.call : @tenant_names
+    end
+
+    def tenant_name(name)
+      @tenant_name.respond_to?(:call) ? @tenant_name.call(name) : name
     end
 
     # Whether or not db:migrate should also migrate tenants

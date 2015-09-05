@@ -26,6 +26,11 @@ Apartment.configure do |config|
   #
   config.tenant_names = lambda { ToDo_Tenant_Or_User_Model.pluck :database }
 
+  # In order to amend tenant database names or prefix them with your
+  # application name you can set up the transformation as follows.
+  #
+  # config.tenant_name = lambda { |name| "application_#{name}" }
+
   #
   # ==> PostgreSQL only options
 
