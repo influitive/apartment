@@ -10,7 +10,9 @@ module Apartment
     class FirstSubdomain < Subdomain
 
       def parse_tenant_name(request)
-        super.split('.')[0]
+        if super.present?
+          super.split('.')[0]
+        end
       end
     end
   end
