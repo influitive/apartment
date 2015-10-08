@@ -15,5 +15,10 @@ describe Apartment::Elevators::FirstSubdomain do
       let(:subdomain) { "test1.test2" }
       it { should == "test1" }
     end
+    
+    context "no subdomain" do
+      let(:subdomain) { nil }
+      it { should == nil }
+    end
   end
 end
