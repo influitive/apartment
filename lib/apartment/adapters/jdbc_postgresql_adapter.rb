@@ -15,26 +15,15 @@ module Apartment
     # Default adapter when not using Postgresql Schemas
     class JDBCPostgresqlAdapter < PostgresqlAdapter
 
-    protected
-
-      def create_tenant(tenant)
-        # There is a bug in activerecord-jdbcpostgresql-adapter (1.2.5) that will cause
-        # an exception if no options are passed into the create_database call.
-        Apartment.connection.create_database(environmentify(tenant), { :thisisahack => '' })
-
-      rescue *rescuable_exceptions
-        raise TenantExists, "The tenant #{environmentify(tenant)} already exists."
-      end
-
-      #   Return a new config that is multi-tenanted
-      #
-      def multi_tenantify(tenant)
-        @config.clone.tap do |config|
-          config[:url] = "#{config[:url].gsub(/(\S+)\/.+$/, '\1')}/#{environmentify(tenant)}"
-        end
-      end
-
     private
+
+      def multi_tenantify_with_tenant_db_name(config, tenant)
+        config[:url] = "#{config[:url].gsub(/(\S+)\/.+$/, '\1')}/#{environmentify(tenant)}"
+      end
+
+      def create_tenant_command(conn, tenant)
+        conn.create_database(environmentify(tenant), { :thisisahack => '' })
+      end
 
       def rescue_from
         ActiveRecord::JDBCError

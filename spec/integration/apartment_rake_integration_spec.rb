@@ -33,7 +33,7 @@ describe "apartment rake tasks", database: :postgresql do
 
     let(:x){ 1 + rand(5) }    # random number of dbs to create
     let(:db_names){ x.times.map{ Apartment::Test.next_db } }
-    let!(:company_count){ Company.count + db_names.length }
+    let!(:company_count){ db_names.length }
 
     before do
       db_names.collect do |db_name|

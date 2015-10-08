@@ -11,19 +11,8 @@ module Apartment
   module Adapters
     class JDBCMysqlAdapter < AbstractJDBCAdapter
 
-      protected
-
-      #   Connect to new database
-      #   Abstract adapter will catch generic ActiveRecord error
-      #   Catch specific adapter errors here
-      #
-      #   @param {String} database Database name
-      #
-      def connect_to_new(database)
-        super
-      rescue TenantNotFound
-        Apartment::Tenant.reset
-        raise TenantNotFound, "Cannot find database #{environmentify(database)}"
+      def reset_on_connection_exception?
+        true
       end
     end
   end

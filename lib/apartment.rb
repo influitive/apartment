@@ -24,9 +24,16 @@ module Apartment
       yield self if block_given?
     end
 
-    # Be careful not to use `return` here so both Proc and lambda can be used without breaking
     def tenant_names
-      @tenant_names.respond_to?(:call) ? @tenant_names.call : @tenant_names
+      extract_tenant_config.keys.map(&:to_s)
+    end
+
+    def tenants_with_config
+      extract_tenant_config
+    end
+
+    def db_config_for(tenant)
+      (tenants_with_config[tenant] || connection_config).with_indifferent_access
     end
 
     # Whether or not db:migrate should also migrate tenants
@@ -95,6 +102,19 @@ module Apartment
     def use_postgres_schemas=(to_use_or_not_to_use)
       Apartment::Deprecation.warn "[Deprecation Warning] `use_postgresql_schemas=` is now deprecated, please use `use_schemas=`"
       self.use_schemas = to_use_or_not_to_use
+    end
+
+    def extract_tenant_config
+      return {} unless @tenant_names
+      values = @tenant_names.respond_to?(:call) ? @tenant_names.call : @tenant_names
+      unless values.is_a? Hash
+        values = values.each_with_object({}) do |tenant, hash|
+          hash[tenant] = connection_config
+        end
+      end
+      values.with_indifferent_access
+    rescue ActiveRecord::StatementInvalid
+      {}
     end
   end
 
