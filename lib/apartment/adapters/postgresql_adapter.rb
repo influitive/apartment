@@ -15,6 +15,13 @@ module Apartment
     # Default adapter when not using Postgresql Schemas
     class PostgresqlAdapter < AbstractAdapter
 
+      def initialize(config)
+        super
+
+        Apartment.connection_handler = ActiveRecord::ConnectionAdapters::ConnectionHandler.new
+        reset
+      end
+
       def drop(tenant)
         # Apartment.connection.drop_database note that drop_database will not throw an exception, so manually execute
         Apartment.connection.execute(%{DROP DATABASE "#{tenant}"})
