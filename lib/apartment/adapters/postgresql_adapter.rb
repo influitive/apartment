@@ -43,6 +43,7 @@ module Apartment
       def initialize(config)
         super
 
+        Apartment.establish_connection(config)
         reset
       end
 
