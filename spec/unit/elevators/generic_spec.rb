@@ -15,7 +15,7 @@ describe Apartment::Elevators::Generic do
     it "calls the processor if given" do
       elevator = described_class.new(Proc.new{}, Proc.new{'tenant1'})
 
-      Apartment::Tenant.should_receive(:switch!).with('tenant1')
+      Apartment::Tenant.should_receive(:switch).with('tenant1')
 
       elevator.call('HTTP_HOST' => 'foo.bar.com')
     end
@@ -29,7 +29,24 @@ describe Apartment::Elevators::Generic do
     it "switches to the parsed db_name" do
       elevator = MyElevator.new(Proc.new{})
 
-      Apartment::Tenant.should_receive(:switch!).with('tenant2')
+      Apartment::Tenant.should_receive(:switch).with('tenant2')
+
+      elevator.call('HTTP_HOST' => 'foo.bar.com')
+    end
+
+    it "calls the block implementation of `switch`" do
+      elevator = MyElevator.new(Proc.new{}, Proc.new{'tenant2'})
+
+      Apartment::Tenant.should_receive(:switch).with('tenant2').and_yield
+      elevator.call('HTTP_HOST' => 'foo.bar.com')
+    end
+
+    it "does not call `switch` if no database given" do
+      app = Proc.new{}
+      elevator = MyElevator.new(app, Proc.new{})
+
+      Apartment::Tenant.should_not_receive(:switch)
+      app.should_receive :call
 
       elevator.call('HTTP_HOST' => 'foo.bar.com')
     end
