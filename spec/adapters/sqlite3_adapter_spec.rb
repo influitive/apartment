@@ -20,7 +20,7 @@ describe Apartment::Adapters::Sqlite3Adapter, database: :sqlite do
       it_should_behave_like "a connection based apartment adapter"
 
       after(:all) do
-        #File.delete(Apartment::Test.config['connections']['sqlite']['database'])
+        File.delete(Apartment::Test.config['connections']['sqlite']['database'])
       end
     end
 

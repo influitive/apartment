@@ -39,8 +39,11 @@ module Apartment
         raise TenantExists,
           "The tenant #{environmentify(tenant)} already exists." if File.exists?(database_file(tenant))
 
-        f = File.new(database_file(tenant), File::CREAT)
-        f.close
+        begin
+          f = File.new(database_file(tenant), File::CREAT)
+        ensure
+          f.close
+        end
       end
 
     private
