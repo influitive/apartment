@@ -46,7 +46,7 @@ module Apartment
     private
 
       def database_file(tenant)
-        "#{@default_dir}/#{tenant}.sqlite3"
+        "#{@default_dir}/#{environmentify(tenant)}.sqlite3"
       end
     end
   end
