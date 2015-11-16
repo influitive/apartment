@@ -39,14 +39,17 @@ module Apartment
         raise TenantExists,
           "The tenant #{environmentify(tenant)} already exists." if File.exists?(database_file(tenant))
 
-        f = File.new(database_file(tenant), File::CREAT)
-        f.close
+        begin
+          f = File.new(database_file(tenant), File::CREAT)
+        ensure
+          f.close
+        end
       end
 
     private
 
       def database_file(tenant)
-        "#{@default_dir}/#{tenant}.sqlite3"
+        "#{@default_dir}/#{environmentify(tenant)}.sqlite3"
       end
     end
   end
