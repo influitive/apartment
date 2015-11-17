@@ -31,4 +31,23 @@ shared_examples_for "a connection based apartment adapter" do
       }.to raise_error(Apartment::TenantNotFound)
     end
   end
+
+  describe "#switch" do
+    it "creates a new connection handler per thread" do
+      hs = Mutex.new
+      handlers = {}
+      threads = []
+      [1, 2].each do |i|
+        threads << Thread.new do
+          db_name = "db#{i}"
+          Apartment::Tenant.switch(send(db_name)) do
+            hs.synchronize{ handlers[db_name] = Apartment.connection_handler.object_id }
+          end
+        end
+      end
+      threads.each(&:join)
+
+      expect(handlers["db1"]).not_to eq handlers["db2"]
+    end
+  end
 end
