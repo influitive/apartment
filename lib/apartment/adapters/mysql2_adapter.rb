@@ -21,17 +21,8 @@ module Apartment
 
     protected
 
-      #   Connect to new tenant
-      #   Abstract adapter will catch generic ActiveRecord error
-      #   Catch specific adapter errors here
-      #
-      #   @param {String} tenant Tenant name
-      #
-      def connect_to_new(tenant = nil)
-        super
-      rescue Mysql2::Error
-        Apartment::Tenant.reset
-        raise TenantNotFound, "Cannot find tenant #{environmentify(tenant)}"
+      def rescue_from
+        Mysql2::Error
       end
     end
 
@@ -49,12 +40,6 @@ module Apartment
         Apartment.connection.execute "use `#{default_tenant}`"
       end
 
-      #   Set the table_name to always use the default tenant for excluded models
-      #
-      def process_excluded_models
-        Apartment.excluded_models.each{ |model| process_excluded_model(model) }
-      end
-
     protected
 
       #   Connect to new tenant
@@ -64,9 +49,9 @@ module Apartment
 
         Apartment.connection.execute "use `#{environmentify(tenant)}`"
 
-      rescue ActiveRecord::StatementInvalid
+      rescue ActiveRecord::StatementInvalid => exception
         Apartment::Tenant.reset
-        raise TenantNotFound, "Cannot find tenant #{environmentify(tenant)}"
+        raise_connect_error!(tenant, exception)
       end
 
       def process_excluded_model(model)
@@ -76,6 +61,10 @@ module Apartment
 
           klass.table_name = "#{default_tenant}.#{table_name}"
         end
+      end
+
+      def reset_on_connection_exception?
+        true
       end
     end
   end

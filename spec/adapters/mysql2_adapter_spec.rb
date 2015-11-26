@@ -44,6 +44,7 @@ describe Apartment::Adapters::Mysql2Adapter, database: :mysql do
       before { Apartment.use_schemas = false }
 
       it_should_behave_like "a generic apartment adapter"
+      it_should_behave_like "a generic apartment adapter able to handle custom configuration"
       it_should_behave_like "a connection based apartment adapter"
     end
   end

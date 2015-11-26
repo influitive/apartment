@@ -416,6 +416,33 @@ and test environments.  If you wish to turn this option off in production, you c
 config.prepend_environment = !Rails.env.production?
 ```
 
+## Tenants on different servers
+
+You can store your tenants in different databases on one or more servers.
+To do it, specify your `tenant_names` as a hash, keys being the actual tenant names,
+values being a hash with the database configuration to use.
+
+Example:
+
+```ruby
+config.tenant_names = {
+  'tenant1' => {
+    adapter: 'postgresql',
+    host: 'some_server',
+    port: 5555,
+    database: 'postgres' # this is not the name of the tenant's db
+                         # but the name of the database to connect to, before creating the tenant's db
+                         # mandatory in postgresql
+  }
+}
+# or using a lambda:
+config.tenant_names = lambda do
+  Tenant.all.each_with_object({}) do |tenant, hash|
+    hash[tenant.name] = tenant.db_configuration
+  end
+end
+```
+
 ## Delayed::Job
 ### Has been removed... See apartment-sidekiq for a better backgrounding experience
 

@@ -17,7 +17,6 @@ apartment_namespace = namespace :apartment do
   desc "Migrate all tenants"
   task :migrate do
     warn_if_tenants_empty
-
     tenants.each do |tenant|
       begin
         puts("Migrating #{tenant} tenant")

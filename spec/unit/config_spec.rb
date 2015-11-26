@@ -7,6 +7,12 @@ describe Apartment do
     let(:excluded_models){ ["Company"] }
     let(:seed_data_file_path){ "#{Rails.root}/db/seeds/import.rb" }
 
+    def tenant_names_from_array(names)
+      names.each_with_object({}) do |tenant, hash|
+        hash[tenant] = Apartment.connection_config
+      end.with_indifferent_access
+    end
+
     it "should yield the Apartment object" do
       Apartment.configure do |config|
         config.excluded_models = []
@@ -52,36 +58,60 @@ describe Apartment do
     end
 
     context "databases" do
-      it "should return object if it doesnt respond_to call" do
-        tenant_names = ['users', 'companies']
+      let(:users_conf_hash) { { port: 5444 } }
 
+      before do
         Apartment.configure do |config|
-          config.excluded_models = []
           config.tenant_names = tenant_names
         end
-        Apartment.tenant_names.should == tenant_names
       end
 
-      it "should invoke the proc if appropriate" do
-        tenant_names = lambda{ ['users', 'users'] }
-        tenant_names.should_receive(:call)
+      context "tenant_names as string array" do
+        let(:tenant_names) { ['users', 'companies'] }
 
-        Apartment.configure do |config|
-          config.excluded_models = []
-          config.tenant_names = tenant_names
+        it "should return object if it doesnt respond_to call" do
+          Apartment.tenant_names.should == tenant_names_from_array(tenant_names).keys
         end
-        Apartment.tenant_names
+
+        it "should set tenants_with_config" do
+          Apartment.tenants_with_config.should == tenant_names_from_array(tenant_names)
+        end
       end
 
-      it "should return the invoked proc if appropriate" do
-        dbs = lambda{ Company.all }
+      context "tenant_names as proc returning an array" do
+        let(:tenant_names) { lambda { ['users', 'companies'] } }
 
-        Apartment.configure do |config|
-          config.excluded_models = []
-          config.tenant_names = dbs
+        it "should return object if it doesnt respond_to call" do
+          Apartment.tenant_names.should == tenant_names_from_array(tenant_names.call).keys
         end
 
-        Apartment.tenant_names.should == Company.all
+        it "should set tenants_with_config" do
+          Apartment.tenants_with_config.should == tenant_names_from_array(tenant_names.call)
+        end
+      end
+
+      context "tenant_names as Hash" do
+        let(:tenant_names) { { users: users_conf_hash }.with_indifferent_access }
+
+        it "should return object if it doesnt respond_to call" do
+          Apartment.tenant_names.should == tenant_names.keys
+        end
+
+        it "should set tenants_with_config" do
+          Apartment.tenants_with_config.should == tenant_names
+        end
+      end
+
+      context "tenant_names as proc returning a Hash" do
+        let(:tenant_names) { lambda { { users: users_conf_hash }.with_indifferent_access } }
+
+        it "should return object if it doesnt respond_to call" do
+          Apartment.tenant_names.should == tenant_names.call.keys
+        end
+
+        it "should set tenants_with_config" do
+          Apartment.tenants_with_config.should == tenant_names.call
+        end
       end
     end
 

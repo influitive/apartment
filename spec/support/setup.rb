@@ -22,6 +22,7 @@ module Apartment
             # before
             Apartment::Tenant.reload!(config)
             ActiveRecord::Base.establish_connection config
+            Apartment::Test.reset_table_names
 
             example.run
 
@@ -34,9 +35,8 @@ module Apartment
 
               Apartment.connection_class.remove_connection(klass)
               klass.clear_all_connections!
-              klass.reset_table_name
             end
-
+            Apartment::Test.reset_table_names
             Apartment.reset
             Apartment::Tenant.reload!
           end

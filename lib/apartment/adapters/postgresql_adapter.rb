@@ -15,14 +15,6 @@ module Apartment
     # Default adapter when not using Postgresql Schemas
     class PostgresqlAdapter < AbstractAdapter
 
-      def drop(tenant)
-        # Apartment.connection.drop_database note that drop_database will not throw an exception, so manually execute
-        Apartment.connection.execute(%{DROP DATABASE "#{tenant}"})
-
-      rescue *rescuable_exceptions
-        raise TenantNotFound, "The tenant #{tenant} cannot be found"
-      end
-
     private
 
       def rescue_from
@@ -37,31 +29,6 @@ module Apartment
         super
 
         reset
-      end
-
-      #   Drop the tenant
-      #
-      #   @param {String} tenant Database (schema) to drop
-      #
-      def drop(tenant)
-        Apartment.connection.execute(%{DROP SCHEMA "#{tenant}" CASCADE})
-
-      rescue *rescuable_exceptions
-        raise TenantNotFound, "The schema #{tenant.inspect} cannot be found."
-      end
-
-      #   Reset search path to default search_path
-      #   Set the table_name to always use the default namespace for excluded models
-      #
-      def process_excluded_models
-        Apartment.excluded_models.each do |excluded_model|
-          excluded_model.constantize.tap do |klass|
-            # Ensure that if a schema *was* set, we override
-            table_name = klass.table_name.split('.', 2).last
-
-            klass.table_name = "#{default_tenant}.#{table_name}"
-          end
-        end
       end
 
       #   Reset schema search path to the default schema_search_path
@@ -79,6 +46,19 @@ module Apartment
 
     protected
 
+      def process_excluded_model(excluded_model)
+        excluded_model.constantize.tap do |klass|
+          # Ensure that if a schema *was* set, we override
+          table_name = klass.table_name.split('.', 2).last
+
+          klass.table_name = "#{default_tenant}.#{table_name}"
+        end
+      end
+
+      def drop_command(conn, tenant)
+        conn.execute(%{DROP SCHEMA "#{tenant}" CASCADE})
+      end
+
       #   Set schema search path to new schema
       #
       def connect_to_new(tenant = nil)
@@ -92,16 +72,11 @@ module Apartment
         raise TenantNotFound, "One of the following schema(s) is invalid: \"#{tenant}\" #{full_search_path}"
       end
 
-      #   Create the new schema
-      #
-      def create_tenant(tenant)
-        Apartment.connection.execute(%{CREATE SCHEMA "#{tenant}"})
-
-      rescue *rescuable_exceptions
-        raise TenantExists, "The schema #{tenant} already exists."
-      end
-
     private
+
+      def create_tenant_command(conn, tenant)
+        conn.execute(%{CREATE SCHEMA "#{tenant}"})
+      end
 
       #   Generate the final search path to set including persistent_schemas
       #

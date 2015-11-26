@@ -4,16 +4,11 @@ module Apartment
   module Adapters
     class AbstractJDBCAdapter < AbstractAdapter
 
-    protected
-
-      #   Return a new config that is multi-tenanted
-      #
-      def multi_tenantify(database)
-        @config.clone.tap do |config|
-          config[:url] = "#{config[:url].gsub(/(\S+)\/.+$/, '\1')}/#{environmentify(database)}"
-        end
-      end
     private
+
+      def multi_tenantify_with_tenant_db_name(config, tenant)
+        config[:url] = "#{config[:url].gsub(/(\S+)\/.+$/, '\1')}/#{environmentify(tenant)}"
+      end
 
       def rescue_from
         ActiveRecord::JDBCError

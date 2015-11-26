@@ -54,6 +54,7 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
       let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.current_database } }
 
       it_should_behave_like "a generic apartment adapter"
+      it_should_behave_like "a generic apartment adapter able to handle custom configuration"
       it_should_behave_like "a connection based apartment adapter"
     end
   end
