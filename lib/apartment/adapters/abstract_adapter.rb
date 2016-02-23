@@ -140,7 +140,7 @@ module Apartment
       #
       def seed_data
         # Don't log the output of seeding the db
-        silence_stream(STDOUT){ load_or_abort(Apartment.seed_data_file) } if Apartment.seed_data_file
+        silence_warnings{ load_or_abort(Apartment.seed_data_file) } if Apartment.seed_data_file
       end
       alias_method :seed, :seed_data
 

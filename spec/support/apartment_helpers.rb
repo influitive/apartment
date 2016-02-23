@@ -34,7 +34,7 @@ module Apartment
     def load_schema(version = 3)
       file = File.expand_path("../../schemas/v#{version}.rb", __FILE__)
 
-      silence_stream(STDOUT){ load(file) }
+      silence_warnings{ load(file) }
     end
 
     def migrate
