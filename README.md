@@ -126,7 +126,7 @@ module MyApplication
 end
 ```
 
-If you want to exclude a domain, for example if you don't want your application to treate www like a subdomain, in an initializer in your application, you can set the following:
+If you want to exclude a domain, for example if you don't want your application to treat www like a subdomain, in an initializer in your application, you can set the following:
 
 ```ruby
 # config/initializers/apartment/subdomain_exclusions.rb
