@@ -3,6 +3,9 @@ require 'apartment/deprecation'
 module Apartment
   module Adapters
     class AbstractAdapter
+      include ActiveSupport::Callbacks
+      define_callbacks :create, :switch
+
       attr_writer :default_tenant
 
       #   @constructor
@@ -17,15 +20,17 @@ module Apartment
       #   @param {String} tenant Tenant name
       #
       def create(tenant)
-        create_tenant(tenant)
+        run_callbacks :create do
+          create_tenant(tenant)
 
-        switch(tenant) do
-          import_database_schema
+          switch(tenant) do
+            import_database_schema
 
-          # Seed data if appropriate
-          seed_data if Apartment.seed_after_create
+            # Seed data if appropriate
+            seed_data if Apartment.seed_after_create
 
-          yield if block_given?
+            yield if block_given?
+          end
         end
       end
 
@@ -80,10 +85,12 @@ module Apartment
       #   @param {String} tenant name
       #
       def switch!(tenant = nil)
-        return reset if tenant.nil?
+        run_callbacks :switch do
+          return reset if tenant.nil?
 
-        connect_to_new(tenant).tap do
-          Apartment.connection.clear_query_cache
+          connect_to_new(tenant).tap do
+            Apartment.connection.clear_query_cache
+          end
         end
       end
 

@@ -9,7 +9,7 @@ module Apartment
     extend self
     extend Forwardable
 
-    def_delegators :adapter, :create, :drop, :switch, :switch!, :current, :each, :reset, :seed, :current_tenant, :default_tenant
+    def_delegators :adapter, :create, :drop, :switch, :switch!, :current, :each, :reset, :set_callback, :seed, :current_tenant, :default_tenant
 
     attr_writer :config
 
