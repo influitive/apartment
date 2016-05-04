@@ -6,6 +6,11 @@ module Apartment
     #   Assumes that tenant name should match subdomain
     #
     class Subdomain < Generic
+      def initialize(*args)
+        require 'public_suffix'
+        super
+      end
+
       def self.excluded_subdomains
         @excluded_subdomains ||= []
       end
@@ -40,7 +45,7 @@ module Apartment
       def subdomains(host)
         return [] unless named_host?(host)
 
-        host.split('.')[0..-(Apartment.tld_length + 2)]
+        (PublicSuffix.parse(host).trd || '').split('.')
       end
 
       def named_host?(host)
