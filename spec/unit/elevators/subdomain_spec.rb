@@ -41,6 +41,20 @@ describe Apartment::Elevators::Subdomain do
         elevator.parse_tenant_name(request).should == "foo"
       end
     end
+
+    context "assuming localhost" do
+      it "should return nil for localhost" do
+        request = ActionDispatch::Request.new('HTTP_HOST' => 'localhost')
+        elevator.parse_tenant_name(request).should be_nil
+      end
+    end
+
+    context "assuming ip address" do
+      it "should return nil for an ip address" do
+        request = ActionDispatch::Request.new('HTTP_HOST' => '127.0.0.1')
+        elevator.parse_tenant_name(request).should be_nil
+      end
+    end
   end
 
   describe "#call" do

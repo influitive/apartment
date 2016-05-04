@@ -43,13 +43,7 @@ module Apartment
       end
 
       def subdomains(host)
-        return [] unless named_host?(host)
-
-        (PublicSuffix.parse(host).trd || '').split('.')
-      end
-
-      def named_host?(host)
-        !(host.nil? || /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.match(host))
+        PublicSuffix.valid?(host) ? (PublicSuffix.parse(host).trd || '').split('.') : []
       end
     end
   end
