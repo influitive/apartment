@@ -9,3 +9,5 @@ group :local do
 end
 
 gemspec :path => "../"
+
+gem "test-unit"
