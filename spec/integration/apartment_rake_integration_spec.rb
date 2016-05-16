@@ -49,7 +49,7 @@ describe "apartment rake tasks", database: :postgresql do
 
     describe "#migrate" do
       it "should migrate all databases" do
-        ActiveRecord::Migrator.should_receive(:migrate).exactly(company_count).times
+        expect(ActiveRecord::Migrator).to receive(:migrate).exactly(company_count).times
 
         @rake['apartment:migrate'].invoke
       end
@@ -57,7 +57,7 @@ describe "apartment rake tasks", database: :postgresql do
 
     describe "#rollback" do
       it "should rollback all dbs" do
-        ActiveRecord::Migrator.should_receive(:rollback).exactly(company_count).times
+        expect(ActiveRecord::Migrator).to receive(:rollback).exactly(company_count).times
 
         @rake['apartment:rollback'].invoke
       end
@@ -65,7 +65,7 @@ describe "apartment rake tasks", database: :postgresql do
 
     describe "apartment:seed" do
       it "should seed all databases" do
-        Apartment::Tenant.should_receive(:seed).exactly(company_count).times
+        expect(Apartment::Tenant).to receive(:seed).exactly(company_count).times
 
         @rake['apartment:seed'].invoke
       end
