@@ -16,7 +16,7 @@ describe Apartment do
     it "should yield the Apartment object" do
       Apartment.configure do |config|
         config.excluded_models = []
-        config.should == Apartment
+        expect(config).to eq(Apartment)
       end
     end
 
@@ -24,7 +24,7 @@ describe Apartment do
       Apartment.configure do |config|
         config.excluded_models = excluded_models
       end
-      Apartment.excluded_models.should == excluded_models
+      expect(Apartment.excluded_models).to eq(excluded_models)
     end
 
     it "should set use_schemas" do
@@ -32,14 +32,14 @@ describe Apartment do
         config.excluded_models = []
         config.use_schemas = false
       end
-      Apartment.use_schemas.should be false
+      expect(Apartment.use_schemas).to be false
     end
 
     it "should set seed_data_file" do
       Apartment.configure do |config|
         config.seed_data_file = seed_data_file_path
       end
-      Apartment.seed_data_file.should eq(seed_data_file_path)
+      expect(Apartment.seed_data_file).to eq(seed_data_file_path)
     end
 
     it "should set seed_after_create" do
@@ -47,14 +47,14 @@ describe Apartment do
         config.excluded_models = []
         config.seed_after_create = true
       end
-      Apartment.seed_after_create.should be true
+      expect(Apartment.seed_after_create).to be true
     end
 
     it "should set tld_length" do
       Apartment.configure do |config|
         config.tld_length = 2
       end
-      Apartment.tld_length.should == 2
+      expect(Apartment.tld_length).to eq(2)
     end
 
     context "databases" do
@@ -70,11 +70,11 @@ describe Apartment do
         let(:tenant_names) { ['users', 'companies'] }
 
         it "should return object if it doesnt respond_to call" do
-          Apartment.tenant_names.should == tenant_names_from_array(tenant_names).keys
+          expect(Apartment.tenant_names).to eq(tenant_names_from_array(tenant_names).keys)
         end
 
         it "should set tenants_with_config" do
-          Apartment.tenants_with_config.should == tenant_names_from_array(tenant_names)
+          expect(Apartment.tenants_with_config).to eq(tenant_names_from_array(tenant_names))
         end
       end
 
@@ -82,11 +82,11 @@ describe Apartment do
         let(:tenant_names) { lambda { ['users', 'companies'] } }
 
         it "should return object if it doesnt respond_to call" do
-          Apartment.tenant_names.should == tenant_names_from_array(tenant_names.call).keys
+          expect(Apartment.tenant_names).to eq(tenant_names_from_array(tenant_names.call).keys)
         end
 
         it "should set tenants_with_config" do
-          Apartment.tenants_with_config.should == tenant_names_from_array(tenant_names.call)
+          expect(Apartment.tenants_with_config).to eq(tenant_names_from_array(tenant_names.call))
         end
       end
 
@@ -94,11 +94,11 @@ describe Apartment do
         let(:tenant_names) { { users: users_conf_hash }.with_indifferent_access }
 
         it "should return object if it doesnt respond_to call" do
-          Apartment.tenant_names.should == tenant_names.keys
+          expect(Apartment.tenant_names).to eq(tenant_names.keys)
         end
 
         it "should set tenants_with_config" do
-          Apartment.tenants_with_config.should == tenant_names
+          expect(Apartment.tenants_with_config).to eq(tenant_names)
         end
       end
 
@@ -106,11 +106,11 @@ describe Apartment do
         let(:tenant_names) { lambda { { users: users_conf_hash }.with_indifferent_access } }
 
         it "should return object if it doesnt respond_to call" do
-          Apartment.tenant_names.should == tenant_names.call.keys
+          expect(Apartment.tenant_names).to eq(tenant_names.call.keys)
         end
 
         it "should set tenants_with_config" do
-          Apartment.tenants_with_config.should == tenant_names.call
+          expect(Apartment.tenants_with_config).to eq(tenant_names.call)
         end
       end
     end

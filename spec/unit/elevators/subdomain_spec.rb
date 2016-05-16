@@ -9,12 +9,12 @@ describe Apartment::Elevators::Subdomain do
     context "assuming tld_length of 1" do
       it "should parse subdomain" do
         request = ActionDispatch::Request.new('HTTP_HOST' => 'foo.bar.com')
-        elevator.parse_tenant_name(request).should == 'foo'
+        expect(elevator.parse_tenant_name(request)).to eq('foo')
       end
 
       it "should return nil when no subdomain" do
         request = ActionDispatch::Request.new('HTTP_HOST' => 'bar.com')
-        elevator.parse_tenant_name(request).should be_nil
+        expect(elevator.parse_tenant_name(request)).to be_nil
       end
     end
 
@@ -27,26 +27,26 @@ describe Apartment::Elevators::Subdomain do
 
       it "should parse subdomain in the third level domain" do
         request = ActionDispatch::Request.new('HTTP_HOST' => 'foo.bar.co.uk')
-        elevator.parse_tenant_name(request).should == "foo"
+        expect(elevator.parse_tenant_name(request)).to eq("foo")
       end
 
       it "should return nil when no subdomain in the third level domain" do
         request = ActionDispatch::Request.new('HTTP_HOST' => 'bar.co.uk')
-        elevator.parse_tenant_name(request).should be_nil
+        expect(elevator.parse_tenant_name(request)).to be_nil
       end
     end
   end
 
   describe "#call" do
     it "switches to the proper tenant" do
-      Apartment::Tenant.should_receive(:switch).with('tenant1')
+      expect(Apartment::Tenant).to receive(:switch).with('tenant1')
       elevator.call('HTTP_HOST' => 'tenant1.example.com')
     end
 
     it "ignores excluded subdomains" do
       described_class.excluded_subdomains = %w{foo}
 
-      Apartment::Tenant.should_not_receive(:switch)
+      expect(Apartment::Tenant).not_to receive(:switch)
 
       elevator.call('HTTP_HOST' => 'foo.bar.com')
 

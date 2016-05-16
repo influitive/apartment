@@ -14,13 +14,13 @@ shared_examples_for "a generic apartment adapter" do
   describe "#create" do
 
     it "should create the new databases" do
-      tenant_names.should include(db1)
-      tenant_names.should include(db2)
+      expect(tenant_names).to include(db1)
+      expect(tenant_names).to include(db2)
     end
 
     it "should load schema.rb to new schema" do
       subject.switch(db1) do
-        connection.tables.should include('companies')
+        expect(connection.tables).to include('companies')
       end
     end
 
@@ -31,32 +31,32 @@ shared_examples_for "a generic apartment adapter" do
 
       subject.create(db2) do
         @count = User.count
-        subject.current.should == db2
+        expect(subject.current).to eq(db2)
         User.create
       end
 
-      subject.current.should_not == db2
+      expect(subject.current).not_to eq(db2)
 
-      subject.switch(db2){ User.count.should == @count + 1 }
+      subject.switch(db2){ expect(User.count).to eq(@count + 1) }
     end
   end
 
   describe "#drop" do
     it "should remove the db" do
       subject.drop db1
-      tenant_names.should_not include(db1)
+      expect(tenant_names).not_to include(db1)
     end
   end
 
   describe "#switch!" do
     it "should connect to new db" do
       subject.switch!(db1)
-      subject.current.should == db1
+      expect(subject.current).to eq(db1)
     end
 
     it "should reset connection if database is nil" do
       subject.switch!
-      subject.current.should == default_tenant
+      expect(subject.current).to eq(default_tenant)
     end
 
     it "should raise an error if database is invalid" do
@@ -69,9 +69,9 @@ shared_examples_for "a generic apartment adapter" do
   describe "#switch" do
     it "connects and resets the tenant" do
       subject.switch(db1) do
-        subject.current.should == db1
+        expect(subject.current).to eq(db1)
       end
-      subject.current.should == default_tenant
+      expect(subject.current).to eq(default_tenant)
     end
 
     # We're often finding when using Apartment in tests, the `current` (ie the previously connect to db)
@@ -88,7 +88,7 @@ shared_examples_for "a generic apartment adapter" do
       expect(Apartment::Deprecation).to receive(:warn)
 
       subject.switch(db1)
-      subject.current.should == db1
+      expect(subject.current).to eq(db1)
     end
   end
 
@@ -97,7 +97,7 @@ shared_examples_for "a generic apartment adapter" do
       expect(Apartment::Deprecation).to receive(:warn)
 
       subject.process(db1) do
-        subject.current.should == db1
+        expect(subject.current).to eq(db1)
       end
     end
   end
@@ -106,14 +106,14 @@ shared_examples_for "a generic apartment adapter" do
     it "should reset connection" do
       subject.switch!(db1)
       subject.reset
-      subject.current.should == default_tenant
+      expect(subject.current).to eq(default_tenant)
     end
   end
 
   describe "#current" do
     it "should return the current db name" do
       subject.switch!(db1)
-      subject.current.should == db1
+      expect(subject.current).to eq(db1)
     end
   end
 
