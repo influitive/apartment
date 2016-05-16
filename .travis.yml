@@ -1,25 +1,22 @@
 language: ruby
 rvm:
-  - 1.9.3
   - 2.0.0
-  - 2.1.0
-  - 2.2.0
-  - jruby-19mode
-  - jruby-head
+  - 2.1.9
+  - 2.2.4
+  - 2.3.1
+  - jruby-9.0.5.0
 gemfile:
   - gemfiles/rails_3_2.gemfile
   - gemfiles/rails_4_0.gemfile
   - gemfiles/rails_4_1.gemfile
   - gemfiles/rails_4_2.gemfile
-bundler_args: --without local --verbose
+bundler_args: --without local
 before_install:
   - gem install bundler -v '> 1.5.0'
 env:
   RUBY_GC_MALLOC_LIMIT: 90000000
   RUBY_FREE_MIN: 200000
 matrix:
-  allow_failures:
-    - rvm: jruby-head
   exclude:
     - rvm: 2.2.0
       gemfile: gemfiles/rails_3_2.gemfile

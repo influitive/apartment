@@ -1,7 +1,7 @@
 if defined?(JRUBY_VERSION)
 
   require 'spec_helper'
-  require 'lib/apartment/adapters/jdbc_mysql_adapter'
+  require 'apartment/adapters/jdbc_mysql_adapter'
 
   describe Apartment::Adapters::JDBCMysqlAdapter, database: :mysql do
 
