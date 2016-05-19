@@ -3,6 +3,10 @@ require 'spec_helper'
 shared_examples_for "a connection based apartment adapter" do
   include Apartment::Spec::AdapterRequirements
 
+  def get_tenant_name
+    Apartment.connection_config[:database]
+  end
+
   let(:default_tenant){ subject.switch{ ActiveRecord::Base.connection.current_database } }
 
   describe "#init" do
@@ -13,6 +17,12 @@ shared_examples_for "a connection based apartment adapter" do
       Apartment::Tenant.init
 
       expect(Company.connection.object_id).not_to eq(ActiveRecord::Base.connection.object_id)
+    end
+
+    it "has the correct connection handler" do
+      Apartment::Tenant.init
+
+      expect(Apartment.connection_handler.class.name).to eq "Apartment::ConnectionHandler"
     end
   end
 

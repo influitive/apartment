@@ -12,7 +12,6 @@ module Apartment
           # any before/after hooks defined in individual tests
           # Otherwise these actually get run after test defined hooks
           around(:each) do |example|
-
             def config
               db = RSpec.current_example.metadata.fetch(:database, :postgresql)
 
@@ -20,9 +19,10 @@ module Apartment
             end
 
             # before
-            Apartment::Tenant.reload!(config)
             ActiveRecord::Base.establish_connection config
             Apartment::Test.reset_table_names
+
+            Apartment::Tenant.reload!(config)
 
             example.run
 
@@ -32,13 +32,13 @@ module Apartment
 
             Apartment.excluded_models.each do |model|
               klass = model.constantize
-
               Apartment.connection_class.remove_connection(klass)
               klass.clear_all_connections!
             end
             Apartment::Test.reset_table_names
             Apartment.reset
             Apartment::Tenant.reload!
+            ActiveRecord::Base.establish_connection config
           end
         end
       end

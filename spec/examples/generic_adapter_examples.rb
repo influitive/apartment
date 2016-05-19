@@ -3,6 +3,23 @@ require 'spec_helper'
 shared_examples_for "a generic apartment adapter" do
   include Apartment::Spec::AdapterRequirements
 
+  def dequote(string)
+    string[0] == '"' && string[string.length - 1] == '"' ? string[1..-2] : string
+  end
+
+  #   I don't particularly like using Tenant#current for postgres tests,
+  #   because it just return the instance var. This way we're looking at the
+  #   actual schema search path of the connection. More peace of mind :)
+  #
+  def current_db
+    case Apartment::Tenant.adapter.class.name
+    when "Apartment::Adapters::PostgresqlAdapter"
+      dequote(Apartment.connection.schema_search_path.split(",").first.strip)
+    else
+      Apartment::Tenant.current
+    end
+  end
+
   before {
     Apartment.prepend_environment = false
     Apartment.append_environment = false
@@ -25,6 +42,7 @@ shared_examples_for "a generic apartment adapter" do
     end
 
     it "should yield to block if passed and reset" do
+      subject.reset
       subject.drop(db2) # so we don't get errors on creation
 
       @count = 0  # set our variable so its visible in and outside of blocks
@@ -64,6 +82,30 @@ shared_examples_for "a generic apartment adapter" do
         subject.switch! 'unknown_database'
       }.to raise_error(Apartment::ApartmentError)
     end
+
+    it "should be threadsafe" do
+      unless Apartment::Tenant.adapter.class.name == "Apartment::Adapters::Sqlite3Adapter"
+        lock = Mutex.new
+        threads = []
+        dbs = []
+        pools = []
+        # TODO: look in to 'too many connections' error.
+        40.times do |n|
+          threads << Thread.new do
+            db = send("db#{(n % 2) + 1}")
+            Apartment::Tenant.switch!(db)
+
+            lock.synchronize do
+              dbs   << [db, current_db]
+              pools << ActiveRecord::Base.connection_pool.object_id
+            end
+          end
+        end
+        threads.each(&:join)
+
+        expect(dbs.all?{ |expected, actual| expected == actual }).to be true
+      end
+    end
   end
 
   describe "#switch" do
@@ -82,23 +124,6 @@ shared_examples_for "a generic apartment adapter" do
       expect {
         subject.switch(db1){ subject.drop(db2) }
       }.to_not raise_error
-    end
-
-    it "warns if no block is given, but calls switch!" do
-      expect(Apartment::Deprecation).to receive(:warn)
-
-      subject.switch(db1)
-      expect(subject.current).to eq(db1)
-    end
-  end
-
-  describe "#process" do
-    it "is deprecated" do
-      expect(Apartment::Deprecation).to receive(:warn)
-
-      subject.process(db1) do
-        expect(subject.current).to eq(db1)
-      end
     end
   end
 

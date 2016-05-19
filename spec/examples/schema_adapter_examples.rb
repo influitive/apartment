@@ -18,15 +18,15 @@ shared_examples_for "a schema based apartment adapter" do
     it "should process model exclusions" do
       Apartment::Tenant.init
 
-      expect(Company.table_name).to eq("public.companies")
+      expect(Company.connection_pool).to_not eq(ActiveRecord::Base.connection_pool)
     end
 
     context "with a default_schema", :default_schema => true do
 
-      it "should set the proper table_name on excluded_models" do
+      it "should set excluded_models to default_schema" do
         Apartment::Tenant.init
 
-        expect(Company.table_name).to eq("#{default_schema}.companies")
+        expect(Company.connection.schema_search_path).to match /^"?#{default_schema}/
       end
 
       it 'sets the search_path correctly' do
@@ -79,7 +79,7 @@ shared_examples_for "a schema based apartment adapter" do
         expect(tenant_names).to include(db.to_s)
       end
 
-      after{ subject.drop(db) }
+      after { subject.drop(db) rescue nil }
     end
 
   end
@@ -179,7 +179,7 @@ shared_examples_for "a schema based apartment adapter" do
         expect(connection.schema_search_path).to start_with %{"#{db.to_s}"}
       end
 
-      after{ subject.drop(db) }
+      after { subject.drop(db) rescue nil }
     end
 
     describe "with default_schema specified", :default_schema => true do
