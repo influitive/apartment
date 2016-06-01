@@ -152,7 +152,7 @@ module Apartment
 
       def drop_command(conn, tenant)
         # connection.drop_database   note that drop_database will not throw an exception, so manually execute
-        conn.execute("DROP DATABASE #{environmentify(tenant)}")
+        conn.execute("DROP DATABASE `#{environmentify(tenant)}`")
       end
 
       class SeparateDbConnectionHandler < ::ActiveRecord::Base
