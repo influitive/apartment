@@ -162,9 +162,6 @@ module Apartment
         conn.execute("DROP DATABASE #{environmentify(tenant)}")
       end
 
-      class SeparateDbConnectionHandler < ::ActiveRecord::Base
-      end
-
       #   Create the tenant
       #
       #   @param {String} tenant Database name
@@ -262,12 +259,16 @@ module Apartment
         Apartment.db_config_for(tenant).clone
       end
 
-      # neutral connection is necessary whenever you need to create/remove a database from a server.
-      # example: when you use postgresql, you need to connect to the default postgresql database before you create your own.
-      def with_neutral_connection(tenant, &block)
-        SeparateDbConnectionHandler.establish_connection(multi_tenantify(tenant, false))
-        yield(SeparateDbConnectionHandler.connection)
-        SeparateDbConnectionHandler.connection.close
+     def with_neutral_connection(tenant, &block)
+        if Apartment.with_multi_server_setup
+          # neutral connection is necessary whenever you need to create/remove a database from a server.
+          # example: when you use postgresql, you need to connect to the default postgresql database before you create your own.
+          SeparateDbConnectionHandler.establish_connection(multi_tenantify(tenant, false))
+          yield(SeparateDbConnectionHandler.connection)
+          SeparateDbConnectionHandler.connection.close
+        else
+          yield(Apartment.connection)
+        end
       end
 
       def reset_on_connection_exception?
@@ -284,6 +285,9 @@ module Apartment
 
       def raise_connect_error!(tenant, exception)
         raise TenantNotFound, "Error while connecting to tenant #{environmentify(tenant)}: #{ exception.message }"
+      end
+
+      class SeparateDbConnectionHandler < ::ActiveRecord::Base
       end
     end
   end
