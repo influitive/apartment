@@ -10,6 +10,7 @@ gemfile:
   - gemfiles/rails_4_0.gemfile
   - gemfiles/rails_4_1.gemfile
   - gemfiles/rails_4_2.gemfile
+  - gemfiles/rails_5_0.gemfile
 bundler_args: --without local
 before_install:
   - gem install bundler -v '> 1.5.0'
