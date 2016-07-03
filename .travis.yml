@@ -19,6 +19,10 @@ env:
   RUBY_FREE_MIN: 200000
 matrix:
   exclude:
+    - rvm: 2.0.0
+      gemfile: gemfiles/rails_5_0.gemfile
+    - rvm: 2.1.9
+      gemfile: gemfiles/rails_5_0.gemfile
     - rvm: 2.2.0
       gemfile: gemfiles/rails_3_2.gemfile
   fast_finish: true
