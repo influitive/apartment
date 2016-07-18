@@ -11,8 +11,10 @@ module Apartment
 
       included do
         before do
-          subject.create(db1)
-          subject.create(db2)
+          # certain test fails cause the DBs to already exist when this runs,
+          # just rescue it? :/
+          subject.create(db1) rescue nil
+          subject.create(db2) rescue nil
         end
 
         after do

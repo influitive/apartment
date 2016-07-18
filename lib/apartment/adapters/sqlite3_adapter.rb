@@ -10,9 +10,10 @@ module Apartment
   module Adapters
     class Sqlite3Adapter < AbstractAdapter
       def initialize(config)
-        @default_dir = File.expand_path(File.dirname(config[:database]))
-
         super
+
+        @default_dir = File.expand_path(File.dirname(config[:database]))
+        @default_tenant = File.basename(config[:database], '.sqlite3')
       end
 
       def drop(tenant)
@@ -28,11 +29,11 @@ module Apartment
 
     protected
 
-      def connect_to_new(tenant)
+      def connection_connect(klass, tenant)
         raise TenantNotFound,
           "The tenant #{environmentify(tenant)} cannot be found." unless File.exists?(database_file(tenant))
 
-        super database_file(tenant)
+        super klass, database_file(tenant)
       end
 
       def create_tenant(tenant)

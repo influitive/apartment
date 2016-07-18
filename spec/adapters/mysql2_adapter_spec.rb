@@ -3,6 +3,18 @@ require 'apartment/adapters/mysql2_adapter'
 
 describe Apartment::Adapters::Mysql2Adapter, database: :mysql do
   unless defined?(JRUBY_VERSION)
+    # patch for ActiveRecord 4.0 and MySQL 5.7 ...
+    if Rails::VERSION::MAJOR == 4 && Rails::VERSION::MINOR == 0
+      # force loading of the adapter ..
+      require 'active_record/connection_adapters/abstract_mysql_adapter'
+      module ActiveRecord
+        module ConnectionAdapters
+          class AbstractMysqlAdapter
+            NATIVE_DATABASE_TYPES[:primary_key] = "int(11) auto_increment PRIMARY KEY"
+          end
+        end
+      end
+    end
 
     subject(:adapter){ Apartment::Tenant.mysql2_adapter config }
 
@@ -35,7 +47,7 @@ describe Apartment::Adapters::Mysql2Adapter, database: :mysql do
         it "should process model exclusions" do
           Apartment::Tenant.init
 
-          expect(Company.table_name).to eq("#{default_tenant}.companies")
+          expect(Company.connection_pool).not_to eq(ActiveRecord::Base.connection_pool)
         end
       end
     end

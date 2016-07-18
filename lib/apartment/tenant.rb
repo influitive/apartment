@@ -16,6 +16,11 @@ module Apartment
     #   Initialize Apartment config options such as excluded_models
     #
     def init
+      require 'apartment/connection_handler' unless defined?(Apartment::ConnectionHandler)
+      old_con = Apartment.connection_class.remove_connection(Apartment.connection_class)
+      Apartment.connection_class.default_connection_handler = Apartment::ConnectionHandler.new
+      Apartment.connection_class.establish_connection(old_con)
+
       adapter.process_excluded_models
     end
 
@@ -62,15 +67,6 @@ module Apartment
     #
     def config
       @config ||= Apartment.connection_config
-    end
-  end
-
-  def self.const_missing(const_name)
-    if const_name == :Database
-      Apartment::Deprecation.warn "`Apartment::Database` has been deprecated. Use `Apartment::Tenant` instead."
-      Tenant
-    else
-      super
     end
   end
 end

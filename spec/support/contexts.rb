@@ -5,12 +5,12 @@ shared_context "with default schema", :default_schema => true do
 
   before do
     Apartment::Test.create_schema(default_schema)
-    Apartment.default_schema = default_schema
+    Apartment.default_tenant = default_schema
   end
 
   after do
-    # resetting default_schema so we can drop and any further resets won't try to access droppped schema
-    Apartment.default_schema = nil
+    # resetting default_schema so we can drop and any further resets won't try to access dropped schema
+    Apartment.default_tenant = nil
     Apartment::Test.drop_schema(default_schema)
   end
 end
@@ -47,6 +47,6 @@ shared_context "persistent_schemas", :persistent_schemas => true do
 
   after do
     Apartment.persistent_schemas = []
-    persistent_schemas.map{|schema| subject.drop(schema) }
+    persistent_schemas.map{|schema| subject.drop(schema) rescue nil }
   end
 end

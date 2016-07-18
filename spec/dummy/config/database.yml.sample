@@ -10,7 +10,7 @@ test:
   driver: org.postgresql.Driver
   url: jdbc:postgresql://localhost:5432/apartment_postgresql_test
   timeout: 5000
-  pool: 5
+  pool: 100
 
 development:
   adapter: postgresql
@@ -20,19 +20,19 @@ development:
   driver: org.postgresql.Driver
   url: jdbc:postgresql://localhost:5432/apartment_postgresql_development
   timeout: 5000
-  pool: 5
+  pool: 100
 <% else %>
 test:
   adapter: postgresql
   database: apartment_postgresql_test
   min_messages: WARNING
-  pool: 5
+  pool: 100
   timeout: 5000
 
 development:
   adapter: postgresql
   database: apartment_postgresql_development
   min_messages: WARNING
-  pool: 5
+  pool: 100
   timeout: 5000
 <% end %>

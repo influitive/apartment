@@ -13,6 +13,7 @@ module Apartment
       #
       def initialize(config)
         @config = config
+        @default_tenant = @config[:database]
       end
 
       #   Create a new tenant, import schema, seed if appropriate
@@ -34,24 +35,6 @@ module Apartment
         end
       end
 
-      #   Get the current tenant name
-      #
-      #   @return {String} current tenant name
-      #
-      def current_database
-        Apartment::Deprecation.warn "[Deprecation Warning] `current_database` is now deprecated, please use `current`"
-        current
-      end
-
-      #   Get the current tenant name
-      #
-      #   @return {String} current tenant name
-      #
-      def current_tenant
-        Apartment::Deprecation.warn "[Deprecation Warning] `current_tenant` is now deprecated, please use `current`"
-        current
-      end
-
       #   Note alias_method here doesn't work with inheritence apparently ??
       #
       def current
@@ -63,9 +46,8 @@ module Apartment
       #   @return {String} default tenant name
       #
       def default_tenant
-        @default_tenant || Apartment.default_tenant
+        Apartment.default_tenant || @default_tenant
       end
-      alias :default_schema :default_tenant # TODO deprecate default_schema
 
       #   Drop the tenant
       #
@@ -99,25 +81,14 @@ module Apartment
       #   @param {String?} tenant to connect to
       #
       def switch(tenant = nil)
-        if block_given?
-          begin
-            previous_tenant = current
-            switch!(tenant)
-            yield
-
-          ensure
-            switch!(previous_tenant) rescue reset
-          end
-        else
-          Apartment::Deprecation.warn("[Deprecation Warning] `switch` now requires a block reset to the default tenant after the block. Please use `switch!` instead if you don't want this")
+        begin
+          previous_tenant = current
           switch!(tenant)
-        end
-      end
+          yield
 
-      #   [Deprecated]
-      def process(tenant = nil, &block)
-        Apartment::Deprecation.warn("[Deprecation Warning] `process` is now deprecated. Please use `switch`")
-        switch(tenant, &block)
+        ensure
+          switch!(previous_tenant) rescue reset
+        end
       end
 
       #   Iterate over all tenants, switch to tenant and yield tenant name
@@ -154,12 +125,12 @@ module Apartment
     protected
 
       def process_excluded_model(excluded_model)
-        excluded_model.constantize.establish_connection @config
+        connect_to_new(default_tenant, excluded_model.constantize, true)
       end
 
       def drop_command(conn, tenant)
         # connection.drop_database   note that drop_database will not throw an exception, so manually execute
-        conn.execute("DROP DATABASE #{environmentify(tenant)}")
+        conn.execute("DROP DATABASE #{conn.quote_table_name(environmentify(tenant))}")
       end
 
       class SeparateDbConnectionHandler < ::ActiveRecord::Base
@@ -185,12 +156,26 @@ module Apartment
       #
       #   @param {String} tenant Database name
       #
-      def connect_to_new(tenant)
-        Apartment.establish_connection multi_tenantify(tenant)
-        Apartment.connection.active?   # call active? to manually check if this connection is valid
+      def connect_to_new(tenant, klass = Apartment.connection_class, force_reconnect = false)
+        if Apartment.use_schemas && !force_reconnect
+          conditional_connect(klass, tenant)
+        else
+          connection_connect(klass, tenant)
+        end
+        local_connect(klass, tenant) if respond_to?(:local_connect)
+        Apartment.connection.active?
       rescue *rescuable_exceptions => exception
         Apartment::Tenant.reset if reset_on_connection_exception?
         raise_connect_error!(tenant, exception)
+      end
+
+      def conditional_connect(klass, tenant)
+        conf = multi_tenantify(tenant)
+        Apartment.switch_to_host(klass, conf, conf[:host])
+      end
+
+      def connection_connect(klass, tenant)
+        klass.establish_connection(multi_tenantify(tenant))
       end
 
       #   Prepend the environment if configured and the environment isn't already there
@@ -199,6 +184,7 @@ module Apartment
       #   @return {String} tenant name with Rails environment *optionally* prepended
       #
       def environmentify(tenant)
+        tenant = tenant.to_s
         unless tenant.include?(Rails.env)
           if Apartment.prepend_environment
             "#{Rails.env}_#{tenant}"
@@ -275,15 +261,15 @@ module Apartment
       end
 
       def raise_drop_tenant_error!(tenant, exception)
-        raise TenantNotFound, "Error while dropping tenant #{environmentify(tenant)}: #{ exception.message }"
+        raise TenantNotFound, "Error while dropping tenant #{environmentify(tenant)}: #{exception.message}"
       end
 
       def raise_create_tenant_error!(tenant, exception)
-        raise TenantExists, "Error while creating tenant #{environmentify(tenant)}: #{ exception.message }"
+        raise TenantExists, "Error while creating tenant #{environmentify(tenant)}: #{exception.message}"
       end
 
       def raise_connect_error!(tenant, exception)
-        raise TenantNotFound, "Error while connecting to tenant #{environmentify(tenant)}: #{ exception.message }"
+        raise TenantNotFound, "Error while connecting to tenant #{environmentify(tenant)}: #{exception.message}"
       end
     end
   end
