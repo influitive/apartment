@@ -140,7 +140,7 @@ module Apartment
       #   @return {String} raw SQL contaning inserts with data from schema_migrations
       #
       def pg_dump_schema_migrations_data
-        with_pg_env { `pg_dump -a --inserts -t schema_migrations -n #{default_tenant} #{dbname}` }
+        with_pg_env { `pg_dump -a --inserts -t schema_migrations -t ar_internal_metadata -n #{default_tenant} #{dbname}` }
       end
 
       # Temporary set Postgresql related environment variables if there are in @config
