@@ -434,6 +434,7 @@ values being a hash with the database configuration to use.
 Example:
 
 ```ruby
+config.with_multi_server_setup = true
 config.tenant_names = {
   'tenant1' => {
     adapter: 'postgresql',

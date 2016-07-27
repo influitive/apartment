@@ -15,12 +15,6 @@ module Apartment
       "db%d" % @x += 1
     end
 
-    def reset_table_names
-      Apartment.excluded_models.each do |model|
-        model.constantize.reset_table_name
-      end
-    end
-
     def drop_schema(schema)
       ActiveRecord::Base.connection.execute("DROP SCHEMA IF EXISTS #{schema} CASCADE") rescue true
     end

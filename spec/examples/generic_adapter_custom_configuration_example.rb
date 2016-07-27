@@ -12,6 +12,11 @@ shared_examples_for "a generic apartment adapter able to handle custom configura
 
   before do
     Apartment.tenant_names = custom_tenant_names
+    Apartment.with_multi_server_setup = true
+  end
+
+  after do
+    Apartment.with_multi_server_setup = false
   end
 
   context "database key taken from specific config" do
