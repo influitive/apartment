@@ -3,11 +3,11 @@
 source "http://rubygems.org"
 
 gem "rails", "~> 3.2"
+gem "test-unit", "~> 3.0"
 
 group :local do
   gem "pry"
+  gem "guard-rspec", "~> 4.2"
 end
 
 gemspec :path => "../"
-
-gem "test-unit"
