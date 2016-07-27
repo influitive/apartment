@@ -34,6 +34,27 @@ module Apartment
         reset
       end
 
+      #   Create a new tenant, import schema, seed if appropriate
+      #
+      #   @param {String} tenant Tenant name
+      #
+      def create(tenant)
+        run_callbacks :create do
+          create_tenant(tenant)
+
+          Apartment.establish_connection multi_tenantify(tenant)
+          import_database_schema
+          Apartment.establish_connection @config
+
+          switch(tenant) do
+            # Seed data if appropriate
+            seed_data if Apartment.seed_after_create
+
+            yield if block_given?
+          end
+        end
+      end
+
       #   Reset current tenant to the default_tenant
       #
       def reset
