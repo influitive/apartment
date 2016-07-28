@@ -1,3 +1,15 @@
+# 1.2.0
+  * July 28, 2016
+
+  - Official Rails 5 support
+
+# 1.1.0
+  * May 26, 2016
+
+  - Reset tenant after each request
+  - [Support callbacks](https://github.com/influitive/apartment/commit/ff9c9d092a781026502f5997c0bbedcb5748bc83) on switch [cbeer]
+  - Preliminary support for [separate database hosts](https://github.com/influitive/apartment/commit/abdffbf8cd9fba87243f16c86390da13e318ee1f) [apneadiving]
+
 # 1.0.2
   * July 2, 2015
 
@@ -323,4 +335,3 @@
   * March 30, 2011 *
 
   - Original pass from Ryan
-
