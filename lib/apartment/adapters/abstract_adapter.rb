@@ -105,7 +105,7 @@ module Apartment
             switch!(tenant)
             yield
 
-          ensure
+          rescue TenantNotFound
             switch!(previous_tenant) rescue reset
           end
         else
