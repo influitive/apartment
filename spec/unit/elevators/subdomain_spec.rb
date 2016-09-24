@@ -53,4 +53,28 @@ describe Apartment::Elevators::Subdomain do
       described_class.excluded_subdomains = nil
     end
   end
+
+  describe ".excluded_subdomain?" do
+    it "must ignore any item of the list" do
+      described_class.excluded_subdomains = %w{foo bar cereal}
+
+      expect(described_class.excluded_subdomain?("foo")).to eq(true)
+      expect(described_class.excluded_subdomain?("bar")).to eq(true)
+      expect(described_class.excluded_subdomain?("cereal")).to eq(true)
+      expect(described_class.excluded_subdomain?("flakes")).to eq(false)
+
+      described_class.excluded_subdomains = nil
+    end
+
+    it "must ignore regexp's on the list that match" do
+      described_class.excluded_subdomains = [/foo/, /bar/, /cereal-\d+/]
+
+      expect(described_class.excluded_subdomain?("food")).to eq(true)
+      expect(described_class.excluded_subdomain?("bareatric")).to eq(true)
+      expect(described_class.excluded_subdomain?("cereal")).to eq(false)
+      expect(described_class.excluded_subdomain?("cereal-1985")).to eq(true)
+
+      described_class.excluded_subdomains = nil
+    end
+  end
 end
