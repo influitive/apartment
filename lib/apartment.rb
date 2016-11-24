@@ -76,7 +76,7 @@ module Apartment
     end
 
     def tld_length
-      @tld_length || 1
+      @tld_length || Rails.application.config.action_dispatch.tld_length
     end
 
     # Reset all the config for Apartment
