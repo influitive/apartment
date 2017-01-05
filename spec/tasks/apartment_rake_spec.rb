@@ -10,6 +10,7 @@ describe "apartment rake tasks" do
     load 'tasks/apartment.rake'
     # stub out rails tasks
     Rake::Task.define_task('db:migrate')
+    Rake::Task.define_task('db:migrate:prallel')
     Rake::Task.define_task('db:seed')
     Rake::Task.define_task('db:rollback')
     Rake::Task.define_task('db:migrate:up')
@@ -45,6 +46,17 @@ describe "apartment rake tasks" do
       it "should migrate public and all multi-tenant dbs" do
         expect(Apartment::Migrator).to receive(:migrate).exactly(tenant_count).times
         @rake['apartment:migrate'].invoke
+      end
+    end
+
+    describe "apartment:migrate:prallel" do
+      before do
+        allow(Apartment::Migrator).to receive(:migrate)   # don't care about this
+      end
+
+      it "should migrate public and all multi-tenant dbs" do
+        expect(Parallel).to receive(:each).with(tenant_names, in_processes: 2)
+        @rake['apartment:migrate:parallel'].invoke
       end
     end
 

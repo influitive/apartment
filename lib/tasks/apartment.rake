@@ -27,6 +27,23 @@ apartment_namespace = namespace :apartment do
     end
   end
 
+  namespace :migrate do
+    desc 'Migrate all tenants in parallel'
+    task :parallel, [:in_processes] do |task, args|
+      args.with_defaults(in_processes: 2)
+      warn_if_tenants_empty
+
+      Parallel.each(tenants, in_processes: args.in_processes) do |tenant_name|
+        begin
+          puts("Migrating #{tenant_name} tenant")
+          Apartment::Migrator.migrate tenant_name
+        rescue Apartment::TenantNotFound => e
+          puts e.message
+        end
+      end
+    end
+  end
+
   desc "Seed all tenants"
   task :seed do
     warn_if_tenants_empty
