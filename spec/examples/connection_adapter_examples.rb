@@ -12,7 +12,7 @@ shared_examples_for "a connection based apartment adapter" do
       end
       Apartment::Tenant.init
 
-      Company.connection.object_id.should_not == ActiveRecord::Base.connection.object_id
+      expect(Company.connection.object_id).not_to eq(ActiveRecord::Base.connection.object_id)
     end
   end
 

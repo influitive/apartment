@@ -1,7 +1,7 @@
 if defined?(JRUBY_VERSION)
 
   require 'spec_helper'
-  require 'lib/apartment/adapters/jdbc_postgresql_adapter'
+  require 'apartment/adapters/jdbc_postgresql_adapter'
 
   describe Apartment::Adapters::JDBCPostgresqlAdapter, database: :postgresql do
 

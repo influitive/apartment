@@ -3,6 +3,9 @@ require 'apartment/deprecation'
 module Apartment
   module Adapters
     class AbstractAdapter
+      include ActiveSupport::Callbacks
+      define_callbacks :create, :switch
+
       attr_writer :default_tenant
 
       #   @constructor
@@ -17,15 +20,17 @@ module Apartment
       #   @param {String} tenant Tenant name
       #
       def create(tenant)
-        create_tenant(tenant)
+        run_callbacks :create do
+          create_tenant(tenant)
 
-        switch(tenant) do
-          import_database_schema
+          switch(tenant) do
+            import_database_schema
 
-          # Seed data if appropriate
-          seed_data if Apartment.seed_after_create
+            # Seed data if appropriate
+            seed_data if Apartment.seed_after_create
 
-          yield if block_given?
+            yield if block_given?
+          end
         end
       end
 
@@ -80,10 +85,12 @@ module Apartment
       #   @param {String} tenant name
       #
       def switch!(tenant = nil)
-        return reset if tenant.nil?
+        run_callbacks :switch do
+          return reset if tenant.nil?
 
-        connect_to_new(tenant).tap do
-          Apartment.connection.clear_query_cache
+          connect_to_new(tenant).tap do
+            Apartment.connection.clear_query_cache
+          end
         end
       end
 
@@ -152,10 +159,7 @@ module Apartment
 
       def drop_command(conn, tenant)
         # connection.drop_database   note that drop_database will not throw an exception, so manually execute
-        conn.execute("DROP DATABASE #{environmentify(tenant)}")
-      end
-
-      class SeparateDbConnectionHandler < ::ActiveRecord::Base
+        conn.execute("DROP DATABASE #{conn.quote_table_name(environmentify(tenant))}")
       end
 
       #   Create the tenant
@@ -255,12 +259,16 @@ module Apartment
         Apartment.db_config_for(tenant).clone
       end
 
-      # neutral connection is necessary whenever you need to create/remove a database from a server.
-      # example: when you use postgresql, you need to connect to the default postgresql database before you create your own.
-      def with_neutral_connection(tenant, &block)
-        SeparateDbConnectionHandler.establish_connection(multi_tenantify(tenant, false))
-        yield(SeparateDbConnectionHandler.connection)
-        SeparateDbConnectionHandler.connection.close
+     def with_neutral_connection(tenant, &block)
+        if Apartment.with_multi_server_setup
+          # neutral connection is necessary whenever you need to create/remove a database from a server.
+          # example: when you use postgresql, you need to connect to the default postgresql database before you create your own.
+          SeparateDbConnectionHandler.establish_connection(multi_tenantify(tenant, false))
+          yield(SeparateDbConnectionHandler.connection)
+          SeparateDbConnectionHandler.connection.close
+        else
+          yield(Apartment.connection)
+        end
       end
 
       def reset_on_connection_exception?
@@ -277,6 +285,9 @@ module Apartment
 
       def raise_connect_error!(tenant, exception)
         raise TenantNotFound, "Error while connecting to tenant #{environmentify(tenant)}: #{ exception.message }"
+      end
+
+      class SeparateDbConnectionHandler < ::ActiveRecord::Base
       end
     end
   end

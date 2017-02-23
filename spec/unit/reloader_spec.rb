@@ -16,9 +16,9 @@ describe Apartment::Reloader do
     subject{ Apartment::Reloader.new(double("Rack::Application", :call => nil)) }
 
     it "should initialize apartment when called" do
-      Company.table_name.should_not include('public.')
+      expect(Company.table_name).not_to include('public.')
       subject.call(double('env'))
-      Company.table_name.should include('public.')
+      expect(Company.table_name).to include('public.')
     end
   end
 end

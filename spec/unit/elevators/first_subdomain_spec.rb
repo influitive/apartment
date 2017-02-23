@@ -8,17 +8,17 @@ describe Apartment::Elevators::FirstSubdomain do
 
     context "one subdomain" do
       let(:subdomain) { "test" }
-      it { should == "test" }
+      it { is_expected.to eq("test") }
     end
 
     context "nested subdomains" do
       let(:subdomain) { "test1.test2" }
-      it { should == "test1" }
+      it { is_expected.to eq("test1") }
     end
     
     context "no subdomain" do
       let(:subdomain) { nil }
-      it { should == nil }
+      it { is_expected.to eq(nil) }
     end
   end
 end

@@ -35,7 +35,7 @@ describe Apartment::Adapters::Mysql2Adapter, database: :mysql do
         it "should process model exclusions" do
           Apartment::Tenant.init
 
-          Company.table_name.should == "#{default_tenant}.companies"
+          expect(Company.table_name).to eq("#{default_tenant}.companies")
         end
       end
     end

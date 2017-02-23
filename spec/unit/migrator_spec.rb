@@ -6,7 +6,7 @@ describe Apartment::Migrator do
   let(:tenant){ Apartment::Test.next_db }
 
   # Don't need a real switch here, just testing behaviour
-  before { Apartment::Tenant.adapter.stub(:connect_to_new) }
+  before { allow(Apartment::Tenant.adapter).to receive(:connect_to_new) }
 
   describe "::migrate" do
     it "switches and migrates" do

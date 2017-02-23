@@ -27,7 +27,7 @@ module Apartment
     #   See the middleware/console declarations below to help with this. Hope to fix that soon.
     #
     config.to_prepare do
-      Apartment::Tenant.init unless ARGV.include? 'assets:precompile'
+      Apartment::Tenant.init unless ARGV.any? { |arg| arg =~ /\Aassets:(?:precompile|clean)\z/ }
     end
 
     #
@@ -46,7 +46,7 @@ module Apartment
 
       # Apartment::Reloader is middleware to initialize things properly on each request to dev
       initializer 'apartment.init' do |app|
-        app.config.middleware.use "Apartment::Reloader"
+        app.config.middleware.use Apartment::Reloader
       end
 
       # Overrides reload! to also call Apartment::Tenant.init as well so that the reloaded classes have the proper table_names
