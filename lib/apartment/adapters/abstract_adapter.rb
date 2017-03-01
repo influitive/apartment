@@ -175,7 +175,7 @@ module Apartment
       end
 
       def create_tenant_command(conn, tenant)
-        conn.create_database(environmentify(tenant))
+        conn.create_database(environmentify(tenant), @config)
       end
 
       #   Connect to new tenant
