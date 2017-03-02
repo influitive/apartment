@@ -7,10 +7,6 @@ module Apartment
     #   Assumes that tenant name should match subdomain
     #
     class Subdomain < Generic
-      def initialize(*args)
-        super
-      end
-
       def self.excluded_subdomains
         @excluded_subdomains ||= []
       end
