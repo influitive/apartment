@@ -43,7 +43,23 @@ module Apartment
       end
 
       def subdomains(host)
-        PublicSuffix.valid?(host) ? (PublicSuffix.parse(host).trd || '').split('.') : []
+        host_valid?(host) ? parse_host(host) : []
+      end
+
+      def host_valid?(host)
+        not ip_host?(host) and domain_valid?(host)
+      end
+
+      def ip_host?(host)
+        !/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/.match(host).nil?
+      end
+
+      def domain_valid?(host)
+        PublicSuffix::VERSION[0] == '1' ? PublicSuffix.valid?(host) : PublicSuffix.valid?(host, ignore_private: true)
+      end
+
+      def parse_host(host)
+        (PublicSuffix.parse(host).trd || '').split('.')
       end
     end
   end
