@@ -1,4 +1,5 @@
 require 'apartment/elevators/generic'
+require 'public_suffix'
 
 module Apartment
   module Elevators
@@ -7,7 +8,6 @@ module Apartment
     #
     class Subdomain < Generic
       def initialize(*args)
-        require 'public_suffix'
         super
       end
 
@@ -47,7 +47,7 @@ module Apartment
       end
 
       def host_valid?(host)
-        not ip_host?(host) and domain_valid?(host)
+        !ip_host?(host) && domain_valid?(host)
       end
 
       def ip_host?(host)
@@ -55,7 +55,7 @@ module Apartment
       end
 
       def domain_valid?(host)
-        PublicSuffix::VERSION[0] == '1' ? PublicSuffix.valid?(host) : PublicSuffix.valid?(host, ignore_private: true)
+        PublicSuffix.valid?(host, ignore_private: true)
       end
 
       def parse_host(host)
