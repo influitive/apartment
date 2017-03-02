@@ -75,10 +75,6 @@ module Apartment
       @seed_data_file = "#{Rails.root}/db/seeds.rb"
     end
 
-    def tld_length
-      @tld_length || 1
-    end
-
     # Reset all the config for Apartment
     def reset
       (ACCESSOR_METHODS + WRITER_METHODS).each{|method| remove_instance_variable(:"@#{method}") if instance_variable_defined?(:"@#{method}") }

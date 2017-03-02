@@ -132,15 +132,6 @@ module MyApplication
 end
 ```
 
-By default, the subdomain elevator assumes that the parent domain consists of two segments, e.g. 'example.com'. If this isn't the case, you can adjust the `tld_length` (top level domain length) configuration variable, which defaults to 1. For example, if you are using 'localhost' in development:
-```ruby
-# config/initializers/apartment.rb
-Apartment.configure do |config|
- ...
- config.tld_length = 0 if Rails.env == 'development'
-end
-```
-
 If you want to exclude a domain, for example if you don't want your application to treat www like a subdomain, in an initializer in your application, you can set the following:
 
 ```ruby
