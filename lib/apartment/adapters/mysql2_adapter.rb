@@ -21,6 +21,11 @@ module Apartment
 
     protected
 
+      def exist_command(conn, tenant)
+        result = conn.execute("SELECT 1 AS `exists` FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = #{conn.quote_table_name(environmentify(tenant))}").try(:first)
+        result && result['exists'] == '1'
+      end
+
       def rescue_from
         Mysql2::Error
       end
@@ -65,6 +70,11 @@ module Apartment
 
       def reset_on_connection_exception?
         true
+      end
+
+      def exist_command(conn, tenant)
+        result = conn.execute("SELECT 1 AS `exists` FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = #{conn.quote_table_name(environmentify(tenant))}").try(:first)
+        result && result['exists'] == '1'
       end
     end
   end

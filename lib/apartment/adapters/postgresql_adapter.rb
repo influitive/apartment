@@ -15,6 +15,13 @@ module Apartment
     # Default adapter when not using Postgresql Schemas
     class PostgresqlAdapter < AbstractAdapter
 
+    protected
+
+      def exist_command(conn, tenant)
+        result = conn.execute("SELECT EXISTS(SELECT 1 FROM pg_database WHERE datname = '#{environmentify(tenant)}')").try(:first)
+        result && result['exists']
+      end
+
     private
 
       def rescue_from
@@ -57,6 +64,12 @@ module Apartment
 
       def drop_command(conn, tenant)
         conn.execute(%{DROP SCHEMA "#{tenant}" CASCADE})
+      end
+
+      def exist_command(conn, tenant)
+        # Needs to get implemented by each adapter
+        result = conn.execute("SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = '#{environmentify(tenant)}')").try(:first)
+        result && result['exists']
       end
 
       #   Set schema search path to new schema

@@ -120,6 +120,15 @@ module Apartment
       end
       alias_method :seed, :seed_data
 
+      #   Checks whether a tenant exists or not
+      #
+      def exist?(tenant)
+        # Needs to get implemented by each adapter
+        with_neutral_connection(tenant) do |conn|
+          exist_command(conn, tenant)
+        end
+      end
+
     protected
 
       def process_excluded_model(excluded_model)

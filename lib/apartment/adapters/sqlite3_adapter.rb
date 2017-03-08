@@ -26,6 +26,10 @@ module Apartment
         File.basename(Apartment.connection.instance_variable_get(:@config)[:database], '.sqlite3')
       end
 
+      def exist?(tenant)
+        File.exist?(database_file(tenant))
+      end
+
     protected
 
       def connect_to_new(tenant)
