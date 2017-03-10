@@ -123,10 +123,7 @@ module Apartment
       #   Checks whether a tenant exists or not
       #
       def exist?(tenant)
-        # Needs to get implemented by each adapter
-        with_neutral_connection(tenant) do |conn|
-          !!exist_command(conn, tenant)
-        end
+        false
       end
 
     protected

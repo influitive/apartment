@@ -144,4 +144,16 @@ shared_examples_for "a generic apartment adapter" do
       expect(result).to eq([db2])
     end
   end
+
+  describe "#exist" do
+    it 'should return true if tenant exists' do
+      subject.create('resident')
+      expect(subject.exist?('resident')).to be true
+      subject.drop('resident')
+    end
+
+    it 'should return false if tenant does not exists' do
+      expect(subject.exist?('resident')).to be false
+    end
+  end
 end

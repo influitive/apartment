@@ -19,12 +19,12 @@ module Apartment
         @default_tenant = config[:database]
       end
 
-    protected
-
-      def exist_command(conn, tenant)
-        result = conn.execute("SELECT 1 AS `exists` FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = #{conn.quote_table_name(environmentify(tenant))}").try(:first)
-        result && result['exists'] == '1'
+      def exist?(tenant)
+        result = Apartment.connection.exec_query("SELECT 1 AS `exists` FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = #{Apartment.connection.quote(environmentify(tenant))}").try(:first)
+        result.present? && result['exists'] == 1
       end
+
+    protected
 
       def rescue_from
         Mysql2::Error
@@ -43,6 +43,11 @@ module Apartment
       #
       def reset
         Apartment.connection.execute "use `#{default_tenant}`"
+      end
+
+      def exist?(tenant)
+        result = Apartment.connection.exec_query("SELECT 1 AS `exists` FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = #{Apartment.connection.quote(environmentify(tenant))}").try(:first)
+        result.present? && result['exists'] == 1
       end
 
     protected
@@ -72,10 +77,6 @@ module Apartment
         true
       end
 
-      def exist_command(conn, tenant)
-        result = conn.execute("SELECT 1 AS `exists` FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = #{conn.quote_table_name(environmentify(tenant))}").try(:first)
-        result && result['exists'] == '1'
-      end
     end
   end
 end

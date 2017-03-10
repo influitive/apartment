@@ -103,13 +103,6 @@ describe Apartment::Tenant do
         end
       end
 
-      describe "#exist" do
-        it "should check if tenant exist" do
-          expect(subject.exist?(db1)).to be true
-          expect(subject.exist?('blah')).to be false
-        end
-      end
-
       describe "#switch!" do
 
         let(:x){ rand(3) }
