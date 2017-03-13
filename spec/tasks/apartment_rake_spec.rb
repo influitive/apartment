@@ -10,7 +10,7 @@ describe "apartment rake tasks" do
     load 'tasks/apartment.rake'
     # stub out rails tasks
     Rake::Task.define_task('db:migrate')
-    Rake::Task.define_task('db:migrate:prallel')
+    Rake::Task.define_task('db:migrate:parallel')
     Rake::Task.define_task('db:seed')
     Rake::Task.define_task('db:rollback')
     Rake::Task.define_task('db:migrate:up')
@@ -49,7 +49,7 @@ describe "apartment rake tasks" do
       end
     end
 
-    describe "apartment:migrate:prallel" do
+    describe "apartment:migrate:parallel" do
       before do
         allow(Apartment::Migrator).to receive(:migrate)   # don't care about this
       end
