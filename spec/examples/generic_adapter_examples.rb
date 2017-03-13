@@ -102,23 +102,6 @@ shared_examples_for "a generic apartment adapter" do
         subject.switch(db1){ subject.drop(db2) }
       }.to_not raise_error
     end
-
-    it "warns if no block is given, but calls switch!" do
-      expect(Apartment::Deprecation).to receive(:warn)
-
-      subject.switch(db1)
-      expect(subject.current).to eq(db1)
-    end
-  end
-
-  describe "#process" do
-    it "is deprecated" do
-      expect(Apartment::Deprecation).to receive(:warn)
-
-      subject.process(db1) do
-        expect(subject.current).to eq(db1)
-      end
-    end
   end
 
   describe "#reset" do

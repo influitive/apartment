@@ -1,5 +1,3 @@
-require 'apartment/deprecation'
-
 module Apartment
   module Adapters
     class AbstractAdapter
@@ -32,24 +30,6 @@ module Apartment
             yield if block_given?
           end
         end
-      end
-
-      #   Get the current tenant name
-      #
-      #   @return {String} current tenant name
-      #
-      def current_database
-        Apartment::Deprecation.warn "[Deprecation Warning] `current_database` is now deprecated, please use `current`"
-        current
-      end
-
-      #   Get the current tenant name
-      #
-      #   @return {String} current tenant name
-      #
-      def current_tenant
-        Apartment::Deprecation.warn "[Deprecation Warning] `current_tenant` is now deprecated, please use `current`"
-        current
       end
 
       #   Note alias_method here doesn't work with inheritence apparently ??
@@ -99,25 +79,14 @@ module Apartment
       #   @param {String?} tenant to connect to
       #
       def switch(tenant = nil)
-        if block_given?
-          begin
-            previous_tenant = current
-            switch!(tenant)
-            yield
-
-          ensure
-            switch!(previous_tenant) rescue reset
-          end
-        else
-          Apartment::Deprecation.warn("[Deprecation Warning] `switch` now requires a block reset to the default tenant after the block. Please use `switch!` instead if you don't want this")
+        begin
+          previous_tenant = current
           switch!(tenant)
-        end
-      end
+          yield
 
-      #   [Deprecated]
-      def process(tenant = nil, &block)
-        Apartment::Deprecation.warn("[Deprecation Warning] `process` is now deprecated. Please use `switch`")
-        switch(tenant, &block)
+        ensure
+          switch!(previous_tenant) rescue reset
+        end
       end
 
       #   Iterate over all tenants, switch to tenant and yield tenant name
