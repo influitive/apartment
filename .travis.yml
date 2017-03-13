@@ -6,10 +6,10 @@ rvm:
   - 2.3.1
   - jruby-9.0.5.0
 gemfile:
-  - gemfiles/rails_3_2.gemfile
   - gemfiles/rails_4_0.gemfile
   - gemfiles/rails_4_1.gemfile
   - gemfiles/rails_4_2.gemfile
+  - gemfiles/rails_5_0.gemfile
 bundler_args: --without local
 before_install:
   - gem install bundler -v '> 1.5.0'
@@ -18,6 +18,8 @@ env:
   RUBY_FREE_MIN: 200000
 matrix:
   exclude:
-    - rvm: 2.2.0
-      gemfile: gemfiles/rails_3_2.gemfile
+    - rvm: 2.0.0
+      gemfile: gemfiles/rails_5_0.gemfile
+    - rvm: 2.1.9
+      gemfile: gemfiles/rails_5_0.gemfile
   fast_finish: true
