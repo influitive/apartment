@@ -1,4 +1,5 @@
 require 'apartment/elevators/generic'
+require 'public_suffix'
 
 module Apartment
   module Elevators
@@ -38,13 +39,23 @@ module Apartment
       end
 
       def subdomains(host)
-        return [] unless named_host?(host)
-
-        host.split('.')[0..-(Apartment.tld_length + 2)]
+        host_valid?(host) ? parse_host(host) : []
       end
 
-      def named_host?(host)
-        !(host.nil? || /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.match(host))
+      def host_valid?(host)
+        !ip_host?(host) && domain_valid?(host)
+      end
+
+      def ip_host?(host)
+        !/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/.match(host).nil?
+      end
+
+      def domain_valid?(host)
+        PublicSuffix.valid?(host, ignore_private: true)
+      end
+
+      def parse_host(host)
+        (PublicSuffix.parse(host).trd || '').split('.')
       end
     end
   end
