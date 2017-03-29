@@ -4,6 +4,10 @@ module Apartment
   module Tenant
 
     def self.postgresql_adapter(config)
+      if ::ActiveRecord::VERSION::MAJOR == 5 && ::ActiveRecord::VERSION::MINOR == 0
+        require 'apartment/pg_test_patch'
+      end
+
       adapter = Adapters::PostgresqlAdapter
       adapter = Adapters::PostgresqlSchemaAdapter if Apartment.use_schemas
       adapter = Adapters::PostgresqlSchemaFromSqlAdapter if Apartment.use_sql && Apartment.use_schemas
@@ -56,6 +60,11 @@ module Apartment
       end
 
       def drop_command(conn, tenant)
+        begin
+          raise
+        rescue => e
+          puts e.backtrace[0..8]
+        end
         conn.execute(%{DROP SCHEMA "#{tenant}" CASCADE})
       end
 
