@@ -59,11 +59,13 @@ shared_examples_for "a schema based apartment adapter" do
 
       @count = 0  # set our variable so its visible in and outside of blocks
 
+      puts "before create"
       subject.create(schema2) do
         @count = User.count
         expect(connection.schema_search_path).to start_with %{"#{schema2}"}
         User.create
       end
+      puts "after create"
 
       expect(connection.schema_search_path).not_to start_with %{"#{schema2}"}
 
