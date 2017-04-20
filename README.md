@@ -127,7 +127,7 @@ In house, we use the subdomain elevator, which analyzes the subdomain of the req
 # application.rb
 module MyApplication
   class Application < Rails::Application
-    config.middleware.use 'Apartment::Elevators::Subdomain'
+    config.middleware.use Apartment::Elevators::Subdomain
   end
 end
 ```
@@ -149,7 +149,7 @@ To switch on the first subdomain, which analyzes the chain of subdomains of the 
 # application.rb
 module MyApplication
   class Application < Rails::Application
-    config.middleware.use 'Apartment::Elevators::FirstSubdomain'
+    config.middleware.use Apartment::Elevators::FirstSubdomain
   end
 end
 ```
@@ -171,7 +171,7 @@ To switch based on full domain (excluding subdomains *ie 'www'* and top level do
 # application.rb
 module MyApplication
   class Application < Rails::Application
-    config.middleware.use 'Apartment::Elevators::Domain'
+    config.middleware.use Apartment::Elevators::Domain
   end
 end
 ```
@@ -184,7 +184,7 @@ To switch based on full host with a hash to find corresponding tenant name use t
 # application.rb
 module MyApplication
   class Application < Rails::Application
-    config.middleware.use 'Apartment::Elevators::HostHash', {'example.com' => 'example_tenant'}
+    config.middleware.use Apartment::Elevators::HostHash, {'example.com' => 'example_tenant'}
   end
 end
 ```
@@ -198,7 +198,7 @@ A Generic Elevator exists that allows you to pass a `Proc` (or anything that res
 module MyApplication
   class Application < Rails::Application
     # Obviously not a contrived example
-    config.middleware.use 'Apartment::Elevators::Generic', Proc.new { |request| request.host.reverse }
+    config.middleware.use Apartment::Elevators::Generic, Proc.new { |request| request.host.reverse }
   end
 end
 ```
@@ -231,7 +231,7 @@ end
 In the examples above, we show the Apartment middleware being appended to the Rack stack with
 
 ```ruby
-Rails.application.config.middleware.use 'Apartment::Elevators::Subdomain'
+Rails.application.config.middleware.use Apartment::Elevators::Subdomain
 ```
 
 By default, the Subdomain middleware switches into a Tenant based on the subdomain at the beginning of the request, and when the request is finished, it switches back to the "public" Tenant. This happens in the [Generic](https://github.com/influitive/apartment/blob/development/lib/apartment/elevators/generic.rb#L22) elevator, so all elevators that inherit from this elevator will operate as such. 
