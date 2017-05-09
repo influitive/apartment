@@ -51,7 +51,7 @@ describe "apartment rake tasks" do
         Apartment.configure do |config|
           config.use_parallel_tenant_task = true
         end
-        expect(Parallel).to receive(:each).with(tenant_names, in_processes: Apartment.num_parallel_threads)
+        expect(Parallel).to receive(:each).with(tenant_names, in_processes: Apartment.num_parallel_in_processes)
         @rake['apartment:migrate'].invoke
       end
 
@@ -59,7 +59,7 @@ describe "apartment rake tasks" do
         Apartment.configure do |config|
           config.use_parallel_tenant_task = false
         end
-        expect(Parallel).not_to receive(:each).with(tenant_names, in_processes: Apartment.num_parallel_threads)
+        expect(Parallel).not_to receive(:each).with(tenant_names, in_processes: Apartment.num_parallel_in_processes)
         @rake['apartment:migrate'].invoke
       end
     end
@@ -93,7 +93,7 @@ describe "apartment rake tasks" do
           Apartment.configure do |config|
             config.use_parallel_tenant_task = true
           end
-          expect(Parallel).to receive(:each).with(tenant_names, in_processes: Apartment.num_parallel_threads)
+          expect(Parallel).to receive(:each).with(tenant_names, in_processes: Apartment.num_parallel_in_processes)
           @rake['apartment:migrate:up'].invoke
         end
 
@@ -101,7 +101,7 @@ describe "apartment rake tasks" do
           Apartment.configure do |config|
             config.use_parallel_tenant_task = false
           end
-          expect(Parallel).not_to receive(:each).with(tenant_names, in_processes: Apartment.num_parallel_threads)
+          expect(Parallel).not_to receive(:each).with(tenant_names, in_processes: Apartment.num_parallel_in_processes)
           @rake['apartment:migrate:up'].invoke
         end
       end
@@ -136,7 +136,7 @@ describe "apartment rake tasks" do
           Apartment.configure do |config|
             config.use_parallel_tenant_task = true
           end
-          expect(Parallel).to receive(:each).with(tenant_names, in_processes: Apartment.num_parallel_threads)
+          expect(Parallel).to receive(:each).with(tenant_names, in_processes: Apartment.num_parallel_in_processes)
           @rake['apartment:migrate:down'].invoke
         end
 
@@ -144,7 +144,7 @@ describe "apartment rake tasks" do
           Apartment.configure do |config|
             config.use_parallel_tenant_task = false
           end
-          expect(Parallel).not_to receive(:each).with(tenant_names, in_processes: Apartment.num_parallel_threads)
+          expect(Parallel).not_to receive(:each).with(tenant_names, in_processes: Apartment.num_parallel_in_processes)
           @rake['apartment:migrate:down'].invoke
         end
       end
@@ -168,7 +168,7 @@ describe "apartment rake tasks" do
         Apartment.configure do |config|
           config.use_parallel_tenant_task = true
         end
-        expect(Parallel).to receive(:each).with(tenant_names, in_processes: Apartment.num_parallel_threads)
+        expect(Parallel).to receive(:each).with(tenant_names, in_processes: Apartment.num_parallel_in_processes)
         @rake['apartment:rollback'].invoke
       end
 
@@ -176,7 +176,7 @@ describe "apartment rake tasks" do
         Apartment.configure do |config|
           config.use_parallel_tenant_task = false
         end
-        expect(Parallel).not_to receive(:each).with(tenant_names, in_processes: Apartment.num_parallel_threads)
+        expect(Parallel).not_to receive(:each).with(tenant_names, in_processes: Apartment.num_parallel_in_processes)
         @rake['apartment:rollback'].invoke
       end
     end

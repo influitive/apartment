@@ -6,7 +6,7 @@ describe Apartment do
 
     let(:excluded_models){ ["Company"] }
     let(:seed_data_file_path){ "#{Rails.root}/db/seeds/import.rb" }
-    let(:num_parallel_threads) { 5 }
+    let(:num_parallel_in_processes) { 5 }
 
     def tenant_names_from_array(names)
       names.each_with_object({}) do |tenant, hash|
@@ -51,15 +51,15 @@ describe Apartment do
       expect(Apartment.seed_after_create).to be true
     end
 
-    it "should set num_parallel_threads" do
+    it "should set num_parallel_in_processes" do
       Apartment.configure do |config|
-        config.num_parallel_threads = num_parallel_threads
+        config.num_parallel_in_processes = num_parallel_in_processes
       end
-      expect(Apartment.num_parallel_threads).to eq(num_parallel_threads)
+      expect(Apartment.num_parallel_in_processes).to eq(num_parallel_in_processes)
     end
 
-    it "should have default num_parallel_threads that less than or equal to ActiveRecord::Base.connection_pool.size" do
-      expect(Apartment.num_parallel_threads).to be <= ActiveRecord::Base.connection_pool.size
+    it "should have default num_parallel_in_processes that less than or equal to ActiveRecord::Base.connection_pool.size" do
+      expect(Apartment.num_parallel_in_processes).to be <= ActiveRecord::Base.connection_pool.size
     end
 
     context "databases" do

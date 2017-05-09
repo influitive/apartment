@@ -12,7 +12,7 @@ module Apartment
     extend Forwardable
 
     ACCESSOR_METHODS  = [:use_schemas, :use_sql, :seed_after_create, :prepend_environment, :append_environment, :with_multi_server_setup, :use_parallel_tenant_task ]
-    WRITER_METHODS    = [:tenant_names, :database_schema_file, :excluded_models, :default_schema, :persistent_schemas, :connection_class, :tld_length, :db_migrate_tenants, :seed_data_file, :num_parallel_threads]
+    WRITER_METHODS    = [:tenant_names, :database_schema_file, :excluded_models, :default_schema, :persistent_schemas, :connection_class, :tld_length, :db_migrate_tenants, :seed_data_file, :num_parallel_in_processes]
 
     attr_accessor(*ACCESSOR_METHODS)
     attr_writer(*WRITER_METHODS)
@@ -75,10 +75,10 @@ module Apartment
       @seed_data_file = "#{Rails.root}/db/seeds.rb"
     end
 
-    def num_parallel_threads
-      return @num_parallel_threads if defined?(@num_parallel_threads)
+    def num_parallel_in_processes
+      return @num_parallel_in_processes if defined?(@num_parallel_in_processes)
 
-      @num_parallel_threads = [1,ActiveRecord::Base.connection_pool.size - 2].max
+      @num_parallel_in_processes = [1,ActiveRecord::Base.connection_pool.size - 2].max
     end
 
     # Reset all the config for Apartment
