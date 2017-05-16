@@ -51,7 +51,7 @@ module Apartment
     #   Reset config and adapter so they are regenerated
     #
     def reload!(config = nil)
-      Thread.current[:apartment_adapter] = nil
+      Thread.current[:apartment_adapter] = mysql2_adapter(config)
       @config = config
     end
 
