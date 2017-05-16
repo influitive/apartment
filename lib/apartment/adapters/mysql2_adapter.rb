@@ -37,6 +37,9 @@ module Apartment
       #   Reset current tenant to the default_tenant
       #
       def reset
+        # This method is changed to establish different remote servers connections for which config is changed
+        Apartment.establish_connection(@config)
+        p "ApartmentConfigHost::#{@config['host']}"
         Apartment.connection.execute "use `#{default_tenant}`"
       end
 
