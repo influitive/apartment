@@ -93,7 +93,7 @@ One can optionally use the full database creation instead if they want, though t
 To switch tenants using Apartment, use the following command:
 
 ```ruby
-Apartment::Tenant.switch!('tenant_name')
+Apartment::Tenant.switch('tenant_name')
 ```
 
 When switch is called, all requests coming to ActiveRecord will be routed to the tenant
