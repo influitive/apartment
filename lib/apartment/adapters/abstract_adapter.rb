@@ -88,7 +88,7 @@ module Apartment
         run_callbacks :switch do
           return reset if tenant.nil?
 
-          connect_to_new(tenant).tap do
+          connect(tenant).tap do
             Apartment.connection.clear_query_cache
           end
         end
@@ -178,16 +178,29 @@ module Apartment
         conn.create_database(environmentify(tenant))
       end
 
+      def connect(tenant)
+        if Apartment.connection_handler.connected?(tenant)
+          connect_to_existing(tenant)
+        else
+          connect_to_new(tenant)
+        end
+        Apartment.connection.active?   # call active? to manually check if this connection is valid
+      rescue *rescuable_exceptions => exception
+        Apartment::Tenant.reset if reset_on_connection_exception?
+        raise_connect_error!(tenant, exception)
+      end
+
       #   Connect to new tenant
       #
       #   @param {String} tenant Database name
       #
       def connect_to_new(tenant)
         Apartment.establish_connection multi_tenantify(tenant)
-        Apartment.connection.active?   # call active? to manually check if this connection is valid
-      rescue *rescuable_exceptions => exception
-        Apartment::Tenant.reset if reset_on_connection_exception?
-        raise_connect_error!(tenant, exception)
+      end
+
+      def connect_to_existing(tenant)
+        Apartment.connection_specification_name = tenant
+        Apartment.connection
       end
 
       #   Prepend the environment if configured and the environment isn't already there
