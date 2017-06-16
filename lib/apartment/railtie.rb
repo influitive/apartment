@@ -23,6 +23,10 @@ module Apartment
       ActiveRecord::Migrator.migrations_paths = Rails.application.paths['db/migrate'].to_a
     end
 
+    config.after_initialize do
+      require 'apartment/active_record/connection_handling'
+    end
+
     #   Hook into ActionDispatch::Reloader to ensure Apartment is properly initialized
     #   Note that this doens't entirely work as expected in Development, because this is called before classes are reloaded
     #   See the middleware/console declarations below to help with this. Hope to fix that soon.
