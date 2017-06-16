@@ -38,4 +38,12 @@ connections:
   sqlite:
     adapter: sqlite3
     database: <%= File.expand_path('../spec/dummy/db', __FILE__) %>/default.sqlite3
+
+  sqlserver:
+    adapter: sqlserver
+    mode: dblib
+    host: localhost
+    database: apartment_sqlserver_test
+    username: sa
+    password:
 <% end %>
