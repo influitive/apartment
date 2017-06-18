@@ -23,3 +23,4 @@ matrix:
     - rvm: 2.1.9
       gemfile: gemfiles/rails_5_0.gemfile
   fast_finish: true
+cache: bundler
