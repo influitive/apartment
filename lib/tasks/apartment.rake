@@ -131,6 +131,6 @@ apartment_namespace = namespace :apartment do
     yield
   rescue => e
     raise e if ENV['APARTMENT_DISABLE_ALL_MIGRATE_ERROR'] != 'true'
-    pust e.message
+    put e.message
   end
 end
