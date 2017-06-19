@@ -5,11 +5,9 @@ apartment_namespace = namespace :apartment do
   desc "Create all tenants"
   task create: 'db:migrate' do
     tenants.each do |tenant|
-      begin
+      handle_rescuing [Apartment::TenantExists] do
         puts("Creating #{tenant} tenant")
         quietly { Apartment::Tenant.create(tenant) }
-      rescue Apartment::TenantExists => e
-        puts e.message
       end
     end
   end
@@ -18,11 +16,9 @@ apartment_namespace = namespace :apartment do
   task :migrate do
     warn_if_tenants_empty
     tenants.each do |tenant|
-      begin
+      handle_rescuing [Apartment::TenantNotFound] do
         puts("Migrating #{tenant} tenant")
         Apartment::Migrator.migrate tenant
-      rescue Apartment::TenantNotFound => e
-        puts e.message
       end
     end
   end
@@ -34,11 +30,9 @@ apartment_namespace = namespace :apartment do
       warn_if_tenants_empty
 
       Parallel.each(tenants, in_processes: args.in_processes) do |tenant_name|
-        begin
+        handle_rescuing [Apartment::TenantNotFound] do
           puts("Migrating #{tenant_name} tenant")
           Apartment::Migrator.migrate tenant_name
-        rescue Apartment::TenantNotFound => e
-          puts e.message
         end
       end
     end
@@ -49,13 +43,11 @@ apartment_namespace = namespace :apartment do
     warn_if_tenants_empty
 
     tenants.each do |tenant|
-      begin
+      handle_rescuing [Apartment::TenantNotFound] do
         puts("Seeding #{tenant} tenant")
         Apartment::Tenant.switch(tenant) do
           Apartment::Tenant.seed
         end
-      rescue Apartment::TenantNotFound => e
-        puts e.message
       end
     end
   end
@@ -67,11 +59,9 @@ apartment_namespace = namespace :apartment do
     step = ENV['STEP'] ? ENV['STEP'].to_i : 1
 
     tenants.each do |tenant|
-      begin
+      handle_rescuing [Apartment::TenantNotFound] do
         puts("Rolling back #{tenant} tenant")
         Apartment::Migrator.rollback tenant, step
-      rescue Apartment::TenantNotFound => e
-        puts e.message
       end
     end
   end
@@ -85,11 +75,9 @@ apartment_namespace = namespace :apartment do
       raise 'VERSION is required' unless version
 
       tenants.each do |tenant|
-        begin
+        handle_rescuing [Apartment::TenantNotFound] do
           puts("Migrating #{tenant} tenant up")
           Apartment::Migrator.run :up, tenant, version
-        rescue Apartment::TenantNotFound => e
-          puts e.message
         end
       end
     end
@@ -102,11 +90,9 @@ apartment_namespace = namespace :apartment do
       raise 'VERSION is required' unless version
 
       tenants.each do |tenant|
-        begin
+        handle_rescuing [Apartment::TenantNotFound] do
           puts("Migrating #{tenant} tenant down")
           Apartment::Migrator.run :down, tenant, version
-        rescue Apartment::TenantNotFound => e
-          puts e.message
         end
       end
     end
@@ -139,5 +125,12 @@ apartment_namespace = namespace :apartment do
         Note that your tenants currently haven't been migrated. You'll need to run `db:migrate` to rectify this.
       WARNING
     end
+  end
+
+  def handle_rescuing(disabled_errors)
+    yield
+  rescue => e
+    raise e if ENV['APARTMENT_DISABLE_ALL_MIGRATE_ERROR'] != 'true'
+    pust e.message
   end
 end
