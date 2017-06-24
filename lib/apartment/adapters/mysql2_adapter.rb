@@ -37,7 +37,9 @@ module Apartment
       #   Reset current tenant to the default_tenant
       #
       def reset
-        Apartment.connection.execute "use `#{default_tenant}`"
+        super.tap do
+          Apartment.connection.execute "use `#{default_tenant}`"
+        end
       end
 
     protected
