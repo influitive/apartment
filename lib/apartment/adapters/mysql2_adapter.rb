@@ -47,20 +47,27 @@ module Apartment
       def connect_to_new(tenant)
         return reset if tenant.nil?
 
-        Apartment.connection.execute "use `#{environmentify(tenant)}`"
-
-      rescue ActiveRecord::StatementInvalid => exception
-        Apartment::Tenant.reset
-        raise_connect_error!(tenant, exception)
+        super.tap do
+          begin
+            Apartment.connection.execute "use `#{environmentify(tenant)}`"
+          rescue
+            Apartment::Tenant.reset
+            raise_connect_error!(tenant, exception)
+          end
+        end
       end
 
-      def process_excluded_model(model)
-        model.constantize.tap do |klass|
-          # Ensure that if a schema *was* set, we override
-          table_name = klass.table_name.split('.', 2).last
-
-          klass.table_name = "#{default_tenant}.#{table_name}"
+      def process_excluded_model(excluded_model)
+        ensure_exclude_table_name(excluded_model.constantize) do
+          super
         end
+      end
+
+      def ensure_exclude_table_name(model)
+        table_name = model.table_name.split('.', 2).last
+        yield
+      ensure
+        model.table_name = "#{default_tenant}.#{table_name}"
       end
 
       def reset_on_connection_exception?
