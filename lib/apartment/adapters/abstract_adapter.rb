@@ -152,8 +152,12 @@ module Apartment
       #   @param {String} tenant Database name
       #
       def connect_to_new(tenant)
+        query_cache_enabled = ActiveRecord::Base.connection.query_cache_enabled
+
         Apartment.establish_connection multi_tenantify(tenant)
         Apartment.connection.active?   # call active? to manually check if this connection is valid
+
+        Apartment.connection.enable_query_cache! if query_cache_enabled
       rescue *rescuable_exceptions => exception
         Apartment::Tenant.reset if reset_on_connection_exception?
         raise_connect_error!(tenant, exception)
