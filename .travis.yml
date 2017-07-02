@@ -10,6 +10,7 @@ gemfile:
   - gemfiles/rails_4_1.gemfile
   - gemfiles/rails_4_2.gemfile
   - gemfiles/rails_5_0.gemfile
+  - gemfiles/rails_5_1.gemfile
 bundler_args: --without local
 before_install:
   - gem install bundler -v '> 1.5.0'
@@ -22,4 +23,13 @@ matrix:
       gemfile: gemfiles/rails_5_0.gemfile
     - rvm: 2.1.9
       gemfile: gemfiles/rails_5_0.gemfile
+    - rvm: 2.0.0
+      gemfile: gemfiles/rails_5_1.gemfile
+    - rvm: 2.1.9
+      gemfile: gemfiles/rails_5_1.gemfile
   fast_finish: true
+cache: bundler
+addons:
+  # XXX: Workaround for building
+  # Apartment with Rails 5.0 or higher could not use PostgreSQL versions below 9.2 by unknown reason.
+  postgresql: "9.3"

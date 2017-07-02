@@ -1,4 +1,5 @@
-class CreateDummyModels < ActiveRecord::Migration
+migration_class = (ActiveRecord::VERSION::MAJOR >= 5) ?  ActiveRecord::Migration[4.2] : ActiveRecord::Migration
+class CreateDummyModels < migration_class
   def self.up
     create_table :companies do |t|
       t.boolean :dummy
