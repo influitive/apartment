@@ -29,3 +29,7 @@ matrix:
       gemfile: gemfiles/rails_5_1.gemfile
   fast_finish: true
 cache: bundler
+addons:
+  # XXX: Workaround for building
+  # Apartment with Rails 5.0 or higher could not use PostgreSQL versions below 9.2 by unknown reason.
+  postgresql: "9.3"
