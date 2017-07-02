@@ -58,7 +58,7 @@ Apartment.configure do |config|
   # config.use_schemas = true
 
   # Apartment can be forced to use raw SQL dumps instead of schema.rb for creating new schemas.
-  # Use this when you are using some extra features in PostgreSQL that can't be respresented in
+  # Use this when you are using some extra features in PostgreSQL that can't be represented in
   # schema.rb, like materialized views etc. (only applies with use_schemas set to true).
   # (Note: this option doesn't use db/structure.sql, it creates SQL dump by executing pg_dump)
   #
