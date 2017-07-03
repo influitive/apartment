@@ -59,8 +59,7 @@ describe Apartment::Tenant do
 
     describe "#adapter" do
       it "should load postgresql adapter" do
-        subject.adapter
-        expect(Apartment::Adapters::PostgresqlAdapter).to be_a(Class)
+        expect(subject.adapter).to be_a(Apartment::Adapters::PostgresqlSchemaAdapter)
       end
 
       it "raises exception with invalid adapter specified" do
