@@ -68,6 +68,13 @@ module Apartment
         @current = tenant.to_s
         Apartment.connection.schema_search_path = full_search_path
 
+        # When the PostgreSQL version is < 9.3,
+        # there is a issue for prepared statement with changing search_path.
+        # https://www.postgresql.org/docs/9.3/static/sql-prepare.html
+        if postgresql_version < 90300
+          Apartment.connection.clear_cache!
+        end
+
       rescue *rescuable_exceptions
         raise TenantNotFound, "One of the following schema(s) is invalid: \"#{tenant}\" #{full_search_path}"
       end
@@ -86,6 +93,12 @@ module Apartment
 
       def persistent_schemas
         [@current, Apartment.persistent_schemas].flatten
+      end
+
+      def postgresql_version
+        # ActiveRecord::ConnectionAdapters::PostgreSQLAdapter#postgresql_version is
+        # public from Rails 5.0.
+        Apartment.connection.send(:postgresql_version)
       end
     end
 
