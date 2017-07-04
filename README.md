@@ -498,5 +498,3 @@ Has been removed. See [apartment-sidekiq](https://github.com/influitive/apartmen
 ## License
 
 Apartment is released under the [MIT License](http://www.opensource.org/licenses/MIT).
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/influitive/apartment/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
