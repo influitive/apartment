@@ -6,6 +6,14 @@ shared_examples_for "a connection based apartment adapter" do
   let(:default_tenant){ subject.switch{ ActiveRecord::Base.connection.current_database } }
 
   describe "#init" do
+    after do
+      # Apartment::Tenant.init creates per model connection.
+      # Remove the connection after testing not to unintentionally keep the connection across tests.
+      Apartment.excluded_models.each do |excluded_model|
+        excluded_model.constantize.remove_connection
+      end
+    end
+
     it "should process model exclusions" do
       Apartment.configure do |config|
         config.excluded_models = ["Company"]

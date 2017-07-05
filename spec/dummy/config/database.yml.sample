@@ -25,6 +25,7 @@ development:
 test:
   adapter: postgresql
   database: apartment_postgresql_test
+  username: postgres
   min_messages: WARNING
   pool: 5
   timeout: 5000
@@ -32,6 +33,7 @@ test:
 development:
   adapter: postgresql
   database: apartment_postgresql_development
+  username: postgres
   min_messages: WARNING
   pool: 5
   timeout: 5000
