@@ -4,6 +4,18 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 ENV["RAILS_ENV"] = "test"
 
 require File.expand_path("../dummy/config/environment.rb", __FILE__)
+
+# Loading dummy applications affects table_name of each excluded models
+# defined in `spec/dummy/config/initializers/apartment.rb`.
+# To make them pristine, we need to execute below lines.
+Apartment.excluded_models.each do |model|
+  klass = model.constantize
+
+  Apartment.connection_class.remove_connection(klass)
+  klass.clear_all_connections!
+  klass.reset_table_name
+end
+
 require "rspec/rails"
 require 'capybara/rspec'
 require 'capybara/rails'
