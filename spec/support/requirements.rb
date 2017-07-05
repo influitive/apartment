@@ -11,17 +11,21 @@ module Apartment
 
       included do
         before do
+          puts "start before"
           subject.create(db1)
           subject.create(db2)
+          puts "end before"
         end
 
         after do
+          puts "start after"
           # Reset before dropping (can't drop a db you're connected to)
           subject.reset
 
           # sometimes we manually drop these schemas in testing, don't care if we can't drop, hence rescue
           subject.drop(db1) rescue true
           subject.drop(db2) rescue true
+          puts "end after"
         end
       end
 

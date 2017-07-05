@@ -4,6 +4,10 @@ module Apartment
   module Tenant
 
     def self.mysql2_adapter(config)
+      if ::ActiveRecord::VERSION::MAJOR == 5 && ::ActiveRecord::VERSION::MINOR == 0
+        require 'apartment/rails5_patch'
+      end
+
       Apartment.use_schemas ?
         Adapters::Mysql2SchemaAdapter.new(config) :
         Adapters::Mysql2Adapter.new(config)
