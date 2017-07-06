@@ -67,7 +67,7 @@ describe Apartment::Tenant do
 
         expect {
           Apartment::Tenant.adapter
-        }.to raise_error
+        }.to raise_error(RuntimeError)
       end
 
       context "threadsafety" do
