@@ -405,7 +405,7 @@ Happy to accept PR's on the matter.
 
 #### Alternative: Creating new schemas by using raw SQL dumps
 
-Apartment can be forced to use raw SQL dumps insted of `schema.rb` for creating new schemas. Use this when you are using some extra features in postgres that can't be respresented in `schema.rb`, like materialized views etc.
+Apartment can be forced to use raw SQL dumps insted of `schema.rb` for creating new schemas. Use this when you are using some extra features in postgres that can't be represented in `schema.rb`, like materialized views etc.
 
 This only applies while using postgres adapter and `config.use_schemas` is set to `true`.
 (Note: this option doesn't use `db/structure.sql`, it creates SQL dump by executing `pg_dump`)
