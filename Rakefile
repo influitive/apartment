@@ -9,7 +9,7 @@ require "rspec/core/rake_task"
 
 RSpec::Core::RakeTask.new(:spec => %w{ db:copy_credentials db:test:prepare }) do |spec|
   spec.pattern = "spec/**/*_spec.rb"
-  # spec.rspec_opts = '--order rand:16996'
+  # spec.rspec_opts = '--order rand:47078'
 end
 
 namespace :spec do
