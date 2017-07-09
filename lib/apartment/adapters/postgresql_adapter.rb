@@ -15,6 +15,11 @@ module Apartment
     # Default adapter when not using Postgresql Schemas
     class PostgresqlAdapter < AbstractAdapter
 
+      def exist?(tenant)
+        result = Apartment.connection.exec_query("SELECT EXISTS(SELECT 1 FROM pg_database WHERE datname = #{Apartment.connection.quote(environmentify(tenant))})").try(:first)
+        result.present? && result['exists'] == 't'
+      end
+
     private
 
       def rescue_from
@@ -42,6 +47,10 @@ module Apartment
 
       def current
         @current || default_tenant
+      end
+
+      def exist?(tenant)
+        Apartment.connection.schema_exists?(tenant)
       end
 
     protected

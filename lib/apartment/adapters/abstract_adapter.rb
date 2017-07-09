@@ -120,6 +120,12 @@ module Apartment
       end
       alias_method :seed, :seed_data
 
+      #   Checks whether a tenant exists or not
+      #
+      def exist?(tenant)
+        false
+      end
+
     protected
 
       def process_excluded_model(excluded_model)

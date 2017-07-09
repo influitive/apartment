@@ -19,6 +19,11 @@ module Apartment
         @default_tenant = config[:database]
       end
 
+      def exist?(tenant)
+        result = Apartment.connection.exec_query("SELECT 1 AS `exists` FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = #{Apartment.connection.quote(environmentify(tenant))}").try(:first)
+        result.present? && result['exists'] == 1
+      end
+
     protected
 
       def rescue_from
@@ -38,6 +43,11 @@ module Apartment
       #
       def reset
         Apartment.connection.execute "use `#{default_tenant}`"
+      end
+
+      def exist?(tenant)
+        result = Apartment.connection.exec_query("SELECT 1 AS `exists` FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = #{Apartment.connection.quote(environmentify(tenant))}").try(:first)
+        result.present? && result['exists'] == 1
       end
 
     protected
@@ -66,6 +76,7 @@ module Apartment
       def reset_on_connection_exception?
         true
       end
+
     end
   end
 end
