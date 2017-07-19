@@ -107,7 +107,8 @@ module Apartment
 
       PSQL_DUMP_BLACKLISTED_STATEMENTS= [
         /SET search_path/i,   # overridden later
-        /SET lock_timeout/i   # new in postgresql 9.3
+        /SET lock_timeout/i,  # new in postgresql 9.3
+        /CREATE SCHEMA/i      # remove create schema clause
       ]
 
       def import_database_schema
@@ -178,11 +179,29 @@ module Apartment
       def patch_search_path(sql)
         search_path = "SET search_path = \"#{current}\", #{default_tenant};"
 
+        excluded_tables = Apartment.excluded_models.map{ |model| model.constantize.table_name }.uniq
         sql
           .split("\n")
+          .map { |line| format_foreign_key_constraints(line, excluded_tables) }
           .select {|line| check_input_against_regexps(line, PSQL_DUMP_BLACKLISTED_STATEMENTS).empty?}
           .prepend(search_path)
           .join("\n")
+      end
+
+      # Append default_schema to FK definitions, for tables belonging to excluded_models
+      #
+      def format_foreign_key_constraints line, excluded_tables
+        if line.match(/ADD CONSTRAINT .* FOREIGN KEY/)
+          table_name = line[/REFERENCES (.*)\(/, 1]
+          new_table_name = "#{default_schema}.#{table_name}"
+          if excluded_tables.include?(new_table_name)
+            line.gsub("REFERENCES #{table_name}", "REFERENCES #{new_table_name}")
+          else
+            line
+          end
+        else
+          line
+        end
       end
 
       #   Checks if any of regexps matches against input
