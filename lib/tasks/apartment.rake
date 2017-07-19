@@ -3,7 +3,7 @@ require 'apartment/migrator'
 apartment_namespace = namespace :apartment do
 
   desc "Create all tenants"
-  task create: 'db:migrate' do
+  task :create do
     tenants.each do |tenant|
       begin
         puts("Creating #{tenant} tenant")
