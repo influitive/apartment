@@ -33,26 +33,26 @@ describe Apartment::Elevators::Subdomain do
     context "assuming two subdomains" do
       it "should parse two subdomains in the two level domain" do
         request = ActionDispatch::Request.new('HTTP_HOST' => 'foo.xyz.bar.com')
-        elevator.parse_tenant_name(request).should == "foo"
+        expect(elevator.parse_tenant_name(request)).to eq("foo")
       end
 
       it "should parse two subdomains in the third level domain" do
         request = ActionDispatch::Request.new('HTTP_HOST' => 'foo.xyz.bar.co.uk')
-        elevator.parse_tenant_name(request).should == "foo"
+        expect(elevator.parse_tenant_name(request)).to eq("foo")
       end
     end
 
     context "assuming localhost" do
       it "should return nil for localhost" do
         request = ActionDispatch::Request.new('HTTP_HOST' => 'localhost')
-        elevator.parse_tenant_name(request).should be_nil
+        expect(elevator.parse_tenant_name(request)).to be_nil
       end
     end
 
     context "assuming ip address" do
       it "should return nil for an ip address" do
         request = ActionDispatch::Request.new('HTTP_HOST' => '127.0.0.1')
-        elevator.parse_tenant_name(request).should be_nil
+        expect(elevator.parse_tenant_name(request)).to be_nil
       end
     end
   end
