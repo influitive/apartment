@@ -235,7 +235,7 @@ In the examples above, we show the Apartment middleware being appended to the Ra
 Rails.application.config.middleware.use Apartment::Elevators::Subdomain
 ```
 
-By default, the Subdomain middleware switches into a Tenant based on the subdomain at the beginning of the request, and when the request is finished, it switches back to the "public" Tenant. This happens in the [Generic](https://github.com/influitive/apartment/blob/development/lib/apartment/elevators/generic.rb#L22) elevator, so all elevators that inherit from this elevator will operate as such. 
+By default, the Subdomain middleware switches into a Tenant based on the subdomain at the beginning of the request, and when the request is finished, it switches back to the "public" Tenant. This happens in the [Generic](https://github.com/influitive/apartment/blob/development/lib/apartment/elevators/generic.rb#L22) elevator, so all elevators that inherit from this elevator will operate as such.
 
 It's also good to note that Apartment switches back to the "public" tenant any time an error is raised in your application.
 
