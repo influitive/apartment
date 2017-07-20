@@ -20,7 +20,7 @@ before_install:
   - gem install bundler -v '> 1.5.0'
 env:
   RUBY_GC_MALLOC_LIMIT: 90000000
-  RUBY_FREE_MIN: 200000
+  RUBY_GC_HEAP_FREE_SLOTS: 200000
 matrix:
   allow_failures:
     - rvm: ruby-head
