@@ -1,5 +1,6 @@
 # Apartment
 
+[![Gem Version](https://badge.fury.io/rb/apartment.svg)](https://badge.fury.io/rb/apartment)
 [![Code Climate](https://codeclimate.com/github/influitive/apartment/badges/gpa.svg)](https://codeclimate.com/github/influitive/apartment)
 [![Build Status](https://travis-ci.org/influitive/apartment.svg?branch=development)](https://travis-ci.org/influitive/apartment)
 
