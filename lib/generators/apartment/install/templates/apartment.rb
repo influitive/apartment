@@ -49,13 +49,18 @@ Apartment.configure do |config|
   #
   config.tenant_names = lambda { ToDo_Tenant_Or_User_Model.pluck :database }
 
+  # PostgreSQL:
+  #   Specifies whether to use PostgreSQL schemas or create a new database per Tenant.
   #
-  # ==> PostgreSQL only options
-
-  # Specifies whether to use PostgreSQL schemas or create a new database per Tenant.
+  # MySQL:
+  #   Specifies whether to switch databases by using `use` statement or re-establish connection.
+  #
   # The default behaviour is true.
   #
   # config.use_schemas = true
+
+  #
+  # ==> PostgreSQL only options
 
   # Apartment can be forced to use raw SQL dumps instead of schema.rb for creating new schemas.
   # Use this when you are using some extra features in PostgreSQL that can't be represented in
