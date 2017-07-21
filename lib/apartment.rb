@@ -99,6 +99,9 @@ module Apartment
   # Raised when apartment cannot find the adapter specified in <tt>config/database.yml</tt>
   AdapterNotFound = Class.new(ApartmentError)
 
+  # Raised when apartment cannot find the file to be loaded
+  FileNotFound = Class.new(ApartmentError)
+
   # Tenant specified is unknown
   TenantNotFound = Class.new(ApartmentError)
 
