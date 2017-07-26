@@ -1,3 +1,21 @@
+# 2.0.0
+  * July 26, 2017
+
+  - Raise FileNotFound rather than abort when loading files [meganemura]
+  - Add 5.1 support with fixes for deprecations [meganemura]
+  - Fix tests for 5.x and a host of dev-friendly improvements [meganemura]
+  - Keep query cache config after switching databases [fernandomm]
+  - Pass constants not strings to middleware stack (Rails 5) [tzabaman]
+  - Remove deprecations from 1.0.0 [caironoleto]
+  - Replace `tld_length` configuration option with PublicSuffix gem for the
+    subdomain elevator [humancopy]
+  - Pass full config to create_database to allow :encoding/:collation/etc
+    [kakipo]
+  - Don't retain a connection during initialization [mikecmpbll]
+  - Fix database name escaping in drop_command [mikecmpbll]
+  - Skip initialization for assets:clean and assets:precompile tasks
+    [frank-west-iii]
+
 # 1.2.0
   * July 28, 2016
 

@@ -9,4 +9,4 @@ group :local do
   gem "guard-rspec", "~> 4.2"
 end
 
-gemspec :path => "../"
+gemspec path: "../"

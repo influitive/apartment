@@ -18,7 +18,7 @@ module Apartment
     private
 
       def rescue_from
-        PGError
+        PG::Error
       end
     end
 
@@ -63,10 +63,17 @@ module Apartment
       #
       def connect_to_new(tenant = nil)
         return reset if tenant.nil?
-        raise ActiveRecord::StatementInvalid.new("Could not find schema #{tenant}") unless Apartment.connection.schema_exists? tenant
+        raise ActiveRecord::StatementInvalid.new("Could not find schema #{tenant}") unless Apartment.connection.schema_exists?(tenant.to_s)
 
         @current = tenant.to_s
         Apartment.connection.schema_search_path = full_search_path
+
+        # When the PostgreSQL version is < 9.3,
+        # there is a issue for prepared statement with changing search_path.
+        # https://www.postgresql.org/docs/9.3/static/sql-prepare.html
+        if postgresql_version < 90300
+          Apartment.connection.clear_cache!
+        end
 
       rescue *rescuable_exceptions
         raise TenantNotFound, "One of the following schema(s) is invalid: \"#{tenant}\" #{full_search_path}"
@@ -87,6 +94,12 @@ module Apartment
       def persistent_schemas
         [@current, Apartment.persistent_schemas].flatten
       end
+
+      def postgresql_version
+        # ActiveRecord::ConnectionAdapters::PostgreSQLAdapter#postgresql_version is
+        # public from Rails 5.0.
+        Apartment.connection.send(:postgresql_version)
+      end
     end
 
     # Another Adapter for Postgresql when using schemas and SQL
@@ -94,7 +107,8 @@ module Apartment
 
       PSQL_DUMP_BLACKLISTED_STATEMENTS= [
         /SET search_path/i,   # overridden later
-        /SET lock_timeout/i   # new in postgresql 9.3
+        /SET lock_timeout/i,   # new in postgresql 9.3
+        /SET idle_in_transaction_session_timeout/i,   # new in postgresql 9.6
       ]
 
       def import_database_schema

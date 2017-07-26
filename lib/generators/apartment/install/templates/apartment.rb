@@ -49,16 +49,21 @@ Apartment.configure do |config|
   #
   config.tenant_names = lambda { ToDo_Tenant_Or_User_Model.pluck :database }
 
+  # PostgreSQL:
+  #   Specifies whether to use PostgreSQL schemas or create a new database per Tenant.
   #
-  # ==> PostgreSQL only options
-
-  # Specifies whether to use PostgreSQL schemas or create a new database per Tenant.
+  # MySQL:
+  #   Specifies whether to switch databases by using `use` statement or re-establish connection.
+  #
   # The default behaviour is true.
   #
   # config.use_schemas = true
 
+  #
+  # ==> PostgreSQL only options
+
   # Apartment can be forced to use raw SQL dumps instead of schema.rb for creating new schemas.
-  # Use this when you are using some extra features in PostgreSQL that can't be respresented in
+  # Use this when you are using some extra features in PostgreSQL that can't be represented in
   # schema.rb, like materialized views etc. (only applies with use_schemas set to true).
   # (Note: this option doesn't use db/structure.sql, it creates SQL dump by executing pg_dump)
   #
@@ -83,10 +88,10 @@ end
 
 # Setup a custom Tenant switching middleware. The Proc should return the name of the Tenant that
 # you want to switch to.
-# Rails.application.config.middleware.use 'Apartment::Elevators::Generic', lambda { |request|
+# Rails.application.config.middleware.use Apartment::Elevators::Generic, lambda { |request|
 #   request.host.split('.').first
 # }
 
-# Rails.application.config.middleware.use 'Apartment::Elevators::Domain'
-Rails.application.config.middleware.use 'Apartment::Elevators::Subdomain'
-# Rails.application.config.middleware.use 'Apartment::Elevators::FirstSubdomain'
+# Rails.application.config.middleware.use Apartment::Elevators::Domain
+Rails.application.config.middleware.use Apartment::Elevators::Subdomain
+# Rails.application.config.middleware.use Apartment::Elevators::FirstSubdomain

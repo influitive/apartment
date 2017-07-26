@@ -50,13 +50,6 @@ describe Apartment do
       expect(Apartment.seed_after_create).to be true
     end
 
-    it "should set tld_length" do
-      Apartment.configure do |config|
-        config.tld_length = 2
-      end
-      expect(Apartment.tld_length).to eq(2)
-    end
-
     context "databases" do
       let(:users_conf_hash) { { port: 5444 } }
 

@@ -3,7 +3,6 @@ require 'active_support/core_ext/object/blank'
 require 'forwardable'
 require 'active_record'
 require 'apartment/tenant'
-require 'apartment/deprecation'
 
 module Apartment
 
@@ -75,33 +74,9 @@ module Apartment
       @seed_data_file = "#{Rails.root}/db/seeds.rb"
     end
 
-    def tld_length
-      @tld_length || 1
-    end
-
     # Reset all the config for Apartment
     def reset
       (ACCESSOR_METHODS + WRITER_METHODS).each{|method| remove_instance_variable(:"@#{method}") if instance_variable_defined?(:"@#{method}") }
-    end
-
-    def database_names
-      Apartment::Deprecation.warn "[Deprecation Warning] `database_names` is now deprecated, please use `tenant_names`"
-      tenant_names
-    end
-
-    def database_names=(names)
-      Apartment::Deprecation.warn "[Deprecation Warning] `database_names=` is now deprecated, please use `tenant_names=`"
-      self.tenant_names=(names)
-    end
-
-    def use_postgres_schemas
-      Apartment::Deprecation.warn "[Deprecation Warning] `use_postgresql_schemas` is now deprecated, please use `use_schemas`"
-      use_schemas
-    end
-
-    def use_postgres_schemas=(to_use_or_not_to_use)
-      Apartment::Deprecation.warn "[Deprecation Warning] `use_postgresql_schemas=` is now deprecated, please use `use_schemas=`"
-      self.use_schemas = to_use_or_not_to_use
     end
 
     def extract_tenant_config
@@ -123,6 +98,9 @@ module Apartment
 
   # Raised when apartment cannot find the adapter specified in <tt>config/database.yml</tt>
   AdapterNotFound = Class.new(ApartmentError)
+
+  # Raised when apartment cannot find the file to be loaded
+  FileNotFound = Class.new(ApartmentError)
 
   # Tenant specified is unknown
   TenantNotFound = Class.new(ApartmentError)

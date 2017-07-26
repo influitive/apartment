@@ -59,8 +59,7 @@ describe Apartment::Tenant do
 
     describe "#adapter" do
       it "should load postgresql adapter" do
-        subject.adapter
-        expect(Apartment::Adapters::PostgresqlAdapter).to be_a(Class)
+        expect(subject.adapter).to be_a(Apartment::Adapters::PostgresqlSchemaAdapter)
       end
 
       it "raises exception with invalid adapter specified" do
@@ -68,7 +67,7 @@ describe Apartment::Tenant do
 
         expect {
           Apartment::Tenant.adapter
-        }.to raise_error
+        }.to raise_error(RuntimeError)
       end
 
       context "threadsafety" do
@@ -135,6 +134,14 @@ describe Apartment::Tenant do
               config.excluded_models = ["Company"]
             end
             subject.init
+          end
+
+          after do
+            # Apartment::Tenant.init creates per model connection.
+            # Remove the connection after testing not to unintentionally keep the connection across tests.
+            Apartment.excluded_models.each do |excluded_model|
+              excluded_model.constantize.remove_connection
+            end
           end
 
           it "should create excluded models in public schema" do

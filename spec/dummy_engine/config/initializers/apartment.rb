@@ -42,10 +42,10 @@ end
 ##
 # Elevator Configuration
 
-# Rails.application.config.middleware.use 'Apartment::Elevators::Generic', lambda { |request|
+# Rails.application.config.middleware.use Apartment::Elevators::Generic, lambda { |request|
 #   # TODO: supply generic implementation
 # }
 
-# Rails.application.config.middleware.use 'Apartment::Elevators::Domain'
+# Rails.application.config.middleware.use Apartment::Elevators::Domain
 
-Rails.application.config.middleware.use 'Apartment::Elevators::Subdomain'
+Rails.application.config.middleware.use Apartment::Elevators::Subdomain

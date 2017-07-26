@@ -1,0 +1,14 @@
+version: '2'
+services:
+  postgresql:
+    image: postgres:9.2
+    environment:
+      POSTGRES_PASSWORD: ""
+    ports:
+      - "5432:5432"
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - "3306:3306"

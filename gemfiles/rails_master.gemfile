@@ -2,12 +2,11 @@
 
 source "http://rubygems.org"
 
-gem "rails", "~> 3.2.0"
-gem "test-unit", "~> 3.0"
+gem "rails", git: "https://github.com/rails/rails.git"
 
 group :local do
   gem "pry"
   gem "guard-rspec", "~> 4.2"
 end
 
-gemspec :path => "../"
+gemspec path: "../"

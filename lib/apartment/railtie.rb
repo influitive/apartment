@@ -17,7 +17,6 @@ module Apartment
         config.seed_after_create = false
         config.prepend_environment = false
         config.append_environment = false
-        config.tld_length = 1
       end
 
       ActiveRecord::Migrator.migrations_paths = Rails.application.paths['db/migrate'].to_a
@@ -28,7 +27,11 @@ module Apartment
     #   See the middleware/console declarations below to help with this. Hope to fix that soon.
     #
     config.to_prepare do
-      Apartment::Tenant.init unless ARGV.include? 'assets:precompile'
+      unless ARGV.any? { |arg| arg =~ /\Aassets:(?:precompile|clean)\z/ }
+        Apartment.connection_class.connection_pool.with_connection do
+          Apartment::Tenant.init
+        end
+      end
     end
 
     #
