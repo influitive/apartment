@@ -62,6 +62,11 @@ Apartment.configure do |config|
   #
   # ==> PostgreSQL only options
 
+  # By default Apartment will do a full dump and create very table that is in the default schema, even
+  # tables that come from excluded models. To exclude tables that come from excluded models, uncomment
+  # this line.
+  # config.exclude_tables = true
+
   # Apartment can be forced to use raw SQL dumps instead of schema.rb for creating new schemas.
   # Use this when you are using some extra features in PostgreSQL that can't be represented in
   # schema.rb, like materialized views etc. (only applies with use_schemas set to true).

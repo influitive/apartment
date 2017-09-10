@@ -137,16 +137,18 @@ module Apartment
       #   @return {String} raw SQL contaning only postgres schema dump
       #
       def pg_dump_schema
+        # Skip excluded tables
+        if Apartment.exclude_tables
+          excluded_tables =
+            collect_table_names(Apartment.excluded_models)
+            .uniq
+            .map! {|t| "-T #{t}"}
+            .join(' ')
 
-        # Skip excluded tables? :/
-        # excluded_tables =
-        #   collect_table_names(Apartment.excluded_models)
-        #   .map! {|t| "-T #{t}"}
-        #   .join(' ')
-
-        # `pg_dump -s -x -O -n #{default_tenant} #{excluded_tables} #{dbname}`
-
-        with_pg_env { `pg_dump -s -x -O -n #{default_tenant} #{dbname}` }
+          with_pg_env { `pg_dump -s -x -O -n #{default_tenant} #{excluded_tables} #{dbname}` }
+        else
+          with_pg_env { `pg_dump -s -x -O -n #{default_tenant} #{dbname}` }
+        end
       end
 
       #   Dump data from schema_migrations table
