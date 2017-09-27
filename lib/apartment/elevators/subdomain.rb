@@ -55,7 +55,7 @@ module Apartment
       end
 
       def parse_host(host)
-        (PublicSuffix.parse(host).trd || '').split('.')
+        (PublicSuffix.parse(host, ignore_private: true).trd || '').split('.')
       end
     end
   end
