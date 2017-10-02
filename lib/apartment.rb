@@ -2,6 +2,7 @@ require 'apartment/railtie' if defined?(Rails)
 require 'active_support/core_ext/object/blank'
 require 'forwardable'
 require 'active_record'
+require 'parallel'
 require 'apartment/tenant'
 
 module Apartment
