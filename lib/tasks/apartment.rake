@@ -17,7 +17,7 @@ apartment_namespace = namespace :apartment do
   desc "Migrate all tenants"
   task :migrate do
     warn_if_tenants_empty
-    tenants.each do |tenant|
+    iterate_tenants do |tenant|
       begin
         puts("Migrating #{tenant} tenant")
         Apartment::Migrator.migrate tenant
@@ -31,7 +31,7 @@ apartment_namespace = namespace :apartment do
   task :seed do
     warn_if_tenants_empty
 
-    tenants.each do |tenant|
+    iterate_tenants do |tenant|
       begin
         puts("Seeding #{tenant} tenant")
         Apartment::Tenant.switch(tenant) do
@@ -49,7 +49,7 @@ apartment_namespace = namespace :apartment do
 
     step = ENV['STEP'] ? ENV['STEP'].to_i : 1
 
-    tenants.each do |tenant|
+    iterate_tenants do |tenant|
       begin
         puts("Rolling back #{tenant} tenant")
         Apartment::Migrator.rollback tenant, step
@@ -67,7 +67,7 @@ apartment_namespace = namespace :apartment do
       version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
       raise 'VERSION is required' unless version
 
-      tenants.each do |tenant|
+      iterate_tenants do |tenant|
         begin
           puts("Migrating #{tenant} tenant up")
           Apartment::Migrator.run :up, tenant, version
@@ -84,7 +84,7 @@ apartment_namespace = namespace :apartment do
       version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
       raise 'VERSION is required' unless version
 
-      tenants.each do |tenant|
+      iterate_tenants do |tenant|
         begin
           puts("Migrating #{tenant} tenant down")
           Apartment::Migrator.run :down, tenant, version
@@ -121,6 +121,18 @@ apartment_namespace = namespace :apartment do
 
         Note that your tenants currently haven't been migrated. You'll need to run `db:migrate` to rectify this.
       WARNING
+    end
+  end
+
+  def iterate_tenants
+    if Apartment.use_parallel_tenant_task
+      Parallel.each(tenants, in_processes: Apartment.num_parallel_in_processes ) do |tenant_name|
+        yield tenant_name
+      end
+    else
+      tenants.each do |tenant_name|
+        yield tenant_name
+      end
     end
   end
 end
