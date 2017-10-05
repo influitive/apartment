@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   # must be >= 3.1.2 due to bug in prepared_statements
   s.add_dependency 'activerecord',    '>= 3.1.2', '< 6.0'
   s.add_dependency 'rack',            '>= 1.3.6'
-  s.add_dependency 'public_suffix',   '~> 2.0.5'
+  s.add_dependency 'public_suffix',   '>= 2'
 
   s.add_development_dependency 'appraisal'
   s.add_development_dependency 'rake',         '~> 0.9'
