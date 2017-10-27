@@ -117,7 +117,7 @@ manually in your `application.rb` like so
 
 ```ruby
 # config/application.rb
-require 'apartment/elevators/subdomain' # or 'domain' or 'generic'
+require 'apartment/elevators/subdomain' # or 'domain', 'first_subdomain', 'host'
 ```
 
 #### Switch on subdomain
@@ -166,7 +166,7 @@ This functions much in the same way as the Subdomain elevator. **NOTE:** in fact
 
 #### Switch on domain
 
-To switch based on full domain (excluding subdomains *ie 'www'* and top level domains *ie '.com'* ) use the following:
+To switch based on full domain (excluding the 'www' subdomains and top level domains *ie '.com'* ) use the following:
 
 ```ruby
 # application.rb
@@ -176,6 +176,11 @@ module MyApplication
   end
 end
 ```
+
+Note that if you have several subdomains, then it will match on the first *non-www* subdomain:
+- example.com => example
+- www.example.com => example
+- a.example.com => a
 
 #### Switch on full host using a hash
 
@@ -189,6 +194,31 @@ module MyApplication
   end
 end
 ```
+
+#### Switch on full host, ignoring given first subdomains
+
+To switch based on full host to find corresponding tenant name use the following:
+
+```ruby
+# application.rb
+module MyApplication
+  class Application < Rails::Application
+    config.middleware.use Apartment::Elevators::Host
+  end
+end
+```
+
+If you want to exclude a first-subdomain, for example if you don't want your application to include www in the matching, in an initializer in your application, you can set the following:
+
+```ruby
+Apartment::Elevators::Host.ignored_first_subdomains = ['www']
+```
+
+With the above set, these would be the results:
+- example.com => example.com
+- www.example.com => example.com
+- a.example.com => a.example.com
+- www.a.example.com => a.example.com
 
 #### Custom Elevator
 

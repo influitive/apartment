@@ -4,9 +4,11 @@ module Apartment
   module Elevators
     #   Provides a rack based tenant switching solution based on domain
     #   Assumes that tenant name should match domain
-    #   Parses request host for second level domain
+    #   Parses request host for second level domain, ignoring www
     #   eg. example.com       => example
     #       www.example.bc.ca => example
+    #       a.example.bc.ca   => a
+    #       
     #
     class Domain < Generic
 
