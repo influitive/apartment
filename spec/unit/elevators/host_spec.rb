@@ -13,6 +13,8 @@ describe Apartment::Elevators::Host do
     end
 
     context "assuming no ignored_first_subdomains" do
+      before { allow(described_class).to receive(:ignored_first_subdomains).and_return([]) }
+
       context "with 3 parts" do
         it "should return the whole host" do
           request = ActionDispatch::Request.new('HTTP_HOST' => 'foo.bar.com')
@@ -29,7 +31,7 @@ describe Apartment::Elevators::Host do
     end
 
     context "assuming ignored_first_subdomains is set" do
-      before { described_class.ignored_first_subdomains = %w{www foo} }
+      before { allow(described_class).to receive(:ignored_first_subdomains).and_return(%w{www foo}) }
 
       context "with 3 parts" do
         it "should return host without www" do
@@ -73,17 +75,15 @@ describe Apartment::Elevators::Host do
 
   describe "#call" do
     it "switches to the proper tenant" do
+      allow(described_class).to receive(:ignored_first_subdomains).and_return([])
       expect(Apartment::Tenant).to receive(:switch).with('foo.bar.com')
       elevator.call('HTTP_HOST' => 'foo.bar.com')
     end
 
     it "ignores ignored_first_subdomains" do
-      described_class.ignored_first_subdomains = %w{foo}
-
+      allow(described_class).to receive(:ignored_first_subdomains).and_return(%w{foo})
       expect(Apartment::Tenant).to receive(:switch).with('bar.com')
       elevator.call('HTTP_HOST' => 'foo.bar.com')
-      
-      described_class.ignored_first_subdomains = nil
     end
   end
 end
