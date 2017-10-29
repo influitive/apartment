@@ -513,7 +513,38 @@ end
 
 ## Delayed::Job
 
-Has been removed. See [apartment-sidekiq](https://github.com/influitive/apartment-sidekiq) for a better backgrounding experience.
+It's really easy to write a custom plugin that will work for *all* jobs with no futher code. First, install delayed_job as required. Next, add a tenant column with the following migration:
+
+```bash
+$ rails generate migration AddTenantToDelayedJob tenant:string
+```
+
+Last, use the following plugin:
+
+```ruby
+# config/initializers/a0_delayed_tenant_plugin.rb
+class A0DelayedTenantPlugin < Delayed::Plugin
+  callbacks do |lifecycle|
+    # save current tenant before enqueuing the job
+    lifecycle.before :enqueue do |job|
+      job.tenant = Apartment::Tenant.current
+    end
+
+    lifecycle.around :perform do |worker, job, *args, &block|
+      # Switch to the saved tenant, ocurrs before deserializing this job
+      Apartment::Tenant.switch(job.tenant) do
+        # Add aditional context setup HERE, like security context for ex.
+        block.call(worker, job, *args)
+      end
+    end
+  end
+end
+
+# register this plugin
+Delayed::Worker.plugins << A0DelayedTenantPlugin
+```
+
+And that's all.
 
 ## Contributing
 
