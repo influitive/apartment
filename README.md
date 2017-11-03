@@ -511,9 +511,9 @@ config.tenant_names = lambda do
 end
 ```
 
-## Delayed::Job
+## Background workers
 
-Has been removed. See [apartment-sidekiq](https://github.com/influitive/apartment-sidekiq) for a better backgrounding experience.
+See [apartment-sidekiq](https://github.com/influitive/apartment-sidekiq) or [apartment-activejob](https://github.com/influitive/apartment-activejob).
 
 ## Contributing
 
