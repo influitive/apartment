@@ -94,12 +94,17 @@ One can optionally use the full database creation instead if they want, though t
 To switch tenants using Apartment, use the following command:
 
 ```ruby
-Apartment::Tenant.switch!('tenant_name')
+Apartment::Tenant.switch('tenant_name') do
+  # ...
+end
 ```
 
 When switch is called, all requests coming to ActiveRecord will be routed to the tenant
-you specify (with the exception of excluded models, see below). To return to the 'root'
-tenant, call switch with no arguments.
+you specify (with the exception of excluded models, see below). The tenant is automatically
+switched back at the end of the block to what it was before.
+
+There is also `switch!` which doesn't take a block, but it's recommended to use `switch`.
+To return to the default tenant, you can call `switch` with no arguments.
 
 ### Switching Tenants per request
 
