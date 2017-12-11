@@ -47,6 +47,8 @@ matrix:
     - rvm: ruby-head
       gemfile: gemfiles/rails_4_1.gemfile
     - rvm: jruby-9.0.5.0
+      gemfile: gemfiles/rails_4_0.gemfile
+    - rvm: jruby-9.0.5.0
       gemfile: gemfiles/rails_4_2.gemfile
     - rvm: jruby-9.0.5.0
       gemfile: gemfiles/rails_5_0.gemfile
@@ -54,6 +56,8 @@ matrix:
       gemfile: gemfiles/rails_5_1.gemfile
     - rvm: jruby-9.0.5.0
       gemfile: gemfiles/rails_master.gemfile
+    - rvm: jruby-9.1.9.0
+      gemfile: gemfiles/rails_4_0.gemfile
     - rvm: jruby-9.1.9.0
       gemfile: gemfiles/rails_5_0.gemfile
     - rvm: jruby-9.1.9.0
