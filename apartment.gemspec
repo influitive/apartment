@@ -41,9 +41,4 @@ Gem::Specification.new do |s|
     s.add_development_dependency 'pg',     '>= 0.11.0'
     s.add_development_dependency 'sqlite3'
   end
-
-  if RUBY_VERSION < '2.1.0'
-    # capybara depends on xpath depends on nokogiri
-    s.add_development_dependency 'nokogiri', '< 1.7.0'
-  end
 end
