@@ -480,6 +480,17 @@ Note that you can disable the default migrating of all tenants with `db:migrate`
 `Apartment.db_migrate_tenants = false` in your `Rakefile`. Note this must be done
 *before* the rake tasks are loaded. ie. before `YourApp::Application.load_tasks` is called
 
+#### Parallel Migrations
+
+Apartment supports parallelizing migrations into multiple threads when
+you have a large number of tenants. By default, parallel migrations is
+turned off. You can enable this by setting `parallel_migration_threads` to 
+the number of threads you want to use in your initializer.
+
+Keep in mind that because migrations are going to access the database,
+the number of threads indicated here should be less than the pool size
+that Rails will use to connect to your database.
+
 ### Handling Environments
 
 By default, when not using postgresql schemas, Apartment will prepend the environment to the tenant name
