@@ -279,7 +279,7 @@ This works okay for simple applications, but it's important to consider that you
 To resolve this issue, consider adding the Apartment middleware at a location in the Rack stack that makes sense for your needs, e.g.:
 
 ```ruby
-Rails.application.config.middleware.insert_before 'Warden::Manager', 'Apartment::Elevators::Subdomain'
+Rails.application.config.middleware.insert_before Warden::Manager, Apartment::Elevators::Subdomain
 ```
 
 Now work done in the Warden middleware is wrapped in the `Apartment::Tenant.switch` context started in the Generic elevator.
