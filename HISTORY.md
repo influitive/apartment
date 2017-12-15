@@ -1,6 +1,13 @@
 # 2.1.0
   * December 15, 2017
 
+  - Add `parallel_migration_threads` configuration option for running migrations
+    in parallel [ryanbrunner]
+  - Drop Ruby 2.0.0 support [meganemura]
+  - ignore_private when parsing subdomains with PublicSuffix [michiomochi]
+  - Ignore row_security statements in psql dumps for backward compatibility
+    [meganemura]
+  - "Host" elevator [shrmnk]
   - Enhance db:drop task to act on all tenants [kuzukuzu]
 
 # 2.0.0
