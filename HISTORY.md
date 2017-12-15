@@ -1,3 +1,8 @@
+# 2.1.0
+  * December 15, 2017
+
+  - Enhance db:drop task to act on all tenants [kuzukuzu]
+
 # 2.0.0
   * July 26, 2017
 
