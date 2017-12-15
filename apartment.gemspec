@@ -21,7 +21,8 @@ Gem::Specification.new do |s|
   # must be >= 3.1.2 due to bug in prepared_statements
   s.add_dependency 'activerecord',    '>= 3.1.2', '< 6.0'
   s.add_dependency 'rack',            '>= 1.3.6'
-  s.add_dependency 'public_suffix',   '~> 2.0.5'
+  s.add_dependency 'public_suffix',   '>= 2'
+  s.add_dependency 'parallel',        '>= 0.7.1'
 
   s.add_development_dependency 'appraisal'
   s.add_development_dependency 'rake',         '~> 0.9'
@@ -40,10 +41,5 @@ Gem::Specification.new do |s|
     s.add_development_dependency 'mysql2', '~> 0.3.10'
     s.add_development_dependency 'pg',     '>= 0.11.0'
     s.add_development_dependency 'sqlite3'
-  end
-
-  if RUBY_VERSION < '2.1.0'
-    # capybara depends on xpath depends on nokogiri
-    s.add_development_dependency 'nokogiri', '< 1.7.0'
   end
 end

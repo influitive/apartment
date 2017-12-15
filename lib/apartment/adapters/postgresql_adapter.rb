@@ -106,8 +106,9 @@ module Apartment
     class PostgresqlSchemaFromSqlAdapter < PostgresqlSchemaAdapter
 
       PSQL_DUMP_BLACKLISTED_STATEMENTS= [
-        /SET search_path/i,   # overridden later
-        /SET lock_timeout/i,   # new in postgresql 9.3
+        /SET search_path/i,                           # overridden later
+        /SET lock_timeout/i,                          # new in postgresql 9.3
+        /SET row_security/i,                          # new in postgresql 9.5
         /SET idle_in_transaction_session_timeout/i,   # new in postgresql 9.6
       ]
 

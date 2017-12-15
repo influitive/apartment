@@ -11,7 +11,7 @@ module Apartment
     extend Forwardable
 
     ACCESSOR_METHODS  = [:use_schemas, :use_sql, :seed_after_create, :prepend_environment, :append_environment, :with_multi_server_setup ]
-    WRITER_METHODS    = [:tenant_names, :database_schema_file, :excluded_models, :default_schema, :persistent_schemas, :connection_class, :tld_length, :db_migrate_tenants, :seed_data_file]
+    WRITER_METHODS    = [:tenant_names, :database_schema_file, :excluded_models, :default_schema, :persistent_schemas, :connection_class, :tld_length, :db_migrate_tenants, :seed_data_file, :parallel_migration_threads]
 
     attr_accessor(*ACCESSOR_METHODS)
     attr_writer(*WRITER_METHODS)
@@ -50,6 +50,10 @@ module Apartment
 
     def default_schema
       @default_schema || "public" # TODO 'public' is postgres specific
+    end
+
+    def parallel_migration_threads
+      @parallel_migration_threads || 0
     end
     alias :default_tenant :default_schema
     alias :default_tenant= :default_schema=
