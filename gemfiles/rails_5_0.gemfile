@@ -9,4 +9,10 @@ group :local do
   gem "guard-rspec", "~> 4.2"
 end
 
+if defined?(JRUBY_VERSION)
+  gem 'activerecord-jdbc-adapter', '~> 50.0'
+  gem 'activerecord-jdbcpostgresql-adapter', '~> 50.0'
+  gem 'activerecord-jdbcmysql-adapter', '~> 50.0'
+end
+
 gemspec path: "../"
