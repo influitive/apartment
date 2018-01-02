@@ -1,15 +1,13 @@
 language: ruby
 rvm:
   - 2.1.9
-  - 2.2.4
-  - 2.3.1
-  - 2.4.1
+  - 2.2.9
+  - 2.3.6
+  - 2.4.3
+  - 2.5.0
   - ruby-head
-  - jruby-9.0.5.0
-  - jruby-9.1.9.0
+  - jruby-9.1.15.0
 gemfile:
-  - gemfiles/rails_4_0.gemfile
-  - gemfiles/rails_4_1.gemfile
   - gemfiles/rails_4_2.gemfile
   - gemfiles/rails_5_0.gemfile
   - gemfiles/rails_5_1.gemfile
@@ -31,31 +29,9 @@ matrix:
       gemfile: gemfiles/rails_5_1.gemfile
     - rvm: 2.1.9
       gemfile: gemfiles/rails_master.gemfile
-    - rvm: 2.4.1
-      gemfile: gemfiles/rails_4_0.gemfile
-    - rvm: 2.4.1
-      gemfile: gemfiles/rails_4_1.gemfile
-    - rvm: ruby-head
-      gemfile: gemfiles/rails_4_0.gemfile
-    - rvm: ruby-head
-      gemfile: gemfiles/rails_4_1.gemfile
-    - rvm: jruby-9.0.5.0
-      gemfile: gemfiles/rails_4_0.gemfile
-    - rvm: jruby-9.0.5.0
-      gemfile: gemfiles/rails_4_2.gemfile
-    - rvm: jruby-9.0.5.0
-      gemfile: gemfiles/rails_5_0.gemfile
-    - rvm: jruby-9.0.5.0
+    - rvm: jruby-9.1.15.0
       gemfile: gemfiles/rails_5_1.gemfile
-    - rvm: jruby-9.0.5.0
-      gemfile: gemfiles/rails_master.gemfile
-    - rvm: jruby-9.1.9.0
-      gemfile: gemfiles/rails_4_0.gemfile
-    - rvm: jruby-9.1.9.0
-      gemfile: gemfiles/rails_5_0.gemfile
-    - rvm: jruby-9.1.9.0
-      gemfile: gemfiles/rails_5_1.gemfile
-    - rvm: jruby-9.1.9.0
+    - rvm: jruby-9.1.15.0
       gemfile: gemfiles/rails_master.gemfile
   fast_finish: true
 cache: bundler
