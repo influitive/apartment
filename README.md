@@ -149,7 +149,7 @@ This functions much in the same way as Apartment.excluded_models. This example w
 
 #### Switch on first subdomain
 
-To switch on the first subdomain, which analyzes the chain of subdomains of the request and switches to a tenant schema of the first name in the chain (e.g. owls.birds.animals.com would switch to "owl"). It can be used like so:
+To switch on the first subdomain, which analyzes the chain of subdomains of the request and switches to a tenant schema of the first name in the chain (e.g. owls.birds.animals.com would switch to "owls"). It can be used like so:
 
 ```ruby
 # application.rb
