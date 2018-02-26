@@ -13,6 +13,8 @@ if defined?(JRUBY_VERSION)
   gem 'activerecord-jdbc-adapter', '~> 51.0'
   gem 'activerecord-jdbcpostgresql-adapter', '~> 51.0'
   gem 'activerecord-jdbcmysql-adapter', '~> 51.0'
+else
+  gem "pg", "< 1.0.0"
 end
 
 gemspec path: "../"
