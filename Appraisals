@@ -34,6 +34,15 @@ appraise "rails-5-1" do
   end
 end
 
+appraise "rails-5-2" do
+  gem "rails", "~> 5.2.0.rc1"
+  platforms :jruby do
+    gem 'activerecord-jdbc-adapter', '~> 51.0'
+    gem 'activerecord-jdbcpostgresql-adapter', '~> 51.0'
+    gem 'activerecord-jdbcmysql-adapter', '~> 51.0'
+  end
+end
+
 appraise "rails-master" do
   gem "rails", git: 'https://github.com/rails/rails.git'
   platforms :jruby do
