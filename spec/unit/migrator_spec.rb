@@ -42,7 +42,7 @@ describe Apartment::Migrator do
     end
   end
 
-  context "with ActiveRecord abowe or equal to 5.2.0", skip: ActiveRecord.version < Gem::Version.new("5.2.0") do
+  context "with ActiveRecord above or equal to 5.2.0", skip: ActiveRecord.version < Gem::Version.new("5.2.0") do
     before do
       allow(Apartment::Migrator).to receive(:activerecord_below_5_2?) { false }
     end
