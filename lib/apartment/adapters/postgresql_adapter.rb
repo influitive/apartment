@@ -185,6 +185,7 @@ module Apartment
           .select {|line| check_input_against_regexps(line, PSQL_DUMP_BLACKLISTED_STATEMENTS).empty?}
           .prepend(search_path)
           .join("\n")
+          .gsub(/#{default_tenant}\./, "#{current}.")
       end
 
       #   Checks if any of regexps matches against input
