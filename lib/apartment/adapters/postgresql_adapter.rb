@@ -155,7 +155,7 @@ module Apartment
       #   @return {String} raw SQL contaning inserts with data from schema_migrations
       #
       def pg_dump_schema_migrations_data
-        with_pg_env { `pg_dump -a --inserts -t schema_migrations -t ar_internal_metadata -n #{default_tenant} #{dbname}` }
+        with_pg_env { `pg_dump -a --inserts -t schema_migrations -n #{default_tenant} #{dbname}` }
       end
 
       # Temporary set Postgresql related environment variables if there are in @config
@@ -180,11 +180,21 @@ module Apartment
       def patch_search_path(sql)
         search_path = "SET search_path = \"#{current}\", #{default_tenant};"
 
-        sql
-          .split("\n")
-          .select {|line| check_input_against_regexps(line, PSQL_DUMP_BLACKLISTED_STATEMENTS).empty?}
-          .prepend(search_path)
-          .join("\n")
+          swap_schema_qualifier(sql)
+            .split("\n")
+            .select {|line| check_input_against_regexps(line, PSQL_DUMP_BLACKLISTED_STATEMENTS).empty?}
+            .prepend(search_path)
+            .join("\n")
+      end
+
+      def swap_schema_qualifier(sql)
+        sql.gsub(/#{default_tenant}\.\w*/) do |match|
+          if Apartment.pg_excluded_names.any? { |name| match.include? name }
+            match
+          else
+            match.gsub(default_tenant, current)
+          end
+        end
       end
 
       #   Checks if any of regexps matches against input

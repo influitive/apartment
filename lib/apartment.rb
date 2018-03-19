@@ -10,8 +10,8 @@ module Apartment
 
     extend Forwardable
 
-    ACCESSOR_METHODS  = [:use_schemas, :use_sql, :seed_after_create, :prepend_environment, :append_environment, :with_multi_server_setup ]
-    WRITER_METHODS    = [:tenant_names, :database_schema_file, :excluded_models, :default_schema, :persistent_schemas, :connection_class, :tld_length, :db_migrate_tenants, :seed_data_file, :parallel_migration_threads]
+    ACCESSOR_METHODS  = [:use_schemas, :use_sql, :seed_after_create, :prepend_environment, :append_environment, :with_multi_server_setup]
+    WRITER_METHODS    = [:tenant_names, :database_schema_file, :excluded_models, :default_schema, :persistent_schemas, :connection_class, :tld_length, :db_migrate_tenants, :seed_data_file, :parallel_migration_threads, :pg_excluded_names]
 
     attr_accessor(*ACCESSOR_METHODS)
     attr_writer(*WRITER_METHODS)
@@ -76,6 +76,10 @@ module Apartment
       return @seed_data_file if defined?(@seed_data_file)
 
       @seed_data_file = "#{Rails.root}/db/seeds.rb"
+    end
+
+    def pg_excluded_names
+      @pg_excluded_names || []
     end
 
     # Reset all the config for Apartment
