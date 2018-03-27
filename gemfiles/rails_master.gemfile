@@ -10,8 +10,6 @@ group :local do
 end
 
 platforms :ruby do
-  # TODO: Remove pinning if rails can use mysql2 0.5.0
-  # https://github.com/brianmario/mysql2/releases/tag/0.5.0
   gem "mysql2", "~> 0.4.0"
 end
 
