@@ -85,6 +85,16 @@ Apartment.configure do |config|
   # Uncomment the line below if you want to disable this behaviour in production.
   #
   # config.prepend_environment = !Rails.env.production?
+
+  # When using PostgreSQL schemas, the database dump will be namespaced, and
+  # apartment will substitute the default namespace (usually public) with the
+  # name of the new tenant when creating a new tenant. Some items must maintain
+  # a reference to the default namespace (ie public) - for instance, a default
+  # uuid generation. Uncomment the line below to create a list of namespaced
+  # items in the schema dump that should *not* have their namespace replaced by
+  # the new tenant
+  #
+  # config.pg_excluded_names = ["uuid_generate_v4"]
 end
 
 # Setup a custom Tenant switching middleware. The Proc should return the name of the Tenant that
