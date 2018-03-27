@@ -1,7 +1,7 @@
 version: '2'
 services:
   postgresql:
-    image: postgres:9.2
+    image: postgres:10.3
     environment:
       POSTGRES_PASSWORD: ""
     ports:
