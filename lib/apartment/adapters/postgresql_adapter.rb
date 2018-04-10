@@ -204,7 +204,7 @@ module Apartment
           if Apartment.pg_excluded_names.any? { |name| match.include? name }
             match
           else
-            match.gsub(default_tenant, %{"#{current}"})
+            match.gsub("#{default_tenant}.", %{"#{current}".})
           end
         end
       end
