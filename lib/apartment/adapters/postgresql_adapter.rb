@@ -197,6 +197,7 @@ module Apartment
           .select {|line| check_input_against_regexps(line, PSQL_DUMP_BLACKLISTED_STATEMENTS).empty?}
           .prepend(search_path)
           .join("\n")
+          .gsub(/#{default_tenant}\./, "#{current}.")
       end
 
       def swap_schema_qualifier(sql)
