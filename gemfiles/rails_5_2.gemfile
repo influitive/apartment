@@ -9,10 +9,6 @@ group :local do
   gem "guard-rspec", "~> 4.2"
 end
 
-platforms :ruby do
-  gem "mysql2", "~> 0.4.0"
-end
-
 platforms :jruby do
   gem "activerecord-jdbc-adapter", "~> 51.0"
   gem "activerecord-jdbcpostgresql-adapter", "~> 51.0"
