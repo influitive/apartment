@@ -113,11 +113,23 @@ module Apartment
       ]
 
       def import_database_schema
-        clone_pg_schema
-        copy_schema_migrations
+        preserving_search_path do
+          clone_pg_schema
+          copy_schema_migrations
+        end
       end
 
     private
+
+      # Re-set search path after the schema is imported.
+      # Postgres now sets search path to empty before dumping the schema
+      # and it mut be reset
+      #
+      def preserving_search_path
+        search_path = Apartment.connection.execute("show search_path").first["search_path"]
+        yield
+        Apartment.connection.execute("set search_path = #{search_path}")
+      end
 
       # Clone default schema into new schema named after current tenant
       #
@@ -155,7 +167,7 @@ module Apartment
       #   @return {String} raw SQL contaning inserts with data from schema_migrations
       #
       def pg_dump_schema_migrations_data
-        with_pg_env { `pg_dump -a --inserts -t schema_migrations -t ar_internal_metadata -n #{default_tenant} #{dbname}` }
+        with_pg_env { `pg_dump -a --inserts -t #{default_tenant}.schema_migrations -t #{default_tenant}.ar_internal_metadata #{dbname}` }
       end
 
       # Temporary set Postgresql related environment variables if there are in @config
@@ -180,11 +192,21 @@ module Apartment
       def patch_search_path(sql)
         search_path = "SET search_path = \"#{current}\", #{default_tenant};"
 
-        sql
+        swap_schema_qualifier(sql)
           .split("\n")
           .select {|line| check_input_against_regexps(line, PSQL_DUMP_BLACKLISTED_STATEMENTS).empty?}
           .prepend(search_path)
           .join("\n")
+      end
+
+      def swap_schema_qualifier(sql)
+        sql.gsub(/#{default_tenant}\.\w*/) do |match|
+          if Apartment.pg_excluded_names.any? { |name| match.include? name }
+            match
+          else
+            match.gsub(default_tenant, %{"#{current}"})
+          end
+        end
       end
 
       #   Checks if any of regexps matches against input
