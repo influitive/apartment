@@ -33,8 +33,9 @@ module Apartment
         Apartment.connection_class.connection_pool.with_connection do
           Apartment::Tenant.init
         end
-      rescue ::ActiveRecord::NoDatabaseError => e
-        puts e.message
+      rescue ::ActiveRecord::NoDatabaseError
+        # Since `db:create` and other tasks invoke this block from Rails 5.2.0,
+        # we need to swallow the error to execute `db:create` properly.
       end
     end
 
