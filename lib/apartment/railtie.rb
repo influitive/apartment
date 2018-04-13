@@ -27,7 +27,7 @@ module Apartment
     #   See the middleware/console declarations below to help with this. Hope to fix that soon.
     #
     config.to_prepare do
-      unless ARGV.any? { |arg| arg =~ /\Aassets:(?:precompile|clean)\z/ }
+      unless ARGV.any? { |arg| arg =~ /\Aassets:(?:precompile|clean)\z|\Adb:create\z/ }
         Apartment.connection_class.connection_pool.with_connection do
           Apartment::Tenant.init
         end
