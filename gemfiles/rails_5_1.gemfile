@@ -2,7 +2,7 @@
 
 source "http://rubygems.org"
 
-gem "rails", "5.1.1"
+gem "rails", "~> 5.1.0"
 
 group :local do
   gem "pry"
@@ -11,7 +11,6 @@ end
 
 platforms :ruby do
   gem "pg", "< 1.0.0"
-  gem "mysql2", "~> 0.4.0"
 end
 
 platforms :jruby do
