@@ -27,7 +27,7 @@ appraise "rails-5-0" do
 end
 
 appraise "rails-5-1" do
-  gem "rails", "5.1.1"
+  gem "rails", "~> 5.1.0"
   platforms :ruby do
     gem "pg", "< 1.0.0"
     # TODO: Remove pinning if rails can use mysql2 0.5.0
