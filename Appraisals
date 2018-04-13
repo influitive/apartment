@@ -42,7 +42,7 @@ appraise "rails-5-1" do
 end
 
 appraise "rails-5-2" do
-  gem "rails", "~> 5.2.0.rc1"
+  gem "rails", "~> 5.2.0"
   platforms :ruby do
     # TODO: Remove pinning if rails can use mysql2 0.5.0
     # https://github.com/brianmario/mysql2/releases/tag/0.5.0
