@@ -29,6 +29,8 @@ test:
   min_messages: WARNING
   pool: 5
   timeout: 5000
+  host: localhost
+  port: 5432
 
 development:
   adapter: postgresql
@@ -37,4 +39,6 @@ development:
   min_messages: WARNING
   pool: 5
   timeout: 5000
+  host: localhost
+  port: 5432
 <% end %>
