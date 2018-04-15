@@ -3,13 +3,13 @@ language: ruby
 services:
   - docker
 rvm:
+  - jruby-9.1.15.0
   - 2.1.9
   - 2.2.9
   - 2.3.6
   - 2.4.3
   - 2.5.0
   - ruby-head
-  - jruby-9.1.15.0
 gemfile:
   - gemfiles/rails_4_2.gemfile
   - gemfiles/rails_5_0.gemfile
