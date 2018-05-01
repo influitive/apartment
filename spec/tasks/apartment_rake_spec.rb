@@ -16,11 +16,19 @@ describe "apartment rake tasks" do
     Rake::Task.define_task('db:migrate:up')
     Rake::Task.define_task('db:migrate:down')
     Rake::Task.define_task('db:migrate:redo')
+    Rake::Task.define_task('db:schema:dump')
+    Rake::Task.define_task('db:structure:dump')
   end
 
   after do
     Rake.application = nil
     ENV['VERSION'] = nil    # linux users reported env variable carrying on between tests
+
+    structure_file = "spec/dummy/db/structure.sql"
+
+    if File.exists?(structure_file)
+      File.delete(structure_file)
+    end
   end
 
   after(:all) do
@@ -47,6 +55,12 @@ describe "apartment rake tasks" do
         expect(Apartment::Migrator).to receive(:migrate).exactly(tenant_count).times
         @rake['apartment:migrate'].invoke
       end
+
+      it "should dump the schema after each tenant" do
+        allow(Apartment::Migrator).to receive(:migrate)
+        expect(@rake).to receive(:invoke_task).exactly(tenant_count).times
+        @rake["apartment:migrate"].invoke
+      end
     end
 
     describe "apartment:migrate:up" do
@@ -72,6 +86,12 @@ describe "apartment rake tasks" do
         it "migrates up to a specific version" do
           expect(Apartment::Migrator).to receive(:run).with(:up, anything, version.to_i).exactly(tenant_count).times
           @rake['apartment:migrate:up'].invoke
+        end
+
+        it "should dump the schema after each tenant" do
+          allow(Apartment::Migrator).to receive(:run)
+          expect(Rake.application).to receive(:invoke_task).exactly(tenant_count).times
+          @rake["apartment:migrate:up"].invoke
         end
       end
     end
@@ -100,6 +120,12 @@ describe "apartment rake tasks" do
           expect(Apartment::Migrator).to receive(:run).with(:down, anything, version.to_i).exactly(tenant_count).times
           @rake['apartment:migrate:down'].invoke
         end
+
+        it "should dump the schema after each tenant" do
+          allow(Apartment::Migrator).to receive(:run)
+          expect(Rake.application).to receive(:invoke_task).exactly(tenant_count).times
+          @rake["apartment:migrate:down"].invoke
+        end
       end
     end
 
@@ -115,6 +141,12 @@ describe "apartment rake tasks" do
         expect(Apartment::Migrator).to receive(:rollback).with(anything, step.to_i).exactly(tenant_count).times
         ENV['STEP'] = step
         @rake['apartment:rollback'].invoke
+      end
+
+      it "should dump the schema after each tenant" do
+        allow(Apartment::Migrator).to receive(:rollback)
+        expect(Rake.application).to receive(:invoke_task).exactly(tenant_count).times
+        @rake["apartment:rollback"].invoke
       end
     end
 
