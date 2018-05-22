@@ -45,7 +45,7 @@ module Apartment
     private
 
     def activerecord_below_5_2?
-      ActiveRecord.version.release < Gem::Version.new('5.2.0')
+      ActiveRecord.respond_to?(:version) ? ActiveRecord.version.release < Gem::Version.new('5.2.0') : true
     end
   end
 end
