@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -9,41 +8,48 @@
 # from scratch. The latter is a flawed and unsustainable approach (the more migrations
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
-# It's strongly recommended to check this file into your version control system.
+# It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111202022214) do
+ActiveRecord::Schema.define(version: 2018_04_15_260934) do
 
-  create_table "books", :force => true do |t|
-    t.string   "name"
-    t.integer  "pages"
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "books", force: :cascade do |t|
+    t.string "name"
+    t.integer "pages"
     t.datetime "published"
   end
 
-  create_table "companies", :force => true do |t|
+  create_table "companies", force: :cascade do |t|
     t.boolean "dummy"
-    t.string  "database"
+    t.string "database"
   end
 
-  create_table "delayed_jobs", :force => true do |t|
-    t.integer  "priority",   :default => 0
-    t.integer  "attempts",   :default => 0
-    t.text     "handler"
-    t.text     "last_error"
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.integer "priority", default: 0
+    t.integer "attempts", default: 0
+    t.text "handler"
+    t.text "last_error"
     t.datetime "run_at"
     t.datetime "locked_at"
     t.datetime "failed_at"
-    t.string   "locked_by"
+    t.string "locked_by"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "queue"
+    t.string "queue"
+    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
-  add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
+  create_table "public_tokens", id: :serial, force: :cascade do |t|
+    t.string "token"
+    t.integer "user_id"
+  end
 
-  create_table "users", :force => true do |t|
-    t.string   "name"
+  create_table "users", force: :cascade do |t|
+    t.string "name"
     t.datetime "birthdate"
-    t.string   "sex"
+    t.string "sex"
   end
 
 end
