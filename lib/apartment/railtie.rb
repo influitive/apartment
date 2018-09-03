@@ -27,10 +27,15 @@ module Apartment
     #   See the middleware/console declarations below to help with this. Hope to fix that soon.
     #
     config.to_prepare do
-      unless ARGV.any? { |arg| arg =~ /\Aassets:(?:precompile|clean)\z/ }
+      next if ARGV.any? { |arg| arg =~ /\Aassets:(?:precompile|clean)\z/ }
+
+      begin
         Apartment.connection_class.connection_pool.with_connection do
           Apartment::Tenant.init
         end
+      rescue ::ActiveRecord::NoDatabaseError
+        # Since `db:create` and other tasks invoke this block from Rails 5.2.0,
+        # we need to swallow the error to execute `db:create` properly.
       end
     end
 

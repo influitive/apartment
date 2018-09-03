@@ -58,6 +58,22 @@ shared_examples_for "a generic apartment adapter" do
 
       subject.switch(db2){ expect(User.count).to eq(@count + 1) }
     end
+
+    it "should raise error when the schema.rb is missing unless Apartment.use_sql is set to true" do
+      next if Apartment.use_sql
+
+      subject.drop(db1)
+      begin
+        Dir.mktmpdir do |tmpdir|
+          Apartment.database_schema_file = "#{tmpdir}/schema.rb"
+          expect {
+            subject.create(db1)
+          }.to raise_error(Apartment::FileNotFound)
+        end
+      ensure
+        Apartment.remove_instance_variable(:@database_schema_file)
+      end
+    end
   end
 
   describe "#drop" do
@@ -101,23 +117,6 @@ shared_examples_for "a generic apartment adapter" do
       expect {
         subject.switch(db1){ subject.drop(db2) }
       }.to_not raise_error
-    end
-
-    it "warns if no block is given, but calls switch!" do
-      expect(Apartment::Deprecation).to receive(:warn)
-
-      subject.switch(db1)
-      expect(subject.current).to eq(db1)
-    end
-  end
-
-  describe "#process" do
-    it "is deprecated" do
-      expect(Apartment::Deprecation).to receive(:warn)
-
-      subject.process(db1) do
-        expect(subject.current).to eq(db1)
-      end
     end
   end
 

@@ -3,7 +3,6 @@ require 'active_support/core_ext/object/blank'
 require 'forwardable'
 require 'active_record'
 require 'apartment/tenant'
-require 'apartment/deprecation'
 
 module Apartment
 
@@ -11,8 +10,8 @@ module Apartment
 
     extend Forwardable
 
-    ACCESSOR_METHODS  = [:use_schemas, :use_sql, :seed_after_create, :prepend_environment, :append_environment, :with_multi_server_setup ]
-    WRITER_METHODS    = [:tenant_names, :database_schema_file, :excluded_models, :default_schema, :persistent_schemas, :connection_class, :tld_length, :db_migrate_tenants, :seed_data_file]
+    ACCESSOR_METHODS  = [:use_schemas, :use_sql, :seed_after_create, :prepend_environment, :append_environment, :with_multi_server_setup]
+    WRITER_METHODS    = [:tenant_names, :database_schema_file, :excluded_models, :default_schema, :persistent_schemas, :connection_class, :tld_length, :db_migrate_tenants, :seed_data_file, :parallel_migration_threads, :pg_excluded_names]
 
     attr_accessor(*ACCESSOR_METHODS)
     attr_writer(*WRITER_METHODS)
@@ -52,6 +51,10 @@ module Apartment
     def default_schema
       @default_schema || "public" # TODO 'public' is postgres specific
     end
+
+    def parallel_migration_threads
+      @parallel_migration_threads || 0
+    end
     alias :default_tenant :default_schema
     alias :default_tenant= :default_schema=
 
@@ -75,29 +78,13 @@ module Apartment
       @seed_data_file = "#{Rails.root}/db/seeds.rb"
     end
 
+    def pg_excluded_names
+      @pg_excluded_names || []
+    end
+
     # Reset all the config for Apartment
     def reset
       (ACCESSOR_METHODS + WRITER_METHODS).each{|method| remove_instance_variable(:"@#{method}") if instance_variable_defined?(:"@#{method}") }
-    end
-
-    def database_names
-      Apartment::Deprecation.warn "[Deprecation Warning] `database_names` is now deprecated, please use `tenant_names`"
-      tenant_names
-    end
-
-    def database_names=(names)
-      Apartment::Deprecation.warn "[Deprecation Warning] `database_names=` is now deprecated, please use `tenant_names=`"
-      self.tenant_names=(names)
-    end
-
-    def use_postgres_schemas
-      Apartment::Deprecation.warn "[Deprecation Warning] `use_postgresql_schemas` is now deprecated, please use `use_schemas`"
-      use_schemas
-    end
-
-    def use_postgres_schemas=(to_use_or_not_to_use)
-      Apartment::Deprecation.warn "[Deprecation Warning] `use_postgresql_schemas=` is now deprecated, please use `use_schemas=`"
-      self.use_schemas = to_use_or_not_to_use
     end
 
     def extract_tenant_config
@@ -119,6 +106,9 @@ module Apartment
 
   # Raised when apartment cannot find the adapter specified in <tt>config/database.yml</tt>
   AdapterNotFound = Class.new(ApartmentError)
+
+  # Raised when apartment cannot find the file to be loaded
+  FileNotFound = Class.new(ApartmentError)
 
   # Tenant specified is unknown
   TenantNotFound = Class.new(ApartmentError)

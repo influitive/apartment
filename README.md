@@ -1,7 +1,8 @@
 # Apartment
 
-[![Code Climate](https://codeclimate.com/github/influitive/apartment.png)](https://codeclimate.com/github/influitive/apartment)
-[![Build Status](https://secure.travis-ci.org/influitive/apartment.png?branch=development)](http://travis-ci.org/influitive/apartment)
+[![Gem Version](https://badge.fury.io/rb/apartment.svg)](https://badge.fury.io/rb/apartment)
+[![Code Climate](https://codeclimate.com/github/influitive/apartment/badges/gpa.svg)](https://codeclimate.com/github/influitive/apartment)
+[![Build Status](https://travis-ci.org/influitive/apartment.svg?branch=development)](https://travis-ci.org/influitive/apartment)
 
 *Multitenancy for Rails and ActiveRecord*
 
@@ -93,12 +94,17 @@ One can optionally use the full database creation instead if they want, though t
 To switch tenants using Apartment, use the following command:
 
 ```ruby
-Apartment::Tenant.switch!('tenant_name')
+Apartment::Tenant.switch('tenant_name') do
+  # ...
+end
 ```
 
 When switch is called, all requests coming to ActiveRecord will be routed to the tenant
-you specify (with the exception of excluded models, see below). To return to the 'root'
-tenant, call switch with no arguments.
+you specify (with the exception of excluded models, see below). The tenant is automatically
+switched back at the end of the block to what it was before.
+
+There is also `switch!` which doesn't take a block, but it's recommended to use `switch`.
+To return to the default tenant, you can call `switch` with no arguments.
 
 ### Switching Tenants per request
 
@@ -116,7 +122,7 @@ manually in your `application.rb` like so
 
 ```ruby
 # config/application.rb
-require 'apartment/elevators/subdomain' # or 'domain' or 'generic'
+require 'apartment/elevators/subdomain' # or 'domain', 'first_subdomain', 'host'
 ```
 
 #### Switch on subdomain
@@ -127,7 +133,7 @@ In house, we use the subdomain elevator, which analyzes the subdomain of the req
 # application.rb
 module MyApplication
   class Application < Rails::Application
-    config.middleware.use 'Apartment::Elevators::Subdomain'
+    config.middleware.use Apartment::Elevators::Subdomain
   end
 end
 ```
@@ -143,18 +149,18 @@ This functions much in the same way as Apartment.excluded_models. This example w
 
 #### Switch on first subdomain
 
-To switch on the first subdomain, which analyzes the chain of subdomains of the request and switches to a tenant schema of the first name in the chain (e.g. owls.birds.animals.com would switch to "owl"). It can be used like so:
+To switch on the first subdomain, which analyzes the chain of subdomains of the request and switches to a tenant schema of the first name in the chain (e.g. owls.birds.animals.com would switch to "owls"). It can be used like so:
 
 ```ruby
 # application.rb
 module MyApplication
   class Application < Rails::Application
-    config.middleware.use 'Apartment::Elevators::FirstSubdomain'
+    config.middleware.use Apartment::Elevators::FirstSubdomain
   end
 end
 ```
 
-If you want to exclude a domain, for example if you don't want your application to treate www like a subdomain, in an initializer in your application, you can set the following:
+If you want to exclude a domain, for example if you don't want your application to treat www like a subdomain, in an initializer in your application, you can set the following:
 
 ```ruby
 # config/initializers/apartment/subdomain_exclusions.rb
@@ -165,16 +171,21 @@ This functions much in the same way as the Subdomain elevator. **NOTE:** in fact
 
 #### Switch on domain
 
-To switch based on full domain (excluding subdomains *ie 'www'* and top level domains *ie '.com'* ) use the following:
+To switch based on full domain (excluding the 'www' subdomains and top level domains *ie '.com'* ) use the following:
 
 ```ruby
 # application.rb
 module MyApplication
   class Application < Rails::Application
-    config.middleware.use 'Apartment::Elevators::Domain'
+    config.middleware.use Apartment::Elevators::Domain
   end
 end
 ```
+
+Note that if you have several subdomains, then it will match on the first *non-www* subdomain:
+- example.com => example
+- www.example.com => example
+- a.example.com => a
 
 #### Switch on full host using a hash
 
@@ -184,10 +195,35 @@ To switch based on full host with a hash to find corresponding tenant name use t
 # application.rb
 module MyApplication
   class Application < Rails::Application
-    config.middleware.use 'Apartment::Elevators::HostHash', {'example.com' => 'example_tenant'}
+    config.middleware.use Apartment::Elevators::HostHash, {'example.com' => 'example_tenant'}
   end
 end
 ```
+
+#### Switch on full host, ignoring given first subdomains
+
+To switch based on full host to find corresponding tenant name use the following:
+
+```ruby
+# application.rb
+module MyApplication
+  class Application < Rails::Application
+    config.middleware.use Apartment::Elevators::Host
+  end
+end
+```
+
+If you want to exclude a first-subdomain, for example if you don't want your application to include www in the matching, in an initializer in your application, you can set the following:
+
+```ruby
+Apartment::Elevators::Host.ignored_first_subdomains = ['www']
+```
+
+With the above set, these would be the results:
+- example.com => example.com
+- www.example.com => example.com
+- a.example.com => a.example.com
+- www.a.example.com => a.example.com
 
 #### Custom Elevator
 
@@ -198,7 +234,7 @@ A Generic Elevator exists that allows you to pass a `Proc` (or anything that res
 module MyApplication
   class Application < Rails::Application
     # Obviously not a contrived example
-    config.middleware.use 'Apartment::Elevators::Generic', Proc.new { |request| request.host.reverse }
+    config.middleware.use Apartment::Elevators::Generic, Proc.new { |request| request.host.reverse }
   end
 end
 ```
@@ -231,10 +267,10 @@ end
 In the examples above, we show the Apartment middleware being appended to the Rack stack with
 
 ```ruby
-Rails.application.config.middleware.use 'Apartment::Elevators::Subdomain'
+Rails.application.config.middleware.use Apartment::Elevators::Subdomain
 ```
 
-By default, the Subdomain middleware switches into a Tenant based on the subdomain at the beginning of the request, and when the request is finished, it switches back to the "public" Tenant. This happens in the [Generic](https://github.com/influitive/apartment/blob/development/lib/apartment/elevators/generic.rb#L22) elevator, so all elevators that inherit from this elevator will operate as such. 
+By default, the Subdomain middleware switches into a Tenant based on the subdomain at the beginning of the request, and when the request is finished, it switches back to the "public" Tenant. This happens in the [Generic](https://github.com/influitive/apartment/blob/development/lib/apartment/elevators/generic.rb#L22) elevator, so all elevators that inherit from this elevator will operate as such.
 
 It's also good to note that Apartment switches back to the "public" tenant any time an error is raised in your application.
 
@@ -243,7 +279,7 @@ This works okay for simple applications, but it's important to consider that you
 To resolve this issue, consider adding the Apartment middleware at a location in the Rack stack that makes sense for your needs, e.g.:
 
 ```ruby
-Rails.application.config.middleware.insert_before 'Warden::Manager', 'Apartment::Elevators::Subdomain'
+Rails.application.config.middleware.insert_before Warden::Manager, Apartment::Elevators::Subdomain
 ```
 
 Now work done in the Warden middleware is wrapped in the `Apartment::Tenant.switch` context started in the Generic elevator.
@@ -341,6 +377,8 @@ namespace :db do
     ActiveRecord::Base.connection.execute 'CREATE EXTENSION IF NOT EXISTS HSTORE SCHEMA shared_extensions;'
     # Enable UUID-OSSP
     ActiveRecord::Base.connection.execute 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp" SCHEMA shared_extensions;'
+    # Grant usage to public
+    ActiveRecord::Base.connection.execute 'GRANT usage ON SCHEMA shared_extensions to public;'
   end
 end
 
@@ -405,7 +443,7 @@ Happy to accept PR's on the matter.
 
 #### Alternative: Creating new schemas by using raw SQL dumps
 
-Apartment can be forced to use raw SQL dumps insted of `schema.rb` for creating new schemas. Use this when you are using some extra features in postgres that can't be respresented in `schema.rb`, like materialized views etc.
+Apartment can be forced to use raw SQL dumps insted of `schema.rb` for creating new schemas. Use this when you are using some extra features in postgres that can't be represented in `schema.rb`, like materialized views etc.
 
 This only applies while using postgres adapter and `config.use_schemas` is set to `true`.
 (Note: this option doesn't use `db/structure.sql`, it creates SQL dump by executing `pg_dump`)
@@ -441,6 +479,17 @@ from `Apartment.tenant_names`
 Note that you can disable the default migrating of all tenants with `db:migrate` by setting
 `Apartment.db_migrate_tenants = false` in your `Rakefile`. Note this must be done
 *before* the rake tasks are loaded. ie. before `YourApp::Application.load_tasks` is called
+
+#### Parallel Migrations
+
+Apartment supports parallelizing migrations into multiple threads when
+you have a large number of tenants. By default, parallel migrations is
+turned off. You can enable this by setting `parallel_migration_threads` to 
+the number of threads you want to use in your initializer.
+
+Keep in mind that because migrations are going to access the database,
+the number of threads indicated here should be less than the pool size
+that Rails will use to connect to your database.
 
 ### Handling Environments
 
@@ -480,9 +529,9 @@ config.tenant_names = lambda do
 end
 ```
 
-## Delayed::Job
+## Background workers
 
-Has been removed. See [apartment-sidekiq](https://github.com/influitive/apartment-sidekiq) for a better backgrounding experience.
+See [apartment-sidekiq](https://github.com/influitive/apartment-sidekiq) or [apartment-activejob](https://github.com/influitive/apartment-activejob).
 
 ## Contributing
 
@@ -498,5 +547,3 @@ Has been removed. See [apartment-sidekiq](https://github.com/influitive/apartmen
 ## License
 
 Apartment is released under the [MIT License](http://www.opensource.org/licenses/MIT).
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/influitive/apartment/trend.png)](https://bitdeli.com/free "Bitdeli Badge")

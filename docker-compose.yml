@@ -1,0 +1,33 @@
+version: '2.3'
+services:
+  postgresql:
+    image: postgres:9.5.12
+    environment:
+      POSTGRES_PASSWORD: ""
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: pg_isready -U postgres
+      start_period: 10s
+      interval: 10s
+      timeout: 30s
+      retries: 3
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: mysqladmin -h 127.0.0.1 -uroot ping
+      start_period: 15s
+      interval: 10s
+      timeout: 30s
+      retries: 3
+  healthcheck:
+    image: busybox
+    depends_on:
+      postgresql:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy

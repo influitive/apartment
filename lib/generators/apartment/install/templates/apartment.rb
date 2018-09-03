@@ -6,6 +6,7 @@
 # require 'apartment/elevators/domain'
 require 'apartment/elevators/subdomain'
 # require 'apartment/elevators/first_subdomain'
+# require 'apartment/elevators/host'
 
 #
 # Apartment Configuration
@@ -49,16 +50,21 @@ Apartment.configure do |config|
   #
   config.tenant_names = lambda { ToDo_Tenant_Or_User_Model.pluck :database }
 
+  # PostgreSQL:
+  #   Specifies whether to use PostgreSQL schemas or create a new database per Tenant.
   #
-  # ==> PostgreSQL only options
-
-  # Specifies whether to use PostgreSQL schemas or create a new database per Tenant.
+  # MySQL:
+  #   Specifies whether to switch databases by using `use` statement or re-establish connection.
+  #
   # The default behaviour is true.
   #
   # config.use_schemas = true
 
+  #
+  # ==> PostgreSQL only options
+
   # Apartment can be forced to use raw SQL dumps instead of schema.rb for creating new schemas.
-  # Use this when you are using some extra features in PostgreSQL that can't be respresented in
+  # Use this when you are using some extra features in PostgreSQL that can't be represented in
   # schema.rb, like materialized views etc. (only applies with use_schemas set to true).
   # (Note: this option doesn't use db/structure.sql, it creates SQL dump by executing pg_dump)
   #
@@ -79,14 +85,25 @@ Apartment.configure do |config|
   # Uncomment the line below if you want to disable this behaviour in production.
   #
   # config.prepend_environment = !Rails.env.production?
+
+  # When using PostgreSQL schemas, the database dump will be namespaced, and
+  # apartment will substitute the default namespace (usually public) with the
+  # name of the new tenant when creating a new tenant. Some items must maintain
+  # a reference to the default namespace (ie public) - for instance, a default
+  # uuid generation. Uncomment the line below to create a list of namespaced
+  # items in the schema dump that should *not* have their namespace replaced by
+  # the new tenant
+  #
+  # config.pg_excluded_names = ["uuid_generate_v4"]
 end
 
 # Setup a custom Tenant switching middleware. The Proc should return the name of the Tenant that
 # you want to switch to.
-# Rails.application.config.middleware.use 'Apartment::Elevators::Generic', lambda { |request|
+# Rails.application.config.middleware.use Apartment::Elevators::Generic, lambda { |request|
 #   request.host.split('.').first
 # }
 
-# Rails.application.config.middleware.use 'Apartment::Elevators::Domain'
-Rails.application.config.middleware.use 'Apartment::Elevators::Subdomain'
-# Rails.application.config.middleware.use 'Apartment::Elevators::FirstSubdomain'
+# Rails.application.config.middleware.use Apartment::Elevators::Domain
+Rails.application.config.middleware.use Apartment::Elevators::Subdomain
+# Rails.application.config.middleware.use Apartment::Elevators::FirstSubdomain
+# Rails.application.config.middleware.use Apartment::Elevators::Host

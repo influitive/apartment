@@ -9,7 +9,7 @@ require "rspec/core/rake_task"
 
 RSpec::Core::RakeTask.new(:spec => %w{ db:copy_credentials db:test:prepare }) do |spec|
   spec.pattern = "spec/**/*_spec.rb"
-  # spec.rspec_opts = '--order rand:16996'
+  # spec.rspec_opts = '--order rand:47078'
 end
 
 namespace :spec do
@@ -51,15 +51,26 @@ namespace :postgres do
 
   desc 'Build the PostgreSQL test databases'
   task :build_db do
-    %x{ createdb -E UTF8 #{pg_config['database']} -U#{pg_config['username']} } rescue "test db already exists"
+    params = []
+    params << "-E UTF8"
+    params << pg_config['database']
+    params << "-U#{pg_config['username']}"
+    params << "-h#{pg_config['host']}" if pg_config['host']
+    params << "-p#{pg_config['port']}" if pg_config['port']
+    %x{ createdb #{params.join(' ')} } rescue "test db already exists"
     ActiveRecord::Base.establish_connection pg_config
-    ActiveRecord::Migrator.migrate('spec/dummy/db/migrate')
+    migrate
   end
 
   desc "drop the PostgreSQL test database"
   task :drop_db do
     puts "dropping database #{pg_config['database']}"
-    %x{ dropdb #{pg_config['database']} -U#{pg_config['username']} }
+    params = []
+    params << pg_config['database']
+    params << "-U#{pg_config['username']}"
+    params << "-h#{pg_config['host']}" if pg_config['host']
+    params << "-p#{pg_config['port']}" if pg_config['port']
+    %x{ dropdb #{params.join(' ')} }
   end
 
 end
@@ -70,15 +81,23 @@ namespace :mysql do
 
   desc 'Build the MySQL test databases'
   task :build_db do
-    %x{ mysqladmin -u #{my_config['username']} --password=#{my_config['password']} create #{my_config['database']} } rescue "test db already exists"
+    params = []
+    params << "-h #{my_config['host']}" if my_config['host']
+    params << "-u #{my_config['username']}" if my_config['username']
+    params << "-p#{my_config['password']}" if my_config['password']
+    %x{ mysqladmin #{params.join(' ')} create #{my_config['database']} } rescue "test db already exists"
     ActiveRecord::Base.establish_connection my_config
-    ActiveRecord::Migrator.migrate('spec/dummy/db/migrate')
+    migrate
   end
 
   desc "drop the MySQL test database"
   task :drop_db do
     puts "dropping database #{my_config['database']}"
-    %x{ mysqladmin -u #{my_config['username']} --password=#{my_config['password']} drop #{my_config['database']} --force}
+    params = []
+    params << "-h #{my_config['host']}" if my_config['host']
+    params << "-u #{my_config['username']}" if my_config['username']
+    params << "-p#{my_config['password']}" if my_config['password']
+    %x{ mysqladmin #{params.join(' ')} drop #{my_config['database']} --force}
   end
 
 end
@@ -94,4 +113,16 @@ end
 
 def my_config
   config['mysql']
+end
+
+def activerecord_below_5_2?
+  ActiveRecord.version.release < Gem::Version.new('5.2.0')
+end
+
+def migrate
+  if activerecord_below_5_2?
+    ActiveRecord::Migrator.migrate('spec/dummy/db/migrate')
+  else
+    ActiveRecord::MigrationContext.new('spec/dummy/db/migrate').migrate
+  end
 end
