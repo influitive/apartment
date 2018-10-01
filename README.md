@@ -84,6 +84,14 @@ would not allow a full new database to be created.
 
 One can optionally use the full database creation instead if they want, though this is not recommended
 
+When using schemas, you can also pass in a list of schemas if desired. Any tables defined in a schema earlier in the chain will be referenced first, so this is only useful if you have a schema with only some of the tables defined:
+
+```ruby
+Apartment::Tenant.switch(['tenant_1', 'tenant_2']) do
+  # ...
+end
+```
+
 ### Switching Tenants
 
 To switch tenants using Apartment, use the following command:

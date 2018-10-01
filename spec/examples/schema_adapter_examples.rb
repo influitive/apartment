@@ -127,6 +127,13 @@ shared_examples_for 'a schema based apartment adapter' do
       expect(connection.schema_search_path).to start_with %("#{public_schema}")
       expect(User.sequence_name).to eq "#{public_schema}.#{User.table_name}_id_seq"
     end
+
+    it "allows a list of schemas" do
+      subject.switch([schema1, schema2]) do
+        expect(connection.schema_search_path).to include %{"#{schema1}"}
+        expect(connection.schema_search_path).to include %{"#{schema2}"}
+      end
+    end
   end
 
   describe '#reset' do
