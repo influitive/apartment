@@ -150,10 +150,7 @@ module Apartment
         /SET lock_timeout/i,                          # new in postgresql 9.3
         /SET row_security/i,                          # new in postgresql 9.5
         /SET idle_in_transaction_session_timeout/i,   # new in postgresql 9.6
-        /SET default_table_access_method/i,           # new in postgresql 12
-        /CREATE SCHEMA public/i,
-        /COMMENT ON SCHEMA public/i
-
+        /CREATE SCHEMA.+public/i,                     # new in postgresql 11
       ].freeze
 
       def import_database_schema
