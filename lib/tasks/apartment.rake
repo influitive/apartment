@@ -23,6 +23,8 @@ apartment_namespace = namespace :apartment do
         Apartment::Tenant.drop(tenant)
       rescue Apartment::TenantNotFound => e
         puts e.message
+      rescue ActiveRecord::NoDatabaseError => e
+        puts e.message
       end
     end
   end
