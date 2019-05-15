@@ -24,7 +24,8 @@ module Apartment
     #   @return {subclass of Apartment::AbstractAdapter}
     #
     def adapter
-      Thread.current[:apartment_adapter] ||= begin
+      # Thread.current[:apartment_adapter] ||= 
+      begin
         adapter_method = "#{config[:adapter]}_adapter"
 
         if defined?(JRUBY_VERSION)
