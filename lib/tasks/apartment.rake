@@ -130,7 +130,7 @@ apartment_namespace = namespace :apartment do
   end
 
   def warn_if_tenants_empty
-    if tenants.empty?
+    if tenants.empty? && ENV['IGNORE_EMPTY_TENANTS'] != "true"
       puts <<-WARNING
         [WARNING] - The list of tenants to migrate appears to be empty. This could mean a few things:
 
