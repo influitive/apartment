@@ -533,6 +533,31 @@ end
 
 See [apartment-sidekiq](https://github.com/influitive/apartment-sidekiq) or [apartment-activejob](https://github.com/influitive/apartment-activejob).
 
+## Callbacks
+
+You can execute callbacks when switching between tenants or creating a new one, Apartment provides the following callbacks:
+
+- before_create
+- after_create
+- before_switch
+- after_switch
+
+You can register a callback using [ActiveSupport::Callbacks](https://api.rubyonrails.org/classes/ActiveSupport/Callbacks.html) the following way:
+
+```ruby
+require 'apartment/adapters/abstract_adapter'
+
+module Apartment
+  module Adapters
+    class AbstractAdapter
+      set_callback :switch, :before do |object|
+        ...
+      end
+    end
+  end
+end
+```
+
 ## Contributing
 
 * In both `spec/dummy/config` and `spec/config`, you will see `database.yml.sample` files
