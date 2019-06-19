@@ -149,7 +149,7 @@ This functions much in the same way as Apartment.excluded_models. This example w
 
 #### Switch on first subdomain
 
-To switch on the first subdomain, which analyzes the chain of subdomains of the request and switches to a tenant schema of the first name in the chain (e.g. owls.birds.animals.com would switch to "owl"). It can be used like so:
+To switch on the first subdomain, which analyzes the chain of subdomains of the request and switches to a tenant schema of the first name in the chain (e.g. owls.birds.animals.com would switch to "owls"). It can be used like so:
 
 ```ruby
 # application.rb
@@ -532,6 +532,31 @@ end
 ## Background workers
 
 See [apartment-sidekiq](https://github.com/influitive/apartment-sidekiq) or [apartment-activejob](https://github.com/influitive/apartment-activejob).
+
+## Callbacks
+
+You can execute callbacks when switching between tenants or creating a new one, Apartment provides the following callbacks:
+
+- before_create
+- after_create
+- before_switch
+- after_switch
+
+You can register a callback using [ActiveSupport::Callbacks](https://api.rubyonrails.org/classes/ActiveSupport/Callbacks.html) the following way:
+
+```ruby
+require 'apartment/adapters/abstract_adapter'
+
+module Apartment
+  module Adapters
+    class AbstractAdapter
+      set_callback :switch, :before do |object|
+        ...
+      end
+    end
+  end
+end
+```
 
 ## Contributing
 

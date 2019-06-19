@@ -1,6 +1,33 @@
+# 2.2.0
+  * April 14, 2018
+
+## Added
+  - #523: Add Rails 5.2 support [IngusSkaistkalns]
+  - #504: Test against Ruby 2.5.0 [ahorek]
+  - #528: Test against Rails 5.2 [meganemura]
+
+## Removed
+  - #504: Remove Rails 4.0/4.1 support [ahorek]
+  - #545: Stop supporting for JRuby + Rails 5.0 [meganemura]
+
+## Fixed
+  - #537: Fix PostgresqlSchemaFromSqlAdapter for newer PostgreSQL [shterrett]
+    - #532: Issue is reported by [aldrinmartoq]
+  - #519: Fix exception when main database doesn't exist [mayeco]
+
+## Changed
+  - #514: Fix typo [menorval]
+
 # 2.1.0
   * December 15, 2017
 
+  - Add `parallel_migration_threads` configuration option for running migrations
+    in parallel [ryanbrunner]
+  - Drop Ruby 2.0.0 support [meganemura]
+  - ignore_private when parsing subdomains with PublicSuffix [michiomochi]
+  - Ignore row_security statements in psql dumps for backward compatibility
+    [meganemura]
+  - "Host" elevator [shrmnk]
   - Enhance db:drop task to act on all tenants [kuzukuzu]
 
 # 2.0.0

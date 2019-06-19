@@ -2,15 +2,11 @@
 
 source "http://rubygems.org"
 
-gem "rails", "~> 5.1.0"
+gem "rails", "~> 5.2.0"
 
 group :local do
   gem "pry"
   gem "guard-rspec", "~> 4.2"
-end
-
-platforms :ruby do
-  gem "pg", "< 1.0.0"
 end
 
 platforms :jruby do

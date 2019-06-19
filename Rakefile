@@ -59,7 +59,7 @@ namespace :postgres do
     params << "-p#{pg_config['port']}" if pg_config['port']
     %x{ createdb #{params.join(' ')} } rescue "test db already exists"
     ActiveRecord::Base.establish_connection pg_config
-    ActiveRecord::Migrator.migrate('spec/dummy/db/migrate')
+    migrate
   end
 
   desc "drop the PostgreSQL test database"
@@ -87,7 +87,7 @@ namespace :mysql do
     params << "-p#{my_config['password']}" if my_config['password']
     %x{ mysqladmin #{params.join(' ')} create #{my_config['database']} } rescue "test db already exists"
     ActiveRecord::Base.establish_connection my_config
-    ActiveRecord::Migrator.migrate('spec/dummy/db/migrate')
+    migrate
   end
 
   desc "drop the MySQL test database"
@@ -113,4 +113,16 @@ end
 
 def my_config
   config['mysql']
+end
+
+def activerecord_below_5_2?
+  ActiveRecord.version.release < Gem::Version.new('5.2.0')
+end
+
+def migrate
+  if activerecord_below_5_2?
+    ActiveRecord::Migrator.migrate('spec/dummy/db/migrate')
+  else
+    ActiveRecord::MigrationContext.new('spec/dummy/db/migrate').migrate
+  end
 end
