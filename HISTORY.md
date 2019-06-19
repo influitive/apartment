@@ -1,3 +1,14 @@
+# 2.2.1
+  * June 19, 2019
+
+## Added
+  - #566: IGNORE_EMPTY_TENANTS environment variable to ignore empty tenants
+    warning. [Pysis868]
+
+## Fixed
+  - #586: Ignore `CREATE SCHEMA public` statement in pg dump [artemave]
+  - #549: Fix Postgres schema creation with dump SQL [ancorcruz]
+
 # 2.2.0
   * April 14, 2018
 
