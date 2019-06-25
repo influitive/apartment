@@ -38,17 +38,34 @@ end
 appraise "rails-5-2" do
   gem "rails", "~> 5.2.0"
   platforms :jruby do
-    gem 'activerecord-jdbc-adapter', '~> 51.0'
-    gem 'activerecord-jdbcpostgresql-adapter', '~> 51.0'
-    gem 'activerecord-jdbcmysql-adapter', '~> 51.0'
+    gem 'activerecord-jdbc-adapter', '~> 52.0'
+    gem 'activerecord-jdbcpostgresql-adapter', '~> 52.0'
+    gem 'activerecord-jdbcmysql-adapter', '~> 52.0'
   end
 end
 
+
+appraise "rails-6-0" do
+  gem "rails", "~> 6.0.0.rc1"
+  platforms :ruby do
+    gem 'sqlite3', '~> 1.4'
+  end
+  platforms :jruby do
+    gem 'activerecord-jdbc-adapter', '~> 60.0.rc1'
+    gem 'activerecord-jdbcpostgresql-adapter', '~> 60.0.rc1'
+    gem 'activerecord-jdbcmysql-adapter', '~> 60.0.rc1'
+  end
+end
+
+
 appraise "rails-master" do
   gem "rails", git: 'https://github.com/rails/rails.git'
+  platforms :ruby do
+    gem 'sqlite3', '~> 1.4'
+  end
   platforms :jruby do
-    gem 'activerecord-jdbc-adapter', '~> 51.0'
-    gem 'activerecord-jdbcpostgresql-adapter', '~> 51.0'
-    gem 'activerecord-jdbcmysql-adapter', '~> 51.0'
+    gem 'activerecord-jdbc-adapter', '~> 52.0'
+    gem 'activerecord-jdbcpostgresql-adapter', '~> 52.0'
+    gem 'activerecord-jdbcmysql-adapter', '~> 52.0'
   end
 end

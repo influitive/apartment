@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT"]
 
   # must be >= 3.1.2 due to bug in prepared_statements
-  s.add_dependency 'activerecord',    '>= 3.1.2', '< 6.0'
+  s.add_dependency 'activerecord',    '>= 3.1.2', '< 6.1'
   s.add_dependency 'rack',            '>= 1.3.6'
   s.add_dependency 'public_suffix',   '>= 2'
   s.add_dependency 'parallel',        '>= 0.7.1'
@@ -29,6 +29,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec',        '~> 3.4'
   s.add_development_dependency 'rspec-rails',  '~> 3.4'
   s.add_development_dependency 'capybara',     '~> 2.0'
+  s.add_development_dependency 'bundler',      '>= 1.3', '< 2.0'
 
   if defined?(JRUBY_VERSION)
     s.add_development_dependency 'activerecord-jdbc-adapter'
@@ -40,6 +41,6 @@ Gem::Specification.new do |s|
   else
     s.add_development_dependency 'mysql2'
     s.add_development_dependency 'pg'
-    s.add_development_dependency 'sqlite3'
+    s.add_development_dependency 'sqlite3', '~> 1.3.6'
   end
 end

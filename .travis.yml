@@ -9,19 +9,23 @@ rvm:
   - 2.3.6
   - 2.4.3
   - 2.5.0
+  - 2.6.2
   - ruby-head
 gemfile:
   - gemfiles/rails_4_2.gemfile
   - gemfiles/rails_5_0.gemfile
   - gemfiles/rails_5_1.gemfile
   - gemfiles/rails_5_2.gemfile
+  - gemfiles/rails_6_0.gemfile
   - gemfiles/rails_master.gemfile
 bundler_args: --without local
 before_install:
   - sudo /etc/init.d/mysql stop
   - sudo /etc/init.d/postgresql stop
   - docker-compose up -d
-  - gem install bundler -v '> 1.5.0'
+  - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
+  - gem uninstall bundler -v '>= 2' -x || true
+  - gem install bundler -v '< 2'
 env:
   RUBY_GC_MALLOC_LIMIT: 90000000
   RUBY_GC_HEAP_FREE_SLOTS: 200000
@@ -39,11 +43,21 @@ matrix:
     - rvm: 2.1.9
       gemfile: gemfiles/rails_5_2.gemfile
     - rvm: 2.1.9
+      gemfile: gemfiles/rails_6_0.gemfile
+    - rvm: 2.1.9
       gemfile: gemfiles/rails_master.gemfile
+    - rvm: 2.2.9 
+      gemfile: gemfiles/rails_6_0.gemfile
+    - rvm: 2.3.6
+      gemfile: gemfiles/rails_6_0.gemfile
+    - rvm: 2.4.3
+      gemfile: gemfiles/rails_6_0.gemfile
     - rvm: jruby-9.1.15.0
       gemfile: gemfiles/rails_5_1.gemfile
     - rvm: jruby-9.1.15.0
       gemfile: gemfiles/rails_5_2.gemfile
+    - rvm: jruby-9.1.15.0
+      gemfile: gemfiles/rails_6_0.gemfile
     - rvm: jruby-9.1.15.0
       gemfile: gemfiles/rails_master.gemfile
   fast_finish: true
