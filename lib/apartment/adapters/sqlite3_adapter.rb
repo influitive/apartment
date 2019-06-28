@@ -10,7 +10,7 @@ module Apartment
   module Adapters
     class Sqlite3Adapter < AbstractAdapter
       def initialize(config)
-        @default_dir = File.expand_path(File.dirname(config[:database]))
+        @default_dir = File.join(Rails.root, File.dirname(config[:database]))
 
         super
       end
