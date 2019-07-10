@@ -71,7 +71,11 @@ describe "apartment rake tasks", database: :postgresql do
     end
 
     context "with ActiveRecord above or equal to 5.2.0" do
-      let(:migration_context_double) { double(:migration_context) }
+      let(:migration_context_double) do
+        context = double(:migration_context)
+        allow(context).to receive(:current_version).and_return("20111202022214")
+        context
+      end
 
       before do
         allow(Apartment::Migrator).to receive(:activerecord_below_5_2?) { false }

@@ -34,6 +34,7 @@ apartment_namespace = namespace :apartment do
       begin
         puts("Migrating #{tenant} tenant")
         Apartment::Migrator.migrate tenant
+        dump_schema
       rescue Apartment::TenantNotFound => e
         puts e.message
       end
@@ -66,6 +67,7 @@ apartment_namespace = namespace :apartment do
       begin
         puts("Rolling back #{tenant} tenant")
         Apartment::Migrator.rollback tenant, step
+        dump_schema
       rescue Apartment::TenantNotFound => e
         puts e.message
       end
@@ -84,6 +86,7 @@ apartment_namespace = namespace :apartment do
         begin
           puts("Migrating #{tenant} tenant up")
           Apartment::Migrator.run :up, tenant, version
+          dump_schema
         rescue Apartment::TenantNotFound => e
           puts e.message
         end
@@ -101,6 +104,7 @@ apartment_namespace = namespace :apartment do
         begin
           puts("Migrating #{tenant} tenant down")
           Apartment::Migrator.run :down, tenant, version
+          dump_schema
         rescue Apartment::TenantNotFound => e
           puts e.message
         end
@@ -140,6 +144,18 @@ apartment_namespace = namespace :apartment do
 
         Note that your tenants currently haven't been migrated. You'll need to run `db:migrate` to rectify this.
       WARNING
+    end
+  end
+
+  def dump_schema
+    if ActiveRecord::Base.dump_schema_after_migration
+      Rake::TaskManager.record_task_metadata=true
+      case ActiveRecord::Base.schema_format
+      when :ruby then Rake.application.invoke_task("db:schema:dump")
+      when :sql  then Rake.application.invoke_task("db:structure:dump")
+      else
+        raise "unknown schema format #{ActiveRecord::Base.schema_format}"
+      end
     end
   end
 end
