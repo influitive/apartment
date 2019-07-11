@@ -28,7 +28,7 @@ module Apartment
     #
     config.to_prepare do
       next if ARGV.any? { |arg| arg =~ /\Aassets:(?:precompile|clean)\z/ }
-      next if ARGV.any? { |arg| arg == 'webpacker:compile'}
+      next if ARGV.any? { |arg| arg == 'webpacker:compile' }
 
       begin
         Apartment.connection_class.connection_pool.with_connection do
