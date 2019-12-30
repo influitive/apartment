@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ["lib"]
 
-  s.homepage = %q{https://github.com/influitive/apartment}
+  s.homepage = %q{https://github.com/rails-on-services/apartment}
   s.licenses = ["MIT"]
 
   # must be >= 3.1.2 due to bug in prepared_statements
