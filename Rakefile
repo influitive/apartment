@@ -119,9 +119,15 @@ def activerecord_below_5_2?
   ActiveRecord.version.release < Gem::Version.new('5.2.0')
 end
 
+def activerecord_below_6_0?
+  ActiveRecord.version.release < Gem::Version.new('6.0.0')
+end
+
 def migrate
   if activerecord_below_5_2?
     ActiveRecord::Migrator.migrate('spec/dummy/db/migrate')
+  elsif activerecord_below_6_0?
+    ActiveRecord::MigrationContext.new('spec/dummy/db/migrate').migrate
   else
     # TODO: Figure out if there is any other possibility that can/should be
     # passed here as the second argument for the migration context
