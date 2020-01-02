@@ -3,7 +3,7 @@ $: << File.expand_path("../lib", __FILE__)
 require "apartment/version"
 
 Gem::Specification.new do |s|
-  s.name = %q{perx-apartment}
+  s.name = %q{ros-apartment}
   s.version = Apartment::VERSION
 
   s.authors       = ["Ryan Brunner", "Brad Robertson"]
