@@ -123,6 +123,8 @@ def migrate
   if activerecord_below_5_2?
     ActiveRecord::Migrator.migrate('spec/dummy/db/migrate')
   else
-    ActiveRecord::MigrationContext.new('spec/dummy/db/migrate').migrate
+    # TODO: Figure out if there is any other possibility that can/should be
+    # passed here as the second argument for the migration context
+    ActiveRecord::MigrationContext.new('spec/dummy/db/migrate', ActiveRecord::SchemaMigration).migrate
   end
 end
