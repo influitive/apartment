@@ -4,8 +4,6 @@
 [![Code Climate](https://codeclimate.com/github/influitive/apartment/badges/gpa.svg)](https://codeclimate.com/github/influitive/apartment)
 [![Build Status](https://travis-ci.org/influitive/apartment.svg?branch=development)](https://travis-ci.org/influitive/apartment)
 
-# NOT ACTIVELY MAINTAINED YET. SOLELY FOR TESTING PURPOSES ATM
-
 *Multitenancy for Rails and ActiveRecord*
 
 Apartment provides tools to help you deal with multiple tenants in your Rails
