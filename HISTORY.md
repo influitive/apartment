@@ -1,3 +1,10 @@
+# 2.3.0
+  * January 3, 2020
+
+## Added
+  - Basic support for rails 6
+  - Released different gem name, with same API as apartment
+
 # 2.2.1
   * June 19, 2019
 
