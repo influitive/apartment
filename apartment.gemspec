@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'rack',            '>= 1.3.6'
 
   s.add_development_dependency 'appraisal'
-  s.add_development_dependency 'bundler',      '>= 1.3', '< 2.0'
+  s.add_development_dependency 'bundler',      '~> 2.0'
   s.add_development_dependency 'capybara',     '~> 2.0'
   s.add_development_dependency 'perx-rubocop', '~> 0.0'
   s.add_development_dependency 'rake',         '~> 0.9'
