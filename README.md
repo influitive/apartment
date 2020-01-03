@@ -4,6 +4,8 @@
 [![Code Climate](https://codeclimate.com/github/influitive/apartment/badges/gpa.svg)](https://codeclimate.com/github/influitive/apartment)
 [![Build Status](https://travis-ci.org/influitive/apartment.svg?branch=development)](https://travis-ci.org/influitive/apartment)
 
+# NOT ACTIVELY MAINTAINED YET. SOLELY FOR TESTING PURPOSES ATM
+
 *Multitenancy for Rails and ActiveRecord*
 
 Apartment provides tools to help you deal with multiple tenants in your Rails
@@ -484,7 +486,7 @@ Note that you can disable the default migrating of all tenants with `db:migrate`
 
 Apartment supports parallelizing migrations into multiple threads when
 you have a large number of tenants. By default, parallel migrations is
-turned off. You can enable this by setting `parallel_migration_threads` to 
+turned off. You can enable this by setting `parallel_migration_threads` to
 the number of threads you want to use in your initializer.
 
 Keep in mind that because migrations are going to access the database,
