@@ -37,23 +37,10 @@ module Apartment
       #   Reset current tenant to the default_tenant
       #
       def reset
-        Apartment.connection.execute "use `#{default_tenant}`"
+        connect_to_new(default_tenant)
       end
 
     protected
-
-      #   Connect to new tenant
-      #
-      def connect_to_new(tenant)
-        return reset if tenant.nil?
-
-        Apartment.connection.execute "use `#{environmentify(tenant)}`"
-
-      rescue ActiveRecord::StatementInvalid => exception
-        Apartment::Tenant.reset
-        raise_connect_error!(tenant, exception)
-      end
-
       def process_excluded_model(model)
         model.constantize.tap do |klass|
           # Ensure that if a schema *was* set, we override
