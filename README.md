@@ -33,7 +33,7 @@ may find or proposing improvements to the gem itself. Feel free to reach out.
 Add the following to your Gemfile:
 
 ```ruby
-gem 'ros-apartment'
+gem 'ros-apartment', require: 'apartment'
 ```
 
 Then generate your `Apartment` config file using
