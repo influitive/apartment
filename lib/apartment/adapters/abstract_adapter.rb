@@ -230,7 +230,7 @@ module Apartment
       end
 
       def db_connection_config(tenant)
-        Apartment.db_config_for(tenant).clone
+        Apartment.db_config_for(tenant).dup
       end
 
       def with_neutral_connection(tenant, &_block)
