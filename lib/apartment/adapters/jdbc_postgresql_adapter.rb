@@ -4,9 +4,11 @@ module Apartment
   module Tenant
 
     def self.jdbc_postgresql_adapter(config)
-      Apartment.use_schemas ?
-        Adapters::JDBCPostgresqlSchemaAdapter.new(config) :
+      if Apartment.use_schemas
+        Adapters::JDBCPostgresqlSchemaAdapter.new(config)
+      else
         Adapters::JDBCPostgresqlAdapter.new(config)
+      end
     end
   end
 

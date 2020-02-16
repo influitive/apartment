@@ -541,14 +541,6 @@ Style/MixinUsage:
   Exclude:
     - '.pryrc'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, Autocorrect.
-# SupportedStyles: module_function, extend_self
-Style/ModuleFunction:
-  Exclude:
-    - 'spec/support/apartment_helpers.rb'
-
 # Offense count: 5
 # Cop supports --auto-correct.
 Style/MultilineIfModifier:
@@ -556,12 +548,6 @@ Style/MultilineIfModifier:
     - 'lib/apartment/adapters/sqlite3_adapter.rb'
     - 'lib/apartment/elevators/host_hash.rb'
     - 'spec/support/requirements.rb'
-
-# Offense count: 2
-Style/MultilineTernaryOperator:
-  Exclude:
-    - 'lib/apartment/adapters/jdbc_postgresql_adapter.rb'
-    - 'lib/apartment/adapters/mysql2_adapter.rb'
 
 # Offense count: 7
 # Cop supports --auto-correct.
@@ -575,18 +561,6 @@ Style/MutableConstant:
     - 'lib/apartment/version.rb'
     - 'spec/dummy_engine/lib/dummy_engine/version.rb'
 
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: Strict.
-Style/NumericLiterals:
-  MinDigits: 15
-
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/ParallelAssignment:
-  Exclude:
-    - 'lib/apartment/adapters/postgresql_adapter.rb'
-
 # Offense count: 29
 # Cop supports --auto-correct.
 # Configuration parameters: PreferredDelimiters.
@@ -599,25 +573,6 @@ Style/PercentLiteralDelimiters:
     - 'spec/examples/schema_adapter_examples.rb'
     - 'spec/integration/apartment_rake_integration_spec.rb'
     - 'spec/support/requirements.rb'
-    - 'spec/unit/elevators/host_spec.rb'
-    - 'spec/unit/elevators/subdomain_spec.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: short, verbose
-Style/PreferredHashMethods:
-  Exclude:
-    - 'lib/apartment/elevators/host_hash.rb'
-
-# Offense count: 13
-# Cop supports --auto-correct.
-Style/Proc:
-  Exclude:
-    - 'lib/apartment/console.rb'
-    - 'spec/unit/elevators/domain_spec.rb'
-    - 'spec/unit/elevators/generic_spec.rb'
-    - 'spec/unit/elevators/host_hash_spec.rb'
     - 'spec/unit/elevators/host_spec.rb'
     - 'spec/unit/elevators/subdomain_spec.rb'
 

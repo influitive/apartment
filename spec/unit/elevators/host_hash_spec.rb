@@ -3,7 +3,7 @@ require 'apartment/elevators/host_hash'
 
 describe Apartment::Elevators::HostHash do
 
-  subject(:elevator) { Apartment::Elevators::HostHash.new(Proc.new{}, 'example.com' => 'example_tenant') }
+  subject(:elevator) { Apartment::Elevators::HostHash.new(proc{}, 'example.com' => 'example_tenant') }
 
   describe "#parse_tenant_name" do
     it "parses the host for a domain name" do

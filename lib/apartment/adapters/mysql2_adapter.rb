@@ -4,9 +4,11 @@ module Apartment
   module Tenant
 
     def self.mysql2_adapter(config)
-      Apartment.use_schemas ?
-        Adapters::Mysql2SchemaAdapter.new(config) :
+      if Apartment.use_schemas
+        Adapters::Mysql2SchemaAdapter.new(config)
+      else
         Adapters::Mysql2Adapter.new(config)
+      end
     end
   end
 

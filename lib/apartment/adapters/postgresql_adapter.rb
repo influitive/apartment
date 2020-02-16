@@ -74,7 +74,7 @@ module Apartment
         # When the PostgreSQL version is < 9.3,
         # there is a issue for prepared statement with changing search_path.
         # https://www.postgresql.org/docs/9.3/static/sql-prepare.html
-        if postgresql_version < 90300
+        if postgresql_version < 90_300
           Apartment.connection.clear_cache!
         end
 
@@ -179,7 +179,10 @@ module Apartment
       # Temporary set Postgresql related environment variables if there are in @config
       #
       def with_pg_env(&block)
-        pghost, pgport, pguser, pgpassword =  ENV['PGHOST'], ENV['PGPORT'], ENV['PGUSER'], ENV['PGPASSWORD']
+        pghost =  ENV['PGHOST']
+        pgport = ENV['PGPORT']
+        pguser = ENV['PGUSER']
+        pgpassword = ENV['PGPASSWORD']
 
         ENV['PGHOST'] = @config[:host] if @config[:host]
         ENV['PGPORT'] = @config[:port].to_s if @config[:port]
@@ -188,7 +191,10 @@ module Apartment
 
         block.call
       ensure
-        ENV['PGHOST'], ENV['PGPORT'], ENV['PGUSER'], ENV['PGPASSWORD'] = pghost, pgport, pguser, pgpassword
+        ENV['PGHOST'] = pghost
+        ENV['PGPORT'] = pgport
+        ENV['PGUSER'] = pguser
+        ENV['PGPASSWORD'] = pgpassword
       end
 
       #   Remove "SET search_path ..." line from SQL dump and prepend search_path set to current tenant

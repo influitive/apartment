@@ -7,3 +7,7 @@ inherit_gem:
 Style/WordArray:
   Exclude:
     - spec/schemas/**/*.rb
+
+Style/NumericLiterals:
+  Exclude:
+    - spec/schemas/**/*.rb

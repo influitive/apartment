@@ -1,7 +1,9 @@
 module Apartment
   module Test
 
+    # rubocop:disable Style/ModuleFunction
     extend self
+    # rubocop:enable Style/ModuleFunction
 
     def reset
       Apartment.excluded_models = nil
