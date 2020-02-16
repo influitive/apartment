@@ -15,7 +15,7 @@ module Apartment
 
     def next_db
       @x ||= 0
-      format('db%d', @x += 1)
+      format('db%<db_idx>d', db_idx: @x += 1)
     end
 
     def drop_schema(schema)
