@@ -18,9 +18,9 @@ shared_examples_for "a generic apartment adapter" do
         Apartment::Railtie.config.to_prepare_blocks.map(&:call)
 
         num_available_connections = Apartment.connection_class.connection_pool
-          .instance_variable_get(:@available)
-          .instance_variable_get(:@queue)
-          .size
+                                             .instance_variable_get(:@available)
+                                             .instance_variable_get(:@queue)
+                                             .size
 
         expect(num_available_connections).to eq(1)
       end
@@ -45,7 +45,7 @@ shared_examples_for "a generic apartment adapter" do
     it "should yield to block if passed and reset" do
       subject.drop(db2) # so we don't get errors on creation
 
-      @count = 0  # set our variable so its visible in and outside of blocks
+      @count = 0 # set our variable so its visible in and outside of blocks
 
       subject.create(db2) do
         @count = User.count

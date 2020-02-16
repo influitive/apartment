@@ -8,7 +8,7 @@ describe Apartment::Reloader do
         config.use_schemas = true
       end
       Apartment::Tenant.reload!(config)
-      Company.reset_table_name  # ensure we're clean
+      Company.reset_table_name # ensure we're clean
     end
 
     subject { Apartment::Reloader.new(double("Rack::Application", :call => nil)) }

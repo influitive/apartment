@@ -19,7 +19,7 @@ describe "apartment rake tasks" do
 
   after do
     Rake.application = nil
-    ENV['VERSION'] = nil    # linux users reported env variable carrying on between tests
+    ENV['VERSION'] = nil # linux users reported env variable carrying on between tests
   end
 
   after(:all) do
@@ -38,7 +38,7 @@ describe "apartment rake tasks" do
 
     describe "apartment:migrate" do
       before do
-        allow(ActiveRecord::Migrator).to receive(:migrate)   # don't care about this
+        allow(ActiveRecord::Migrator).to receive(:migrate) # don't care about this
       end
 
       it "should migrate public and all multi-tenant dbs" do

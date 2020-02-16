@@ -63,7 +63,7 @@ shared_examples_for "a schema based apartment adapter" do
     it "should yield to block if passed and reset" do
       subject.drop(schema2) # so we don't get errors on creation
 
-      @count = 0  # set our variable so its visible in and outside of blocks
+      @count = 0 # set our variable so its visible in and outside of blocks
 
       subject.create(schema2) do
         @count = User.count

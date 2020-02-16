@@ -103,7 +103,7 @@ module Apartment
 
     # Another Adapter for Postgresql when using schemas and SQL
     class PostgresqlSchemaFromSqlAdapter < PostgresqlSchemaAdapter
-      PSQL_DUMP_BLACKLISTED_STATEMENTS= [
+      PSQL_DUMP_BLACKLISTED_STATEMENTS = [
         /SET search_path/i,                           # overridden later
         /SET lock_timeout/i,                          # new in postgresql 9.3
         /SET row_security/i,                          # new in postgresql 9.5
@@ -173,7 +173,7 @@ module Apartment
       # Temporary set Postgresql related environment variables if there are in @config
       #
       def with_pg_env(&block)
-        pghost =  ENV['PGHOST']
+        pghost = ENV['PGHOST']
         pgport = ENV['PGPORT']
         pguser = ENV['PGUSER']
         pgpassword = ENV['PGPASSWORD']

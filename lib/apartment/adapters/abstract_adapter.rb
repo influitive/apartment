@@ -175,7 +175,7 @@ module Apartment
         query_cache_enabled = ActiveRecord::Base.connection.query_cache_enabled
 
         Apartment.establish_connection multi_tenantify(tenant)
-        Apartment.connection.active?   # call active? to manually check if this connection is valid
+        Apartment.connection.active? # call active? to manually check if this connection is valid
 
         Apartment.connection.enable_query_cache! if query_cache_enabled
       rescue *rescuable_exceptions => exception
@@ -186,7 +186,7 @@ module Apartment
       #   Import the database schema
       #
       def import_database_schema
-        ActiveRecord::Schema.verbose = false    # do not log schema load output.
+        ActiveRecord::Schema.verbose = false # do not log schema load output.
 
         load_or_raise(Apartment.database_schema_file) if Apartment.database_schema_file
       end

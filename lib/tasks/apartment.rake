@@ -106,7 +106,7 @@ apartment_namespace = namespace :apartment do
       end
     end
 
-    desc  'Rolls back the tenant one migration and re migrate up (options: STEP=x, VERSION=x).'
+    desc 'Rolls back the tenant one migration and re migrate up (options: STEP=x, VERSION=x).'
     task :redo do
       if ENV['VERSION']
         apartment_namespace['migrate:down'].invoke
