@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'rake'
 
 describe "apartment rake tasks", database: :postgresql do
-
   before do
     @rake = Rake::Application.new
     Rake.application = @rake
@@ -30,7 +31,6 @@ describe "apartment rake tasks", database: :postgresql do
   after { Rake.application = nil }
 
   context "with x number of databases" do
-
     let(:x){ 1 + rand(5) }    # random number of dbs to create
     let(:db_names){ x.times.map{ Apartment::Test.next_db } }
     let!(:company_count){ db_names.length }

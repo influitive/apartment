@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'http://rubygems.org'
 
 gemspec
@@ -5,6 +7,6 @@ gemspec
 gem 'rails', '>= 3.1.2'
 
 group :local do
-  gem 'pry'
   gem 'guard-rspec', '~> 4.2'
+  gem 'pry'
 end
