@@ -699,20 +699,3 @@ Style/SymbolArray:
 Style/SymbolProc:
   Exclude:
     - 'lib/tasks/apartment.rake'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyleForMultiline.
-# SupportedStylesForMultiline: comma, consistent_comma, no_comma
-Style/TrailingCommaInArrayLiteral:
-  Exclude:
-    - 'lib/apartment/adapters/postgresql_adapter.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: ExactNameMatch, AllowPredicates, AllowDSLWriters, IgnoreClassMethods, AllowedMethod.
-# AllowedMethod: to_ary, to_a, to_c, to_enum, to_h, to_hash, to_i, to_int, to_io, to_open, to_path, to_proc, to_r, to_regexp, to_str, to_s, to_sym
-Style/TrivialAccessors:
-  Exclude:
-    - 'lib/apartment/elevators/host.rb'
-    - 'lib/apartment/elevators/subdomain.rb'

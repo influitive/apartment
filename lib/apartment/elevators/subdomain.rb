@@ -7,12 +7,10 @@ module Apartment
     #   Assumes that tenant name should match subdomain
     #
     class Subdomain < Generic
+      attr_writer :excluded_subdomains
+
       def self.excluded_subdomains
         @excluded_subdomains ||= []
-      end
-
-      def self.excluded_subdomains=(arg)
-        @excluded_subdomains = arg
       end
 
       def parse_tenant_name(request)
