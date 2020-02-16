@@ -36,10 +36,10 @@ describe 'query caching' do
       ActiveRecord::Base.connection.enable_query_cache!
 
       Apartment::Tenant.switch! db_names.first
-      expect(User.find_by_name(db_names.first).name).to eq(db_names.first)
+      expect(User.find_by(name: db_names.first).name).to eq(db_names.first)
 
       Apartment::Tenant.switch! db_names.last
-      expect(User.find_by_name(db_names.first)).to be_nil
+      expect(User.find_by(name: db_names.first)).to be_nil
     end
   end
 

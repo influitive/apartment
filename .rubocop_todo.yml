@@ -55,14 +55,6 @@ Metrics/LineLength:
 Metrics/MethodLength:
   Max: 24
 
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: Whitelist.
-# Whitelist: find_by_sql
-Rails/DynamicFindBy:
-  Exclude:
-    - 'spec/integration/query_caching_spec.rb'
-
 # Offense count: 1
 # Configuration parameters: Include.
 # Include: app/**/*.rb, config/**/*.rb, db/**/*.rb, lib/**/*.rb
