@@ -6,19 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 13
-# Cop supports --auto-correct.
-# Configuration parameters: TreatCommentsAsGroupSeparators, Include.
-# Include: **/*.gemfile, **/Gemfile, **/gems.rb
-Bundler/OrderedGems:
-  Exclude:
-    - 'gemfiles/rails_4_2.gemfile'
-    - 'gemfiles/rails_5_0.gemfile'
-    - 'gemfiles/rails_5_1.gemfile'
-    - 'gemfiles/rails_5_2.gemfile'
-    - 'gemfiles/rails_6_0.gemfile'
-    - 'gemfiles/rails_master.gemfile'
-
 # Offense count: 3
 # Cop supports --auto-correct.
 # Configuration parameters: AllowUnusedKeywordArguments, IgnoreEmptyMethods.

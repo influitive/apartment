@@ -7,8 +7,8 @@ source 'http://rubygems.org'
 gem 'rails', '~> 6.0.0.rc1'
 
 group :local do
-  gem 'pry'
   gem 'guard-rspec', '~> 4.2'
+  gem 'pry'
 end
 
 platforms :ruby do
@@ -17,8 +17,8 @@ end
 
 platforms :jruby do
   gem 'activerecord-jdbc-adapter', '~> 60.0.rc1'
-  gem 'activerecord-jdbcpostgresql-adapter', '~> 60.0.rc1'
   gem 'activerecord-jdbcmysql-adapter', '~> 60.0.rc1'
+  gem 'activerecord-jdbcpostgresql-adapter', '~> 60.0.rc1'
 end
 
 gemspec path: '../'
