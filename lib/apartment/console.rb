@@ -5,7 +5,10 @@
 
 # reloads the environment
 def reload!(print = true)
+  # rubocop:disable Rails/Output
   puts 'Reloading...' if print
+  # rubocop:enable Rails/Output
+
   # This triggers the to_prepare callbacks
   ActionDispatch::Callbacks.new(proc {}).call({})
   # Manually init Apartment again once classes are reloaded

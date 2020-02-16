@@ -56,27 +56,10 @@ Metrics/MethodLength:
   Max: 24
 
 # Offense count: 1
-# Configuration parameters: Include.
-# Include: app/**/*.rb, config/**/*.rb, db/**/*.rb, lib/**/*.rb
-Rails/Output:
-  Exclude:
-    - '**/rails_helper.rb'
-    - 'lib/apartment/console.rb'
-
-# Offense count: 1
 # Cop supports --auto-correct.
 Security/YAMLLoad:
   Exclude:
     - 'spec/support/config.rb'
-
-# Offense count: 5
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: prefer_alias, prefer_alias_method
-Style/Alias:
-  Exclude:
-    - 'lib/apartment.rb'
-    - 'lib/apartment/adapters/abstract_adapter.rb'
 
 # Offense count: 16
 # Cop supports --auto-correct.

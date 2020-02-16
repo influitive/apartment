@@ -48,7 +48,7 @@ module Apartment
       def default_tenant
         @default_tenant || Apartment.default_tenant
       end
-      alias :default_schema :default_tenant # TODO deprecate default_schema
+      alias default_schema default_tenant # TODO deprecate default_schema
 
       #   Drop the tenant
       #
@@ -121,7 +121,7 @@ module Apartment
         # Don't log the output of seeding the db
         silence_warnings { load_or_raise(Apartment.seed_data_file) } if Apartment.seed_data_file
       end
-      alias_method :seed, :seed_data
+      alias seed seed_data
 
       #   Prepend the environment if configured and the environment isn't already there
       #
@@ -219,7 +219,7 @@ module Apartment
         end
       end
       # Backward compatibility
-      alias_method :load_or_abort, :load_or_raise
+      alias load_or_abort load_or_raise
 
       #   Exceptions to rescue from on db operations
       #

@@ -60,8 +60,8 @@ module Apartment
     def parallel_migration_threads
       @parallel_migration_threads || 0
     end
-    alias :default_tenant :default_schema
-    alias :default_tenant= :default_schema=
+    alias default_tenant default_schema
+    alias default_tenant= default_schema=
 
     def persistent_schemas
       @persistent_schemas || []
