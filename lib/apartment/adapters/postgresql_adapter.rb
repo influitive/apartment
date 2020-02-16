@@ -15,7 +15,7 @@ module Apartment
     # Default adapter when not using Postgresql Schemas
     class PostgresqlAdapter < AbstractAdapter
 
-    private
+      private
 
       def rescue_from
         PG::Error
@@ -44,7 +44,7 @@ module Apartment
         @current || default_tenant
       end
 
-    protected
+      protected
 
       def process_excluded_model(excluded_model)
         excluded_model.constantize.tap do |klass|
@@ -79,7 +79,7 @@ module Apartment
         raise TenantNotFound, "One of the following schema(s) is invalid: \"#{tenant}\" #{full_search_path}"
       end
 
-    private
+      private
 
       def create_tenant_command(conn, tenant)
         conn.execute(%{CREATE SCHEMA "#{tenant}"})
@@ -122,7 +122,7 @@ module Apartment
         end
       end
 
-    private
+      private
 
       # Re-set search path after the schema is imported.
       # Postgres now sets search path to empty before dumping the schema

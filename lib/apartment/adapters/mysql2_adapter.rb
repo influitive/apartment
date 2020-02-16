@@ -19,7 +19,7 @@ module Apartment
         @default_tenant = config[:database]
       end
 
-    protected
+      protected
 
       def rescue_from
         Mysql2::Error
@@ -40,7 +40,7 @@ module Apartment
         Apartment.connection.execute "use `#{default_tenant}`"
       end
 
-    protected
+      protected
 
       #   Connect to new tenant
       #

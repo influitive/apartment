@@ -15,7 +15,7 @@ module Apartment
     # Default adapter when not using Postgresql Schemas
     class JDBCPostgresqlAdapter < PostgresqlAdapter
 
-    private
+      private
 
       def multi_tenantify_with_tenant_db_name(config, tenant)
         config[:url] = "#{config[:url].gsub(/(\S+)\/.+$/, '\1')}/#{environmentify(tenant)}"
@@ -46,7 +46,7 @@ module Apartment
         raise TenantNotFound, "One of the following schema(s) is invalid: #{full_search_path}"
       end
 
-    private
+      private
 
       def rescue_from
         ActiveRecord::JDBCError

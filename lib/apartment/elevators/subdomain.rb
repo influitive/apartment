@@ -29,7 +29,7 @@ module Apartment
         tenant.presence
       end
 
-    protected
+      protected
 
       # *Almost* a direct ripoff of ActionDispatch::Request subdomain methods
 

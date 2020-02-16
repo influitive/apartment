@@ -19,20 +19,6 @@ Bundler/OrderedGems:
     - 'gemfiles/rails_6_0.gemfile'
     - 'gemfiles/rails_master.gemfile'
 
-# Offense count: 13
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, IndentationWidth.
-# SupportedStyles: outdent, indent
-Layout/AccessModifierIndentation:
-  Exclude:
-    - 'lib/apartment/adapters/abstract_adapter.rb'
-    - 'lib/apartment/adapters/abstract_jdbc_adapter.rb'
-    - 'lib/apartment/adapters/jdbc_postgresql_adapter.rb'
-    - 'lib/apartment/adapters/mysql2_adapter.rb'
-    - 'lib/apartment/adapters/postgresql_adapter.rb'
-    - 'lib/apartment/adapters/sqlite3_adapter.rb'
-    - 'lib/apartment/elevators/subdomain.rb'
-
 # Offense count: 4
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, IndentationWidth.
@@ -426,7 +412,7 @@ Style/Alias:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, ProceduralMethods, FunctionalMethods, IgnoredMethods, AllowBracesOnProceduralOneLiners.
 # SupportedStyles: line_count_based, semantic, braces_for_chaining, always_braces
-# ProceduralMethods: benchmark, bm, create, each_with_object, measure, new, realtime, tap, with_object
+# ProceduralMethods: benchmark, bm, bmbm, create, each_with_object, measure, new, realtime, tap, with_object
 # FunctionalMethods: let, let!, subject, watch
 # IgnoredMethods: lambda, proc, it
 Style/BlockDelimiters:

@@ -26,7 +26,7 @@ module Apartment
         File.basename(Apartment.connection.instance_variable_get(:@config)[:database], '.sqlite3')
       end
 
-    protected
+      protected
 
       def connect_to_new(tenant)
         raise TenantNotFound,
@@ -46,7 +46,7 @@ module Apartment
         end
       end
 
-    private
+      private
 
       def database_file(tenant)
         "#{@default_dir}/#{environmentify(tenant)}.sqlite3"

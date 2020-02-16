@@ -139,7 +139,7 @@ module Apartment
         end
       end
 
-    protected
+      protected
 
       def process_excluded_model(excluded_model)
         excluded_model.constantize.establish_connection @config
@@ -234,7 +234,7 @@ module Apartment
         Apartment.db_config_for(tenant).clone
       end
 
-     def with_neutral_connection(tenant, &block)
+      def with_neutral_connection(tenant, &block)
         if Apartment.with_multi_server_setup
           # neutral connection is necessary whenever you need to create/remove a database from a server.
           # example: when you use postgresql, you need to connect to the default postgresql database before you create your own.
