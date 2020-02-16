@@ -45,9 +45,9 @@ shared_examples_for 'a generic apartment adapter able to handle custom configura
   end
 
   context 'database key from tenant name' do
-    let(:expected_args) {
+    let(:expected_args) do
       custom_db_conf.tap { |args| args.delete(:database) }
-    }
+    end
 
     describe '#switch!' do
       it 'should connect to new db' do

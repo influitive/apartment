@@ -81,9 +81,9 @@ shared_examples_for 'a schema based apartment adapter' do
     context 'numeric database names' do
       let(:db) { 1234 }
       it 'should allow them' do
-        expect {
+        expect do
           subject.create(db)
-        }.to_not raise_error
+        end.to_not raise_error
         expect(tenant_names).to include(db.to_s)
       end
 
@@ -93,9 +93,9 @@ shared_examples_for 'a schema based apartment adapter' do
 
   describe '#drop' do
     it 'should raise an error for unknown database' do
-      expect {
+      expect do
         subject.drop 'unknown_database'
-      }.to raise_error(Apartment::TenantNotFound)
+      end.to raise_error(Apartment::TenantNotFound)
     end
 
     context 'numeric database names' do
@@ -103,9 +103,9 @@ shared_examples_for 'a schema based apartment adapter' do
 
       it 'should be able to drop them' do
         subject.create(db)
-        expect {
+        expect do
           subject.drop(db)
-        }.to_not raise_error
+        end.to_not raise_error
         expect(tenant_names).not_to include(db.to_s)
       end
 
@@ -175,9 +175,9 @@ shared_examples_for 'a schema based apartment adapter' do
     end
 
     it 'should raise an error if schema is invalid' do
-      expect {
+      expect do
         subject.switch! 'unknown_schema'
-      }.to raise_error(Apartment::TenantNotFound)
+      end.to raise_error(Apartment::TenantNotFound)
     end
 
     context 'numeric databases' do
@@ -185,9 +185,9 @@ shared_examples_for 'a schema based apartment adapter' do
 
       it 'should connect to them' do
         subject.create(db)
-        expect {
+        expect do
           subject.switch!(db)
-        }.to_not raise_error
+        end.to_not raise_error
 
         expect(connection.schema_search_path).to start_with %("#{db}")
       end

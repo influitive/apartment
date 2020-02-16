@@ -72,9 +72,9 @@ describe Apartment::Tenant do
       it 'raises exception with invalid adapter specified' do
         subject.reload!(config.merge(adapter: 'unknown'))
 
-        expect {
+        expect do
           Apartment::Tenant.adapter
-        }.to raise_error(RuntimeError)
+        end.to raise_error(RuntimeError)
       end
 
       context 'threadsafety' do

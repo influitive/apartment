@@ -56,9 +56,9 @@ describe 'apartment rake tasks' do
         end
 
         it 'requires a version to migrate to' do
-          expect {
+          expect do
             @rake['apartment:migrate:up'].invoke
-          }.to raise_error('VERSION is required')
+          end.to raise_error('VERSION is required')
         end
       end
 
@@ -81,9 +81,9 @@ describe 'apartment rake tasks' do
         end
 
         it 'requires a version to migrate to' do
-          expect {
+          expect do
             @rake['apartment:migrate:down'].invoke
-          }.to raise_error('VERSION is required')
+          end.to raise_error('VERSION is required')
         end
       end
 

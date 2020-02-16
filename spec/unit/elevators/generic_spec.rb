@@ -22,9 +22,9 @@ describe Apartment::Elevators::Generic do
     end
 
     it 'raises if parse_tenant_name not implemented' do
-      expect {
+      expect do
         elevator.call('HTTP_HOST' => 'foo.bar.com')
-      }.to raise_error(RuntimeError)
+      end.to raise_error(RuntimeError)
     end
 
     it 'switches to the parsed db_name' do

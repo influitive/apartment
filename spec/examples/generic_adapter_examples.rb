@@ -5,10 +5,10 @@ require 'spec_helper'
 shared_examples_for 'a generic apartment adapter' do
   include Apartment::Spec::AdapterRequirements
 
-  before {
+  before do
     Apartment.prepend_environment = false
     Apartment.append_environment = false
-  }
+  end
 
   describe '#init' do
     it 'should not retain a connection after railtie' do
@@ -67,9 +67,9 @@ shared_examples_for 'a generic apartment adapter' do
       begin
         Dir.mktmpdir do |tmpdir|
           Apartment.database_schema_file = "#{tmpdir}/schema.rb"
-          expect {
+          expect do
             subject.create(db1)
-          }.to raise_error(Apartment::FileNotFound)
+          end.to raise_error(Apartment::FileNotFound)
         end
       ensure
         Apartment.remove_instance_variable(:@database_schema_file)
@@ -96,9 +96,9 @@ shared_examples_for 'a generic apartment adapter' do
     end
 
     it 'should raise an error if database is invalid' do
-      expect {
+      expect do
         subject.switch! 'unknown_database'
-      }.to raise_error(Apartment::ApartmentError)
+      end.to raise_error(Apartment::ApartmentError)
     end
   end
 
@@ -115,9 +115,9 @@ shared_examples_for 'a generic apartment adapter' do
     it 'should not throw exception if current is no longer accessible' do
       subject.switch!(db2)
 
-      expect {
+      expect do
         subject.switch(db1) { subject.drop(db2) }
-      }.to_not raise_error
+      end.to_not raise_error
     end
   end
 
