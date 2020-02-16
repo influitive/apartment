@@ -3,7 +3,7 @@
 module RSpec
   module Integration
     module CapybaraSessions
-      def in_new_session(&block)
+      def in_new_session(&_block)
         yield new_session
       end
 

@@ -6,15 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: AllowUnusedKeywordArguments, IgnoreEmptyMethods.
-Lint/UnusedMethodArgument:
-  Exclude:
-    - 'lib/apartment/adapters/abstract_adapter.rb'
-    - 'lib/apartment/elevators/generic.rb'
-    - 'spec/support/capybara_sessions.rb'
-
 # Offense count: 5
 Metrics/AbcSize:
   Max: 33
