@@ -13,7 +13,7 @@ describe Apartment::Tenant do
       end
     end
 
-    # TODO this doesn't belong here, but there aren't integration tests currently for mysql
+    # TODO: this doesn't belong here, but there aren't integration tests currently for mysql
     # where to put???
     describe 'exception recovery', type: :request do
       before do
@@ -31,7 +31,7 @@ describe Apartment::Tenant do
       # end
     end
 
-    # TODO re-organize these tests
+    # TODO: re-organize these tests
     context 'with prefix and schemas' do
       describe '#create' do
         before do
@@ -90,7 +90,7 @@ describe Apartment::Tenant do
       end
     end
 
-    # TODO above spec are also with use_schemas=true
+    # TODO: above spec are also with use_schemas=true
     context 'with schemas' do
       before do
         Apartment.configure do |config|

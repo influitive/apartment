@@ -48,7 +48,7 @@ module Apartment
       def default_tenant
         @default_tenant || Apartment.default_tenant
       end
-      alias default_schema default_tenant # TODO deprecate default_schema
+      alias default_schema default_tenant # TODO: deprecate default_schema
 
       #   Drop the tenant
       #

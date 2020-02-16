@@ -33,24 +33,6 @@ Metrics/LineLength:
 Metrics/MethodLength:
   Max: 24
 
-# Offense count: 5
-# Cop supports --auto-correct.
-# Configuration parameters: Keywords.
-# Keywords: TODO, FIXME, OPTIMIZE, HACK, REVIEW
-Style/CommentAnnotation:
-  Exclude:
-    - 'lib/apartment.rb'
-    - 'lib/apartment/adapters/abstract_adapter.rb'
-    - 'spec/tenant_spec.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: compact, expanded
-Style/EmptyMethod:
-  Exclude:
-    - 'spec/dummy/app/controllers/application_controller.rb'
-
 # Offense count: 14
 # Cop supports --auto-correct.
 Style/ExpandPathArguments:

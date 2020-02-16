@@ -54,7 +54,7 @@ module Apartment
     end
 
     def default_schema
-      @default_schema || 'public' # TODO 'public' is postgres specific
+      @default_schema || 'public' # TODO: 'public' is postgres specific
     end
 
     def parallel_migration_threads
