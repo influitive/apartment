@@ -32,8 +32,3 @@ Metrics/LineLength:
 # Configuration parameters: CountComments, ExcludedMethods.
 Metrics/MethodLength:
   Max: 24
-
-# Offense count: 1
-Style/MixinUsage:
-  Exclude:
-    - '.pryrc'
