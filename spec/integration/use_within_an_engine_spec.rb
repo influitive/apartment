@@ -2,7 +2,7 @@
 
 describe 'using apartment within an engine' do
   before do
-    engine_path = Pathname.new(File.expand_path('../../dummy_engine', __FILE__))
+    engine_path = Pathname.new(File.expand_path('../dummy_engine', __dir__))
     require engine_path.join('test/dummy/config/application')
     @rake = Rake::Application.new
     Rake.application = @rake

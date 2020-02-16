@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 # Configure Rails Environment
 ENV['RAILS_ENV'] = 'test'
 
-require File.expand_path('../dummy/config/environment.rb', __FILE__)
+require File.expand_path('dummy/config/environment.rb', __dir__)
 
 # Loading dummy applications affects table_name of each excluded models
 # defined in `spec/dummy/config/initializers/apartment.rb`.

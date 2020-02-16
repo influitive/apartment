@@ -33,22 +33,6 @@ Metrics/LineLength:
 Metrics/MethodLength:
   Max: 24
 
-# Offense count: 14
-# Cop supports --auto-correct.
-Style/ExpandPathArguments:
-  Exclude:
-    - 'lib/generators/apartment/install/install_generator.rb'
-    - 'spec/adapters/sqlite3_adapter_spec.rb'
-    - 'spec/dummy/config/application.rb'
-    - 'spec/dummy/config/boot.rb'
-    - 'spec/dummy/config/environment.rb'
-    - 'spec/dummy/script/rails'
-    - 'spec/dummy_engine/test/dummy/config/application.rb'
-    - 'spec/dummy_engine/test/dummy/config/boot.rb'
-    - 'spec/dummy_engine/test/dummy/config/environment.rb'
-    - 'spec/integration/use_within_an_engine_spec.rb'
-    - 'spec/spec_helper.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.

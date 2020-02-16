@@ -10,7 +10,7 @@ describe Apartment::Adapters::Sqlite3Adapter, database: :sqlite do
 
     context 'using connections' do
       def tenant_names
-        db_dir = File.expand_path('../../dummy/db', __FILE__)
+        db_dir = File.expand_path('../dummy/db', __dir__)
         Dir.glob("#{db_dir}/*.sqlite3").map { |file| File.basename(file, '.sqlite3') }
       end
 
