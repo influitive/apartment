@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Apartment
   module Spec
     #
@@ -34,7 +36,7 @@ module Apartment
         end
       end
 
-      %w{subject tenant_names default_tenant}.each do |method|
+      %w[subject tenant_names default_tenant].each do |method|
         define_method method do
           raise "You must define a `#{method}` method in your host group"
         end unless defined?(method)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'using apartment within an engine' do
   before do
     engine_path = Pathname.new(File.expand_path('../../dummy_engine', __FILE__))

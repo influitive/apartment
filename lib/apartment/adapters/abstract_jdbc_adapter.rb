@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'apartment/adapters/abstract_adapter'
 
 module Apartment

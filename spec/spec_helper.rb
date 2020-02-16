@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 
 # Configure Rails Environment
-ENV["RAILS_ENV"] = "test"
+ENV['RAILS_ENV'] = 'test'
 
-require File.expand_path("../dummy/config/environment.rb", __FILE__)
+require File.expand_path('../dummy/config/environment.rb', __FILE__)
 
 # Loading dummy applications affects table_name of each excluded models
 # defined in `spec/dummy/config/initializers/apartment.rb`.
@@ -16,7 +18,7 @@ Apartment.excluded_models.each do |model|
   klass.reset_table_name
 end
 
-require "rspec/rails"
+require 'rspec/rails'
 require 'capybara/rspec'
 require 'capybara/rails'
 
@@ -24,11 +26,12 @@ begin
   require 'pry'
   silence_warnings { IRB = Pry }
 rescue LoadError
+  nil
 end
 
 ActionMailer::Base.delivery_method = :test
 ActionMailer::Base.perform_deliveries = true
-ActionMailer::Base.default_url_options[:host] = "test.com"
+ActionMailer::Base.default_url_options[:host] = 'test.com'
 
 Rails.backtrace_cleaner.remove_silencers!
 

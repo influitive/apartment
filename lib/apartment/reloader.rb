@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Apartment
   class Reloader
     #   Middleware used in development to init Apartment for each request

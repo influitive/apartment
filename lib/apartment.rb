@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'apartment/railtie' if defined?(Rails)
 require 'active_support/core_ext/object/blank'
 require 'forwardable'
@@ -52,7 +54,7 @@ module Apartment
     end
 
     def default_schema
-      @default_schema || "public" # TODO 'public' is postgres specific
+      @default_schema || 'public' # TODO 'public' is postgres specific
     end
 
     def parallel_migration_threads
@@ -78,7 +80,7 @@ module Apartment
     def seed_data_file
       return @seed_data_file if defined?(@seed_data_file)
 
-      @seed_data_file = "#{Rails.root}/db/seeds.rb"
+      @seed_data_file = Rails.root.join('db', 'seeds.rb')
     end
 
     def pg_excluded_names

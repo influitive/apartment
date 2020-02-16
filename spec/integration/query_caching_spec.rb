@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'query caching' do
@@ -6,8 +8,8 @@ describe 'query caching' do
 
     before do
       Apartment.configure do |config|
-        config.excluded_models = ["Company"]
-        config.tenant_names = lambda { Company.pluck(:database) }
+        config.excluded_models = ['Company']
+        config.tenant_names = -> { Company.pluck(:database) }
         config.use_schemas = true
       end
 
@@ -46,8 +48,8 @@ describe 'query caching' do
 
     before do
       Apartment.configure do |config|
-        config.excluded_models = ["Company"]
-        config.tenant_names = lambda { Company.pluck(:database) }
+        config.excluded_models = ['Company']
+        config.tenant_names = -> { Company.pluck(:database) }
         config.use_schemas = false
       end
 
@@ -66,7 +68,7 @@ describe 'query caching' do
       Company.delete_all
     end
 
-    it "configuration value is kept after switching databases" do
+    it 'configuration value is kept after switching databases' do
       ActiveRecord::Base.connection.enable_query_cache!
 
       Apartment::Tenant.switch! db_name

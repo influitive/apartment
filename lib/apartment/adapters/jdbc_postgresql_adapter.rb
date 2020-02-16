@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'apartment/adapters/postgresql_adapter'
 
 module Apartment
@@ -21,7 +23,7 @@ module Apartment
       end
 
       def create_tenant_command(conn, tenant)
-        conn.create_database(environmentify(tenant), :thisisahack => '')
+        conn.create_database(environmentify(tenant), thisisahack: '')
       end
 
       def rescue_from

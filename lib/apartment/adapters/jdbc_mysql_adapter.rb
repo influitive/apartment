@@ -1,4 +1,6 @@
-require "apartment/adapters/abstract_jdbc_adapter"
+# frozen_string_literal: true
+
+require 'apartment/adapters/abstract_jdbc_adapter'
 
 module Apartment
   module Tenant

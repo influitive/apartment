@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'apartment/adapters/abstract_adapter'
 
 module Apartment
@@ -53,7 +55,7 @@ module Apartment
       end
 
       def drop_command(conn, tenant)
-        conn.execute(%{DROP SCHEMA "#{tenant}" CASCADE})
+        conn.execute(%(DROP SCHEMA "#{tenant}" CASCADE))
       end
 
       #   Set schema search path to new schema
@@ -81,13 +83,13 @@ module Apartment
       private
 
       def create_tenant_command(conn, tenant)
-        conn.execute(%{CREATE SCHEMA "#{tenant}"})
+        conn.execute(%(CREATE SCHEMA "#{tenant}"))
       end
 
       #   Generate the final search path to set including persistent_schemas
       #
       def full_search_path
-        persistent_schemas.map(&:inspect).join(", ")
+        persistent_schemas.map(&:inspect).join(', ')
       end
 
       def persistent_schemas
@@ -127,7 +129,7 @@ module Apartment
       # and it mut be reset
       #
       def preserving_search_path
-        search_path = Apartment.connection.execute("show search_path").first["search_path"]
+        search_path = Apartment.connection.execute('show search_path').first['search_path']
         yield
         Apartment.connection.execute("set search_path = #{search_path}")
       end
@@ -210,7 +212,7 @@ module Apartment
           if Apartment.pg_excluded_names.any? { |name| match.include? name }
             match
           else
-            match.gsub("#{default_tenant}.", %{"#{current}".})
+            match.gsub("#{default_tenant}.", %("#{current}".))
           end
         end
       end

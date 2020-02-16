@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Require whichever elevator you're using below here...
 #
 # require 'apartment/elevators/generic'
@@ -16,7 +18,7 @@ Apartment.configure do |config|
   #
   # config.excluded_models = %w{Tenant}
   #
-  config.excluded_models = %w{}
+  config.excluded_models = %w[]
 
   # use postgres schemas?
   config.use_schemas = true

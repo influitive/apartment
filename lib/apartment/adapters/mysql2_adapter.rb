@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'apartment/adapters/abstract_adapter'
 
 module Apartment
@@ -48,9 +50,9 @@ module Apartment
         return reset if tenant.nil?
 
         Apartment.connection.execute "use `#{environmentify(tenant)}`"
-      rescue ActiveRecord::StatementInvalid => exception
+      rescue ActiveRecord::StatementInvalid => e
         Apartment::Tenant.reset
-        raise_connect_error!(tenant, exception)
+        raise_connect_error!(tenant, e)
       end
 
       def process_excluded_model(model)

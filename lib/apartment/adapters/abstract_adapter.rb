@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Apartment
   module Adapters
     # rubocop:disable Metrics/ClassLength
@@ -56,8 +58,8 @@ module Apartment
         with_neutral_connection(tenant) do |conn|
           drop_command(conn, tenant)
         end
-      rescue *rescuable_exceptions => exception
-        raise_drop_tenant_error!(tenant, exception)
+      rescue *rescuable_exceptions => e
+        raise_drop_tenant_error!(tenant, e)
       end
 
       #   Switch to a new tenant
@@ -159,8 +161,8 @@ module Apartment
         with_neutral_connection(tenant) do |conn|
           create_tenant_command(conn, tenant)
         end
-      rescue *rescuable_exceptions => exception
-        raise_create_tenant_error!(tenant, exception)
+      rescue *rescuable_exceptions => e
+        raise_create_tenant_error!(tenant, e)
       end
 
       def create_tenant_command(conn, tenant)
@@ -178,9 +180,9 @@ module Apartment
         Apartment.connection.active? # call active? to manually check if this connection is valid
 
         Apartment.connection.enable_query_cache! if query_cache_enabled
-      rescue *rescuable_exceptions => exception
+      rescue *rescuable_exceptions => e
         Apartment::Tenant.reset if reset_on_connection_exception?
-        raise_connect_error!(tenant, exception)
+        raise_connect_error!(tenant, e)
       end
 
       #   Import the database schema
@@ -210,7 +212,7 @@ module Apartment
       #   Load a file or raise error if it doesn't exists
       #
       def load_or_raise(file)
-        if File.exists?(file)
+        if File.exist?(file)
           load(file)
         else
           raise FileNotFound, "#{file} doesn't exist yet"

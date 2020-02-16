@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rack/request'
 require 'apartment/tenant'
 
@@ -24,7 +26,7 @@ module Apartment
       end
 
       def parse_tenant_name(request)
-        raise "Override"
+        raise 'Override'
       end
     end
   end

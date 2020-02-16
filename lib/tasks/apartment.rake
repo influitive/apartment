@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'apartment/migrator'
 require 'parallel'
 
 apartment_namespace = namespace :apartment do
-  desc "Create all tenants"
+  desc 'Create all tenants'
   task :create do
     tenants.each do |tenant|
       begin
@@ -14,7 +16,7 @@ apartment_namespace = namespace :apartment do
     end
   end
 
-  desc "Drop all tenants"
+  desc 'Drop all tenants'
   task :drop do
     tenants.each do |tenant|
       begin
@@ -26,7 +28,7 @@ apartment_namespace = namespace :apartment do
     end
   end
 
-  desc "Migrate all tenants"
+  desc 'Migrate all tenants'
   task :migrate do
     warn_if_tenants_empty
     each_tenant do |tenant|
@@ -39,7 +41,7 @@ apartment_namespace = namespace :apartment do
     end
   end
 
-  desc "Seed all tenants"
+  desc 'Seed all tenants'
   task :seed do
     warn_if_tenants_empty
 
@@ -55,7 +57,7 @@ apartment_namespace = namespace :apartment do
     end
   end
 
-  desc "Rolls the migration back to the previous version (specify steps w/ STEP=n) across all tenants."
+  desc 'Rolls the migration back to the previous version (specify steps w/ STEP=n) across all tenants.'
   task :rollback do
     warn_if_tenants_empty
 
@@ -129,7 +131,7 @@ apartment_namespace = namespace :apartment do
   end
 
   def warn_if_tenants_empty
-    if tenants.empty? && ENV['IGNORE_EMPTY_TENANTS'] != "true"
+    if tenants.empty? && ENV['IGNORE_EMPTY_TENANTS'] != 'true'
       puts <<-WARNING
         [WARNING] - The list of tenants to migrate appears to be empty. This could mean a few things:
 

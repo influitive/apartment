@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 # handle postgis adapter as if it were postgresql,
 # only override the adapter_method used for initialization
-require "apartment/adapters/postgresql_adapter"
+require 'apartment/adapters/postgresql_adapter'
 
 module Apartment
   module Tenant

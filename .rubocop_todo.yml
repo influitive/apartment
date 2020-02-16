@@ -19,32 +19,6 @@ Bundler/OrderedGems:
     - 'gemfiles/rails_6_0.gemfile'
     - 'gemfiles/rails_master.gemfile'
 
-# Offense count: 7
-# Cop supports --auto-correct.
-Lint/DeprecatedClassMethods:
-  Exclude:
-    - 'lib/apartment/adapters/abstract_adapter.rb'
-    - 'lib/apartment/adapters/sqlite3_adapter.rb'
-    - 'spec/adapters/sqlite3_adapter_spec.rb'
-
-# Offense count: 3
-Lint/ParenthesesAsGroupedExpression:
-  Exclude:
-    - 'spec/adapters/sqlite3_adapter_spec.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Lint/RedundantStringCoercion:
-  Exclude:
-    - 'spec/examples/schema_adapter_examples.rb'
-
-# Offense count: 2
-# Configuration parameters: AllowComments.
-Lint/SuppressedException:
-  Exclude:
-    - 'lib/apartment/railtie.rb'
-    - 'spec/spec_helper.rb'
-
 # Offense count: 3
 # Cop supports --auto-correct.
 # Configuration parameters: AllowUnusedKeywordArguments, IgnoreEmptyMethods.
@@ -81,26 +55,6 @@ Metrics/LineLength:
 Metrics/MethodLength:
   Max: 24
 
-# Offense count: 1
-Naming/AccessorMethodName:
-  Exclude:
-    - 'spec/examples/generic_adapter_custom_configuration_example.rb'
-
-# Offense count: 4
-# Cop supports --auto-correct.
-# Configuration parameters: PreferredName.
-Naming/RescuedExceptionsVariableName:
-  Exclude:
-    - 'lib/apartment/adapters/abstract_adapter.rb'
-    - 'lib/apartment/adapters/mysql2_adapter.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-Rails/ApplicationRecord:
-  Exclude:
-    - 'spec/dummy/app/models/company.rb'
-    - 'spec/dummy/app/models/user.rb'
-
 # Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: Whitelist.
@@ -108,15 +62,6 @@ Rails/ApplicationRecord:
 Rails/DynamicFindBy:
   Exclude:
     - 'spec/integration/query_caching_spec.rb'
-
-# Offense count: 3
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: slashes, arguments
-Rails/FilePath:
-  Exclude:
-    - 'lib/apartment.rb'
-    - 'spec/tenant_spec.rb'
-    - 'spec/unit/config_spec.rb'
 
 # Offense count: 1
 # Configuration parameters: Include.
@@ -176,14 +121,6 @@ Style/EmptyMethod:
   Exclude:
     - 'spec/dummy/app/controllers/application_controller.rb'
 
-# Offense count: 3
-# Cop supports --auto-correct.
-Style/Encoding:
-  Exclude:
-    - 'spec/schemas/v1.rb'
-    - 'spec/schemas/v2.rb'
-    - 'spec/schemas/v3.rb'
-
 # Offense count: 14
 # Cop supports --auto-correct.
 Style/ExpandPathArguments:
@@ -214,38 +151,12 @@ Style/FormatString:
 Style/FormatStringToken:
   EnforcedStyle: unannotated
 
-# Offense count: 107
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: always, never
-Style/FrozenStringLiteralComment:
-  Enabled: false
-
 # Offense count: 2
 # Configuration parameters: MinBodyLength.
 Style/GuardClause:
   Exclude:
     - 'lib/apartment/adapters/abstract_adapter.rb'
     - 'lib/tasks/apartment.rake'
-
-# Offense count: 33
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, UseHashRocketsWithSymbolValues, PreferHashRocketsForNonAlnumEndingSymbols.
-# SupportedStyles: ruby19, hash_rockets, no_mixed_keys, ruby19_no_mixed_keys
-Style/HashSyntax:
-  Exclude:
-    - 'lib/apartment/adapters/jdbc_postgresql_adapter.rb'
-    - 'spec/dummy/config/initializers/session_store.rb'
-    - 'spec/dummy/config/routes.rb'
-    - 'spec/examples/schema_adapter_examples.rb'
-    - 'spec/integration/apartment_rake_integration_spec.rb'
-    - 'spec/schemas/v1.rb'
-    - 'spec/schemas/v2.rb'
-    - 'spec/schemas/v3.rb'
-    - 'spec/support/contexts.rb'
-    - 'spec/tenant_spec.rb'
-    - 'spec/unit/elevators/first_subdomain_spec.rb'
-    - 'spec/unit/reloader_spec.rb'
 
 # Offense count: 6
 # Cop supports --auto-correct.
@@ -256,18 +167,6 @@ Style/IfUnlessModifier:
     - 'lib/apartment/adapters/abstract_adapter.rb'
     - 'lib/apartment/adapters/jdbc_postgresql_adapter.rb'
     - 'lib/apartment/adapters/postgresql_adapter.rb'
-
-# Offense count: 7
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: line_count_dependent, lambda, literal
-Style/Lambda:
-  Exclude:
-    - 'lib/generators/apartment/install/templates/apartment.rb'
-    - 'spec/dummy/config/initializers/apartment.rb'
-    - 'spec/integration/apartment_rake_integration_spec.rb'
-    - 'spec/integration/query_caching_spec.rb'
-    - 'spec/unit/config_spec.rb'
 
 # Offense count: 1
 Style/MixinUsage:
@@ -293,25 +192,3 @@ Style/MutableConstant:
     - 'lib/apartment/tasks/enhancements.rb'
     - 'lib/apartment/version.rb'
     - 'spec/dummy_engine/lib/dummy_engine/version.rb'
-
-# Offense count: 29
-# Cop supports --auto-correct.
-# Configuration parameters: PreferredDelimiters.
-Style/PercentLiteralDelimiters:
-  Exclude:
-    - 'lib/apartment/adapters/postgresql_adapter.rb'
-    - 'lib/apartment/tasks/enhancements.rb'
-    - 'spec/dummy/config/application.rb'
-    - 'spec/dummy_engine/config/initializers/apartment.rb'
-    - 'spec/examples/schema_adapter_examples.rb'
-    - 'spec/integration/apartment_rake_integration_spec.rb'
-    - 'spec/support/requirements.rb'
-    - 'spec/unit/elevators/host_spec.rb'
-    - 'spec/unit/elevators/subdomain_spec.rb'
-
-# Offense count: 518
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
-# SupportedStyles: single_quotes, double_quotes
-Style/StringLiterals:
-  Enabled: false

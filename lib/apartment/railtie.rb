@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails'
 require 'apartment/tenant'
 require 'apartment/reloader'
@@ -32,10 +34,12 @@ module Apartment
         Apartment.connection_class.connection_pool.with_connection do
           Apartment::Tenant.init
         end
+      # rubocop:disable Lint/SuppressedException
       rescue ::ActiveRecord::NoDatabaseError
         # Since `db:create` and other tasks invoke this block from Rails 5.2.0,
         # we need to swallow the error to execute `db:create` properly.
       end
+      # rubocop:enable Lint/SuppressedException
     end
 
     #
