@@ -2,7 +2,6 @@ require 'apartment/adapters/postgresql_adapter'
 
 module Apartment
   module Tenant
-
     def self.jdbc_postgresql_adapter(config)
       if Apartment.use_schemas
         Adapters::JDBCPostgresqlSchemaAdapter.new(config)
@@ -13,7 +12,6 @@ module Apartment
   end
 
   module Adapters
-
     # Default adapter when not using Postgresql Schemas
     class JDBCPostgresqlAdapter < PostgresqlAdapter
       private

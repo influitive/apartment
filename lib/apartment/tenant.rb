@@ -4,7 +4,6 @@ module Apartment
   #   The main entry point to Apartment functions
   #
   module Tenant
-
     extend self
     extend Forwardable
 

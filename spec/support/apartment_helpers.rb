@@ -1,6 +1,5 @@
 module Apartment
   module Test
-
     # rubocop:disable Style/ModuleFunction
     extend self
     # rubocop:enable Style/ModuleFunction
@@ -42,6 +41,5 @@ module Apartment
     def rollback
       ActiveRecord::Migrator.rollback(Rails.root + ActiveRecord::Migrator.migrations_path)
     end
-
   end
 end

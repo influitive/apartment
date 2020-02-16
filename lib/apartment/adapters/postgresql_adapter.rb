@@ -2,7 +2,6 @@ require 'apartment/adapters/abstract_adapter'
 
 module Apartment
   module Tenant
-
     def self.postgresql_adapter(config)
       adapter = Adapters::PostgresqlAdapter
       adapter = Adapters::PostgresqlSchemaAdapter if Apartment.use_schemas

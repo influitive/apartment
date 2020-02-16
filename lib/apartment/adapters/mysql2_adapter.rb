@@ -2,7 +2,6 @@ require 'apartment/adapters/abstract_adapter'
 
 module Apartment
   module Tenant
-
     def self.mysql2_adapter(config)
       if Apartment.use_schemas
         Adapters::Mysql2SchemaAdapter.new(config)

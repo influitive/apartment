@@ -5,7 +5,6 @@ require 'active_record'
 require 'apartment/tenant'
 
 module Apartment
-
   class << self
     extend Forwardable
 

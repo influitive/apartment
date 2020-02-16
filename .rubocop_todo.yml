@@ -19,26 +19,6 @@ Bundler/OrderedGems:
     - 'gemfiles/rails_6_0.gemfile'
     - 'gemfiles/rails_master.gemfile'
 
-# Offense count: 15
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines
-Layout/EmptyLinesAroundModuleBody:
-  Exclude:
-    - 'lib/apartment.rb'
-    - 'lib/apartment/adapters/jdbc_mysql_adapter.rb'
-    - 'lib/apartment/adapters/jdbc_postgresql_adapter.rb'
-    - 'lib/apartment/adapters/mysql2_adapter.rb'
-    - 'lib/apartment/adapters/postgis_adapter.rb'
-    - 'lib/apartment/adapters/postgresql_adapter.rb'
-    - 'lib/apartment/deprecation.rb'
-    - 'lib/apartment/migrator.rb'
-    - 'lib/apartment/tenant.rb'
-    - 'spec/support/apartment_helpers.rb'
-    - 'spec/support/config.rb'
-    - 'spec/support/requirements.rb'
-    - 'spec/support/setup.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyleAlignWith, AutoCorrect, Severity.

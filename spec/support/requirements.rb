@@ -1,6 +1,5 @@
 module Apartment
   module Spec
-
     #
     #   Define the interface methods required to
     #   use an adapter shared example

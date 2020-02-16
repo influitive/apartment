@@ -2,7 +2,6 @@ require 'apartment/tenant'
 
 module Apartment
   module Migrator
-
     extend self
 
     # Migrate to latest

@@ -1,7 +1,6 @@
 module Apartment
   module Spec
     module Setup
-
       def self.included(base)
         base.instance_eval do
           let(:db1) { Apartment::Test.next_db }
