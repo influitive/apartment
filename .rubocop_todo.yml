@@ -26,42 +26,6 @@ Bundler/OrderedGems:
 Layout/EmptyLinesAroundBlockBody:
   Enabled: false
 
-# Offense count: 18
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines, beginning_only, ending_only
-Layout/EmptyLinesAroundClassBody:
-  Exclude:
-    - 'lib/apartment.rb'
-    - 'lib/apartment/adapters/abstract_jdbc_adapter.rb'
-    - 'lib/apartment/adapters/jdbc_mysql_adapter.rb'
-    - 'lib/apartment/adapters/jdbc_postgresql_adapter.rb'
-    - 'lib/apartment/adapters/mysql2_adapter.rb'
-    - 'lib/apartment/adapters/postgresql_adapter.rb'
-    - 'lib/apartment/elevators/domain.rb'
-    - 'lib/apartment/elevators/first_subdomain.rb'
-    - 'lib/apartment/elevators/generic.rb'
-    - 'lib/apartment/railtie.rb'
-    - 'lib/apartment/reloader.rb'
-    - 'lib/apartment/tasks/enhancements.rb'
-    - 'lib/generators/apartment/install/install_generator.rb'
-
-# Offense count: 5
-# Cop supports --auto-correct.
-Layout/EmptyLinesAroundExceptionHandlingKeywords:
-  Exclude:
-    - 'lib/apartment/adapters/abstract_adapter.rb'
-    - 'lib/apartment/adapters/jdbc_postgresql_adapter.rb'
-    - 'lib/apartment/adapters/mysql2_adapter.rb'
-    - 'lib/apartment/adapters/postgresql_adapter.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-Layout/EmptyLinesAroundMethodBody:
-  Exclude:
-    - 'lib/apartment/adapters/postgresql_adapter.rb'
-    - 'lib/apartment/tasks/enhancements.rb'
-
 # Offense count: 15
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.

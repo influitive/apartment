@@ -5,6 +5,5 @@ module Apartment
     def copy_files
       template "apartment.rb", File.join("config", "initializers", "apartment.rb")
     end
-
   end
 end

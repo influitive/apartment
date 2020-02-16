@@ -1,6 +1,5 @@
 module Apartment
   class Reloader
-
     #   Middleware used in development to init Apartment for each request
     #   Necessary due to code reload (annoying).  When models are reloaded, they no longer have the proper table_name
     #   That is prepended with the schema (if using postgresql schemas)

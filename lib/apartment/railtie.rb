@@ -4,7 +4,6 @@ require 'apartment/reloader'
 
 module Apartment
   class Railtie < Rails::Railtie
-
     #
     #   Set up our default config options
     #   Do this before the app initializers run so we don't override custom settings

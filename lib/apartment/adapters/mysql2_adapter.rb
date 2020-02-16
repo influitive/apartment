@@ -14,7 +14,6 @@ module Apartment
 
   module Adapters
     class Mysql2Adapter < AbstractAdapter
-
       def initialize(config)
         super
 
@@ -50,7 +49,6 @@ module Apartment
         return reset if tenant.nil?
 
         Apartment.connection.execute "use `#{environmentify(tenant)}`"
-
       rescue ActiveRecord::StatementInvalid => exception
         Apartment::Tenant.reset
         raise_connect_error!(tenant, exception)

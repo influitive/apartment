@@ -7,7 +7,6 @@ require 'apartment/tenant'
 module Apartment
 
   class << self
-
     extend Forwardable
 
     ACCESSOR_METHODS = %i[use_schemas use_sql seed_after_create prepend_environment

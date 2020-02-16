@@ -16,7 +16,6 @@ module Apartment
 
     # Default adapter when not using Postgresql Schemas
     class JDBCPostgresqlAdapter < PostgresqlAdapter
-
       private
 
       def multi_tenantify_with_tenant_db_name(config, tenant)
@@ -34,7 +33,6 @@ module Apartment
 
     # Separate Adapter for Postgresql when using schemas
     class JDBCPostgresqlSchemaAdapter < PostgresqlSchemaAdapter
-
       #   Set schema search path to new schema
       #
       def connect_to_new(tenant = nil)
@@ -46,7 +44,6 @@ module Apartment
 
         @current = tenant.to_s
         Apartment.connection.schema_search_path = full_search_path
-
       rescue ActiveRecord::StatementInvalid, ActiveRecord::JDBCError
         raise TenantNotFound, "One of the following schema(s) is invalid: #{full_search_path}"
       end

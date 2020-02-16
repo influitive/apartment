@@ -11,7 +11,6 @@ module Apartment
     #       
     #
     class Domain < Generic
-
       def parse_tenant_name(request)
         return nil if request.host.blank?
 

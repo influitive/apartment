@@ -3,7 +3,6 @@ require 'apartment/adapters/abstract_adapter'
 module Apartment
   module Adapters
     class AbstractJDBCAdapter < AbstractAdapter
-
       private
 
       def multi_tenantify_with_tenant_db_name(config, tenant)

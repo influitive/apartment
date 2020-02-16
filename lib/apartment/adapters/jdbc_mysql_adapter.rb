@@ -10,7 +10,6 @@ module Apartment
 
   module Adapters
     class JDBCMysqlAdapter < AbstractJDBCAdapter
-
       def reset_on_connection_exception?
         true
       end

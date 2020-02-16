@@ -56,7 +56,6 @@ module Apartment
         with_neutral_connection(tenant) do |conn|
           drop_command(conn, tenant)
         end
-
       rescue *rescuable_exceptions => exception
         raise_drop_tenant_error!(tenant, exception)
       end
@@ -83,7 +82,6 @@ module Apartment
         previous_tenant = current
         switch!(tenant)
         yield
-
       ensure
         begin
           switch!(previous_tenant)

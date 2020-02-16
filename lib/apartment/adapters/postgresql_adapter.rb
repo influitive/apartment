@@ -14,7 +14,6 @@ module Apartment
   module Adapters
     # Default adapter when not using Postgresql Schemas
     class PostgresqlAdapter < AbstractAdapter
-
       private
 
       def rescue_from
@@ -24,7 +23,6 @@ module Apartment
 
     # Separate Adapter for Postgresql when using schemas
     class PostgresqlSchemaAdapter < AbstractAdapter
-
       def initialize(config)
         super
 
@@ -77,7 +75,6 @@ module Apartment
         if postgresql_version < 90_300
           Apartment.connection.clear_cache!
         end
-
       rescue *rescuable_exceptions
         raise TenantNotFound, "One of the following schema(s) is invalid: \"#{tenant}\" #{full_search_path}"
       end
@@ -107,7 +104,6 @@ module Apartment
 
     # Another Adapter for Postgresql when using schemas and SQL
     class PostgresqlSchemaFromSqlAdapter < PostgresqlSchemaAdapter
-
       PSQL_DUMP_BLACKLISTED_STATEMENTS= [
         /SET search_path/i,                           # overridden later
         /SET lock_timeout/i,                          # new in postgresql 9.3
@@ -156,7 +152,6 @@ module Apartment
       #   @return {String} raw SQL contaning only postgres schema dump
       #
       def pg_dump_schema
-
         # Skip excluded tables? :/
         # excluded_tables =
         #   collect_table_names(Apartment.excluded_models)

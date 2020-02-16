@@ -6,7 +6,6 @@ module Apartment
     #   Provides a rack based tenant switching solution based on request
     #
     class Generic
-
       def initialize(app, processor = nil)
         @app = app
         @processor = processor || method(:parse_tenant_name)
