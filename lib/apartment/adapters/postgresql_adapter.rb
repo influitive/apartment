@@ -111,7 +111,7 @@ module Apartment
         /CREATE SCHEMA public/i,
         /COMMENT ON SCHEMA public/i
 
-      ]
+      ].freeze
 
       def import_database_schema
         preserving_search_path do

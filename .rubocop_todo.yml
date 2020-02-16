@@ -37,15 +37,3 @@ Metrics/MethodLength:
 Style/MixinUsage:
   Exclude:
     - '.pryrc'
-
-# Offense count: 7
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: literals, strict
-Style/MutableConstant:
-  Exclude:
-    - 'lib/apartment.rb'
-    - 'lib/apartment/adapters/postgresql_adapter.rb'
-    - 'lib/apartment/tasks/enhancements.rb'
-    - 'lib/apartment/version.rb'
-    - 'spec/dummy_engine/lib/dummy_engine/version.rb'
