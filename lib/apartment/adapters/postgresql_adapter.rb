@@ -73,9 +73,7 @@ module Apartment
         # When the PostgreSQL version is < 9.3,
         # there is a issue for prepared statement with changing search_path.
         # https://www.postgresql.org/docs/9.3/static/sql-prepare.html
-        if postgresql_version < 90_300
-          Apartment.connection.clear_cache!
-        end
+        Apartment.connection.clear_cache! if postgresql_version < 90_300
       rescue *rescuable_exceptions
         raise TenantNotFound, "One of the following schema(s) is invalid: \"#{tenant}\" #{full_search_path}"
       end

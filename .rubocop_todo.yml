@@ -33,16 +33,6 @@ Metrics/LineLength:
 Metrics/MethodLength:
   Max: 24
 
-# Offense count: 6
-# Cop supports --auto-correct.
-Style/IfUnlessModifier:
-  Exclude:
-    - '.pryrc'
-    - 'lib/apartment.rb'
-    - 'lib/apartment/adapters/abstract_adapter.rb'
-    - 'lib/apartment/adapters/jdbc_postgresql_adapter.rb'
-    - 'lib/apartment/adapters/postgresql_adapter.rb'
-
 # Offense count: 1
 Style/MixinUsage:
   Exclude:

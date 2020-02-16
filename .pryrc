@@ -1,5 +1,3 @@
 # frozen_string_literal: true
 
-if defined?(Rails) && Rails.env
-  extend Rails::ConsoleMethods
-end
+extend Rails::ConsoleMethods if defined?(Rails) && Rails.env

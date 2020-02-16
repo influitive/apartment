@@ -198,9 +198,7 @@ module Apartment
       #                                   if false, use the default db name from the db
       def multi_tenantify(tenant, with_database = true)
         db_connection_config(tenant).tap do |config|
-          if with_database
-            multi_tenantify_with_tenant_db_name(config, tenant)
-          end
+          multi_tenantify_with_tenant_db_name(config, tenant) if with_database
         end
       end
 
