@@ -716,17 +716,3 @@ Style/TrivialAccessors:
   Exclude:
     - 'lib/apartment/elevators/host.rb'
     - 'lib/apartment/elevators/subdomain.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/UnlessElse:
-  Exclude:
-    - 'lib/apartment/adapters/abstract_adapter.rb'
-
-# Offense count: 5
-# Cop supports --auto-correct.
-# Configuration parameters: WordRegex.
-# SupportedStyles: percent, brackets
-Style/WordArray:
-  EnforcedStyle: percent
-  MinSize: 3

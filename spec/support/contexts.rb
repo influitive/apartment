@@ -38,7 +38,7 @@ shared_context "elevators", elevator: true do
 end
 
 shared_context "persistent_schemas", :persistent_schemas => true do
-  let(:persistent_schemas) { ['hstore', 'postgis'] }
+  let(:persistent_schemas) { %w[hstore postgis] }
 
   before do
     persistent_schemas.map {|schema| subject.create(schema) }

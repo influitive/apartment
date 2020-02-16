@@ -60,7 +60,7 @@ describe Apartment do
       end
 
       context "tenant_names as string array" do
-        let(:tenant_names) { ['users', 'companies'] }
+        let(:tenant_names) { %w[users companies] }
 
         it "should return object if it doesnt respond_to call" do
           expect(Apartment.tenant_names).to eq(tenant_names_from_array(tenant_names).keys)
@@ -72,7 +72,7 @@ describe Apartment do
       end
 
       context "tenant_names as proc returning an array" do
-        let(:tenant_names) { lambda { ['users', 'companies'] } }
+        let(:tenant_names) { lambda { %w[users companies] } }
 
         it "should return object if it doesnt respond_to call" do
           expect(Apartment.tenant_names).to eq(tenant_names_from_array(tenant_names.call).keys)
