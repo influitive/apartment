@@ -425,14 +425,6 @@ Style/BlockDelimiters:
     - 'spec/tenant_spec.rb'
     - 'spec/unit/elevators/generic_spec.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: braces, no_braces, context_dependent
-Style/BracesAroundHashParameters:
-  Exclude:
-    - 'lib/apartment/adapters/jdbc_postgresql_adapter.rb'
-
 # Offense count: 5
 # Cop supports --auto-correct.
 # Configuration parameters: Keywords.
