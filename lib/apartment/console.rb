@@ -5,7 +5,7 @@
 def reload!(print = true)
   puts "Reloading..." if print
   # This triggers the to_prepare callbacks
-  ActionDispatch::Callbacks.new(proc{}).call({})
+  ActionDispatch::Callbacks.new(proc {}).call({})
   # Manually init Apartment again once classes are reloaded
   Apartment::Tenant.init
   true

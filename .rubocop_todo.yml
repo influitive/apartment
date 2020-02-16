@@ -19,14 +19,6 @@ Bundler/OrderedGems:
     - 'gemfiles/rails_6_0.gemfile'
     - 'gemfiles/rails_master.gemfile'
 
-# Offense count: 82
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: space, no_space
-# SupportedStylesForEmptyBraces: space, no_space
-Layout/SpaceBeforeBlockBraces:
-  EnforcedStyleForEmptyBraces: no_space
-
 # Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: AllowForAlignment.
