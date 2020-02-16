@@ -8,7 +8,7 @@ module Apartment
     #   eg. example.com       => example
     #       www.example.bc.ca => example
     #       a.example.bc.ca   => a
-    #       
+    #
     #
     class Domain < Generic
       def parse_tenant_name(request)

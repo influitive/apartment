@@ -15,7 +15,7 @@ describe Apartment::Elevators::FirstSubdomain do
       let(:subdomain) { "test1.test2" }
       it { is_expected.to eq("test1") }
     end
-    
+
     context "no subdomain" do
       let(:subdomain) { nil }
       it { is_expected.to eq(nil) }

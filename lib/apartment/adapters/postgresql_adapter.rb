@@ -200,7 +200,7 @@ module Apartment
 
         swap_schema_qualifier(sql)
           .split("\n")
-          .select {|line| check_input_against_regexps(line, PSQL_DUMP_BLACKLISTED_STATEMENTS).empty?}
+          .select { |line| check_input_against_regexps(line, PSQL_DUMP_BLACKLISTED_STATEMENTS).empty? }
           .prepend(search_path)
           .join("\n")
       end
@@ -218,7 +218,7 @@ module Apartment
       #   Checks if any of regexps matches against input
       #
       def check_input_against_regexps(input, regexps)
-        regexps.select {|c| input.match c}
+        regexps.select { |c| input.match c }
       end
 
       #   Collect table names from AR Models

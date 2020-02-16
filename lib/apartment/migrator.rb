@@ -9,7 +9,7 @@ module Apartment
       Tenant.switch(database) do
         version = ENV["VERSION"] ? ENV["VERSION"].to_i : nil
 
-        migration_scope_block = -> (migration) { ENV["SCOPE"].blank? || (ENV["SCOPE"] == migration.scope) }
+        migration_scope_block = ->(migration) { ENV["SCOPE"].blank? || (ENV["SCOPE"] == migration.scope) }
 
         if activerecord_below_5_2?
           ActiveRecord::Migrator.migrate(ActiveRecord::Migrator.migrations_paths, version, &migration_scope_block)

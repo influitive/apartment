@@ -252,15 +252,15 @@ module Apartment
       end
 
       def raise_drop_tenant_error!(tenant, exception)
-        raise TenantNotFound, "Error while dropping tenant #{environmentify(tenant)}: #{ exception.message }"
+        raise TenantNotFound, "Error while dropping tenant #{environmentify(tenant)}: #{exception.message}"
       end
 
       def raise_create_tenant_error!(tenant, exception)
-        raise TenantExists, "Error while creating tenant #{environmentify(tenant)}: #{ exception.message }"
+        raise TenantExists, "Error while creating tenant #{environmentify(tenant)}: #{exception.message}"
       end
 
       def raise_connect_error!(tenant, exception)
-        raise TenantNotFound, "Error while connecting to tenant #{environmentify(tenant)}: #{ exception.message }"
+        raise TenantNotFound, "Error while connecting to tenant #{environmentify(tenant)}: #{exception.message}"
       end
 
       class SeparateDbConnectionHandler < ::ActiveRecord::Base

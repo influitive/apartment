@@ -41,12 +41,12 @@ shared_context "persistent_schemas", :persistent_schemas => true do
   let(:persistent_schemas) { %w[hstore postgis] }
 
   before do
-    persistent_schemas.map {|schema| subject.create(schema) }
+    persistent_schemas.map { |schema| subject.create(schema) }
     Apartment.persistent_schemas = persistent_schemas
   end
 
   after do
     Apartment.persistent_schemas = []
-    persistent_schemas.map {|schema| subject.drop(schema) }
+    persistent_schemas.map { |schema| subject.drop(schema) }
   end
 end
