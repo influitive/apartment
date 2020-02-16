@@ -2,7 +2,6 @@
 
 module Apartment
   module Adapters
-    # rubocop:disable Metrics/ClassLength
     class AbstractAdapter
       include ActiveSupport::Callbacks
       define_callbacks :create, :switch
@@ -212,11 +211,9 @@ module Apartment
       #   Load a file or raise error if it doesn't exists
       #
       def load_or_raise(file)
-        if File.exist?(file)
-          load(file)
-        else
-          raise FileNotFound, "#{file} doesn't exist yet"
-        end
+        raise FileNotFound, "#{file} doesn't exist yet" unless File.exist?(file)
+
+        load(file)
       end
       # Backward compatibility
       alias load_or_abort load_or_raise
@@ -268,6 +265,5 @@ module Apartment
       class SeparateDbConnectionHandler < ::ActiveRecord::Base
       end
     end
-    # rubocop:enable Metrics/ClassLength
   end
 end

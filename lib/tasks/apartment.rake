@@ -131,16 +131,16 @@ apartment_namespace = namespace :apartment do
   end
 
   def warn_if_tenants_empty
-    if tenants.empty? && ENV['IGNORE_EMPTY_TENANTS'] != 'true'
-      puts <<-WARNING
-        [WARNING] - The list of tenants to migrate appears to be empty. This could mean a few things:
+    return unless tenants.empty? && ENV['IGNORE_EMPTY_TENANTS'] != 'true'
 
-          1. You may not have created any, in which case you can ignore this message
-          2. You've run `apartment:migrate` directly without loading the Rails environment
-            * `apartment:migrate` is now deprecated. Tenants will automatically be migrated with `db:migrate`
+    puts <<-WARNING
+      [WARNING] - The list of tenants to migrate appears to be empty. This could mean a few things:
 
-        Note that your tenants currently haven't been migrated. You'll need to run `db:migrate` to rectify this.
-      WARNING
-    end
+        1. You may not have created any, in which case you can ignore this message
+        2. You've run `apartment:migrate` directly without loading the Rails environment
+          * `apartment:migrate` is now deprecated. Tenants will automatically be migrated with `db:migrate`
+
+      Note that your tenants currently haven't been migrated. You'll need to run `db:migrate` to rectify this.
+    WARNING
   end
 end
