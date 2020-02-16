@@ -56,7 +56,7 @@ shared_examples_for "a generic apartment adapter" do
 
       expect(subject.current).not_to eq(db2)
 
-      subject.switch(db2){ expect(User.count).to eq(@count + 1) }
+      subject.switch(db2) { expect(User.count).to eq(@count + 1) }
     end
 
     it "should raise error when the schema.rb is missing unless Apartment.use_sql is set to true" do
@@ -115,7 +115,7 @@ shared_examples_for "a generic apartment adapter" do
       subject.switch!(db2)
 
       expect {
-        subject.switch(db1){ subject.drop(db2) }
+        subject.switch(db1) { subject.drop(db2) }
       }.to_not raise_error
     end
   end

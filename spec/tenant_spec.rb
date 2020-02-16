@@ -18,7 +18,7 @@ describe Apartment::Tenant do
       before do
         subject.create db1
       end
-      after{ subject.drop db1 }
+      after { subject.drop db1 }
 
       # it "should recover from incorrect database" do
       #   session = Capybara::Session.new(:rack_test, Capybara.app)
@@ -94,7 +94,7 @@ describe Apartment::Tenant do
         subject.create db1
       end
 
-      after{ subject.drop db1 }
+      after { subject.drop db1 }
 
       describe "#create" do
         it "should seed data" do
@@ -105,19 +105,19 @@ describe Apartment::Tenant do
 
       describe "#switch!" do
 
-        let(:x){ rand(3) }
+        let(:x) { rand(3) }
 
         context "creating models" do
 
-          before{ subject.create db2 }
-          after{ subject.drop db2 }
+          before { subject.create db2 }
+          after { subject.drop db2 }
 
           it "should create a model instance in the current schema" do
             subject.switch! db2
-            db2_count = User.count + x.times{ User.create }
+            db2_count = User.count + x.times { User.create }
 
             subject.switch! db1
-            db_count = User.count + x.times{ User.create }
+            db_count = User.count + x.times { User.create }
 
             subject.switch! db2
             expect(User.count).to eq(db2_count)
@@ -146,10 +146,10 @@ describe Apartment::Tenant do
 
           it "should create excluded models in public schema" do
             subject.reset # ensure we're on public schema
-            count = Company.count + x.times{ Company.create }
+            count = Company.count + x.times { Company.create }
 
             subject.switch! db1
-            x.times{ Company.create }
+            x.times { Company.create }
             expect(Company.count).to eq(count + x)
             subject.reset
             expect(Company.count).to eq(count + x)
@@ -167,7 +167,7 @@ describe Apartment::Tenant do
         end
       end
 
-      after{ subject.drop db1 }
+      after { subject.drop db1 }
 
       it 'should seed from default path' do
         subject.create db1

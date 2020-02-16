@@ -7,7 +7,7 @@ describe 'query caching' do
     before do
       Apartment.configure do |config|
         config.excluded_models = ["Company"]
-        config.tenant_names = lambda{ Company.pluck(:database) }
+        config.tenant_names = lambda { Company.pluck(:database) }
         config.use_schemas = true
       end
 
@@ -20,7 +20,7 @@ describe 'query caching' do
     end
 
     after do
-      db_names.each{ |db| Apartment::Tenant.drop(db) }
+      db_names.each { |db| Apartment::Tenant.drop(db) }
       Apartment::Tenant.reset
       Company.delete_all
     end
@@ -47,7 +47,7 @@ describe 'query caching' do
     before do
       Apartment.configure do |config|
         config.excluded_models = ["Company"]
-        config.tenant_names = lambda{ Company.pluck(:database) }
+        config.tenant_names = lambda { Company.pluck(:database) }
         config.use_schemas = false
       end
 

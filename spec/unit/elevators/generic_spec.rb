@@ -9,11 +9,11 @@ describe Apartment::Elevators::Generic do
     end
   end
 
-  subject(:elevator){ described_class.new(Proc.new{}) }
+  subject(:elevator) { described_class.new(Proc.new{}) }
 
   describe "#call" do
     it "calls the processor if given" do
-      elevator = described_class.new(Proc.new{}, Proc.new{'tenant1'})
+      elevator = described_class.new(Proc.new{}, Proc.new {'tenant1'})
 
       expect(Apartment::Tenant).to receive(:switch).with('tenant1')
 
@@ -35,7 +35,7 @@ describe Apartment::Elevators::Generic do
     end
 
     it "calls the block implementation of `switch`" do
-      elevator = MyElevator.new(Proc.new{}, Proc.new{'tenant2'})
+      elevator = MyElevator.new(Proc.new{}, Proc.new {'tenant2'})
 
       expect(Apartment::Tenant).to receive(:switch).with('tenant2').and_yield
       elevator.call('HTTP_HOST' => 'foo.bar.com')

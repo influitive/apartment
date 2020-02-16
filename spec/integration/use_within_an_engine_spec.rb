@@ -10,11 +10,11 @@ describe 'using apartment within an engine' do
   end
 
   it 'sucessfully runs rake db:migrate in the engine root' do
-    expect{ Rake::Task['db:migrate'].invoke }.to_not raise_error
+    expect { Rake::Task['db:migrate'].invoke }.to_not raise_error
   end
 
   it 'sucessfully runs rake app:db:migrate in the engine root' do
-    expect{ Rake::Task['app:db:migrate'].invoke }.to_not raise_error
+    expect { Rake::Task['app:db:migrate'].invoke }.to_not raise_error
   end
 
   context 'when Apartment.db_migrate_tenants is false' do

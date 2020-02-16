@@ -4,9 +4,9 @@ module Apartment
 
       def self.included(base)
         base.instance_eval do
-          let(:db1){ Apartment::Test.next_db }
-          let(:db2){ Apartment::Test.next_db }
-          let(:connection){ ActiveRecord::Base.connection }
+          let(:db1) { Apartment::Test.next_db }
+          let(:db2) { Apartment::Test.next_db }
+          let(:connection) { ActiveRecord::Base.connection }
 
           # This around ensures that we run these hooks before and after
           # any before/after hooks defined in individual tests

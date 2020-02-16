@@ -4,8 +4,8 @@ describe Apartment do
 
   describe "#config" do
 
-    let(:excluded_models){ ["Company"] }
-    let(:seed_data_file_path){ "#{Rails.root}/db/seeds/import.rb" }
+    let(:excluded_models) { ["Company"] }
+    let(:seed_data_file_path) { "#{Rails.root}/db/seeds/import.rb" }
 
     def tenant_names_from_array(names)
       names.each_with_object({}) do |tenant, hash|

@@ -1,7 +1,7 @@
 #   Some shared contexts for specs
 
 shared_context "with default schema", :default_schema => true do
-  let(:default_schema){ Apartment::Test.next_db }
+  let(:default_schema) { Apartment::Test.next_db }
 
   before do
     Apartment::Test.create_schema(default_schema)
@@ -38,15 +38,15 @@ shared_context "elevators", elevator: true do
 end
 
 shared_context "persistent_schemas", :persistent_schemas => true do
-  let(:persistent_schemas){ ['hstore', 'postgis'] }
+  let(:persistent_schemas) { ['hstore', 'postgis'] }
 
   before do
-    persistent_schemas.map{|schema| subject.create(schema) }
+    persistent_schemas.map {|schema| subject.create(schema) }
     Apartment.persistent_schemas = persistent_schemas
   end
 
   after do
     Apartment.persistent_schemas = []
-    persistent_schemas.map{|schema| subject.drop(schema) }
+    persistent_schemas.map {|schema| subject.drop(schema) }
   end
 end

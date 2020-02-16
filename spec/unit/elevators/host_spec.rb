@@ -3,7 +3,7 @@ require 'apartment/elevators/host'
 
 describe Apartment::Elevators::Host do
 
-  subject(:elevator){ described_class.new(Proc.new{}) }
+  subject(:elevator) { described_class.new(Proc.new{}) }
 
   describe "#parse_tenant_name" do
 

@@ -22,7 +22,7 @@ require 'capybara/rails'
 
 begin
   require 'pry'
-  silence_warnings{ IRB = Pry }
+  silence_warnings { IRB = Pry }
 rescue LoadError
 end
 

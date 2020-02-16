@@ -10,7 +10,7 @@ describe Apartment::Migrator do
 
   context 'with ActiveRecord below 5.2.0', skip: ActiveRecord.version >= Gem::Version.new('5.2.0') do
     before do
-      allow(ActiveRecord::Migrator).to receive(:migrations_paths) { %w(spec/dummy/db/migrate) }
+      allow(ActiveRecord::Migrator).to receive(:migrations_paths) { %w[spec/dummy/db/migrate] }
       allow(Apartment::Migrator).to receive(:activerecord_below_5_2?) { true }
     end
 

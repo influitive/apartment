@@ -20,7 +20,7 @@ describe "apartment rake tasks", database: :postgresql do
     Apartment.configure do |config|
       config.use_schemas = true
       config.excluded_models = ["Company"]
-      config.tenant_names = lambda{ Company.pluck(:database) }
+      config.tenant_names = lambda { Company.pluck(:database) }
     end
     Apartment::Tenant.reload!(config)
 
@@ -31,9 +31,9 @@ describe "apartment rake tasks", database: :postgresql do
   after { Rake.application = nil }
 
   context "with x number of databases" do
-    let(:x){ 1 + rand(5) }    # random number of dbs to create
-    let(:db_names){ x.times.map{ Apartment::Test.next_db } }
-    let!(:company_count){ db_names.length }
+    let(:x) { 1 + rand(5) }    # random number of dbs to create
+    let(:db_names) { x.times.map { Apartment::Test.next_db } }
+    let!(:company_count) { db_names.length }
 
     before do
       db_names.collect do |db_name|
@@ -43,7 +43,7 @@ describe "apartment rake tasks", database: :postgresql do
     end
 
     after do
-      db_names.each{ |db| Apartment::Tenant.drop(db) }
+      db_names.each { |db| Apartment::Tenant.drop(db) }
       Company.delete_all
     end
 

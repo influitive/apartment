@@ -93,7 +93,7 @@ module Apartment
       #
       def each(tenants = Apartment.tenant_names)
         tenants.each do |tenant|
-          switch(tenant){ yield tenant }
+          switch(tenant) { yield tenant }
         end
       end
 
@@ -116,7 +116,7 @@ module Apartment
       #
       def seed_data
         # Don't log the output of seeding the db
-        silence_warnings{ load_or_raise(Apartment.seed_data_file) } if Apartment.seed_data_file
+        silence_warnings { load_or_raise(Apartment.seed_data_file) } if Apartment.seed_data_file
       end
       alias_method :seed, :seed_data
 

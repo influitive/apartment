@@ -27,12 +27,12 @@ describe "apartment rake tasks" do
     Apartment::Test.load_schema
   end
 
-  let(:version){ '1234' }
+  let(:version) { '1234' }
 
   context 'database migration' do
 
-    let(:tenant_names){ 3.times.map{ Apartment::Test.next_db } }
-    let(:tenant_count){ tenant_names.length }
+    let(:tenant_names) { 3.times.map { Apartment::Test.next_db } }
+    let(:tenant_count) { tenant_names.length }
 
     before do
       allow(Apartment).to receive(:tenant_names).and_return tenant_names
@@ -57,7 +57,7 @@ describe "apartment rake tasks" do
         end
 
         it "requires a version to migrate to" do
-          expect{
+          expect {
             @rake['apartment:migrate:up'].invoke
           }.to raise_error("VERSION is required")
         end
@@ -84,7 +84,7 @@ describe "apartment rake tasks" do
         end
 
         it "requires a version to migrate to" do
-          expect{
+          expect {
             @rake['apartment:migrate:down'].invoke
           }.to raise_error("VERSION is required")
         end
@@ -104,7 +104,7 @@ describe "apartment rake tasks" do
     end
 
     describe "apartment:rollback" do
-      let(:step){ '3' }
+      let(:step) { '3' }
 
       it "should rollback dbs" do
         expect(Apartment::Migrator).to receive(:rollback).exactly(tenant_count).times

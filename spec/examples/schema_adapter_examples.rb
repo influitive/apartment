@@ -3,9 +3,9 @@ require 'spec_helper'
 shared_examples_for "a schema based apartment adapter" do
   include Apartment::Spec::AdapterRequirements
 
-  let(:schema1){ db1 }
-  let(:schema2){ db2 }
-  let(:public_schema){ default_tenant }
+  let(:schema1) { db1 }
+  let(:schema2) { db2 }
+  let(:public_schema) { default_tenant }
 
   describe "#init" do
 
@@ -75,11 +75,11 @@ shared_examples_for "a schema based apartment adapter" do
 
       expect(connection.schema_search_path).not_to start_with %{"#{schema2}"}
 
-      subject.switch(schema2){ expect(User.count).to eq(@count + 1) }
+      subject.switch(schema2) { expect(User.count).to eq(@count + 1) }
     end
 
     context "numeric database names" do
-      let(:db){ 1234 }
+      let(:db) { 1234 }
       it "should allow them" do
         expect {
           subject.create(db)
@@ -87,7 +87,7 @@ shared_examples_for "a schema based apartment adapter" do
         expect(tenant_names).to include(db.to_s)
       end
 
-      after{ subject.drop(db) }
+      after { subject.drop(db) }
     end
 
   end
@@ -100,7 +100,7 @@ shared_examples_for "a schema based apartment adapter" do
     end
 
     context "numeric database names" do
-      let(:db){ 1234 }
+      let(:db) { 1234 }
 
       it "should be able to drop them" do
         subject.create(db)
@@ -176,7 +176,7 @@ shared_examples_for "a schema based apartment adapter" do
     end
 
     context "numeric databases" do
-      let(:db){ 1234 }
+      let(:db) { 1234 }
 
       it "should connect to them" do
         subject.create(db)
@@ -187,7 +187,7 @@ shared_examples_for "a schema based apartment adapter" do
         expect(connection.schema_search_path).to start_with %{"#{db.to_s}"}
       end
 
-      after{ subject.drop(db) }
+      after { subject.drop(db) }
     end
 
     describe "with default_schema specified", :default_schema => true do
@@ -206,7 +206,7 @@ shared_examples_for "a schema based apartment adapter" do
 
     context "persistent_schemas", :persistent_schemas => true do
 
-      before{ subject.switch!(schema1) }
+      before { subject.switch!(schema1) }
 
       it "maintains the persistent schemas in the schema_search_path" do
         expect(connection.schema_search_path).to end_with persistent_schemas.map { |schema| %{"#{schema}"} }.join(', ')

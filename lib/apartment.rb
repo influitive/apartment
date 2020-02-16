@@ -84,7 +84,7 @@ module Apartment
 
     # Reset all the config for Apartment
     def reset
-      (ACCESSOR_METHODS + WRITER_METHODS).each{|method| remove_instance_variable(:"@#{method}") if instance_variable_defined?(:"@#{method}") }
+      (ACCESSOR_METHODS + WRITER_METHODS).each {|method| remove_instance_variable(:"@#{method}") if instance_variable_defined?(:"@#{method}") }
     end
 
     def extract_tenant_config

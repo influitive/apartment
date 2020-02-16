@@ -4,11 +4,11 @@ require 'apartment/adapters/postgresql_adapter'
 describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
   unless defined?(JRUBY_VERSION)
 
-    subject{ Apartment::Tenant.postgresql_adapter config }
+    subject { Apartment::Tenant.postgresql_adapter config }
 
     context "using schemas with schema.rb" do
 
-      before{ Apartment.use_schemas = true }
+      before { Apartment.use_schemas = true }
 
       # Not sure why, but somehow using let(:tenant_names) memoizes for the whole example group, not just each test
       def tenant_names
@@ -23,7 +23,7 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
 
     context "using schemas with SQL dump" do
 
-      before{ Apartment.use_schemas = true; Apartment.use_sql = true }
+      before { Apartment.use_schemas = true; Apartment.use_sql = true }
 
       # Not sure why, but somehow using let(:tenant_names) memoizes for the whole example group, not just each test
       def tenant_names
@@ -44,7 +44,7 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
 
     context "using connections" do
 
-      before{ Apartment.use_schemas = false }
+      before { Apartment.use_schemas = false }
 
       # Not sure why, but somehow using let(:tenant_names) memoizes for the whole example group, not just each test
       def tenant_names

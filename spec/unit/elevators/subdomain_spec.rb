@@ -3,7 +3,7 @@ require 'apartment/elevators/subdomain'
 
 describe Apartment::Elevators::Subdomain do
 
-  subject(:elevator){ described_class.new(Proc.new{}) }
+  subject(:elevator) { described_class.new(Proc.new{}) }
 
   describe "#parse_tenant_name" do
     context "assuming one tld" do
