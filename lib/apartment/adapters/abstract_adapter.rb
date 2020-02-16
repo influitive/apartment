@@ -1,5 +1,6 @@
 module Apartment
   module Adapters
+    # rubocop:disable Metrics/ClassLength
     class AbstractAdapter
       include ActiveSupport::Callbacks
       define_callbacks :create, :switch
@@ -79,13 +80,15 @@ module Apartment
       #   @param {String?} tenant to connect to
       #
       def switch(tenant = nil)
-        begin
-          previous_tenant = current
-          switch!(tenant)
-          yield
+        previous_tenant = current
+        switch!(tenant)
+        yield
 
-        ensure
-          switch!(previous_tenant) rescue reset
+      ensure
+        begin
+          switch!(previous_tenant)
+        rescue StandardError => _e
+          reset
         end
       end
 
@@ -265,5 +268,6 @@ module Apartment
       class SeparateDbConnectionHandler < ::ActiveRecord::Base
       end
     end
+    # rubocop:enable Metrics/ClassLength
   end
 end

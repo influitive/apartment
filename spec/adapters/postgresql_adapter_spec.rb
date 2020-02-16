@@ -23,7 +23,10 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
 
     context "using schemas with SQL dump" do
 
-      before { Apartment.use_schemas = true; Apartment.use_sql = true }
+      before do
+        Apartment.use_schemas = true
+        Apartment.use_sql = true
+      end
 
       # Not sure why, but somehow using let(:tenant_names) memoizes for the whole example group, not just each test
       def tenant_names

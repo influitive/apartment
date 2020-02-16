@@ -126,7 +126,7 @@ apartment_namespace = namespace :apartment do
   end
 
   def tenants
-    ENV['DB'] ? ENV['DB'].split(',').map { |s| s.strip } : Apartment.tenant_names || []
+    ENV['DB'] ? ENV['DB'].split(',').map(&:strip) : Apartment.tenant_names || []
   end
 
   def warn_if_tenants_empty

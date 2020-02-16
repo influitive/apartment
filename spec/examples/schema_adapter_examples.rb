@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+# rubocop:disable Metrics/BlockLength
 shared_examples_for "a schema based apartment adapter" do
   include Apartment::Spec::AdapterRequirements
 
@@ -40,7 +41,7 @@ shared_examples_for "a schema based apartment adapter" do
       it 'sets the search_path correctly' do
         Apartment::Tenant.init
 
-        expect(User.connection.schema_search_path).to match(%r|#{default_schema}|)
+        expect(User.connection.schema_search_path).to match(/|#{default_schema}|/)
       end
     end
 
@@ -110,7 +111,13 @@ shared_examples_for "a schema based apartment adapter" do
         expect(tenant_names).not_to include(db.to_s)
       end
 
-      after { subject.drop(db) rescue nil }
+      after do
+        begin
+          subject.drop(db)
+        rescue StandardError => _e
+          nil
+        end
+      end
     end
   end
 
@@ -232,3 +239,4 @@ shared_examples_for "a schema based apartment adapter" do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

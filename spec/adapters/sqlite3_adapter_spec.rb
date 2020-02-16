@@ -35,7 +35,13 @@ describe Apartment::Adapters::Sqlite3Adapter, database: :sqlite do
           end
         end
 
-        after { subject.drop db_name rescue nil }
+        after do
+          begin
+            subject.drop db_name
+          rescue StandardError => _e
+            nil
+          end
+        end
 
         it "should create a new database" do
           subject.create db_name
@@ -50,7 +56,13 @@ describe Apartment::Adapters::Sqlite3Adapter, database: :sqlite do
           Apartment.configure { |config| config.prepend_environment = config.append_environment = false }
         end
 
-        after { subject.drop db_name rescue nil }
+        after do
+          begin
+            subject.drop db_name
+          rescue StandardError => _e
+            nil
+          end
+        end
 
         it "should create a new database" do
           subject.create db_name
@@ -68,7 +80,13 @@ describe Apartment::Adapters::Sqlite3Adapter, database: :sqlite do
           end
         end
 
-        after { subject.drop db_name rescue nil }
+        after do
+          begin
+            subject.drop db_name
+          rescue StandardError => _e
+            nil
+          end
+        end
 
         it "should create a new database" do
           subject.create db_name
@@ -76,8 +94,6 @@ describe Apartment::Adapters::Sqlite3Adapter, database: :sqlite do
           expect(File.exists?("#{default_dir}/#{db_name}_#{Rails.env}.sqlite3")).to eq true
         end
       end
-
     end
-
   end
 end

@@ -42,7 +42,13 @@ describe Apartment::Tenant do
           subject.reload!(config)
         end
 
-        after { subject.drop "db_with_prefix" rescue nil }
+        after do
+          begin
+            subject.drop "db_with_prefix"
+          rescue StandardError => _e
+            nil
+          end
+        end
 
         it "should create a new database" do
           subject.create "db_with_prefix"

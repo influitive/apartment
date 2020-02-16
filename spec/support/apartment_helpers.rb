@@ -16,7 +16,9 @@ module Apartment
     end
 
     def drop_schema(schema)
-      ActiveRecord::Base.connection.execute("DROP SCHEMA IF EXISTS #{schema} CASCADE") rescue true
+      ActiveRecord::Base.connection.execute("DROP SCHEMA IF EXISTS #{schema} CASCADE")
+    rescue StandardError => _e
+      true
     end
 
     # Use this if you don't want to import schema.rb etc... but need the postgres schema to exist

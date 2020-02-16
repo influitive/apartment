@@ -19,9 +19,19 @@ module Apartment
           # Reset before dropping (can't drop a db you're connected to)
           subject.reset
 
-          # sometimes we manually drop these schemas in testing, don't care if we can't drop, hence rescue
-          subject.drop(db1) rescue true
-          subject.drop(db2) rescue true
+          # sometimes we manually drop these schemas in testing, don't care if
+          # we can't drop, hence rescue
+          begin
+            subject.drop(db1)
+          rescue StandardError => _e
+            true
+          end
+
+          begin
+            subject.drop(db2)
+          rescue StandardError => _e
+            true
+          end
         end
       end
 
