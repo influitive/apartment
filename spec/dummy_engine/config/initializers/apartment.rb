@@ -8,7 +8,6 @@ require 'apartment/elevators/subdomain'
 # Apartment Configuration
 #
 Apartment.configure do |config|
-
   # These models will not be multi-tenanted,
   # but remain in the global (public) namespace
   #

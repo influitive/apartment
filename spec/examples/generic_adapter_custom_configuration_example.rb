@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 shared_examples_for "a generic apartment adapter able to handle custom configuration" do
-
   let(:custom_tenant_name) { 'test_tenantwwww' }
   let(:db) { |example| example.metadata[:database]}
   let(:custom_tenant_names) do
@@ -20,7 +19,6 @@ shared_examples_for "a generic apartment adapter able to handle custom configura
   end
 
   context "database key taken from specific config" do
-
     let(:expected_args) { get_custom_db_conf }
 
     describe "#create" do
@@ -45,13 +43,11 @@ shared_examples_for "a generic apartment adapter able to handle custom configura
   end
 
   context "database key from tenant name" do
-
     let(:expected_args) {
       get_custom_db_conf.tap {|args| args.delete(:database) }
     }
 
     describe "#switch!" do
-
       it "should connect to new db" do
         expect(Apartment).to receive(:establish_connection) do |args|
           db_name = args.delete(:database)

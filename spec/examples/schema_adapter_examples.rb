@@ -9,7 +9,6 @@ shared_examples_for "a schema based apartment adapter" do
   let(:public_schema) { default_tenant }
 
   describe "#init" do
-
     before do
       Apartment.configure do |config|
         config.excluded_models = ["Company"]
@@ -31,7 +30,6 @@ shared_examples_for "a schema based apartment adapter" do
     end
 
     context "with a default_schema", :default_schema => true do
-
       it "should set the proper table_name on excluded_models" do
         Apartment::Tenant.init
 
@@ -57,7 +55,6 @@ shared_examples_for "a schema based apartment adapter" do
   #   Creates happen already in our before_filter
   #
   describe "#create" do
-
     it "should load schema.rb to new schema" do
       connection.schema_search_path = schema1
       expect(connection.tables).to include('companies')
@@ -90,7 +87,6 @@ shared_examples_for "a schema based apartment adapter" do
 
       after { subject.drop(db) }
     end
-
   end
 
   describe "#drop" do
@@ -212,7 +208,6 @@ shared_examples_for "a schema based apartment adapter" do
     end
 
     context "persistent_schemas", :persistent_schemas => true do
-
       before { subject.switch!(schema1) }
 
       it "maintains the persistent schemas in the schema_search_path" do

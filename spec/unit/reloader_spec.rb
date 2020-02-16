@@ -1,9 +1,7 @@
 require 'spec_helper'
 
 describe Apartment::Reloader do
-
   context "using postgresql schemas" do
-
     before do
       Apartment.configure do |config|
         config.excluded_models = ["Company"]

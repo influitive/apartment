@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe Apartment::Tenant do
   context "using mysql", database: :mysql do
-
     before { subject.reload!(config) }
 
     describe "#adapter" do
@@ -110,11 +109,9 @@ describe Apartment::Tenant do
       end
 
       describe "#switch!" do
-
         let(:x) { rand(3) }
 
         context "creating models" do
-
           before { subject.create db2 }
           after { subject.drop db2 }
 
@@ -134,7 +131,6 @@ describe Apartment::Tenant do
         end
 
         context "with excluded models" do
-
           before do
             Apartment.configure do |config|
               config.excluded_models = ["Company"]

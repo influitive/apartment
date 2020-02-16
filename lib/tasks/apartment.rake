@@ -2,7 +2,6 @@ require 'apartment/migrator'
 require 'parallel'
 
 apartment_namespace = namespace :apartment do
-
   desc "Create all tenants"
   task :create do
     tenants.each do |tenant|

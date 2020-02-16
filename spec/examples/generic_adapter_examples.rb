@@ -31,7 +31,6 @@ shared_examples_for "a generic apartment adapter" do
   #   Creates happen already in our before_filter
   #
   describe "#create" do
-
     it "should create the new databases" do
       expect(tenant_names).to include(db1)
       expect(tenant_names).to include(db2)

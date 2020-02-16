@@ -2,7 +2,6 @@ require 'spec_helper'
 require 'apartment/migrator'
 
 describe Apartment::Migrator do
-
   let(:tenant) { Apartment::Test.next_db }
 
   # Don't need a real switch here, just testing behaviour

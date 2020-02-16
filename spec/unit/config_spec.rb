@@ -1,9 +1,7 @@
 require 'spec_helper'
 
 describe Apartment do
-
   describe "#config" do
-
     let(:excluded_models) { ["Company"] }
     let(:seed_data_file_path) { "#{Rails.root}/db/seeds/import.rb" }
 
@@ -107,6 +105,5 @@ describe Apartment do
         end
       end
     end
-
   end
 end

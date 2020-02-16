@@ -19,13 +19,6 @@ Bundler/OrderedGems:
     - 'gemfiles/rails_6_0.gemfile'
     - 'gemfiles/rails_master.gemfile'
 
-# Offense count: 54
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty_lines, no_empty_lines
-Layout/EmptyLinesAroundBlockBody:
-  Enabled: false
-
 # Offense count: 15
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.

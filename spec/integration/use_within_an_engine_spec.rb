@@ -1,5 +1,4 @@
 describe 'using apartment within an engine' do
-
   before do
     engine_path = Pathname.new(File.expand_path('../../dummy_engine', __FILE__))
     require engine_path.join('test/dummy/config/application')
@@ -24,5 +23,4 @@ describe 'using apartment within an engine' do
       Rake::Task['db:migrate'].invoke
     end
   end
-
 end

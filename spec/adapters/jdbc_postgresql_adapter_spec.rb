@@ -4,11 +4,9 @@ if defined?(JRUBY_VERSION)
   require 'apartment/adapters/jdbc_postgresql_adapter'
 
   describe Apartment::Adapters::JDBCPostgresqlAdapter, database: :postgresql do
-
     subject { Apartment::Tenant.jdbc_postgresql_adapter config.symbolize_keys }
 
     context "using schemas" do
-
       before { Apartment.use_schemas = true }
 
       # Not sure why, but somehow using let(:tenant_names) memoizes for the whole example group, not just each test
@@ -23,7 +21,6 @@ if defined?(JRUBY_VERSION)
     end
 
     context "using databases" do
-
       before { Apartment.use_schemas = false }
 
       # Not sure why, but somehow using let(:tenant_names) memoizes for the whole example group, not just each test
@@ -35,7 +32,6 @@ if defined?(JRUBY_VERSION)
 
       it_should_behave_like "a generic apartment adapter"
       it_should_behave_like "a connection based apartment adapter"
-
     end
   end
 end

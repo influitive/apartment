@@ -2,11 +2,9 @@ require 'spec_helper'
 require 'apartment/elevators/host'
 
 describe Apartment::Elevators::Host do
-
   subject(:elevator) { described_class.new(proc) }
 
   describe "#parse_tenant_name" do
-
     it "should return nil when no host" do
       request = ActionDispatch::Request.new('HTTP_HOST' => '')
       expect(elevator.parse_tenant_name(request)).to be_nil

@@ -12,7 +12,6 @@ module Apartment
           # any before/after hooks defined in individual tests
           # Otherwise these actually get run after test defined hooks
           around(:each) do |example|
-
             def config
               db = RSpec.current_example.metadata.fetch(:database, :postgresql)
 

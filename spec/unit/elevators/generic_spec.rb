@@ -2,7 +2,6 @@ require 'spec_helper'
 require 'apartment/elevators/generic'
 
 describe Apartment::Elevators::Generic do
-
   class MyElevator < described_class
     def parse_tenant_name(*)
       'tenant2'

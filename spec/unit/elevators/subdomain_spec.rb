@@ -2,7 +2,6 @@ require 'spec_helper'
 require 'apartment/elevators/subdomain'
 
 describe Apartment::Elevators::Subdomain do
-
   subject(:elevator) { described_class.new(proc) }
 
   describe "#parse_tenant_name" do

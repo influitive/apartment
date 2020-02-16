@@ -4,7 +4,6 @@ require 'apartment/migrator'
 require 'apartment/tenant'
 
 describe "apartment rake tasks" do
-
   before do
     @rake = Rake::Application.new
     Rake.application = @rake
@@ -30,7 +29,6 @@ describe "apartment rake tasks" do
   let(:version) { '1234' }
 
   context 'database migration' do
-
     let(:tenant_names) { 3.times.map { Apartment::Test.next_db } }
     let(:tenant_count) { tenant_names.length }
 
@@ -50,7 +48,6 @@ describe "apartment rake tasks" do
     end
 
     describe "apartment:migrate:up" do
-
       context "without a version" do
         before do
           ENV['VERSION'] = nil
@@ -64,7 +61,6 @@ describe "apartment rake tasks" do
       end
 
       context "with version" do
-
         before do
           ENV['VERSION'] = version
         end
@@ -77,7 +73,6 @@ describe "apartment rake tasks" do
     end
 
     describe "apartment:migrate:down" do
-
       context "without a version" do
         before do
           ENV['VERSION'] = nil
@@ -91,7 +86,6 @@ describe "apartment rake tasks" do
       end
 
       context "with version" do
-
         before do
           ENV['VERSION'] = version
         end
@@ -124,6 +118,5 @@ describe "apartment rake tasks" do
         @rake['apartment:drop'].invoke
       end
     end
-
   end
 end

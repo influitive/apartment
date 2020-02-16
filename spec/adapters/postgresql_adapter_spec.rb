@@ -7,7 +7,6 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
     subject { Apartment::Tenant.postgresql_adapter config }
 
     context "using schemas with schema.rb" do
-
       before { Apartment.use_schemas = true }
 
       # Not sure why, but somehow using let(:tenant_names) memoizes for the whole example group, not just each test
@@ -22,7 +21,6 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
     end
 
     context "using schemas with SQL dump" do
-
       before do
         Apartment.use_schemas = true
         Apartment.use_sql = true
@@ -46,7 +44,6 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
     end
 
     context "using connections" do
-
       before { Apartment.use_schemas = false }
 
       # Not sure why, but somehow using let(:tenant_names) memoizes for the whole example group, not just each test
