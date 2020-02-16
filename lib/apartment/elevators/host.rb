@@ -20,6 +20,7 @@ module Apartment
 
       def parse_tenant_name(request)
         return nil if request.host.blank?
+
         parts = request.host.split('.')
         self.class.ignored_first_subdomains.include?(parts[0]) ? parts.drop(1).join('.') : request.host
       end

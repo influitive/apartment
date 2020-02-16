@@ -44,7 +44,6 @@ appraise "rails-5-2" do
   end
 end
 
-
 appraise "rails-6-0" do
   gem "rails", "~> 6.0.0.rc1"
   platforms :ruby do
@@ -56,7 +55,6 @@ appraise "rails-6-0" do
     gem 'activerecord-jdbcmysql-adapter', '~> 60.0.rc1'
   end
 end
-
 
 appraise "rails-master" do
   gem "rails", git: 'https://github.com/rails/rails.git'

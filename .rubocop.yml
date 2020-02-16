@@ -11,3 +11,7 @@ Style/WordArray:
 Style/NumericLiterals:
   Exclude:
     - spec/schemas/**/*.rb
+
+Layout/EmptyLineAfterMagicComment:
+  Exclude:
+    - spec/schemas/**/*.rb

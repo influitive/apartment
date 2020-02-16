@@ -94,6 +94,7 @@ module Apartment
 
     def extract_tenant_config
       return {} unless @tenant_names
+
       values = @tenant_names.respond_to?(:call) ? @tenant_names.call : @tenant_names
       unless values.is_a? Hash
         values = values.each_with_object({}) do |tenant, hash|
