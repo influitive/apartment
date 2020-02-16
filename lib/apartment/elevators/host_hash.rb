@@ -14,8 +14,10 @@ module Apartment
       end
 
       def parse_tenant_name(request)
-        raise TenantNotFound,
-              "Cannot find tenant for host #{request.host}" unless @hash.key?(request.host)
+        unless @hash.key?(request.host)
+          raise TenantNotFound,
+                "Cannot find tenant for host #{request.host}"
+        end
 
         @hash[request.host]
       end

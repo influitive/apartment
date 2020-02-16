@@ -37,9 +37,11 @@ module Apartment
       end
 
       %w[subject tenant_names default_tenant].each do |method|
+        next if defined?(method)
+
         define_method method do
           raise "You must define a `#{method}` method in your host group"
-        end unless defined?(method)
+        end
       end
     end
   end

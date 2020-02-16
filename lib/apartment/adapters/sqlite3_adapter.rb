@@ -18,8 +18,10 @@ module Apartment
       end
 
       def drop(tenant)
-        raise TenantNotFound,
-              "The tenant #{environmentify(tenant)} cannot be found." unless File.exist?(database_file(tenant))
+        unless File.exist?(database_file(tenant))
+          raise TenantNotFound,
+                "The tenant #{environmentify(tenant)} cannot be found."
+        end
 
         File.delete(database_file(tenant))
       end
@@ -31,15 +33,19 @@ module Apartment
       protected
 
       def connect_to_new(tenant)
-        raise TenantNotFound,
-              "The tenant #{environmentify(tenant)} cannot be found." unless File.exist?(database_file(tenant))
+        unless File.exist?(database_file(tenant))
+          raise TenantNotFound,
+                "The tenant #{environmentify(tenant)} cannot be found."
+        end
 
         super database_file(tenant)
       end
 
       def create_tenant(tenant)
-        raise TenantExists,
-              "The tenant #{environmentify(tenant)} already exists." if File.exist?(database_file(tenant))
+        if File.exist?(database_file(tenant))
+          raise TenantExists,
+                "The tenant #{environmentify(tenant)} already exists."
+        end
 
         begin
           f = File.new(database_file(tenant), File::CREAT)

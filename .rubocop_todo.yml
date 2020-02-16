@@ -38,14 +38,6 @@ Style/MixinUsage:
   Exclude:
     - '.pryrc'
 
-# Offense count: 5
-# Cop supports --auto-correct.
-Style/MultilineIfModifier:
-  Exclude:
-    - 'lib/apartment/adapters/sqlite3_adapter.rb'
-    - 'lib/apartment/elevators/host_hash.rb'
-    - 'spec/support/requirements.rb'
-
 # Offense count: 7
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.
