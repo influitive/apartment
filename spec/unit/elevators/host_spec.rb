@@ -4,7 +4,7 @@ require 'spec_helper'
 require 'apartment/elevators/host'
 
 describe Apartment::Elevators::Host do
-  subject(:elevator) { described_class.new(proc) }
+  subject(:elevator) { described_class.new(Proc.new{}) }
 
   describe '#parse_tenant_name' do
     it 'should return nil when no host' do
