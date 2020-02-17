@@ -16,16 +16,11 @@ Metrics/AbcSize:
 Metrics/BlockLength:
   Max: 176
 
-# Offense count: 1
-# Configuration parameters: CountComments.
-Metrics/ClassLength:
-  Max: 155
-
 # Offense count: 18
 # Cop supports --auto-correct.
 # Configuration parameters: AutoCorrect, AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
 # URISchemes: http, https
-Layout/LineLength:
+Metrics/LineLength:
   Max: 237
 
 # Offense count: 4

@@ -2,6 +2,7 @@
 
 module Apartment
   module Adapters
+    # rubocop:disable Metrics/ClassLength
     class AbstractAdapter
       include ActiveSupport::Callbacks
       define_callbacks :create, :switch
@@ -264,4 +265,5 @@ module Apartment
       end
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end
