@@ -569,6 +569,13 @@ end
 
 * If you're looking to help, check out the TODO file for some upcoming changes I'd like to implement in Apartment.
 
+### Running bundle install
+
+mysql2 gem in some cases fails to install.
+If you face problems running bundle install in OSX, try installing the gem running:
+
+`gem install mysql2 -v '0.5.3' -- --with-ldflags=-L/usr/local/opt/openssl/lib --with-cppflags=-I/usr/local/opt/openssl/include`
+
 ## License
 
 Apartment is released under the [MIT License](http://www.opensource.org/licenses/MIT).
