@@ -15,6 +15,7 @@ rvm:
 
 branches:
   only:
+    - master
     - development
 
 gemfile:
