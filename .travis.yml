@@ -36,6 +36,10 @@ jobs:
     - gemfile: gemfiles/rails_master.gemfile
     - rvm: jruby-9.1.17.0
       gemfile: gemfiles/rails_5_0.gemfile
+    # Rails 5.2.4.1 is currently broken. Code has been fixed but no release
+    # for it yet - https://github.com/rails/rails/issues/38137
+    - rvm: 2.2.9
+      gemfile: gemfiles/rails_5_2.gemfile
   exclude:
     - rvm: 2.1.9
       gemfile: gemfiles/rails_5_0.gemfile
