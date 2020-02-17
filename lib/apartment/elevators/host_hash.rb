@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'apartment/elevators/generic'
 
 module Apartment
@@ -12,8 +14,10 @@ module Apartment
       end
 
       def parse_tenant_name(request)
-        raise TenantNotFound,
-          "Cannot find tenant for host #{request.host}" unless @hash.has_key?(request.host)
+        unless @hash.key?(request.host)
+          raise TenantNotFound,
+                "Cannot find tenant for host #{request.host}"
+        end
 
         @hash[request.host]
       end

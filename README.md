@@ -229,7 +229,7 @@ A Generic Elevator exists that allows you to pass a `Proc` (or anything that res
 module MyApplication
   class Application < Rails::Application
     # Obviously not a contrived example
-    config.middleware.use Apartment::Elevators::Generic, Proc.new { |request| request.host.reverse }
+    config.middleware.use Apartment::Elevators::Generic, proc { |request| request.host.reverse }
   end
 end
 ```

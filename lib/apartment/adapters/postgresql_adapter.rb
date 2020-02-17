@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 require 'apartment/adapters/abstract_adapter'
 
 module Apartment
   module Tenant
-
     def self.postgresql_adapter(config)
       adapter = Adapters::PostgresqlAdapter
       adapter = Adapters::PostgresqlSchemaAdapter if Apartment.use_schemas
@@ -14,8 +15,7 @@ module Apartment
   module Adapters
     # Default adapter when not using Postgresql Schemas
     class PostgresqlAdapter < AbstractAdapter
-
-    private
+      private
 
       def rescue_from
         PG::Error
@@ -24,7 +24,6 @@ module Apartment
 
     # Separate Adapter for Postgresql when using schemas
     class PostgresqlSchemaAdapter < AbstractAdapter
-
       def initialize(config)
         super
 
@@ -44,7 +43,7 @@ module Apartment
         @current || default_tenant
       end
 
-    protected
+      protected
 
       def process_excluded_model(excluded_model)
         excluded_model.constantize.tap do |klass|
@@ -56,14 +55,17 @@ module Apartment
       end
 
       def drop_command(conn, tenant)
-        conn.execute(%{DROP SCHEMA "#{tenant}" CASCADE})
+        conn.execute(%(DROP SCHEMA "#{tenant}" CASCADE))
       end
 
       #   Set schema search path to new schema
       #
       def connect_to_new(tenant = nil)
         return reset if tenant.nil?
+        # rubocop:disable Style/RaiseArgs
         raise ActiveRecord::StatementInvalid.new("Could not find schema #{tenant}") unless Apartment.connection.schema_exists?(tenant.to_s)
+
+        # rubocop:enable Style/RaiseArgs
 
         @current = tenant.to_s
         Apartment.connection.schema_search_path = full_search_path
@@ -71,24 +73,21 @@ module Apartment
         # When the PostgreSQL version is < 9.3,
         # there is a issue for prepared statement with changing search_path.
         # https://www.postgresql.org/docs/9.3/static/sql-prepare.html
-        if postgresql_version < 90300
-          Apartment.connection.clear_cache!
-        end
-
+        Apartment.connection.clear_cache! if postgresql_version < 90_300
       rescue *rescuable_exceptions
         raise TenantNotFound, "One of the following schema(s) is invalid: \"#{tenant}\" #{full_search_path}"
       end
 
-    private
+      private
 
       def create_tenant_command(conn, tenant)
-        conn.execute(%{CREATE SCHEMA "#{tenant}"})
+        conn.execute(%(CREATE SCHEMA "#{tenant}"))
       end
 
       #   Generate the final search path to set including persistent_schemas
       #
       def full_search_path
-        persistent_schemas.map(&:inspect).join(", ")
+        persistent_schemas.map(&:inspect).join(', ')
       end
 
       def persistent_schemas
@@ -104,16 +103,15 @@ module Apartment
 
     # Another Adapter for Postgresql when using schemas and SQL
     class PostgresqlSchemaFromSqlAdapter < PostgresqlSchemaAdapter
-
-      PSQL_DUMP_BLACKLISTED_STATEMENTS= [
+      PSQL_DUMP_BLACKLISTED_STATEMENTS = [
         /SET search_path/i,                           # overridden later
         /SET lock_timeout/i,                          # new in postgresql 9.3
         /SET row_security/i,                          # new in postgresql 9.5
         /SET idle_in_transaction_session_timeout/i,   # new in postgresql 9.6
         /CREATE SCHEMA public/i,
-        /COMMENT ON SCHEMA public/i,
+        /COMMENT ON SCHEMA public/i
 
-      ]
+      ].freeze
 
       def import_database_schema
         preserving_search_path do
@@ -122,14 +120,14 @@ module Apartment
         end
       end
 
-    private
+      private
 
       # Re-set search path after the schema is imported.
       # Postgres now sets search path to empty before dumping the schema
       # and it mut be reset
       #
       def preserving_search_path
-        search_path = Apartment.connection.execute("show search_path").first["search_path"]
+        search_path = Apartment.connection.execute('show search_path').first['search_path']
         yield
         Apartment.connection.execute("set search_path = #{search_path}")
       end
@@ -153,7 +151,6 @@ module Apartment
       #   @return {String} raw SQL contaning only postgres schema dump
       #
       def pg_dump_schema
-
         # Skip excluded tables? :/
         # excluded_tables =
         #   collect_table_names(Apartment.excluded_models)
@@ -176,7 +173,10 @@ module Apartment
       # Temporary set Postgresql related environment variables if there are in @config
       #
       def with_pg_env(&block)
-        pghost, pgport, pguser, pgpassword =  ENV['PGHOST'], ENV['PGPORT'], ENV['PGUSER'], ENV['PGPASSWORD']
+        pghost = ENV['PGHOST']
+        pgport = ENV['PGPORT']
+        pguser = ENV['PGUSER']
+        pgpassword = ENV['PGPASSWORD']
 
         ENV['PGHOST'] = @config[:host] if @config[:host]
         ENV['PGPORT'] = @config[:port].to_s if @config[:port]
@@ -185,7 +185,10 @@ module Apartment
 
         block.call
       ensure
-        ENV['PGHOST'], ENV['PGPORT'], ENV['PGUSER'], ENV['PGPASSWORD'] = pghost, pgport, pguser, pgpassword
+        ENV['PGHOST'] = pghost
+        ENV['PGPORT'] = pgport
+        ENV['PGUSER'] = pguser
+        ENV['PGPASSWORD'] = pgpassword
       end
 
       #   Remove "SET search_path ..." line from SQL dump and prepend search_path set to current tenant
@@ -197,7 +200,7 @@ module Apartment
 
         swap_schema_qualifier(sql)
           .split("\n")
-          .select {|line| check_input_against_regexps(line, PSQL_DUMP_BLACKLISTED_STATEMENTS).empty?}
+          .select { |line| check_input_against_regexps(line, PSQL_DUMP_BLACKLISTED_STATEMENTS).empty? }
           .prepend(search_path)
           .join("\n")
       end
@@ -207,7 +210,7 @@ module Apartment
           if Apartment.pg_excluded_names.any? { |name| match.include? name }
             match
           else
-            match.gsub("#{default_tenant}.", %{"#{current}".})
+            match.gsub("#{default_tenant}.", %("#{current}".))
           end
         end
       end
@@ -215,7 +218,7 @@ module Apartment
       #   Checks if any of regexps matches against input
       #
       def check_input_against_regexps(input, regexps)
-        regexps.select {|c| input.match c}
+        regexps.select { |c| input.match c }
       end
 
       #   Collect table names from AR Models

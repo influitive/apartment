@@ -1,10 +1,11 @@
+# frozen_string_literal: true
+
 require 'forwardable'
 
 module Apartment
   #   The main entry point to Apartment functions
   #
   module Tenant
-
     extend self
     extend Forwardable
 
@@ -40,9 +41,7 @@ module Apartment
           raise "The adapter `#{adapter_method}` is not yet supported"
         end
 
-        unless respond_to?(adapter_method)
-          raise AdapterNotFound, "database configuration specifies nonexistent #{config[:adapter]} adapter"
-        end
+        raise AdapterNotFound, "database configuration specifies nonexistent #{config[:adapter]} adapter" unless respond_to?(adapter_method)
 
         send(adapter_method, config)
       end

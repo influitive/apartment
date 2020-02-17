@@ -1,25 +1,27 @@
+# frozen_string_literal: true
+
 require 'apartment/adapters/abstract_adapter'
 
 module Apartment
   module Tenant
-
     def self.mysql2_adapter(config)
-      Apartment.use_schemas ?
-        Adapters::Mysql2SchemaAdapter.new(config) :
+      if Apartment.use_schemas
+        Adapters::Mysql2SchemaAdapter.new(config)
+      else
         Adapters::Mysql2Adapter.new(config)
+      end
     end
   end
 
   module Adapters
     class Mysql2Adapter < AbstractAdapter
-
       def initialize(config)
         super
 
         @default_tenant = config[:database]
       end
 
-    protected
+      protected
 
       def rescue_from
         Mysql2::Error
@@ -40,7 +42,7 @@ module Apartment
         Apartment.connection.execute "use `#{default_tenant}`"
       end
 
-    protected
+      protected
 
       #   Connect to new tenant
       #
@@ -48,10 +50,9 @@ module Apartment
         return reset if tenant.nil?
 
         Apartment.connection.execute "use `#{environmentify(tenant)}`"
-
-      rescue ActiveRecord::StatementInvalid => exception
+      rescue ActiveRecord::StatementInvalid => e
         Apartment::Tenant.reset
-        raise_connect_error!(tenant, exception)
+        raise_connect_error!(tenant, e)
       end
 
       def process_excluded_model(model)
