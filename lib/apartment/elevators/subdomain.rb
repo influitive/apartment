@@ -13,9 +13,11 @@ module Apartment
         @excluded_subdomains ||= []
       end
 
+      # rubocop:disable Style/TrivialAccessors
       def self.excluded_subdomains=(arg)
         @excluded_subdomains = arg
       end
+      # rubocop:enable Style/TrivialAccessors
 
       def parse_tenant_name(request)
         request_subdomain = subdomain(request.host)

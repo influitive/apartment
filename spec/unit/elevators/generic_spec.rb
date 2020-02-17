@@ -10,7 +10,7 @@ describe Apartment::Elevators::Generic do
     end
   end
 
-  subject(:elevator) { described_class.new(Proc.new{}) }
+  subject(:elevator) { described_class.new(proc {}) }
 
   describe '#call' do
     it 'calls the processor if given' do

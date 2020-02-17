@@ -4,7 +4,7 @@ require 'spec_helper'
 require 'apartment/elevators/domain'
 
 describe Apartment::Elevators::Domain do
-  subject(:elevator) { described_class.new(Proc.new{}) }
+  subject(:elevator) { described_class.new(proc {}) }
 
   describe '#parse_tenant_name' do
     it 'parses the host for a domain name' do

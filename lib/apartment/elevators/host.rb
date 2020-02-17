@@ -18,9 +18,11 @@ module Apartment
         @ignored_first_subdomains ||= []
       end
 
+      # rubocop:disable Style/TrivialAccessors
       def self.ignored_first_subdomains=(arg)
         @ignored_first_subdomains = arg
       end
+      # rubocop:enable Style/TrivialAccessors
 
       def parse_tenant_name(request)
         return nil if request.host.blank?
