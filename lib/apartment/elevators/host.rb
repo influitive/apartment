@@ -14,10 +14,12 @@ module Apartment
     #       www.a.b.c.d.com   => a.b.c.d.com
     #
     class Host < Generic
-      attr_writer ignored_first_subdomains
-
       def self.ignored_first_subdomains
         @ignored_first_subdomains ||= []
+      end
+
+      def self.ignored_first_subdomains=(arg)
+        @ignored_first_subdomains = arg
       end
 
       def parse_tenant_name(request)
