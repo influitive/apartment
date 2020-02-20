@@ -15,3 +15,26 @@ def reload!(print = true)
   Apartment::Tenant.init
   true
 end
+
+
+module Apartment
+  module CustomConsole
+    def st(schema_name = nil)
+      if schema_name.nil?
+        tenant_list.each { |t| puts t }
+      else
+        Apartment::Tenant.switch!(schema_name) if Apartment::Tenant.include? schema_name
+      end
+    end
+
+    def tenant_list
+      tenant_list = ['public']
+      Apartment::Tenant.each do |t|
+        tenant_list << t
+      end
+      tenant_list
+    end
+  end
+end
+
+include Apartment::CustomConsole
