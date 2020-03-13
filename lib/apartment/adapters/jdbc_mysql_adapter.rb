@@ -1,7 +1,8 @@
-require "apartment/adapters/abstract_jdbc_adapter"
+# frozen_string_literal: true
+
+require 'apartment/adapters/abstract_jdbc_adapter'
 
 module Apartment
-
   module Tenant
     def self.jdbc_mysql_adapter(config)
       Adapters::JDBCMysqlAdapter.new config
@@ -10,7 +11,6 @@ module Apartment
 
   module Adapters
     class JDBCMysqlAdapter < AbstractJDBCAdapter
-
       def reset_on_connection_exception?
         true
       end

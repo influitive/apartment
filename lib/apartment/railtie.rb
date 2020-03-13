@@ -1,10 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails'
 require 'apartment/tenant'
 require 'apartment/reloader'
 
 module Apartment
   class Railtie < Rails::Railtie
-
     #
     #   Set up our default config options
     #   Do this before the app initializers run so we don't override custom settings
@@ -33,10 +34,15 @@ module Apartment
         Apartment.connection_class.connection_pool.with_connection do
           Apartment::Tenant.init
         end
-      rescue ::ActiveRecord::NoDatabaseError
+      # rubocop:disable Lint/SuppressedException
+      rescue ::ActiveRecord::NoDatabaseError, PG::ConnectionBad
         # Since `db:create` and other tasks invoke this block from Rails 5.2.0,
         # we need to swallow the error to execute `db:create` properly.
+        Rails.logger.warn do
+          'Failed to initialize Apartment because a database connection could not be established.'
+        end
       end
+      # rubocop:enable Lint/SuppressedException
     end
 
     #
@@ -48,8 +54,10 @@ module Apartment
     end
 
     #
-    #   The following initializers are a workaround to the fact that I can't properly hook into the rails reloader
-    #   Note this is technically valid for any environment where cache_classes is false, for us, it's just development
+    #   The following initializers are a workaround to the fact that I can't
+    #   properly hook into the rails reloader
+    #   Note this is technically valid for any environment where cache_classes
+    #   is false, for us, it's just development
     #
     if Rails.env.development?
 
@@ -58,7 +66,8 @@ module Apartment
         app.config.middleware.use Apartment::Reloader
       end
 
-      # Overrides reload! to also call Apartment::Tenant.init as well so that the reloaded classes have the proper table_names
+      # Overrides reload! to also call Apartment::Tenant.init as well so that the
+      # reloaded classes have the proper table_names
       console do
         require 'apartment/console'
       end

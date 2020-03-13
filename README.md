@@ -10,26 +10,21 @@ Apartment provides tools to help you deal with multiple tenants in your Rails
 application. If you need to have certain data sequestered based on account or company,
 but still allow some data to exist in a common tenant, Apartment can help.
 
-## HELP!
+## Apartment drop in replacement gem
 
-In order to help drive the direction of development and clean up the codebase, we'd like to take a poll
-on how people are currently using Apartment. If you can take 5 seconds (1 question) to answer
-this poll, we'd greatly appreciated it.
+After having reached out via github issues and email directly, no replies ever
+came. Since we wanted to upgrade our application to Rails 6 we decided to fork
+and start some development to support Rails 6. Because we don't have access
+to the apartment gem itself, the solution was to release it under a different
+name but providing the exact same API as it was before.
 
-[View Poll](http://www.poll-maker.com/poll391552x4Bfb41a9-15)
+## Help wanted
 
-## Excessive Memory Issues on ActiveRecord 4.x
-
-> If you're noticing ever growing memory issues (ie growing with each tenant you add)
-> when using Apartment, that's because there's [an issue](https://github.com/rails/rails/issues/19578)
-> with how ActiveRecord maps Postgresql data types into AR data types.
-> This has been patched and will be released for AR 4.2.2. It's apparently hard
-> to backport to 4.1 unfortunately.
-> If you're noticing high memory usage from ActiveRecord with Apartment please upgrade.
-
-```ruby
-gem 'rails', '4.2.1', github: 'influitive/rails', tag: 'v4.2.1.memfix'
-```
+We were never involved with the development of Apartment gem in the first place
+and this project started out of our own needs. We will be more than happy
+to collaborate to maintain the gem alive and supporting the latest versions
+of ruby and rails, but your help is appreciated. Either by reporting bugs you
+may find or proposing improvements to the gem itself. Feel free to reach out.
 
 ## Installation
 
@@ -38,7 +33,7 @@ gem 'rails', '4.2.1', github: 'influitive/rails', tag: 'v4.2.1.memfix'
 Add the following to your Gemfile:
 
 ```ruby
-gem 'apartment'
+gem 'ros-apartment', require: 'apartment'
 ```
 
 Then generate your `Apartment` config file using
@@ -234,7 +229,7 @@ A Generic Elevator exists that allows you to pass a `Proc` (or anything that res
 module MyApplication
   class Application < Rails::Application
     # Obviously not a contrived example
-    config.middleware.use Apartment::Elevators::Generic, Proc.new { |request| request.host.reverse }
+    config.middleware.use Apartment::Elevators::Generic, proc { |request| request.host.reverse }
   end
 end
 ```
@@ -484,7 +479,7 @@ Note that you can disable the default migrating of all tenants with `db:migrate`
 
 Apartment supports parallelizing migrations into multiple threads when
 you have a large number of tenants. By default, parallel migrations is
-turned off. You can enable this by setting `parallel_migration_threads` to 
+turned off. You can enable this by setting `parallel_migration_threads` to
 the number of threads you want to use in your initializer.
 
 Keep in mind that because migrations are going to access the database,
@@ -531,7 +526,12 @@ end
 
 ## Background workers
 
-See [apartment-sidekiq](https://github.com/influitive/apartment-sidekiq) or [apartment-activejob](https://github.com/influitive/apartment-activejob).
+Both these gems have been forked as a side consequence of having a new gem name.
+You can use them exactly as you were using before. They are, just like this one
+a drop-in replacement.
+
+See [apartment-sidekiq](https://github.com/rails-on-services/apartment-sidekiq)
+or [apartment-activejob](https://github.com/rails-on-services/apartment-activejob).
 
 ## Callbacks
 
@@ -568,6 +568,13 @@ end
 * Ensure that your code is accompanied with tests. No code will be merged without tests
 
 * If you're looking to help, check out the TODO file for some upcoming changes I'd like to implement in Apartment.
+
+### Running bundle install
+
+mysql2 gem in some cases fails to install.
+If you face problems running bundle install in OSX, try installing the gem running:
+
+`gem install mysql2 -v '0.5.3' -- --with-ldflags=-L/usr/local/opt/openssl/lib --with-cppflags=-I/usr/local/opt/openssl/include`
 
 ## License
 

@@ -1,3 +1,5 @@
-class Company < ActiveRecord::Base
+# frozen_string_literal: true
+
+class Company < ApplicationRecord
   # Dummy models
 end

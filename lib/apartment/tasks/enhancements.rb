@@ -1,12 +1,13 @@
+# frozen_string_literal: true
+
 # Require this file to append Apartment rake tasks to ActiveRecord db rake tasks
 # Enabled by default in the initializer
 
 module Apartment
   class RakeTaskEnhancer
-
     module TASKS
-      ENHANCE_BEFORE = %w(db:drop)
-      ENHANCE_AFTER  = %w(db:migrate db:rollback db:migrate:up db:migrate:down db:migrate:redo db:seed)
+      ENHANCE_BEFORE = %w[db:drop].freeze
+      ENHANCE_AFTER  = %w[db:migrate db:rollback db:migrate:up db:migrate:down db:migrate:redo db:seed].freeze
       freeze
     end
 
@@ -28,7 +29,6 @@ module Apartment
           task = Rake::Task[name]
           enhance_after_task(task)
         end
-
       end
 
       def should_enhance?
@@ -48,9 +48,7 @@ module Apartment
       def inserted_task_name(task)
         task.name.sub(/db:/, 'apartment:')
       end
-
     end
-
   end
 end
 
