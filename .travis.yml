@@ -4,7 +4,7 @@ language: ruby
 services:
   - docker
 rvm:
-  - jruby-9.1.8
+  - jruby-9.2.11.0
   - 2.1.9
   - 2.2.9
   - 2.3.6
