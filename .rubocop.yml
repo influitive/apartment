@@ -4,6 +4,10 @@ inherit_gem:
   perx-rubocop:
     - default.yml
 
+AllCops:
+  Exclude:
+    - 'gemfiles/**/*.gemfile'
+
 Style/WordArray:
   Exclude:
     - spec/schemas/**/*.rb
