@@ -18,9 +18,15 @@ end
 
 def st(schema_name = nil)
   if schema_name.nil?
+    # rubocop:disable Rails/Output
     tenant_list.each { |t| puts t }
+    # rubocop:enable Rails/Output
+  elsif tenant_list.include? schema_name
+    Apartment::Tenant.switch!(schema_name)
   else
-    Apartment::Tenant.switch!(schema_name) if tenant_list.include? schema_name
+    # rubocop:disable Rails/Output
+    puts "Tenant #{schema_name} is not part of the tenant list"
+    # rubocop:enable Rails/Output
   end
 end
 
