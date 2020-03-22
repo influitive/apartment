@@ -22,7 +22,7 @@ apartment_namespace = namespace :apartment do
       begin
         puts("Dropping #{tenant} tenant")
         Apartment::Tenant.drop(tenant)
-      rescue Apartment::TenantNotFound => e
+      rescue Apartment::TenantNotFound, ActiveRecord::NoDatabaseError => e
         puts e.message
       end
     end
