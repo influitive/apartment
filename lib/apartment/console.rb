@@ -26,8 +26,6 @@ end
 
 def tenant_list
   tenant_list = [Apartment.default_tenant]
-  Apartment::Tenant.each do |t|
-    tenant_list << t
-  end
+  tenant_list += Apartment.tenant_names
   tenant_list.uniq
 end
