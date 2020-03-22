@@ -35,9 +35,12 @@ module Apartment
           Apartment::Tenant.init
         end
       # rubocop:disable Lint/SuppressedException
-      rescue ::ActiveRecord::NoDatabaseError
+      rescue ::ActiveRecord::NoDatabaseError, PG::ConnectionBad
         # Since `db:create` and other tasks invoke this block from Rails 5.2.0,
         # we need to swallow the error to execute `db:create` properly.
+        Rails.logger.warn do
+          'Failed to initialize Apartment because a database connection could not be established.'
+        end
       end
       # rubocop:enable Lint/SuppressedException
     end
