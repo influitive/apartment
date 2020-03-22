@@ -289,6 +289,27 @@ Apartment::Tenant.drop('tenant_name')
 
 When method is called, the schema is dropped and all data from itself will be lost. Be careful with this method.
 
+### Custom Prompt
+
+#### Console methods
+
+`ros-apartment` console configures two helper methods:
+1. `tenant_list` - list available tenants while using the console
+2. `st(tenant_name:String)` - Switches the context to the tenant name passed, if
+it exists.
+
+#### Custom printed prompt
+
+`ros-apartment` also has a custom prompt that gives a bit more information about
+the context in which you're running. It shows the environment as well as the tenant
+that is currently switched to. In order for you to enable this, you need to require
+the custom console in your application.
+
+In `application.rb` add `require 'apartment/custom_console'`.
+Please note that we rely on `pry-rails` to edit the prompt, thus your project needs
+to install it as well. In order to do so, you need to add `gem 'pry-rails'` to your
+project's gemfile.
+
 ## Config
 
 The following config options should be set up in a Rails initializer such as:
