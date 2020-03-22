@@ -5,9 +5,6 @@ services:
   - docker
 rvm:
   - jruby-9.2.11.0
-  - 2.1.9
-  - 2.2.9
-  - 2.3.6
   - 2.4.3
   - 2.5.0
   - 2.6.2
@@ -19,12 +16,12 @@ branches:
     - development
 
 gemfile:
-  - gemfiles/rails_4_2.gemfile
   - gemfiles/rails_5_0.gemfile
   - gemfiles/rails_5_1.gemfile
   - gemfiles/rails_5_2.gemfile
   - gemfiles/rails_6_0.gemfile
   - gemfiles/rails_master.gemfile
+
 bundler_args: --without local
 before_install:
   - sudo /etc/init.d/mysql stop

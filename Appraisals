@@ -1,18 +1,5 @@
 # frozen_string_literal: true
 
-appraise 'rails-4-2' do
-  gem 'rails', '~> 4.2.0'
-  platforms :ruby do
-    gem 'pg', '< 1.0.0'
-    gem 'mysql2', '~> 0.4.0'
-  end
-  platforms :jruby do
-    gem 'activerecord-jdbc-adapter', '~> 1.3'
-    gem 'activerecord-jdbcpostgresql-adapter', '~> 1.3'
-    gem 'activerecord-jdbcmysql-adapter', '~> 1.3'
-  end
-end
-
 appraise 'rails-5-0' do
   gem 'rails', '~> 5.0.0'
   platforms :ruby do
@@ -47,14 +34,14 @@ appraise 'rails-5-2' do
 end
 
 appraise 'rails-6-0' do
-  gem 'rails', '~> 6.0.0.rc1'
+  gem 'rails', '~> 6.0.0'
   platforms :ruby do
     gem 'sqlite3', '~> 1.4'
   end
   platforms :jruby do
-    gem 'activerecord-jdbc-adapter', '~> 60.0.rc1'
-    gem 'activerecord-jdbcpostgresql-adapter', '~> 60.0.rc1'
-    gem 'activerecord-jdbcmysql-adapter', '~> 60.0.rc1'
+    gem 'activerecord-jdbc-adapter', '~> 60.0'
+    gem 'activerecord-jdbcpostgresql-adapter', '~> 60.0'
+    gem 'activerecord-jdbcmysql-adapter', '~> 60.0'
   end
 end
 
