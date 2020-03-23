@@ -1,8 +1,8 @@
 # Apartment
 
-[![Gem Version](https://badge.fury.io/rb/apartment.svg)](https://badge.fury.io/rb/apartment)
-[![Code Climate](https://codeclimate.com/github/influitive/apartment/badges/gpa.svg)](https://codeclimate.com/github/influitive/apartment)
-[![Build Status](https://travis-ci.org/influitive/apartment.svg?branch=development)](https://travis-ci.org/influitive/apartment)
+[![Gem Version](https://badge.fury.io/rb/ros-apartment.svg)](https://badge.fury.io/rb/apartment)
+[![Code Climate](https://api.codeclimate.com/v1/badges/b0dc327380bb8438f991/maintainability)](https://codeclimate.com/github/rails-on-services/apartment/maintainability)
+[![Build Status](https://travis-ci.org/rails-on-services/apartment.svg?branch=development)](https://travis-ci.org/rails-on-services/apartment)
 
 *Multitenancy for Rails and ActiveRecord*
 
