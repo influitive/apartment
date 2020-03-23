@@ -40,10 +40,6 @@ jobs:
   allow_failures:
     - rvm: ruby-head
     - gemfile: gemfiles/rails_master.gemfile
-    - rvm: jruby-9.1.17.0
-      gemfile: gemfiles/rails_5_0.gemfile
-    # Rails 5.2.4.1 is currently broken. Code has been fixed but no release
-    # for it yet - https://github.com/rails/rails/issues/38137
     - rvm: 2.2.9
       gemfile: gemfiles/rails_5_2.gemfile
   exclude:
@@ -63,13 +59,5 @@ jobs:
       gemfile: gemfiles/rails_6_0.gemfile
     - rvm: 2.4.3
       gemfile: gemfiles/rails_6_0.gemfile
-    - rvm: jruby-9.1.17.0
-      gemfile: gemfiles/rails_5_1.gemfile
-    - rvm: jruby-9.1.17.0
-      gemfile: gemfiles/rails_5_2.gemfile
-    - rvm: jruby-9.1.17.0
-      gemfile: gemfiles/rails_6_0.gemfile
-    - rvm: jruby-9.1.17.0
-      gemfile: gemfiles/rails_master.gemfile
   fast_finish: true
 cache: bundler
