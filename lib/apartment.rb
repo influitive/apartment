@@ -6,9 +6,9 @@ require 'forwardable'
 require 'active_record'
 require 'apartment/tenant'
 
-if ActiveRecord.version.release >= Gem::Version.new("6.1")
+if ActiveRecord.version.release >= Gem::Version.new('6.1')
   module ActiveRecord
-    class SchemaMigration < ActiveRecord::Base # :nodoc:
+    class SchemaMigration < ActiveRecord::Base # :nodoc: # rubocop:disable Rails/ApplicationRecord
       class << self
         def table_exists?
           connection.table_exists?(table_name)
@@ -16,7 +16,7 @@ if ActiveRecord.version.release >= Gem::Version.new("6.1")
       end
     end
 
-    class InternalMetadata < ActiveRecord::Base # :nodoc:
+    class InternalMetadata < ActiveRecord::Base # :nodoc: # rubocop:disable Rails/ApplicationRecord
       class << self
         def table_exists?
           connection.table_exists?(table_name)
@@ -41,7 +41,7 @@ module Apartment
     attr_accessor(*ACCESSOR_METHODS)
     attr_writer(*WRITER_METHODS)
 
-    if ActiveRecord.version.release >= Gem::Version.new("6.1")
+    if ActiveRecord.version.release >= Gem::Version.new('6.1')
       def_delegators :connection_class, :connection, :connection_db_config, :establish_connection
 
       def connection_config
