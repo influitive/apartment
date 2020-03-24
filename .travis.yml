@@ -42,6 +42,9 @@ jobs:
     - gemfile: gemfiles/rails_master.gemfile
     - rvm: 2.2.9
       gemfile: gemfiles/rails_5_2.gemfile
+    # JRuby does not provide support for anything below rails 5
+    - rvm: jruby-9.2.11.0
+      gemfile: gemfiles/rails_4_2.gemfile
   exclude:
     - rvm: 2.1.9
       gemfile: gemfiles/rails_5_0.gemfile
