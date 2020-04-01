@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'apartment/railtie' if defined?(Rails)
 require 'active_support/core_ext/object/blank'
 require 'forwardable'
@@ -5,13 +7,16 @@ require 'active_record'
 require 'apartment/tenant'
 
 module Apartment
-
   class << self
-
     extend Forwardable
 
-    ACCESSOR_METHODS  = [:use_schemas, :use_sql, :seed_after_create, :prepend_environment, :append_environment, :with_multi_server_setup]
-    WRITER_METHODS    = [:tenant_names, :database_schema_file, :excluded_models, :default_schema, :persistent_schemas, :connection_class, :tld_length, :db_migrate_tenants, :seed_data_file, :parallel_migration_threads, :pg_excluded_names]
+    ACCESSOR_METHODS = %i[use_schemas use_sql seed_after_create prepend_environment
+                          append_environment with_multi_server_setup].freeze
+
+    WRITER_METHODS = %i[tenant_names database_schema_file excluded_models
+                        default_schema persistent_schemas connection_class
+                        tld_length db_migrate_tenants seed_data_file
+                        parallel_migration_threads pg_excluded_names].freeze
 
     attr_accessor(*ACCESSOR_METHODS)
     attr_writer(*WRITER_METHODS)
@@ -49,14 +54,14 @@ module Apartment
     end
 
     def default_schema
-      @default_schema || "public" # TODO 'public' is postgres specific
+      @default_schema || 'public' # TODO: 'public' is postgres specific
     end
 
     def parallel_migration_threads
       @parallel_migration_threads || 0
     end
-    alias :default_tenant :default_schema
-    alias :default_tenant= :default_schema=
+    alias default_tenant default_schema
+    alias default_tenant= default_schema=
 
     def persistent_schemas
       @persistent_schemas || []
@@ -75,7 +80,7 @@ module Apartment
     def seed_data_file
       return @seed_data_file if defined?(@seed_data_file)
 
-      @seed_data_file = "#{Rails.root}/db/seeds.rb"
+      @seed_data_file = Rails.root.join('db', 'seeds.rb')
     end
 
     def pg_excluded_names
@@ -84,11 +89,12 @@ module Apartment
 
     # Reset all the config for Apartment
     def reset
-      (ACCESSOR_METHODS + WRITER_METHODS).each{|method| remove_instance_variable(:"@#{method}") if instance_variable_defined?(:"@#{method}") }
+      (ACCESSOR_METHODS + WRITER_METHODS).each { |method| remove_instance_variable(:"@#{method}") if instance_variable_defined?(:"@#{method}") }
     end
 
     def extract_tenant_config
       return {} unless @tenant_names
+
       values = @tenant_names.respond_to?(:call) ? @tenant_names.call : @tenant_names
       unless values.is_a? Hash
         values = values.each_with_object({}) do |tenant, hash|

@@ -1,0 +1,17 @@
+inherit_from: .rubocop_todo.yml
+
+inherit_gem:
+  perx-rubocop:
+    - default.yml
+
+Style/WordArray:
+  Exclude:
+    - spec/schemas/**/*.rb
+
+Style/NumericLiterals:
+  Exclude:
+    - spec/schemas/**/*.rb
+
+Layout/EmptyLineAfterMagicComment:
+  Exclude:
+    - spec/schemas/**/*.rb

@@ -1,12 +1,13 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
-shared_examples_for "a generic apartment adapter able to handle custom configuration" do
-
+shared_examples_for 'a generic apartment adapter able to handle custom configuration' do
   let(:custom_tenant_name) { 'test_tenantwwww' }
-  let(:db) { |example| example.metadata[:database]}
+  let(:db) { |example| example.metadata[:database] }
   let(:custom_tenant_names) do
     {
-      custom_tenant_name => get_custom_db_conf
+      custom_tenant_name => custom_db_conf
     }
   end
 
@@ -19,12 +20,11 @@ shared_examples_for "a generic apartment adapter able to handle custom configura
     Apartment.with_multi_server_setup = false
   end
 
-  context "database key taken from specific config" do
+  context 'database key taken from specific config' do
+    let(:expected_args) { custom_db_conf }
 
-    let(:expected_args) { get_custom_db_conf }
-
-    describe "#create" do
-      it "should establish_connection with the separate connection with expected args" do
+    describe '#create' do
+      it 'should establish_connection with the separate connection with expected args' do
         expect(Apartment::Adapters::AbstractAdapter::SeparateDbConnectionHandler).to receive(:establish_connection).with(expected_args).and_call_original
 
         # because we dont have another server to connect to it errors
@@ -33,8 +33,8 @@ shared_examples_for "a generic apartment adapter able to handle custom configura
       end
     end
 
-    describe "#drop" do
-      it "should establish_connection with the separate connection with expected args" do
+    describe '#drop' do
+      it 'should establish_connection with the separate connection with expected args' do
         expect(Apartment::Adapters::AbstractAdapter::SeparateDbConnectionHandler).to receive(:establish_connection).with(expected_args).and_call_original
 
         # because we dont have another server to connect to it errors
@@ -44,15 +44,13 @@ shared_examples_for "a generic apartment adapter able to handle custom configura
     end
   end
 
-  context "database key from tenant name" do
+  context 'database key from tenant name' do
+    let(:expected_args) do
+      custom_db_conf.tap { |args| args.delete(:database) }
+    end
 
-    let(:expected_args) {
-      get_custom_db_conf.tap {|args| args.delete(:database) }
-    }
-
-    describe "#switch!" do
-
-      it "should connect to new db" do
+    describe '#switch!' do
+      it 'should connect to new db' do
         expect(Apartment).to receive(:establish_connection) do |args|
           db_name = args.delete(:database)
 
@@ -72,24 +70,24 @@ shared_examples_for "a generic apartment adapter able to handle custom configura
   def specific_connection
     {
       postgresql: {
-        adapter:  'postgresql',
+        adapter: 'postgresql',
         database: 'override_database',
         password: 'override_password',
         username: 'overridepostgres'
       },
       mysql: {
-        adapter:  'mysql2',
+        adapter: 'mysql2',
         database: 'override_database',
         username: 'root'
       },
       sqlite: {
-        adapter:  'sqlite3',
+        adapter: 'sqlite3',
         database: 'override_database'
       }
     }
   end
 
-  def get_custom_db_conf
+  def custom_db_conf
     specific_connection[db.to_sym].with_indifferent_access
   end
 end

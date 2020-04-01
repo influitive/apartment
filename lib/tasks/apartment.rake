@@ -1,9 +1,10 @@
+# frozen_string_literal: true
+
 require 'apartment/migrator'
 require 'parallel'
 
 apartment_namespace = namespace :apartment do
-
-  desc "Create all tenants"
+  desc 'Create all tenants'
   task :create do
     tenants.each do |tenant|
       begin
@@ -15,19 +16,19 @@ apartment_namespace = namespace :apartment do
     end
   end
 
-  desc "Drop all tenants"
+  desc 'Drop all tenants'
   task :drop do
     tenants.each do |tenant|
       begin
         puts("Dropping #{tenant} tenant")
         Apartment::Tenant.drop(tenant)
-      rescue Apartment::TenantNotFound => e
+      rescue Apartment::TenantNotFound, ActiveRecord::NoDatabaseError => e
         puts e.message
       end
     end
   end
 
-  desc "Migrate all tenants"
+  desc 'Migrate all tenants'
   task :migrate do
     warn_if_tenants_empty
     each_tenant do |tenant|
@@ -40,7 +41,7 @@ apartment_namespace = namespace :apartment do
     end
   end
 
-  desc "Seed all tenants"
+  desc 'Seed all tenants'
   task :seed do
     warn_if_tenants_empty
 
@@ -56,7 +57,7 @@ apartment_namespace = namespace :apartment do
     end
   end
 
-  desc "Rolls the migration back to the previous version (specify steps w/ STEP=n) across all tenants."
+  desc 'Rolls the migration back to the previous version (specify steps w/ STEP=n) across all tenants.'
   task :rollback do
     warn_if_tenants_empty
 
@@ -107,7 +108,7 @@ apartment_namespace = namespace :apartment do
       end
     end
 
-    desc  'Rolls back the tenant one migration and re migrate up (options: STEP=x, VERSION=x).'
+    desc 'Rolls back the tenant one migration and re migrate up (options: STEP=x, VERSION=x).'
     task :redo do
       if ENV['VERSION']
         apartment_namespace['migrate:down'].invoke
@@ -126,20 +127,20 @@ apartment_namespace = namespace :apartment do
   end
 
   def tenants
-    ENV['DB'] ? ENV['DB'].split(',').map { |s| s.strip } : Apartment.tenant_names || []
+    ENV['DB'] ? ENV['DB'].split(',').map(&:strip) : Apartment.tenant_names || []
   end
 
   def warn_if_tenants_empty
-    if tenants.empty? && ENV['IGNORE_EMPTY_TENANTS'] != "true"
-      puts <<-WARNING
-        [WARNING] - The list of tenants to migrate appears to be empty. This could mean a few things:
+    return unless tenants.empty? && ENV['IGNORE_EMPTY_TENANTS'] != 'true'
 
-          1. You may not have created any, in which case you can ignore this message
-          2. You've run `apartment:migrate` directly without loading the Rails environment
-            * `apartment:migrate` is now deprecated. Tenants will automatically be migrated with `db:migrate`
+    puts <<-WARNING
+      [WARNING] - The list of tenants to migrate appears to be empty. This could mean a few things:
 
-        Note that your tenants currently haven't been migrated. You'll need to run `db:migrate` to rectify this.
-      WARNING
-    end
+        1. You may not have created any, in which case you can ignore this message
+        2. You've run `apartment:migrate` directly without loading the Rails environment
+          * `apartment:migrate` is now deprecated. Tenants will automatically be migrated with `db:migrate`
+
+      Note that your tenants currently haven't been migrated. You'll need to run `db:migrate` to rectify this.
+    WARNING
   end
 end

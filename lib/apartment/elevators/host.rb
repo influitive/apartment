@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'apartment/elevators/generic'
 
 module Apartment
@@ -16,12 +18,15 @@ module Apartment
         @ignored_first_subdomains ||= []
       end
 
+      # rubocop:disable Style/TrivialAccessors
       def self.ignored_first_subdomains=(arg)
         @ignored_first_subdomains = arg
       end
+      # rubocop:enable Style/TrivialAccessors
 
       def parse_tenant_name(request)
         return nil if request.host.blank?
+
         parts = request.host.split('.')
         self.class.ignored_first_subdomains.include?(parts[0]) ? parts.drop(1).join('.') : request.host
       end

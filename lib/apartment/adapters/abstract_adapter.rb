@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 module Apartment
   module Adapters
+    # rubocop:disable Metrics/ClassLength
     class AbstractAdapter
       include ActiveSupport::Callbacks
       define_callbacks :create, :switch
@@ -45,7 +48,7 @@ module Apartment
       def default_tenant
         @default_tenant || Apartment.default_tenant
       end
-      alias :default_schema :default_tenant # TODO deprecate default_schema
+      alias default_schema default_tenant # TODO: deprecate default_schema
 
       #   Drop the tenant
       #
@@ -55,9 +58,8 @@ module Apartment
         with_neutral_connection(tenant) do |conn|
           drop_command(conn, tenant)
         end
-
-      rescue *rescuable_exceptions => exception
-        raise_drop_tenant_error!(tenant, exception)
+      rescue *rescuable_exceptions => e
+        raise_drop_tenant_error!(tenant, e)
       end
 
       #   Switch to a new tenant
@@ -79,13 +81,14 @@ module Apartment
       #   @param {String?} tenant to connect to
       #
       def switch(tenant = nil)
+        previous_tenant = current
+        switch!(tenant)
+        yield
+      ensure
         begin
-          previous_tenant = current
-          switch!(tenant)
-          yield
-
-        ensure
-          switch!(previous_tenant) rescue reset
+          switch!(previous_tenant)
+        rescue StandardError => _e
+          reset
         end
       end
 
@@ -93,7 +96,7 @@ module Apartment
       #
       def each(tenants = Apartment.tenant_names)
         tenants.each do |tenant|
-          switch(tenant){ yield tenant }
+          switch(tenant) { yield tenant }
         end
       end
 
@@ -116,9 +119,9 @@ module Apartment
       #
       def seed_data
         # Don't log the output of seeding the db
-        silence_warnings{ load_or_raise(Apartment.seed_data_file) } if Apartment.seed_data_file
+        silence_warnings { load_or_raise(Apartment.seed_data_file) } if Apartment.seed_data_file
       end
-      alias_method :seed, :seed_data
+      alias seed seed_data
 
       #   Prepend the environment if configured and the environment isn't already there
       #
@@ -126,7 +129,7 @@ module Apartment
       #   @return {String} tenant name with Rails environment *optionally* prepended
       #
       def environmentify(tenant)
-        unless tenant.include?(Rails.env)
+        if !tenant.include?(Rails.env)
           if Apartment.prepend_environment
             "#{Rails.env}_#{tenant}"
           elsif Apartment.append_environment
@@ -139,7 +142,7 @@ module Apartment
         end
       end
 
-    protected
+      protected
 
       def process_excluded_model(excluded_model)
         excluded_model.constantize.establish_connection @config
@@ -158,8 +161,8 @@ module Apartment
         with_neutral_connection(tenant) do |conn|
           create_tenant_command(conn, tenant)
         end
-      rescue *rescuable_exceptions => exception
-        raise_create_tenant_error!(tenant, exception)
+      rescue *rescuable_exceptions => e
+        raise_create_tenant_error!(tenant, e)
       end
 
       def create_tenant_command(conn, tenant)
@@ -174,18 +177,18 @@ module Apartment
         query_cache_enabled = ActiveRecord::Base.connection.query_cache_enabled
 
         Apartment.establish_connection multi_tenantify(tenant)
-        Apartment.connection.active?   # call active? to manually check if this connection is valid
+        Apartment.connection.active? # call active? to manually check if this connection is valid
 
         Apartment.connection.enable_query_cache! if query_cache_enabled
-      rescue *rescuable_exceptions => exception
+      rescue *rescuable_exceptions => e
         Apartment::Tenant.reset if reset_on_connection_exception?
-        raise_connect_error!(tenant, exception)
+        raise_connect_error!(tenant, e)
       end
 
       #   Import the database schema
       #
       def import_database_schema
-        ActiveRecord::Schema.verbose = false    # do not log schema load output.
+        ActiveRecord::Schema.verbose = false # do not log schema load output.
 
         load_or_raise(Apartment.database_schema_file) if Apartment.database_schema_file
       end
@@ -196,9 +199,7 @@ module Apartment
       #                                   if false, use the default db name from the db
       def multi_tenantify(tenant, with_database = true)
         db_connection_config(tenant).tap do |config|
-          if with_database
-            multi_tenantify_with_tenant_db_name(config, tenant)
-          end
+          multi_tenantify_with_tenant_db_name(config, tenant) if with_database
         end
       end
 
@@ -209,14 +210,12 @@ module Apartment
       #   Load a file or raise error if it doesn't exists
       #
       def load_or_raise(file)
-        if File.exists?(file)
-          load(file)
-        else
-          raise FileNotFound, "#{file} doesn't exist yet"
-        end
+        raise FileNotFound, "#{file} doesn't exist yet" unless File.exist?(file)
+
+        load(file)
       end
       # Backward compatibility
-      alias_method :load_or_abort, :load_or_raise
+      alias load_or_abort load_or_raise
 
       #   Exceptions to rescue from on db operations
       #
@@ -234,7 +233,7 @@ module Apartment
         Apartment.db_config_for(tenant).clone
       end
 
-     def with_neutral_connection(tenant, &block)
+      def with_neutral_connection(tenant, &_block)
         if Apartment.with_multi_server_setup
           # neutral connection is necessary whenever you need to create/remove a database from a server.
           # example: when you use postgresql, you need to connect to the default postgresql database before you create your own.
@@ -251,19 +250,20 @@ module Apartment
       end
 
       def raise_drop_tenant_error!(tenant, exception)
-        raise TenantNotFound, "Error while dropping tenant #{environmentify(tenant)}: #{ exception.message }"
+        raise TenantNotFound, "Error while dropping tenant #{environmentify(tenant)}: #{exception.message}"
       end
 
       def raise_create_tenant_error!(tenant, exception)
-        raise TenantExists, "Error while creating tenant #{environmentify(tenant)}: #{ exception.message }"
+        raise TenantExists, "Error while creating tenant #{environmentify(tenant)}: #{exception.message}"
       end
 
       def raise_connect_error!(tenant, exception)
-        raise TenantNotFound, "Error while connecting to tenant #{environmentify(tenant)}: #{ exception.message }"
+        raise TenantNotFound, "Error while connecting to tenant #{environmentify(tenant)}: #{exception.message}"
       end
 
       class SeparateDbConnectionHandler < ::ActiveRecord::Base
       end
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end

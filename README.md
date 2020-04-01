@@ -1,8 +1,8 @@
 # Apartment
 
-[![Gem Version](https://badge.fury.io/rb/apartment.svg)](https://badge.fury.io/rb/apartment)
-[![Code Climate](https://codeclimate.com/github/influitive/apartment/badges/gpa.svg)](https://codeclimate.com/github/influitive/apartment)
-[![Build Status](https://travis-ci.org/influitive/apartment.svg?branch=development)](https://travis-ci.org/influitive/apartment)
+[![Gem Version](https://badge.fury.io/rb/ros-apartment.svg)](https://badge.fury.io/rb/apartment)
+[![Code Climate](https://api.codeclimate.com/v1/badges/b0dc327380bb8438f991/maintainability)](https://codeclimate.com/github/rails-on-services/apartment/maintainability)
+[![Build Status](https://travis-ci.org/rails-on-services/apartment.svg?branch=development)](https://travis-ci.org/rails-on-services/apartment)
 
 *Multitenancy for Rails and ActiveRecord*
 
@@ -33,7 +33,7 @@ may find or proposing improvements to the gem itself. Feel free to reach out.
 Add the following to your Gemfile:
 
 ```ruby
-gem 'ros-apartment'
+gem 'ros-apartment', require: 'apartment'
 ```
 
 Then generate your `Apartment` config file using
@@ -229,7 +229,7 @@ A Generic Elevator exists that allows you to pass a `Proc` (or anything that res
 module MyApplication
   class Application < Rails::Application
     # Obviously not a contrived example
-    config.middleware.use Apartment::Elevators::Generic, Proc.new { |request| request.host.reverse }
+    config.middleware.use Apartment::Elevators::Generic, proc { |request| request.host.reverse }
   end
 end
 ```
@@ -288,6 +288,27 @@ Apartment::Tenant.drop('tenant_name')
 ```
 
 When method is called, the schema is dropped and all data from itself will be lost. Be careful with this method.
+
+### Custom Prompt
+
+#### Console methods
+
+`ros-apartment` console configures two helper methods:
+1. `tenant_list` - list available tenants while using the console
+2. `st(tenant_name:String)` - Switches the context to the tenant name passed, if
+it exists.
+
+#### Custom printed prompt
+
+`ros-apartment` also has a custom prompt that gives a bit more information about
+the context in which you're running. It shows the environment as well as the tenant
+that is currently switched to. In order for you to enable this, you need to require
+the custom console in your application.
+
+In `application.rb` add `require 'apartment/custom_console'`.
+Please note that we rely on `pry-rails` to edit the prompt, thus your project needs
+to install it as well. In order to do so, you need to add `gem 'pry-rails'` to your
+project's gemfile.
 
 ## Config
 
@@ -568,6 +589,13 @@ end
 * Ensure that your code is accompanied with tests. No code will be merged without tests
 
 * If you're looking to help, check out the TODO file for some upcoming changes I'd like to implement in Apartment.
+
+### Running bundle install
+
+mysql2 gem in some cases fails to install.
+If you face problems running bundle install in OSX, try installing the gem running:
+
+`gem install mysql2 -v '0.5.3' -- --with-ldflags=-L/usr/local/opt/openssl/lib --with-cppflags=-I/usr/local/opt/openssl/include`
 
 ## License
 

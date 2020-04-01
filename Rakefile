@@ -85,6 +85,7 @@ namespace :mysql do
     params << "-h #{my_config['host']}" if my_config['host']
     params << "-u #{my_config['username']}" if my_config['username']
     params << "-p#{my_config['password']}" if my_config['password']
+    params << "--port #{my_config['port']}" if my_config['port']
     %x{ mysqladmin #{params.join(' ')} create #{my_config['database']} } rescue "test db already exists"
     ActiveRecord::Base.establish_connection my_config
     migrate
@@ -97,6 +98,7 @@ namespace :mysql do
     params << "-h #{my_config['host']}" if my_config['host']
     params << "-u #{my_config['username']}" if my_config['username']
     params << "-p#{my_config['password']}" if my_config['password']
+    params << "--port #{my_config['port']}" if my_config['port']
     %x{ mysqladmin #{params.join(' ')} drop #{my_config['database']} --force}
   end
 

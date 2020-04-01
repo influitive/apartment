@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'apartment/elevators/generic'
 
 module Apartment
@@ -8,14 +10,13 @@ module Apartment
     #   eg. example.com       => example
     #       www.example.bc.ca => example
     #       a.example.bc.ca   => a
-    #       
+    #
     #
     class Domain < Generic
-
       def parse_tenant_name(request)
         return nil if request.host.blank?
 
-        request.host.match(/(www\.)?(?<sld>[^.]*)/)["sld"]
+        request.host.match(/(www\.)?(?<sld>[^.]*)/)['sld']
       end
     end
   end

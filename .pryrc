@@ -1,3 +1,5 @@
-if defined?(Rails) && Rails.env
-  extend Rails::ConsoleMethods
-end
+# frozen_string_literal: true
+
+# rubocop:disable Style/MixinUsage
+extend Rails::ConsoleMethods if defined?(Rails) && Rails.env
+# rubocop:enable Style/MixinUsage
