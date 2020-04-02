@@ -11,7 +11,15 @@ Gem::Specification.new do |s|
   s.summary       = 'A Ruby gem for managing database multitenancy. Apartment Gem drop in replacement'
   s.description   = 'Apartment allows Rack applications to deal with database multitenancy through ActiveRecord'
   s.email         = ['ryan@influitive.com', 'brad@influitive.com', 'rui.p.baltazar@gmail.com']
-  s.files         = `git ls-files`.split($/)
+  # Specify which files should be added to the gem when it is released.
+  # The `git ls-files -z` loads the files in the RubyGem that have been
+  # added into git.
+  s.files = Dir.chdir(File.expand_path(__dir__)) do
+    `git ls-files -z`.split("\x0").reject do |f|
+      # NOTE: ignore all test related
+      f.match(%r{^(test|spec|features)/})
+    end
+  end
   s.executables   = s.files.grep(%r{^bin/}).map { |f| File.basename(f) }
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ['lib']
