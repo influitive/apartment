@@ -6,6 +6,26 @@ require 'forwardable'
 require 'active_record'
 require 'apartment/tenant'
 
+if ActiveRecord.version.release >= Gem::Version.new('6.1')
+  module ActiveRecord
+    class SchemaMigration < ActiveRecord::Base # :nodoc: # rubocop:disable Rails/ApplicationRecord
+      class << self
+        def table_exists?
+          connection.table_exists?(table_name)
+        end
+      end
+    end
+
+    class InternalMetadata < ActiveRecord::Base # :nodoc: # rubocop:disable Rails/ApplicationRecord
+      class << self
+        def table_exists?
+          connection.table_exists?(table_name)
+        end
+      end
+    end
+  end
+end
+
 module Apartment
   class << self
     extend Forwardable
@@ -21,7 +41,15 @@ module Apartment
     attr_accessor(*ACCESSOR_METHODS)
     attr_writer(*WRITER_METHODS)
 
-    def_delegators :connection_class, :connection, :connection_config, :establish_connection
+    if ActiveRecord.version.release >= Gem::Version.new('6.1')
+      def_delegators :connection_class, :connection, :connection_db_config, :establish_connection
+
+      def connection_config
+        connection_db_config.configuration_hash
+      end
+    else
+      def_delegators :connection_class, :connection, :connection_config, :establish_connection
+    end
 
     # configure apartment with available options
     def configure
@@ -37,7 +65,7 @@ module Apartment
     end
 
     def db_config_for(tenant)
-      (tenants_with_config[tenant] || connection_config).with_indifferent_access
+      (tenants_with_config[tenant] || connection_config)
     end
 
     # Whether or not db:migrate should also migrate tenants
