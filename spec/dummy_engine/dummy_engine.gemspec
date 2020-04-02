@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-$:.push File.expand_path('lib', __dir__)
+$LOAD_PATH << File.expand_path('lib', __dir__)
 
 # Maintain your gem's version:
 require 'dummy_engine/version'
