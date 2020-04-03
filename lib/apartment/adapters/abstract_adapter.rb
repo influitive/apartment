@@ -62,18 +62,6 @@ module Apartment
         raise_drop_tenant_error!(tenant, e)
       end
 
-      # Add support for switching the connection as one would do using
-      # ActiveRecord::Base but ensuring that the schema is set that was set before
-      # is maintained in the new connection. When active record establishes a
-      # new connection, it will reset the configuration, thus setting the search
-      # path to the default schema
-      def tenant_connected_to(database: nil, role: nil, prevent_writes: false, &blk)
-        ActiveRecord::Base.connected_to(database: database, role: role, prevent_writes: prevent_writes) do
-          switch!(current)
-          yield(blk)
-        end
-      end
-
       #   Switch to a new tenant
       #
       #   @param {String} tenant name
