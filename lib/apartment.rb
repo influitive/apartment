@@ -11,7 +11,7 @@ if ActiveRecord.version.release >= Gem::Version.new('6.1')
   require_relative 'apartment/active_record/internal_metadata'
 end
 
-require_relative 'active_record/connection_handling' if ActiveRecord.version.release >= Gem::Version.new('6.0')
+# require_relative 'apartment/active_record/connection_handling' if ActiveRecord.version.release >= Gem::Version.new('6.0')
 
 module Apartment
   class << self
@@ -119,6 +119,12 @@ module Apartment
       values.with_indifferent_access
     rescue ActiveRecord::StatementInvalid
       {}
+    end
+
+    def ensure_tenant(table_name)
+      return table_name if table_name.include?('.')
+
+      "#{Apartment::Tenant.current}.#{table_name}"
     end
   end
 
