@@ -11,6 +11,8 @@ if ActiveRecord.version.release >= Gem::Version.new('6.1')
   require_relative 'apartment/active_record/internal_metadata'
 end
 
+require_relative 'active_record/connection_handling' if ActiveRecord.version.release >= Gem::Version.new('6.0')
+
 module Apartment
   class << self
     extend Forwardable
@@ -134,20 +136,4 @@ module Apartment
 
   # The Tenant attempting to be created already exists
   TenantExists = Class.new(ApartmentError)
-end
-
-if ActiveRecord.version.release >= Gem::Version.new('6.0')
-  module ActiveRecord
-    module ConnectionHandling
-      def connected_to_with_tenant(database: nil, role: nil, prevent_writes: false, &blk)
-        connected_to_without_tenant(database: database, role: role, prevent_writes: prevent_writes) do
-          Apartment::Tenant.switch!(Apartment::Tenant.current)
-          yield(blk)
-        end
-      end
-
-      alias connected_to_without_tenant connected_to
-      alias connected_to connected_to_with_tenant
-    end
-  end
 end
