@@ -341,7 +341,42 @@ Rails will always access the 'public' tenant when accessing these models, but no
 
 ### Postgresql Schemas
 
-## Providing a Different default_schema
+#### Allow prepend tenant name
+
+`config.allow_prepend_tenant_name` currently defaults to `false`.
+
+This configuration only applies while using postgres adapter and `config.use_schemas` is set to `true`.
+This is also intended to be used in combination with `Apartment::Model` module. What this module
+does is to overwrite the `arel_table` method, used internally by Rails to create the arel_table
+object and build the final SQL query to include the apartment's current tenant schema name.
+This becomes particularly helpful when we have read/write replicas in our rails application and
+we need to switch the connection between read and write DB.
+When in our application we run `SomeModel.connected_to(role: :reading)` this will switch the connection but also reset the schema that it is pointing to.
+
+The alternative to this is whenever you switch the connection manually, ensure that you switch to
+the expected schema as well. E.g.
+
+```ruby
+ActiveRecord::Base.connected_to(role: :reading) do
+  Apartment::Tenant.switch!(your_schema)
+  do_your_logic
+end
+```
+
+#### Alternative: Creating new schemas by using raw SQL dumps
+
+Apartment can be forced to use raw SQL dumps insted of `schema.rb` for creating new schemas. Use this when you are using some extra features in postgres that can't be represented in `schema.rb`, like materialized views etc.
+
+This only applies while using postgres adapter and `config.use_schemas` is set to `true`.
+(Note: this option doesn't use `db/structure.sql`, it creates SQL dump by executing `pg_dump`)
+
+Enable this option with:
+
+```ruby
+config.use_sql = true
+```
+
+### Providing a Different default_schema
 
 By default, ActiveRecord will use `"$user", public` as the default `schema_search_path`. This can be modified if you wish to use a different default schema be setting:
 
@@ -351,7 +386,7 @@ config.default_schema = "some_other_schema"
 
 With that set, all excluded models will use this schema as the table name prefix instead of `public` and `reset` on `Apartment::Tenant` will return to this schema as well.
 
-## Persistent Schemas
+### Persistent Schemas
 
 Apartment will normally just switch the `schema_search_path` whole hog to the one passed in. This can lead to problems if you want other schemas to always be searched as well. Enter `persistent_schemas`. You can configure a list of other schemas that will always remain in the search path, while the default gets swapped out:
 
@@ -456,18 +491,6 @@ The *ideal* setup would actually be to install `hstore` into the `public` schema
 schema in the `search_path` at all times. We won't be able to do this though until public doesn't
 also contain the tenanted tables, which is an open issue with no real milestone to be completed.
 Happy to accept PR's on the matter.
-
-#### Alternative: Creating new schemas by using raw SQL dumps
-
-Apartment can be forced to use raw SQL dumps insted of `schema.rb` for creating new schemas. Use this when you are using some extra features in postgres that can't be represented in `schema.rb`, like materialized views etc.
-
-This only applies while using postgres adapter and `config.use_schemas` is set to `true`.
-(Note: this option doesn't use `db/structure.sql`, it creates SQL dump by executing `pg_dump`)
-
-Enable this option with:
-```ruby
-config.use_sql = true
-```
 
 ### Managing Migrations
 
