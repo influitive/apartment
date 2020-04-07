@@ -40,7 +40,6 @@ if defined?(JRUBY_VERSION)
           expect(UserWithTenantModel.all.limit(10).to_sql).to eq(sql)
         end
       end
-
     end
 
     context 'using databases' do
