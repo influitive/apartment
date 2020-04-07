@@ -20,6 +20,27 @@ if defined?(JRUBY_VERSION)
 
       it_should_behave_like 'a generic apartment adapter'
       it_should_behave_like 'a schema based apartment adapter'
+
+      context 'using allow_prepend_tenant_name' do
+        let(:api) { Apartment::Tenant }
+
+        before do
+          Apartment.allow_prepend_tenant_name = true
+          api.create(db1)
+          api.create(db2)
+        end
+
+        it 'prepends the tenant schema name to the table name when building the query' do
+          Apartment::Tenant.switch!(db1)
+          sql = "SELECT \"#{db1}\".\"users\".* FROM \"#{db1}\".\"users\" LIMIT 10"
+          expect(UserWithTenantModel.all.limit(10).to_sql).to eq(sql)
+
+          Apartment::Tenant.switch!(db2)
+          sql = "SELECT \"#{db2}\".\"users\".* FROM \"#{db2}\".\"users\" LIMIT 10"
+          expect(UserWithTenantModel.all.limit(10).to_sql).to eq(sql)
+        end
+      end
+
     end
 
     context 'using databases' do
