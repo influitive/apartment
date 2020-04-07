@@ -12,9 +12,5 @@ module Apartment
         @arel_table = Arel::Table.new(final_table_name, type_caster: type_caster)
       end
     end
-    # included do
-      # def self.arel_table
-      # end
-    # end
   end
 end
