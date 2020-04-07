@@ -35,6 +35,14 @@ describe Apartment do
       expect(Apartment.use_schemas).to be false
     end
 
+    it 'should set allow_prepend_tenant_name' do
+      Apartment.configure do |config|
+        config.excluded_models = []
+        config.allow_prepend_tenant_name = true
+      end
+      expect(Apartment.allow_prepend_tenant_name).to be true
+    end
+
     it 'should set seed_data_file' do
       Apartment.configure do |config|
         config.seed_data_file = seed_data_file_path
