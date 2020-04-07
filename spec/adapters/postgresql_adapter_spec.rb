@@ -29,9 +29,10 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
           Apartment::Tenant.init
         end
 
-        it 'prepends the tenant schema name to the table name' do
+        it 'prepends the tenant schema name to the table name when building the query' do
           Apartment::Tenant.switch!(schema1)
-          expect(UserWithTenantModel.table_name).to eq("#{schema1}.users")
+          sql = "SELECT \"#{schema1}\".\"users\".* FROM \"#{schema1}\".\"users\" LIMIT 10"
+          expect(UserWithTenantModel.all.limit(10).to_sql).to eq(sql)
         end
       end
     end
