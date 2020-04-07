@@ -2,8 +2,8 @@
 
 source "http://rubygems.org"
 
-gem "rails", "~> 5.1.0"
 gem "perx-rubocop", "~> 0.0.3"
+gem "rails", "~> 5.1.0"
 
 group :local do
   gem "guard-rspec", "~> 4.2"

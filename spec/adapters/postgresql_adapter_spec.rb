@@ -20,6 +20,20 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
 
       it_should_behave_like 'a generic apartment adapter'
       it_should_behave_like 'a schema based apartment adapter'
+
+      context 'using allow_prepend_tenant_name' do
+        let(:schema1) { db1 }
+
+        before do
+          Apartment.allow_prepend_tenant_name = true
+          Apartment::Tenant.init
+        end
+
+        it 'prepends the tenant schema name to the table name' do
+          Apartment::Tenant.switch!(schema1)
+          expect(UserWithTenantModel.table_name).to eq("#{schema1}.users")
+        end
+      end
     end
 
     context 'using schemas with SQL dump' do
