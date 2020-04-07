@@ -25,6 +25,7 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
         let(:schema1) { db1 }
 
         before do
+          subject.create(schema1)
           Apartment.allow_prepend_tenant_name = true
           Apartment::Tenant.init
         end
