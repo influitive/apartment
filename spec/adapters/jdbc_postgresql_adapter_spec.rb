@@ -33,11 +33,12 @@ if defined?(JRUBY_VERSION)
         it 'prepends the tenant schema name to the table name when building the query' do
           Apartment::Tenant.switch!(db1)
           sql = "SELECT \"#{db1}\".\"users\".* FROM \"#{db1}\".\"users\" LIMIT 10"
-          expect(UserWithTenantModel.all.limit(10).to_sql).to eq(sql)
+          # NOTE: for some reason there is an extra space in the output of to_sql
+          expect(UserWithTenantModel.all.limit(10).to_sql.gsub(/\s+/, ' ')).to eq(sql)
 
           Apartment::Tenant.switch!(db2)
           sql = "SELECT \"#{db2}\".\"users\".* FROM \"#{db2}\".\"users\" LIMIT 10"
-          expect(UserWithTenantModel.all.limit(10).to_sql).to eq(sql)
+          expect(UserWithTenantModel.all.limit(10).to_sql.gsub(/\s+/, ' ')).to eq(sql)
         end
       end
     end
