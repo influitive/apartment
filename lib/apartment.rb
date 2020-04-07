@@ -7,23 +7,25 @@ require 'active_record'
 require 'apartment/tenant'
 
 if ActiveRecord.version.release >= Gem::Version.new('6.1')
-  module ActiveRecord
-    class SchemaMigration < ActiveRecord::Base # :nodoc: # rubocop:disable Rails/ApplicationRecord
-      class << self
-        def table_exists?
-          connection.table_exists?(table_name)
-        end
-      end
-    end
+  require_relative 'apartment/active_record/schema_migration'
+  require_relative 'apartment/active_record/internal_metadata'
+  # module ActiveRecord
+  #   class SchemaMigration < ActiveRecord::Base # :nodoc: # rubocop:disable Rails/ApplicationRecord
+  #     class << self
+  #       def table_exists?
+  #         connection.table_exists?(table_name)
+  #       end
+  #     end
+  #   end
 
-    class InternalMetadata < ActiveRecord::Base # :nodoc: # rubocop:disable Rails/ApplicationRecord
-      class << self
-        def table_exists?
-          connection.table_exists?(table_name)
-        end
-      end
-    end
-  end
+  #   class InternalMetadata < ActiveRecord::Base # :nodoc: # rubocop:disable Rails/ApplicationRecord
+  #     class << self
+  #       def table_exists?
+  #         connection.table_exists?(table_name)
+  #       end
+  #     end
+  #   end
+  # end
 end
 
 module Apartment
