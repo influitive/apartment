@@ -11,8 +11,6 @@ if ActiveRecord.version.release >= Gem::Version.new('6.1')
   require_relative 'apartment/active_record/internal_metadata'
 end
 
-# require_relative 'apartment/active_record/connection_handling' if ActiveRecord.version.release >= Gem::Version.new('6.0')
-
 module Apartment
   class << self
     extend Forwardable
@@ -104,7 +102,9 @@ module Apartment
 
     # Reset all the config for Apartment
     def reset
-      (ACCESSOR_METHODS + WRITER_METHODS).each { |method| remove_instance_variable(:"@#{method}") if instance_variable_defined?(:"@#{method}") }
+      (ACCESSOR_METHODS + WRITER_METHODS).each do |method|
+        remove_instance_variable(:"@#{method}") if instance_variable_defined?(:"@#{method}")
+      end
     end
 
     def extract_tenant_config
@@ -121,8 +121,16 @@ module Apartment
       {}
     end
 
+    # used to ensure that the tenant name is included in the table name
+    # resolution when using schemas (Postgres). This will eventually
+    # allow us to skip setting the search path but rather query the tables
+    # directly. This also means that we will be allowed to keep the prepared
+    # statements instead of clearing the cache on every switch
     def ensure_tenant(table_name)
-      return table_name if table_name.include?('.')
+      # NOTE: Only postgres supports schemas, so prepending tenant name
+      # as part of the table name is only available if configuration
+      # specifies use_schemas
+      return table_name if table_name.include?('.') || !Apartment.use_schemas
 
       "#{Apartment::Tenant.current}.#{table_name}"
     end
