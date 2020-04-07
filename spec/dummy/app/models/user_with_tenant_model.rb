@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'apartment/model'
+
 class UserWithTenantModel < ApplicationRecord
   include Apartment::Model
 

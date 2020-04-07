@@ -22,17 +22,18 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
       it_should_behave_like 'a schema based apartment adapter'
 
       context 'using allow_prepend_tenant_name' do
-        let(:schema1) { db1 }
+        let(:api) { Apartment::Tenant }
 
         before do
-          subject.create(schema1)
+          Apartment.reset
           Apartment.allow_prepend_tenant_name = true
-          Apartment::Tenant.init
+          api.create(db1)
+          api.create(db2)
         end
 
         it 'prepends the tenant schema name to the table name when building the query' do
-          Apartment::Tenant.switch!(schema1)
-          sql = "SELECT \"#{schema1}\".\"users\".* FROM \"#{schema1}\".\"users\" LIMIT 10"
+          Apartment::Tenant.switch!(db1)
+          sql = "SELECT \"#{db1}\".\"users\".* FROM \"#{db1}\".\"users\" LIMIT 10"
           expect(UserWithTenantModel.all.limit(10).to_sql).to eq(sql)
         end
       end
