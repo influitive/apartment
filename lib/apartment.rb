@@ -16,7 +16,8 @@ module Apartment
     extend Forwardable
 
     ACCESSOR_METHODS = %i[use_schemas use_sql seed_after_create prepend_environment
-                          append_environment with_multi_server_setup].freeze
+                          append_environment with_multi_server_setup
+                          allow_prepend_tenant_name].freeze
 
     WRITER_METHODS = %i[tenant_names database_schema_file excluded_models
                         default_schema persistent_schemas connection_class
@@ -127,6 +128,7 @@ module Apartment
     # directly. This also means that we will be allowed to keep the prepared
     # statements instead of clearing the cache on every switch
     def ensure_tenant(table_name)
+      return table_name unless Apartment.allow_prepend_tenant_name
       # NOTE: Only postgres supports schemas, so prepending tenant name
       # as part of the table name is only available if configuration
       # specifies use_schemas
