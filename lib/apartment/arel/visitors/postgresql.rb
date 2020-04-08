@@ -5,13 +5,17 @@ module Arel # :nodoc: all
     class PostgreSQL < Arel::Visitors::ToSql
       private
 
+      # rubocop:disable Naming/MethodName
+      # rubocop:disable Naming/MethodParameterName
       def visit_Arel_Table(o, collector)
         if o.table_alias
-          collector << quoted_table_name_with_tenant(o.name) << " " << quote_table_name(o.table_alias)
+          collector << quoted_table_name_with_tenant(o.name) << ' ' << quote_table_name(o.table_alias)
         else
           collector << quoted_table_name_with_tenant(o.name)
         end
       end
+      # rubocop:enable Naming/MethodParameterName
+      # rubocop:enable Naming/MethodName
 
       def quoted_table_name_with_tenant(table_name)
         # NOTE: Only postgres supports schemas, so prepending tenant name
