@@ -40,5 +40,8 @@ jobs:
     - rvm: ruby-head
     - rvm: jruby-head
     - gemfile: gemfiles/rails_master.gemfile
+  exclude:
+    - rvm: 2.4.10
+      gemfile: gemfiles/rails_6_0.gemfile
   fast_finish: true
 cache: bundler
