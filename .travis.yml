@@ -9,6 +9,7 @@ rvm:
   - 2.5.8
   - 2.6.6
   - 2.7.1
+  - jruby-head
   - ruby-head
 
 branches:
@@ -37,6 +38,7 @@ env:
 jobs:
   allow_failures:
     - rvm: ruby-head
+    - rvm: jruby-head
     - gemfile: gemfiles/rails_master.gemfile
   fast_finish: true
 cache: bundler
