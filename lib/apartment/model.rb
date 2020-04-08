@@ -4,13 +4,12 @@ module Apartment
   module Model
     extend ActiveSupport::Concern
 
-    # module ClassMethods
-    #   def arel_table
-    #     final_table_name = Apartment.table_name_with_tenant(table_name)
-    #     return @arel_table if @arel_table && @arel_table.name == final_table_name
-
-    #     @arel_table = Arel::Table.new(final_table_name, type_caster: type_caster)
-    #   end
-    # end
+    module ClassMethods
+      def cached_find_by_statement(key, &block)
+        cache_key = "#{Apartment::Tenant.current}_#{key}".to_sym
+        cache = @find_by_statement_cache[connection.prepared_statements]
+        cache.compute_if_absent(cache_key) { ActiveRecord::StatementCache.create(connection, &block) }
+      end
+    end
   end
 end
