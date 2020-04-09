@@ -6,6 +6,8 @@ require 'forwardable'
 require 'active_record'
 require 'apartment/tenant'
 
+require_relative 'apartment/arel/visitors/postgresql'
+
 if ActiveRecord.version.release >= Gem::Version.new('6.1')
   require_relative 'apartment/active_record/schema_migration'
   require_relative 'apartment/active_record/internal_metadata'
@@ -120,21 +122,6 @@ module Apartment
       values.with_indifferent_access
     rescue ActiveRecord::StatementInvalid
       {}
-    end
-
-    # used to ensure that the tenant name is included in the table name
-    # resolution when using schemas (Postgres). This will eventually
-    # allow us to skip setting the search path but rather query the tables
-    # directly. This also means that we will be allowed to keep the prepared
-    # statements instead of clearing the cache on every switch
-    def table_name_with_tenant(table_name)
-      return table_name unless Apartment.allow_prepend_tenant_name
-      # NOTE: Only postgres supports schemas, so prepending tenant name
-      # as part of the table name is only available if configuration
-      # specifies use_schemas
-      return table_name if table_name.include?('.') || !Apartment.use_schemas
-
-      "#{Apartment::Tenant.current}.#{table_name}"
     end
   end
 

@@ -5,11 +5,16 @@ module Apartment
     extend ActiveSupport::Concern
 
     module ClassMethods
-      def arel_table
-        final_table_name = Apartment.table_name_with_tenant(table_name)
-        return @arel_table if @arel_table && @arel_table.name == final_table_name
-
-        @arel_table = Arel::Table.new(final_table_name, type_caster: type_caster)
+      # NOTE: key is actually an array of keys. E.g. If we run the following
+      # query: `Setting.find_by(key: 'something', value: 'amazing')` key will
+      # have an array of symbols: `[:key, :something]`
+      def cached_find_by_statement(key, &block)
+        # Modifying the cache key to have a reference to the current tenant,
+        # so the cached statement is referring only to the tenant in which we've
+        # executed this
+        cache_key = [Apartment::Tenant.current] + key
+        cache = @find_by_statement_cache[connection.prepared_statements]
+        cache.compute_if_absent(cache_key) { ActiveRecord::StatementCache.create(connection, &block) }
       end
     end
   end
