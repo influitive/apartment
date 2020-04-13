@@ -24,26 +24,23 @@ module Apartment
       ActiveRecord::Migrator.migrations_paths = Rails.application.paths['db/migrate'].to_a
     end
 
-    #   Hook into ActionDispatch::Reloader to ensure Apartment is properly initialized
-    #   Note that this doens't entirely work as expected in Development, because this is called before classes are reloaded
-    #   See the middleware/console declarations below to help with this. Hope to fix that soon.
-    #
+    # Make sure Apartment is reconfigured when the code is reloaded
     config.to_prepare do
-      next if ARGV.any? { |arg| arg =~ /\Aassets:(?:precompile|clean)\z/ }
-      next if ARGV.any? { |arg| arg == 'webpacker:compile' }
+      Apartment::Tenant.reinitialize
+    end
 
-      begin
-        Apartment.connection_class.connection_pool.with_connection do
-          Apartment::Tenant.init
-        end
-      rescue ::ActiveRecord::NoDatabaseError, PG::ConnectionBad
-        # Since `db:create` and other tasks invoke this block from Rails 5.2.0,
-        # we need to swallow the error to execute `db:create` properly.
-        Rails.logger.warn do
-          'Failed to initialize Apartment because a database connection could not be established.'
+    #
+    # Ensure that Apartment::Tenant.init is called when
+    # a new connection is requested.
+    #
+    module ApartmentInitializer
+      def connection
+        super.tap do
+          Apartment::Tenant.init_once
         end
       end
     end
+    ActiveRecord::Base.singleton_class.prepend ApartmentInitializer
 
     #
     #   Ensure rake tasks are loaded

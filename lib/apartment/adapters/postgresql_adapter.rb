@@ -39,6 +39,11 @@ module Apartment
         Apartment.connection.schema_search_path = full_search_path
       end
 
+      def init
+        super
+        Apartment.connection.schema_search_path = full_search_path
+      end
+
       def current
         @current || default_tenant
       end

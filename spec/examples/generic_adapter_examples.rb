@@ -25,7 +25,7 @@ shared_examples_for 'a generic apartment adapter' do
                                              .instance_variable_get(:@queue)
                                              .size
 
-        expect(num_available_connections).to eq(1)
+        expect(num_available_connections).to eq(0)
       end
     end
   end
