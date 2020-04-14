@@ -6,7 +6,9 @@ require 'forwardable'
 require 'active_record'
 require 'apartment/tenant'
 
-require_relative 'apartment/arel/visitors/postgresql'
+# require_relative 'apartment/arel/visitors/postgresql'
+
+require_relative 'apartment/active_record/connection_handling' if ActiveRecord.version.release >= Gem::Version.new('6.0')
 
 if ActiveRecord.version.release >= Gem::Version.new('6.1')
   require_relative 'apartment/active_record/schema_migration'
