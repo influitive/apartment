@@ -20,8 +20,7 @@ module Apartment
     extend Forwardable
 
     ACCESSOR_METHODS = %i[use_schemas use_sql seed_after_create prepend_environment
-                          append_environment with_multi_server_setup
-                          allow_prepend_tenant_name].freeze
+                          append_environment with_multi_server_setup].freeze
 
     WRITER_METHODS = %i[tenant_names database_schema_file excluded_models
                         default_schema persistent_schemas connection_class

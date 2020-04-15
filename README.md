@@ -341,28 +341,6 @@ Rails will always access the 'public' tenant when accessing these models, but no
 
 ### Postgresql Schemas
 
-#### Allow prepend tenant name
-
-`config.allow_prepend_tenant_name` currently defaults to `false`.
-
-This configuration only applies while using postgres adapter and `config.use_schemas` is set to `true`.
-This is also intended to be used in combination with `Apartment::Model` module. What this module
-does is to overwrite the `arel_table` method, used internally by Rails to create the arel_table
-object and build the final SQL query to include the apartment's current tenant schema name.
-This becomes particularly helpful when we have read/write replicas in our rails application and
-we need to switch the connection between read and write DB.
-When in our application we run `SomeModel.connected_to(role: :reading)` this will switch the connection but also reset the schema that it is pointing to.
-
-The alternative to this is whenever you switch the connection manually, ensure that you switch to
-the expected schema as well. E.g.
-
-```ruby
-ActiveRecord::Base.connected_to(role: :reading) do
-  Apartment::Tenant.switch!(your_schema)
-  do_your_logic
-end
-```
-
 #### Alternative: Creating new schemas by using raw SQL dumps
 
 Apartment can be forced to use raw SQL dumps insted of `schema.rb` for creating new schemas. Use this when you are using some extra features in postgres that can't be represented in `schema.rb`, like materialized views etc.
