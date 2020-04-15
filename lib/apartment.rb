@@ -6,7 +6,9 @@ require 'forwardable'
 require 'active_record'
 require 'apartment/tenant'
 
-require_relative 'apartment/arel/visitors/postgresql'
+# require_relative 'apartment/arel/visitors/postgresql'
+
+require_relative 'apartment/active_record/connection_handling' if ActiveRecord.version.release >= Gem::Version.new('6.0')
 
 if ActiveRecord.version.release >= Gem::Version.new('6.1')
   require_relative 'apartment/active_record/schema_migration'
@@ -18,8 +20,7 @@ module Apartment
     extend Forwardable
 
     ACCESSOR_METHODS = %i[use_schemas use_sql seed_after_create prepend_environment
-                          append_environment with_multi_server_setup
-                          allow_prepend_tenant_name].freeze
+                          append_environment with_multi_server_setup].freeze
 
     WRITER_METHODS = %i[tenant_names database_schema_file excluded_models
                         default_schema persistent_schemas connection_class
