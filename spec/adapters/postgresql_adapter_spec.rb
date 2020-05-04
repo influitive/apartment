@@ -8,6 +8,8 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
 
     subject { Apartment::Tenant.postgresql_adapter config }
 
+    it_should_behave_like 'a generic apartment adapter callbacks'
+
     context 'using schemas with schema.rb' do
       before { Apartment.use_schemas = true }
 

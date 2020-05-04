@@ -68,8 +68,6 @@ module Apartment
       #
       def switch!(tenant = nil)
         run_callbacks :switch do
-          return reset if tenant.nil?
-
           connect_to_new(tenant).tap do
             Apartment.connection.clear_query_cache
           end
@@ -130,14 +128,12 @@ module Apartment
       #   @return {String} tenant name with Rails environment *optionally* prepended
       #
       def environmentify(tenant)
-        if !tenant.include?(Rails.env)
-          if Apartment.prepend_environment
-            "#{Rails.env}_#{tenant}"
-          elsif Apartment.append_environment
-            "#{tenant}_#{Rails.env}"
-          else
-            tenant
-          end
+        return tenant if tenant.nil? || tenant.include?(Rails.env)
+
+        if Apartment.prepend_environment
+          "#{Rails.env}_#{tenant}"
+        elsif Apartment.append_environment
+          "#{tenant}_#{Rails.env}"
         else
           tenant
         end
