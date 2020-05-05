@@ -171,6 +171,8 @@ module Apartment
       #   @param {String} tenant Database name
       #
       def connect_to_new(tenant)
+        return reset if tenant.nil?
+
         query_cache_enabled = ActiveRecord::Base.connection.query_cache_enabled
 
         Apartment.establish_connection multi_tenantify(tenant)
