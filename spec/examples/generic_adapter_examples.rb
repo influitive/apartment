@@ -8,6 +8,7 @@ shared_examples_for 'a generic apartment adapter' do
   before do
     Apartment.prepend_environment = false
     Apartment.append_environment = false
+    Apartment.tenant_presence_check = true
   end
 
   describe '#init' do
