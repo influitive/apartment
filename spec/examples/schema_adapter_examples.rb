@@ -166,11 +166,7 @@ shared_examples_for 'a schema based apartment adapter' do
   describe '#switch!' do
     let(:tenant_presence_check) { true }
 
-    before do
-      Apartment.configure do |config|
-        config.tenant_presence_check = tenant_presence_check
-      end
-    end
+    before { Apartment.tenant_presence_check = tenant_presence_check }
 
     it 'should connect to new schema' do
       subject.switch!(schema1)
