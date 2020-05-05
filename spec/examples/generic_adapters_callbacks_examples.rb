@@ -6,6 +6,10 @@ require 'spec_helper'
 # ensure that the callbacks are properly called. I'm open for ideas or I'll
 # just delete this.
 shared_examples_for 'a generic apartment adapter callbacks' do
+  class MyProc
+    def self.call; end
+  end
+
   include Apartment::Spec::AdapterRequirements
 
   before do
@@ -13,21 +17,38 @@ shared_examples_for 'a generic apartment adapter callbacks' do
     Apartment.append_environment = false
   end
 
-  describe '#switch! to nil' do
+  describe '#switch!' do
     before do
       Apartment::Adapters::AbstractAdapter.set_callback :switch, :before do
-        puts("Before tenant switch from: #{current}")
+        MyProc.call(Apartment::Tenant.current)
       end
 
       Apartment::Adapters::AbstractAdapter.set_callback :switch, :after do
-        puts("After tenant switch to: #{current}")
+        MyProc.call(Apartment::Tenant.current)
       end
 
-      Apartment::Tenant.switch!(nil)
+      allow(MyProc).to receive(:call)
     end
 
-    it 'runs both before and after callbacks' do
-      expect(true).to eq true
+    context 'when tenant is nil' do
+      before do
+        Apartment::Tenant.switch!(nil)
+      end
+
+      it 'runs both before and after callbacks' do
+        expect(MyProc).to have_received(:call).twice
+      end
+    end
+
+    context 'when tenant is not nil' do
+      before do
+        puts db1
+        Apartment::Tenant.switch!(db1)
+      end
+
+      it 'runs both before and after callbacks' do
+        expect(MyProc).to have_received(:call).twice
+      end
     end
   end
 end
