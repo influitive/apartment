@@ -11,7 +11,15 @@ Gem::Specification.new do |s|
   s.summary       = 'A Ruby gem for managing database multitenancy. Apartment Gem drop in replacement'
   s.description   = 'Apartment allows Rack applications to deal with database multitenancy through ActiveRecord'
   s.email         = ['ryan@influitive.com', 'brad@influitive.com', 'rui.p.baltazar@gmail.com']
-  s.files         = `git ls-files`.split($/)
+  # Specify which files should be added to the gem when it is released.
+  # The `git ls-files -z` loads the files in the RubyGem that have been
+  # added into git.
+  s.files = Dir.chdir(File.expand_path(__dir__)) do
+    `git ls-files -z`.split("\x0").reject do |f|
+      # NOTE: ignore all test related
+      f.match(%r{^(test|spec|features)/})
+    end
+  end
   s.executables   = s.files.grep(%r{^bin/}).map { |f| File.basename(f) }
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ['lib']
@@ -20,13 +28,13 @@ Gem::Specification.new do |s|
   s.licenses = ['MIT']
 
   # must be >= 3.1.2 due to bug in prepared_statements
-  s.add_dependency 'activerecord',    '>= 3.1.2', '< 6.1'
+  s.add_dependency 'activerecord',    '>= 5.0.0', '< 6.1'
   s.add_dependency 'parallel',        '< 2.0'
   s.add_dependency 'public_suffix',   '>= 2.0.5', '< 5.0'
   s.add_dependency 'rack',            '>= 1.3.6', '< 3.0'
 
   s.add_development_dependency 'appraisal',    '~> 2.2'
-  s.add_development_dependency 'bundler',      '>= 1.3', '< 2.0'
+  s.add_development_dependency 'bundler',      '>= 1.3', '< 3.0'
   s.add_development_dependency 'capybara',     '~> 2.0'
   s.add_development_dependency 'rake',         '~> 0.9'
   s.add_development_dependency 'rspec',        '~> 3.4'

@@ -1,4 +1,6 @@
-migration_class = (ActiveRecord::VERSION::MAJOR >= 5) ?  ActiveRecord::Migration[4.2] : ActiveRecord::Migration
+# frozen_string_literal: true
+
+migration_class = ActiveRecord::VERSION::MAJOR >= 5 ? ActiveRecord::Migration[4.2] : ActiveRecord::Migration
 class CreateDummyModels < migration_class
   def self.up
     create_table :companies do |t|
@@ -10,24 +12,23 @@ class CreateDummyModels < migration_class
       t.string :name
       t.datetime :birthdate
       t.string :sex
-     end
+    end
 
-     create_table :delayed_jobs do |t|
-       t.integer  :priority,   :default => 0
-       t.integer  :attempts,   :default => 0
-       t.text     :handler
-       t.text     :last_error
-       t.datetime :run_at
-       t.datetime :locked_at
-       t.datetime :failed_at
-       t.string   :locked_by
-       t.datetime :created_at
-       t.datetime :updated_at
-       t.string   :queue
-     end
+    create_table :delayed_jobs do |t|
+      t.integer  :priority,   default: 0
+      t.integer  :attempts,   default: 0
+      t.text     :handler
+      t.text     :last_error
+      t.datetime :run_at
+      t.datetime :locked_at
+      t.datetime :failed_at
+      t.string   :locked_by
+      t.datetime :created_at
+      t.datetime :updated_at
+      t.string   :queue
+    end
 
-     add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
-
+    add_index 'delayed_jobs', %w[priority run_at], name: 'delayed_jobs_priority'
   end
 
   def self.down
@@ -35,5 +36,4 @@ class CreateDummyModels < migration_class
     drop_table :users
     drop_table :delayed_jobs
   end
-
 end

@@ -6,6 +6,15 @@ require 'forwardable'
 require 'active_record'
 require 'apartment/tenant'
 
+# require_relative 'apartment/arel/visitors/postgresql'
+
+require_relative 'apartment/active_record/connection_handling' if ActiveRecord.version.release >= Gem::Version.new('6.0')
+
+if ActiveRecord.version.release >= Gem::Version.new('6.1')
+  require_relative 'apartment/active_record/schema_migration'
+  require_relative 'apartment/active_record/internal_metadata'
+end
+
 module Apartment
   class << self
     extend Forwardable
@@ -21,7 +30,15 @@ module Apartment
     attr_accessor(*ACCESSOR_METHODS)
     attr_writer(*WRITER_METHODS)
 
-    def_delegators :connection_class, :connection, :connection_config, :establish_connection
+    if ActiveRecord.version.release >= Gem::Version.new('6.1')
+      def_delegators :connection_class, :connection, :connection_db_config, :establish_connection
+
+      def connection_config
+        connection_db_config.configuration_hash
+      end
+    else
+      def_delegators :connection_class, :connection, :connection_config, :establish_connection
+    end
 
     # configure apartment with available options
     def configure
@@ -37,7 +54,7 @@ module Apartment
     end
 
     def db_config_for(tenant)
-      (tenants_with_config[tenant] || connection_config).with_indifferent_access
+      (tenants_with_config[tenant] || connection_config)
     end
 
     # Whether or not db:migrate should also migrate tenants
@@ -89,7 +106,9 @@ module Apartment
 
     # Reset all the config for Apartment
     def reset
-      (ACCESSOR_METHODS + WRITER_METHODS).each { |method| remove_instance_variable(:"@#{method}") if instance_variable_defined?(:"@#{method}") }
+      (ACCESSOR_METHODS + WRITER_METHODS).each do |method|
+        remove_instance_variable(:"@#{method}") if instance_variable_defined?(:"@#{method}")
+      end
     end
 
     def extract_tenant_config
