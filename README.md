@@ -324,6 +324,20 @@ Apartment.configure do |config|
 end
 ```
 
+### Skip tenant schema check
+
+This is configurable by setting: `tenant_presence_check`. It defaults to true
+in order to maintain the original gem behavior. This is only checked when using one of the PostgreSQL adapters.
+The original gem behavior, when running `switch` would look for the existence of the schema before switching. This adds an extra query on every context switch. While in the default simple scenarios this is a valid check, in high volume platforms this adds some unnecessary overhead which can be detected in some other ways on the application level.
+
+Setting this configuration value to `false` will disable the schema presence check before trying to switch the context.
+
+```ruby
+Apartment.configure do |config|
+  tenant_presence_check = false
+end
+```
+
 ### Excluding models
 
 If you have some models that should always access the 'public' tenant, you can specify this by configuring Apartment using `Apartment.configure`. This will yield a config object for you. You can set excluded models like so:
