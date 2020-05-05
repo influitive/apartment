@@ -8,6 +8,8 @@ describe Apartment::Adapters::Sqlite3Adapter, database: :sqlite do
 
     subject { Apartment::Tenant.sqlite3_adapter config }
 
+    it_should_behave_like 'a generic apartment adapter callbacks'
+
     context 'using connections' do
       def tenant_names
         db_dir = File.expand_path('../dummy/db', __dir__)
