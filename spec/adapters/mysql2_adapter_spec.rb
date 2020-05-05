@@ -14,6 +14,8 @@ describe Apartment::Adapters::Mysql2Adapter, database: :mysql do
 
     let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.current_database } }
 
+    it_should_behave_like 'a generic apartment adapter callbacks'
+
     context 'using - the equivalent of - schemas' do
       before { Apartment.use_schemas = true }
 

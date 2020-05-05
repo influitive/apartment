@@ -33,6 +33,8 @@ module Apartment
       protected
 
       def connect_to_new(tenant)
+        return reset if tenant.nil?
+
         unless File.exist?(database_file(tenant))
           raise TenantNotFound,
                 "The tenant #{environmentify(tenant)} cannot be found."

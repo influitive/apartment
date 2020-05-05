@@ -8,6 +8,8 @@ if defined?(JRUBY_VERSION)
   describe Apartment::Adapters::JDBCPostgresqlAdapter, database: :postgresql do
     subject { Apartment::Tenant.jdbc_postgresql_adapter config.symbolize_keys }
 
+    it_should_behave_like 'a generic apartment adapter callbacks'
+
     context 'using schemas' do
       before { Apartment.use_schemas = true }
 
