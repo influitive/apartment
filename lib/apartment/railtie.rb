@@ -18,7 +18,7 @@ module Apartment
         config.seed_after_create = false
         config.prepend_environment = false
         config.append_environment = false
-        config.tenant_present_check = true
+        config.tenant_presence_check = true
       end
 
       ActiveRecord::Migrator.migrations_paths = Rails.application.paths['db/migrate'].to_a

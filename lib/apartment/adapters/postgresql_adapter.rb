@@ -80,7 +80,7 @@ module Apartment
       private
 
       def tenant_exists?(tenant)
-        return true unless Apartment.tenant_present_check
+        return true unless Apartment.tenant_presence_check
 
         Apartment.connection.schema_exists?(tenant)
       end
