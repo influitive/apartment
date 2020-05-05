@@ -2,12 +2,9 @@
 
 require 'spec_helper'
 
-# NOTE: This is a dummy test because at the moment i cant think of a way to
-# ensure that the callbacks are properly called. I'm open for ideas or I'll
-# just delete this.
 shared_examples_for 'a generic apartment adapter callbacks' do
   class MyProc
-    def self.call; end
+    def self.call(tenant_name); end
   end
 
   include Apartment::Spec::AdapterRequirements
@@ -30,6 +27,13 @@ shared_examples_for 'a generic apartment adapter callbacks' do
       allow(MyProc).to receive(:call)
     end
 
+    # NOTE: Part of the test setup creates and switches tenants, so we need
+    # to reset the callbacks to ensure that each test run has the correct
+    # counts
+    after do
+      Apartment::Adapters::AbstractAdapter.reset_callbacks :switch
+    end
+
     context 'when tenant is nil' do
       before do
         Apartment::Tenant.switch!(nil)
@@ -42,7 +46,6 @@ shared_examples_for 'a generic apartment adapter callbacks' do
 
     context 'when tenant is not nil' do
       before do
-        puts db1
         Apartment::Tenant.switch!(db1)
       end
 
