@@ -4,7 +4,6 @@ module Apartment
   module CustomConsole
     begin
       require 'pry-rails'
-      require 'apartment/console'
     rescue LoadError
       # rubocop:disable Rails/Output
       puts '[Failed to load pry-rails] If you want to use Apartment custom prompt you need to add pry-rails to your gemfile'
