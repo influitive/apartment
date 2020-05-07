@@ -4,6 +4,7 @@ module Apartment
   module CustomConsole
     begin
       require 'pry-rails'
+      require 'apartment/console'
     rescue LoadError
       # rubocop:disable Rails/Output
       puts '[Failed to load pry-rails] If you want to use Apartment custom prompt you need to add pry-rails to your gemfile'
@@ -21,6 +22,9 @@ module Apartment
       end
 
       Pry.config.prompt = Pry::Prompt[:ros][:value]
+      Pry.config.hooks.add_hook(:when_started, "startup message") do |target, options, pry|
+        tenant_info_msg
+      end
     end
   end
 end
