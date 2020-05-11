@@ -21,6 +21,9 @@ module Apartment
       end
 
       Pry.config.prompt = Pry::Prompt[:ros][:value]
+      Pry.config.hooks.add_hook(:when_started, "startup message") do
+        tenant_info_msg
+      end
     end
   end
 end

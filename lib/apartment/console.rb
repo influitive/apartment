@@ -35,3 +35,11 @@ def tenant_list
   tenant_list += Apartment.tenant_names
   tenant_list.uniq
 end
+
+def tenant_info_msg
+  log_level = ActiveRecord::Base.logger.level
+  ActiveRecord::Base.logger.level = :error
+  puts "Available Tenants: #{tenant_list}\n"
+  puts "Use `st 'tenant'` to switch tenants & `tenant_list` to see list\n"
+  ActiveRecord::Base.logger.level = log_level
+end
