@@ -37,18 +37,23 @@ module Apartment
       #
       def connect_to_new(tenant = nil)
         return reset if tenant.nil?
-        # rubocop:disable Style/RaiseArgs
-        raise ActiveRecord::StatementInvalid.new("Could not find schema #{tenant}") unless Apartment.connection.all_schemas.include? tenant.to_s
 
-        # rubocop:enable Style/RaiseArgs
+        tenant = tenant.to_s
+        raise ActiveRecord::StatementInvalid, "Could not find schema #{tenant}" unless tenant_exists?(tenant)
 
-        @current = tenant.to_s
+        @current = tenant
         Apartment.connection.schema_search_path = full_search_path
       rescue ActiveRecord::StatementInvalid, ActiveRecord::JDBCError
         raise TenantNotFound, "One of the following schema(s) is invalid: #{full_search_path}"
       end
 
       private
+
+      def tenant_exists?(tenant)
+        return true unless Apartment.tenant_presence_check
+
+        Apartment.connection.all_schemas.include? tenant
+      end
 
       def rescue_from
         ActiveRecord::JDBCError

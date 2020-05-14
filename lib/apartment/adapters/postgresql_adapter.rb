@@ -62,12 +62,11 @@ module Apartment
       #
       def connect_to_new(tenant = nil)
         return reset if tenant.nil?
-        # rubocop:disable Style/RaiseArgs
-        raise ActiveRecord::StatementInvalid.new("Could not find schema #{tenant}") unless Apartment.connection.schema_exists?(tenant.to_s)
 
-        # rubocop:enable Style/RaiseArgs
+        tenant = tenant.to_s
+        raise ActiveRecord::StatementInvalid, "Could not find schema #{tenant}" unless tenant_exists?(tenant)
 
-        @current = tenant.to_s
+        @current = tenant
         Apartment.connection.schema_search_path = full_search_path
 
         # When the PostgreSQL version is < 9.3,
@@ -79,6 +78,12 @@ module Apartment
       end
 
       private
+
+      def tenant_exists?(tenant)
+        return true unless Apartment.tenant_presence_check
+
+        Apartment.connection.schema_exists?(tenant)
+      end
 
       def create_tenant_command(conn, tenant)
         conn.execute(%(CREATE SCHEMA "#{tenant}"))
