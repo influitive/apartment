@@ -24,23 +24,12 @@ module Apartment
       Pry::Prompt.add 'ros', desc, %w[> *] do |target_self, nest_level, pry, sep|
         prompt_contents(pry, target_self, nest_level, sep)
       end
+      Pry.config.prompt = Pry::Prompt[:ros][:value]
     end
 
-    # if Pry::Prompt.respond_to?(:add)
-    #   desc = "Includes the current Rails environment and project folder name.\n" \
-    #         '[1] [project_name][Rails.env][Apartment::Tenant.current] pry(main)>'
-
-    #   Pry::Prompt.add 'ros', desc, %w[> *] do |target_self, nest_level, pry, sep|
-    #     "[#{pry.input_ring.size}] [#{PryRails::Prompt.formatted_env}][#{Apartment::Tenant.current}] " \
-    #     "#{pry.config.prompt_name}(#{Pry.view_clip(target_self)})" \
-    #     "#{":#{nest_level}" unless nest_level.zero?}#{sep} "
-    #   end
-
-    #   Pry.config.prompt = Pry::Prompt[:ros][:value]
-    #   Pry.config.hooks.add_hook(:when_started, 'startup message') do
-    #     tenant_info_msg
-    #   end
-    # end
+    Pry.config.hooks.add_hook(:when_started, 'startup message') do
+      tenant_info_msg
+    end
 
     def self.prompt_contents(pry, target_self, nest_level, sep)
       "[#{pry.input_ring.size}] [#{PryRails::Prompt.formatted_env}][#{Apartment::Tenant.current}] " \
