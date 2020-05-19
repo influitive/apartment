@@ -39,6 +39,11 @@ module Apartment
           Apartment::Tenant.init_once
         end
       end
+
+      def arel_table
+        Apartment::Tenant.init_once
+        super
+      end
     end
     ActiveRecord::Base.singleton_class.prepend ApartmentInitializer
 
