@@ -123,9 +123,11 @@ shared_examples_for 'a schema based apartment adapter' do
     it 'connects and resets' do
       subject.switch(schema1) do
         expect(connection.schema_search_path).to start_with %("#{schema1}")
+        expect(User.sequence_name).to eq "#{schema1}.#{User.table_name}_id_seq"
       end
 
       expect(connection.schema_search_path).to start_with %("#{public_schema}")
+      expect(User.sequence_name).to eq "#{public_schema}.#{User.table_name}_id_seq"
     end
   end
 
