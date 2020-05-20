@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'console'
+
 module Apartment
   module CustomConsole
     begin
