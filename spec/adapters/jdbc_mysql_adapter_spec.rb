@@ -9,7 +9,10 @@ if defined?(JRUBY_VERSION)
     subject { Apartment::Tenant.jdbc_mysql_adapter config.symbolize_keys }
 
     def tenant_names
-      ActiveRecord::Base.connection.execute('SELECT schema_name FROM information_schema.schemata').collect { |row| row["SCHEMA_NAME"] }
+      ActiveRecord::Base.connection.execute('SELECT schema_name FROM information_schema.schemata').collect { |row|
+        puts row.inspect
+        row["SCHEMA_NAME"]
+      }
     end
 
     let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.current_database } }
