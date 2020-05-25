@@ -13,20 +13,16 @@ shared_examples_for 'a generic apartment adapter' do
 
   describe '#init' do
     it 'should not retain a connection after railtie' do
-      # this test should work on rails >= 4, the connection pool code is
-      # completely different for 3.2 so we'd have to have a messy conditional..
-      unless Rails::VERSION::MAJOR < 4
-        ActiveRecord::Base.connection_pool.disconnect!
+      ActiveRecord::Base.connection_pool.disconnect!
 
-        Apartment::Railtie.config.to_prepare_blocks.map(&:call)
+      Apartment::Railtie.config.to_prepare_blocks.map(&:call)
 
-        num_available_connections = Apartment.connection_class.connection_pool
-                                             .instance_variable_get(:@available)
-                                             .instance_variable_get(:@queue)
-                                             .size
+      num_available_connections = Apartment.connection_class.connection_pool
+                                            .instance_variable_get(:@available)
+                                            .instance_variable_get(:@queue)
+                                            .size
 
-        expect(num_available_connections).to eq(0)
-      end
+      expect(num_available_connections).to eq(0)
     end
   end
 
@@ -35,6 +31,8 @@ shared_examples_for 'a generic apartment adapter' do
   #
   describe '#create' do
     it 'should create the new databases' do
+      binding.pry
+
       expect(tenant_names).to include(db1)
       expect(tenant_names).to include(db2)
     end
