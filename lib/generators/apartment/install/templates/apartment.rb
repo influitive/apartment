@@ -96,6 +96,11 @@ Apartment.configure do |config|
   # the new tenant
   #
   # config.pg_excluded_names = ["uuid_generate_v4"]
+
+  # Specifies whether the database and schema (when using PostgreSQL schemas) will prepend in ActiveRecord log.
+  # Uncomment the line below if you want to enable this behavior.
+  #
+  # config.active_record_log = true
 end
 
 # Setup a custom Tenant switching middleware. The Proc should return the name of the Tenant that

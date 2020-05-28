@@ -8,6 +8,7 @@ require 'apartment/tenant'
 
 # require_relative 'apartment/arel/visitors/postgresql'
 
+require_relative 'apartment/active_record/log_subscriber'
 require_relative 'apartment/active_record/connection_handling' if ActiveRecord.version.release >= Gem::Version.new('6.0')
 
 if ActiveRecord.version.release >= Gem::Version.new('6.1')
@@ -20,7 +21,7 @@ module Apartment
     extend Forwardable
 
     ACCESSOR_METHODS = %i[use_schemas use_sql seed_after_create prepend_environment
-                          append_environment with_multi_server_setup tenant_presence_check].freeze
+                          append_environment with_multi_server_setup tenant_presence_check active_record_log].freeze
 
     WRITER_METHODS = %i[tenant_names database_schema_file excluded_models
                         default_schema persistent_schemas connection_class
