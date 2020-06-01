@@ -121,9 +121,13 @@ apartment_namespace = namespace :apartment do
   end
 
   def each_tenant(&block)
-    Parallel.each(tenants, in_threads: Apartment.parallel_migration_threads) do |tenant|
+    Parallel.each(tenants_without_default, in_threads: Apartment.parallel_migration_threads) do |tenant|
       block.call(tenant)
     end
+  end
+
+  def tenants_without_default
+    tenants - [Apartment.default_schema]
   end
 
   def tenants
