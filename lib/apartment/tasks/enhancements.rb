@@ -7,7 +7,7 @@ module Apartment
   class RakeTaskEnhancer
     module TASKS
       ENHANCE_BEFORE = %w[db:drop].freeze
-      ENHANCE_AFTER  = %w[db:migrate db:rollback db:migrate:up db:migrate:down db:migrate:redo db:seed].freeze
+      ENHANCE_AFTER  = %w[db:create db:migrate db:rollback db:migrate:up db:migrate:down db:migrate:redo db:seed].freeze
       freeze
     end
 

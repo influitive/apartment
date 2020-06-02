@@ -35,6 +35,12 @@ module Apartment
         end
       end
 
+      #   Initialize Apartment config options such as excluded_models
+      #
+      def init
+        process_excluded_models
+      end
+
       #   Note alias_method here doesn't work with inheritence apparently ??
       #
       def current
