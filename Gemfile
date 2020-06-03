@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-source 'http://rubygems.org'
+source 'https://my.diffend.io/protect/gems'
 
 gemspec
 
