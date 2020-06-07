@@ -1,3 +1,60 @@
+# 2.6.1
+
+## Enhancements
+- N/a
+
+## Bugfixes
+- [Resolves influitive#607] Avoid early connection
+  - <https://github.com/rails-on-services/apartment/pull/39>
+  - <https://github.com/rails-on-services/apartment/pull/53>
+  - <https://github.com/rails-on-services/apartment/pull/51>
+- [Resolves #52] Rake db:setup tries to seed non existent tenant - <https://github.com/rails-on-services/apartment/pull/54>
+- [Resolves #56] DB rollback uses second last migration - <https://github.com/rails-on-services/apartment/pull/57>
+
+## Chores
+-   N/a
+
+# 2.6.0
+
+## Enhancements
+-   [Resolves #26] Support configuration for skip checking of schema existence before switching
+-   [Resolves #41] Add tenant info to console boot
+
+## Bugfixes
+-   [Resolves #37] Custom Console deprecation warning
+-   [Resolves #42] After switch callback not working with nil argument
+
+## Chores
+-   Updated github actions configuration to run on PRs as well
+
+# 2.5.0
+
+## Enhancements
+-   [Resolves #6] Adds support for rails 6.1
+-   [Resolves #27] Adds support to not rely on set search path, but instead prepends the schema name to the table name when using postgresql with schemas.
+-   [Resolves #35] Cache keys are now tenant dependent
+
+## Bugfixes
+-   [Resolves #27] Manually switching connection between read and write forgets the schema
+
+## Chores
+-   [Resolves #31] Add latest ruby versions to test matrix
+
+# 2.4.0
+
+## Enhancements
+-   [Resolves #14] Add console info about tenants and fast switches #17
+-   Skip init if we're running webpacker:compile #18
+
+## Bugfixes
+-   Don't crash when no database connection is present #16
+-   Rescuing ActiveRecord::NoDatabaseError when dropping tenants #19
+
+## Chores
+-   Rakefile should use mysql port from configuration #5
+-   [Resolves #9] Cleanup rubocop todo #8
+-   Cleanup travis matrix #23
+
 # 2.3.0
   * January 3, 2020
 
