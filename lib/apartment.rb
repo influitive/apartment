@@ -6,8 +6,6 @@ require 'forwardable'
 require 'active_record'
 require 'apartment/tenant'
 
-# require_relative 'apartment/arel/visitors/postgresql'
-
 require_relative 'apartment/active_record/log_subscriber'
 require_relative 'apartment/active_record/connection_handling' if ActiveRecord.version.release >= Gem::Version.new('6.0')
 
@@ -31,14 +29,11 @@ module Apartment
     attr_accessor(*ACCESSOR_METHODS)
     attr_writer(*WRITER_METHODS)
 
-    if ActiveRecord.version.release >= Gem::Version.new('6.1')
-      def_delegators :connection_class, :connection, :connection_db_config, :establish_connection
+    def_delegators :connection_class, :connection, :establish_connection
 
-      def connection_config
-        connection_db_config.configuration_hash
-      end
-    else
-      def_delegators :connection_class, :connection, :connection_config, :establish_connection
+    # collect the db configuration from rails configuration values
+    def connection_config
+      @connection_config ||= Rails.configuration.database_configuration[Rails.env].with_indifferent_access
     end
 
     # configure apartment with available options
