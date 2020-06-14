@@ -97,7 +97,11 @@ module Apartment
       end
 
       def create_tenant_command(conn, tenant)
-        conn.execute(%(CREATE SCHEMA "#{tenant}"))
+        schema = %(BEGIN;
+                   CREATE SCHEMA "#{tenant}";
+                   COMMIT;)
+
+        conn.execute(schema)
       end
 
       #   Generate the final search path to set including persistent_schemas
