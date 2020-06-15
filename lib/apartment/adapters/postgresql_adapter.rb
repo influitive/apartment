@@ -98,8 +98,8 @@ module Apartment
 
       def create_tenant_command(conn, tenant)
         schema = %(BEGIN;
-                   CREATE SCHEMA "#{tenant}";
-                   COMMIT;)
+        CREATE SCHEMA "#{tenant}";
+        COMMIT;)
 
         conn.execute(schema)
       end
