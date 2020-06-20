@@ -25,7 +25,7 @@ module Apartment
 
     WRITER_METHODS = %i[tenant_names database_schema_file excluded_models
                         default_schema persistent_schemas connection_class
-                        tld_length db_migrate_tenants seed_data_file
+                        db_migrate_tenants seed_data_file
                         parallel_migration_threads pg_excluded_names].freeze
 
     attr_accessor(*ACCESSOR_METHODS)
@@ -52,6 +52,10 @@ module Apartment
 
     def tenants_with_config
       extract_tenant_config
+    end
+
+    def tld_length=(_)
+      Apartment::Deprecation.warn('`config.tld_length` have no effect because it was removed in https://github.com/influitive/apartment/pull/309')
     end
 
     def db_config_for(tenant)
