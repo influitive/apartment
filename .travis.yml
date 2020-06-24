@@ -30,11 +30,11 @@ before_install:
   - sudo /etc/init.d/postgresql stop
   - docker-compose up -d
 
-install:
-  - gem install --no-document rubocop
-
 before_script:
-  - rubocop --version
+  - bundle install
+
+script:
+  - bundle exec rubocop
 
 env:
   RUBY_GC_MALLOC_LIMIT: 90000000
