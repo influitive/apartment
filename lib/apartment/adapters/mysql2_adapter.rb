@@ -40,6 +40,7 @@ module Apartment
       #
       def reset
         return if @default_tenant.nil?
+
         Apartment.connection.execute "use `#{default_tenant}`"
       end
 
