@@ -19,6 +19,7 @@ module Apartment
     def self.warn_if_tenants_empty
       return unless tenants.empty? && ENV['IGNORE_EMPTY_TENANTS'] != 'true'
 
+      # rubocop:disable Rails/Output
       puts <<-WARNING
         [WARNING] - The list of tenants to migrate appears to be empty. This could mean a few things:
 
@@ -28,6 +29,7 @@ module Apartment
 
         Note that your tenants currently haven't been migrated. You'll need to run `db:migrate` to rectify this.
       WARNING
+      # rubocop:enable Rails/Output
     end
   end
 end
