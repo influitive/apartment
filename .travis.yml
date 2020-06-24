@@ -4,13 +4,13 @@ language: ruby
 services:
   - docker
 rvm:
-  # - jruby-9.2.11.0
-  # - 2.4.10
-  # - 2.5.8
-  # - 2.6.6
+  - jruby-9.2.11.0
+  - 2.4.10
+  - 2.5.8
+  - 2.6.6
   - 2.7.1
-  # - jruby-head
-  # - ruby-head
+  - jruby-head
+  - ruby-head
 
 branches:
   only:
@@ -18,11 +18,11 @@ branches:
     - development
 
 gemfile:
-  # - gemfiles/rails_5_0.gemfile
-  # - gemfiles/rails_5_1.gemfile
-  # - gemfiles/rails_5_2.gemfile
+  - gemfiles/rails_5_0.gemfile
+  - gemfiles/rails_5_1.gemfile
+  - gemfiles/rails_5_2.gemfile
   - gemfiles/rails_6_0.gemfile
-  # - gemfiles/rails_master.gemfile
+  - gemfiles/rails_master.gemfile
 
 bundler_args: --without local
 before_install:
