@@ -29,6 +29,13 @@ before_install:
   - sudo /etc/init.d/mysql stop
   - sudo /etc/init.d/postgresql stop
   - docker-compose up -d
+
+install:
+  - gem install --no-document rubocop
+
+before_script:
+  - rubocop --version
+
 env:
   RUBY_GC_MALLOC_LIMIT: 90000000
   RUBY_GC_HEAP_FREE_SLOTS: 200000
