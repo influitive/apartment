@@ -20,7 +20,7 @@ module Apartment
   class << self
     extend Forwardable
 
-    ACCESSOR_METHODS = %i[use_schemas use_sql seed_after_create prepend_environment default_schema
+    ACCESSOR_METHODS = %i[use_schemas use_sql seed_after_create prepend_environment default_tenant
                           append_environment with_multi_server_setup tenant_presence_check active_record_log].freeze
 
     WRITER_METHODS = %i[tenant_names database_schema_file excluded_models
@@ -78,8 +78,6 @@ module Apartment
     def parallel_migration_threads
       @parallel_migration_threads || 0
     end
-    alias default_tenant default_schema
-    alias default_tenant= default_schema=
 
     def persistent_schemas
       @persistent_schemas || []

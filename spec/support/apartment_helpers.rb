@@ -10,7 +10,7 @@ module Apartment
       Apartment.excluded_models = nil
       Apartment.use_schemas = nil
       Apartment.seed_after_create = nil
-      Apartment.default_schema = nil
+      Apartment.default_tenant = nil
     end
 
     def next_db

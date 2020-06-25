@@ -25,6 +25,8 @@ module Apartment
     # Separate Adapter for Postgresql when using schemas
     class PostgresqlSchemaAdapter < AbstractAdapter
       def initialize(config)
+        @default_tenant = 'public'
+
         super
 
         reset

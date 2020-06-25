@@ -31,17 +31,17 @@ shared_examples_for 'a schema based apartment adapter' do
       expect(Company.table_name).to eq('public.companies')
     end
 
-    context 'with a default_schema', default_schema: true do
+    context 'with a default_tenant', default_tenant: true do
       it 'should set the proper table_name on excluded_models' do
         Apartment::Tenant.init
 
-        expect(Company.table_name).to eq("#{default_schema}.companies")
+        expect(Company.table_name).to eq("#{default_tenant}.companies")
       end
 
       it 'sets the search_path correctly' do
         Apartment::Tenant.init
 
-        expect(User.connection.schema_search_path).to match(/|#{default_schema}|/)
+        expect(User.connection.schema_search_path).to match(/|#{default_tenant}|/)
       end
     end
 
@@ -138,11 +138,11 @@ shared_examples_for 'a schema based apartment adapter' do
       expect(connection.schema_search_path).to start_with %("#{public_schema}")
     end
 
-    context 'with default_schema', default_schema: true do
+    context 'with default_tenant', default_tenant: true do
       it 'should reset to the default schema' do
         subject.switch!(schema1)
         subject.reset
-        expect(connection.schema_search_path).to start_with %("#{default_schema}")
+        expect(connection.schema_search_path).to start_with %("#{default_tenant}")
       end
     end
 
@@ -156,10 +156,10 @@ shared_examples_for 'a schema based apartment adapter' do
         expect(connection.schema_search_path).to end_with persistent_schemas.map { |schema| %("#{schema}") }.join(', ')
       end
 
-      context 'with default_schema', default_schema: true do
+      context 'with default_tenant', default_tenant: true do
         it 'prioritizes the switched schema to front of schema_search_path' do
-          subject.reset # need to re-call this as the default_schema wasn't set at the time that the above reset ran
-          expect(connection.schema_search_path).to start_with %("#{default_schema}")
+          subject.reset # need to re-call this as the default_tenant wasn't set at the time that the above reset ran
+          expect(connection.schema_search_path).to start_with %("#{default_tenant}")
         end
       end
     end
@@ -213,13 +213,13 @@ shared_examples_for 'a schema based apartment adapter' do
       after { subject.drop(db) }
     end
 
-    describe 'with default_schema specified', default_schema: true do
+    describe 'with default_tenant specified', default_tenant: true do
       before do
         subject.switch!(schema1)
       end
 
       it 'should switch out the default schema rather than public' do
-        expect(connection.schema_search_path).not_to include default_schema
+        expect(connection.schema_search_path).not_to include default_tenant
       end
 
       it 'should still switch to the switched schema' do
