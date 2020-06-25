@@ -20,11 +20,11 @@ module Apartment
   class << self
     extend Forwardable
 
-    ACCESSOR_METHODS = %i[use_schemas use_sql seed_after_create prepend_environment
+    ACCESSOR_METHODS = %i[use_schemas use_sql seed_after_create prepend_environment default_schema
                           append_environment with_multi_server_setup tenant_presence_check active_record_log].freeze
 
     WRITER_METHODS = %i[tenant_names database_schema_file excluded_models
-                        default_schema persistent_schemas connection_class
+                        persistent_schemas connection_class
                         db_migrate_tenants seed_data_file
                         parallel_migration_threads pg_excluded_names].freeze
 
@@ -73,10 +73,6 @@ module Apartment
     # Default to empty array
     def excluded_models
       @excluded_models || []
-    end
-
-    def default_schema
-      @default_schema || 'public' # TODO: 'public' is postgres specific
     end
 
     def parallel_migration_threads
