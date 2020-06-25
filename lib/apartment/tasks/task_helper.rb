@@ -9,7 +9,7 @@ module Apartment
     end
 
     def self.tenants_without_default
-      tenants - [Apartment.default_schema]
+      tenants - [Apartment.default_tenant]
     end
 
     def self.tenants
