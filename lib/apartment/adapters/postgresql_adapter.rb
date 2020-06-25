@@ -25,11 +25,13 @@ module Apartment
     # Separate Adapter for Postgresql when using schemas
     class PostgresqlSchemaAdapter < AbstractAdapter
       def initialize(config)
-        @default_tenant = 'public'
-
         super
 
         reset
+      end
+
+      def default_tenant
+        @default_tenant ||= Apartment.default_tenant || 'public'
       end
 
       #   Reset schema search path to the default schema_search_path
