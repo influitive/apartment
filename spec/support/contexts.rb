@@ -2,18 +2,18 @@
 
 #   Some shared contexts for specs
 
-shared_context 'with default schema', default_schema: true do
-  let(:default_schema) { Apartment::Test.next_db }
+shared_context 'with default schema', default_tenant: true do
+  let(:default_tenant) { Apartment::Test.next_db }
 
   before do
-    Apartment::Test.create_schema(default_schema)
-    Apartment.default_schema = default_schema
+    Apartment::Test.create_schema(default_tenant)
+    Apartment.default_tenant = default_tenant
   end
 
   after do
-    # resetting default_schema so we can drop and any further resets won't try to access droppped schema
-    Apartment.default_schema = nil
-    Apartment::Test.drop_schema(default_schema)
+    # resetting default_tenant so we can drop and any further resets won't try to access droppped schema
+    Apartment.default_tenant = nil
+    Apartment::Test.drop_schema(default_tenant)
   end
 end
 

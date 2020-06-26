@@ -8,6 +8,7 @@ require 'apartment/tenant'
 
 # require_relative 'apartment/arel/visitors/postgresql'
 
+require_relative 'apartment/active_record/log_subscriber'
 require_relative 'apartment/active_record/connection_handling' if ActiveRecord.version.release >= Gem::Version.new('6.0')
 
 if ActiveRecord.version.release >= Gem::Version.new('6.1')
@@ -19,12 +20,12 @@ module Apartment
   class << self
     extend Forwardable
 
-    ACCESSOR_METHODS = %i[use_schemas use_sql seed_after_create prepend_environment
-                          append_environment with_multi_server_setup tenant_presence_check].freeze
+    ACCESSOR_METHODS = %i[use_schemas use_sql seed_after_create prepend_environment default_tenant
+                          append_environment with_multi_server_setup tenant_presence_check active_record_log].freeze
 
     WRITER_METHODS = %i[tenant_names database_schema_file excluded_models
-                        default_schema persistent_schemas connection_class
-                        tld_length db_migrate_tenants seed_data_file
+                        persistent_schemas connection_class
+                        db_migrate_tenants seed_data_file
                         parallel_migration_threads pg_excluded_names].freeze
 
     attr_accessor(*ACCESSOR_METHODS)
@@ -53,6 +54,10 @@ module Apartment
       extract_tenant_config
     end
 
+    def tld_length=(_)
+      Apartment::Deprecation.warn('`config.tld_length` have no effect because it was removed in https://github.com/influitive/apartment/pull/309')
+    end
+
     def db_config_for(tenant)
       (tenants_with_config[tenant] || connection_config)
     end
@@ -70,15 +75,9 @@ module Apartment
       @excluded_models || []
     end
 
-    def default_schema
-      @default_schema || 'public' # TODO: 'public' is postgres specific
-    end
-
     def parallel_migration_threads
       @parallel_migration_threads || 0
     end
-    alias default_tenant default_schema
-    alias default_tenant= default_schema=
 
     def persistent_schemas
       @persistent_schemas || []

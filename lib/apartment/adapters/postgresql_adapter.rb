@@ -30,6 +30,10 @@ module Apartment
         reset
       end
 
+      def default_tenant
+        @default_tenant = Apartment.default_tenant || 'public'
+      end
+
       #   Reset schema search path to the default schema_search_path
       #
       #   @return {String} default schema search path

@@ -1,4 +1,5 @@
 ---
 tracker: github
+issue_placement: beginning
 project_id:
 - rails-on-services/apartment

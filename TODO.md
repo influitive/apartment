@@ -46,6 +46,5 @@
 
 Quick TODOs
 
-1. `default_tenant` should be up to the adapter, not the Apartment class, deprecate `default_schema`
 2. deprecation.rb rescues everything, we have a hard dependency on ActiveSupport so this is unnecessary
 3.

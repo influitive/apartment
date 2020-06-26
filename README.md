@@ -368,12 +368,12 @@ Enable this option with:
 config.use_sql = true
 ```
 
-### Providing a Different default_schema
+### Providing a Different default_tenant
 
 By default, ActiveRecord will use `"$user", public` as the default `schema_search_path`. This can be modified if you wish to use a different default schema be setting:
 
 ```ruby
-config.default_schema = "some_other_schema"
+config.default_tenant = "some_other_schema"
 ```
 
 With that set, all excluded models will use this schema as the table name prefix instead of `public` and `reset` on `Apartment::Tenant` will return to this schema as well.
@@ -446,7 +446,7 @@ schema_search_path: "public,shared_extensions"
 ...
 ```
 
-This would be for a config with `default_schema` set to `public` and `persistent_schemas` set to `['shared_extensions']`. **Note**: This only works on Heroku with [Rails 4.1+](https://devcenter.heroku.com/changelog-items/426). For apps that use older Rails versions hosted on Heroku, the only way to properly setup is to start with a fresh PostgreSQL instance:
+This would be for a config with `default_tenant` set to `public` and `persistent_schemas` set to `['shared_extensions']`. **Note**: This only works on Heroku with [Rails 4.1+](https://devcenter.heroku.com/changelog-items/426). For apps that use older Rails versions hosted on Heroku, the only way to properly setup is to start with a fresh PostgreSQL instance:
 
 1. Append `?schema_search_path=public,hstore` to your `DATABASE_URL` environment variable, by this you don't have to revise the `database.yml` file (which is impossible since Heroku regenerates a completely different and immutable `database.yml` of its own on each deploy)
 2. Run `heroku pg:psql` from your command line

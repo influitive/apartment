@@ -83,7 +83,7 @@ describe Apartment::Tenant do
 
         it 'has a threadsafe adapter' do
           subject.switch!(db1)
-          thread = Thread.new { expect(subject.current).to eq(Apartment.default_tenant) }
+          thread = Thread.new { expect(subject.current).to eq(subject.adapter.default_tenant) }
           thread.join
           expect(subject.current).to eq(db1)
         end
