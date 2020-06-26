@@ -7,6 +7,8 @@ require 'parallel'
 apartment_namespace = namespace :apartment do
   desc 'Create all tenants'
   task :create do
+    Apartment::TaskHelper.warn_if_tenants_empty
+
     Apartment::TaskHelper.tenants.each do |tenant|
       begin
         puts("Creating #{tenant} tenant")
@@ -43,7 +45,7 @@ apartment_namespace = namespace :apartment do
   end
 
   desc 'Seed all tenants'
-  task :seed do
+  task seed: :create do
     Apartment::TaskHelper.warn_if_tenants_empty
 
     Apartment::TaskHelper.each_tenant do |tenant|
