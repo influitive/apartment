@@ -27,7 +27,6 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/rails-on-services/apartment'
   s.licenses = ['MIT']
 
-  # must be >= 3.1.2 due to bug in prepared_statements
   s.add_dependency 'activerecord',    '>= 5.0.0', '< 6.1'
   s.add_dependency 'parallel',        '< 2.0'
   s.add_dependency 'public_suffix',   '>= 2.0.5', '< 5.0'
