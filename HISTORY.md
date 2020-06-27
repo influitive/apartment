@@ -1,3 +1,36 @@
+# 2.7.1
+
+# Enhancements
+
+-   N/a
+
+# Bugfixes
+
+-   [Resolves #82] Enhanced db:create breaks plugin compatibility - <https://github.com/rails-on-services/apartment/pull/83>
+
+# Chores
+
+-   Update rake version in development
+-   Renamed gemspec to match gem name
+
+# 2.7.0
+
+# Enhancements
+
+-   [Resolves #70] Rake tasks define methods on main - <https://github.com/rails-on-services/apartment/pull/75>
+-   Add database and schema to active record log. Configurable, defaults to false to keep current behavior - <https://github.com/rails-on-services/apartment/pull/55>
+
+# Bugfixes
+
+-   [Fixes #61] Fix database create in mysql - <https://github.com/rails-on-services/apartment/pull/76>
+
+# Chores
+
+-   Remove deprecated tld_length config option: tld_length was removed in influitive#309, this configuration option doesn't have any effect now. - <https://github.com/rails-on-services/apartment/pull/72>
+-   Using [diffend.io proxy](https://diffend.io) to safely check required gems
+-   Added [story branch](https://github.com/story-branch/story_branch) to the configuration
+-   Using travis-ci to run rubocop as well, replacing github actions: github actions do not work in fork's PRs
+
 # 2.6.1
 
 ## Enhancements
