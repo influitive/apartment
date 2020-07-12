@@ -125,7 +125,9 @@ module Apartment
                           .select { |c| c.instance_variable_defined?(:@sequence_name) }
                           .reject { |c| c.instance_variable_defined?(:@explicit_sequence_name) && c.instance_variable_get(:@explicit_sequence_name) }
                           .each do |c|
-                            c.remove_instance_variable :@sequence_name
+                            # NOTE: due to this https://github.com/rails-on-services/apartment/issues/81
+                            # unreproduceable error we're checking before trying to remove it
+                            c.remove_instance_variable :@sequence_name if c.instance_variable_defined?(:@sequence_name)
                           end
       end
     end
