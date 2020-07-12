@@ -29,5 +29,13 @@ module Apartment
         Note that your tenants currently haven't been migrated. You'll need to run `db:migrate` to rectify this.
       WARNING
     end
+
+    def self.create_tenant(tenant_name)
+      begin
+        Apartment::Tenant.create(tenant_name)
+      rescue Apartment::TenantExists => e
+        puts 'Tried to create already existing tenant'
+      end
+    end
   end
 end
