@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-
-# rubocop:disable Metrics/BlockLength
 shared_examples_for 'a schema based apartment adapter' do
   include Apartment::Spec::AdapterRequirements
 
@@ -254,4 +252,3 @@ shared_examples_for 'a schema based apartment adapter' do
     end
   end
 end
-# rubocop:enable Metrics/BlockLength
