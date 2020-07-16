@@ -4,6 +4,7 @@ require 'apartment/adapters/abstract_adapter'
 
 module Apartment
   module Adapters
+    # JDBC Abstract adapter
     class AbstractJDBCAdapter < AbstractAdapter
       private
 

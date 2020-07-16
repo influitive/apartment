@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module ActiveRecord
+  # Supports the logging configuration to prepend the database and schema in the ActiveRecord log
   class LogSubscriber
     def apartment_log
       return unless Apartment.active_record_log
@@ -8,7 +9,8 @@ module ActiveRecord
       database = color("[#{Apartment.connection.current_database}] ", ActiveSupport::LogSubscriber::MAGENTA, true)
       schema = nil
       unless Apartment.connection.schema_search_path.nil?
-        schema = color("[#{Apartment.connection.schema_search_path.tr('"', '')}] ", ActiveSupport::LogSubscriber::YELLOW, true)
+        schema = color("[#{Apartment.connection.schema_search_path.tr('"', '')}] ",
+                       ActiveSupport::LogSubscriber::YELLOW, true)
       end
       "#{database}#{schema}"
     end

@@ -3,6 +3,7 @@
 require 'apartment/adapters/postgresql_adapter'
 
 module Apartment
+  # JDBC helper to decide wether to use JDBC Postgresql Adapter or JDBC Postgresql Adapter with Schemas
   module Tenant
     def self.jdbc_postgresql_adapter(config)
       if Apartment.use_schemas

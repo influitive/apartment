@@ -3,6 +3,7 @@
 require 'apartment/adapters/abstract_adapter'
 
 module Apartment
+  # Helper module to decide wether to use mysql2 adapter or mysql2 adapter with schemas
   module Tenant
     def self.mysql2_adapter(config)
       if Apartment.use_schemas
@@ -14,6 +15,7 @@ module Apartment
   end
 
   module Adapters
+    # Mysql2 Adapter
     class Mysql2Adapter < AbstractAdapter
       def initialize(config)
         super
@@ -28,6 +30,7 @@ module Apartment
       end
     end
 
+    # Mysql2 Schemas Adapter
     class Mysql2SchemaAdapter < AbstractAdapter
       def initialize(config)
         super

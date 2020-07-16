@@ -2,7 +2,7 @@
 
 module Apartment
   module Adapters
-    # rubocop:disable Metrics/ClassLength
+    # Abstract adapter from which all the Apartment DB related adapters will inherit the base logic
     class AbstractAdapter
       include ActiveSupport::Callbacks
       define_callbacks :create, :switch
@@ -240,7 +240,8 @@ module Apartment
       def with_neutral_connection(tenant, &_block)
         if Apartment.with_multi_server_setup
           # neutral connection is necessary whenever you need to create/remove a database from a server.
-          # example: when you use postgresql, you need to connect to the default postgresql database before you create your own.
+          # example: when you use postgresql, you need to connect to the default postgresql database before you create
+          # your own.
           SeparateDbConnectionHandler.establish_connection(multi_tenantify(tenant, false))
           yield(SeparateDbConnectionHandler.connection)
           SeparateDbConnectionHandler.connection.close
@@ -269,5 +270,4 @@ module Apartment
       end
     end
   end
-  # rubocop:enable Metrics/ClassLength
 end
