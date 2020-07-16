@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 begin
   require 'bundler'
 rescue StandardError
@@ -118,7 +117,6 @@ namespace :mysql do
     `mysqladmin #{params.join(' ')} drop #{my_config['database']} --force`
   end
 end
-# rubocop:enable Metrics/BlockLength
 
 # TODO: clean this up
 def config

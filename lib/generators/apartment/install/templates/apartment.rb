@@ -23,7 +23,8 @@ Apartment.configure do |config|
   # You can make this dynamic by providing a Proc object to be called on migrations.
   # This object should yield either:
   # - an array of strings representing each Tenant name.
-  # - a hash which keys are tenant names, and values custom db config (must contain all key/values required in database.yml)
+  # - a hash which keys are tenant names, and values custom db config
+  # (must contain all key/values required in database.yml)
   #
   # config.tenant_names = lambda{ Customer.pluck(:tenant_name) }
   # config.tenant_names = ['tenant1', 'tenant2']

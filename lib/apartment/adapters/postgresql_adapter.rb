@@ -121,14 +121,17 @@ module Apartment
         # There is `reset_sequence_name`, but that method actually goes to the database
         # to find out the new name. Therefore, we do this hack to only unset the name,
         # and it will be dynamically found the next time it is needed
-        ActiveRecord::Base.descendants
-                          .select { |c| c.instance_variable_defined?(:@sequence_name) }
-                          .reject { |c| c.instance_variable_defined?(:@explicit_sequence_name) && c.instance_variable_get(:@explicit_sequence_name) }
-                          .each do |c|
-                            # NOTE: due to this https://github.com/rails-on-services/apartment/issues/81
-                            # unreproduceable error we're checking before trying to remove it
-                            c.remove_instance_variable :@sequence_name if c.instance_variable_defined?(:@sequence_name)
-                          end
+        descendants_to_unset = ActiveRecord::Base.descendants
+                                                 .select { |c| c.instance_variable_defined?(:@sequence_name) }
+                                                 .reject do |c|
+                                                   c.instance_variable_defined?(:@explicit_sequence_name) &&
+                                                     c.instance_variable_get(:@explicit_sequence_name)
+                                                 end
+        descendants_to_unset.each do |c|
+          # NOTE: due to this https://github.com/rails-on-services/apartment/issues/81
+          # unreproduceable error we're checking before trying to remove it
+          c.remove_instance_variable :@sequence_name if c.instance_variable_defined?(:@sequence_name)
+        end
       end
     end
 
@@ -197,9 +200,11 @@ module Apartment
       #
       #   @return {String} raw SQL contaning inserts with data from schema_migrations
       #
+      # rubocop:disable Layout/LineLength
       def pg_dump_schema_migrations_data
         with_pg_env { `pg_dump -a --inserts -t #{default_tenant}.schema_migrations -t #{default_tenant}.ar_internal_metadata #{dbname}` }
       end
+      # rubocop:enable Layout/LineLength
 
       # Temporary set Postgresql related environment variables if there are in @config
       #

@@ -9,7 +9,9 @@ describe Apartment::Adapters::Mysql2Adapter, database: :mysql do
     subject(:adapter) { Apartment::Tenant.mysql2_adapter config }
 
     def tenant_names
-      ActiveRecord::Base.connection.execute('SELECT schema_name FROM information_schema.schemata').collect { |row| row[0] }
+      ActiveRecord::Base.connection.execute('SELECT schema_name FROM information_schema.schemata').collect do |row|
+        row[0]
+      end
     end
 
     let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.current_database } }

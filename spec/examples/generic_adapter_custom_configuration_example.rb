@@ -25,7 +25,9 @@ shared_examples_for 'a generic apartment adapter able to handle custom configura
 
     describe '#create' do
       it 'should establish_connection with the separate connection with expected args' do
-        expect(Apartment::Adapters::AbstractAdapter::SeparateDbConnectionHandler).to receive(:establish_connection).with(expected_args).and_call_original
+        expect(Apartment::Adapters::AbstractAdapter::SeparateDbConnectionHandler).to(
+          receive(:establish_connection).with(expected_args).and_call_original
+        )
 
         # because we dont have another server to connect to it errors
         # what matters is establish_connection receives proper args
@@ -35,7 +37,9 @@ shared_examples_for 'a generic apartment adapter able to handle custom configura
 
     describe '#drop' do
       it 'should establish_connection with the separate connection with expected args' do
-        expect(Apartment::Adapters::AbstractAdapter::SeparateDbConnectionHandler).to receive(:establish_connection).with(expected_args).and_call_original
+        expect(Apartment::Adapters::AbstractAdapter::SeparateDbConnectionHandler).to(
+          receive(:establish_connection).with(expected_args).and_call_original
+        )
 
         # because we dont have another server to connect to it errors
         # what matters is establish_connection receives proper args
