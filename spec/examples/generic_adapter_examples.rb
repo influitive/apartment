@@ -24,6 +24,12 @@ shared_examples_for 'a generic apartment adapter' do
 
       expect(num_available_connections).to eq(0)
     end
+
+    it 'ensures apartment_adapter is properly set during init' do
+      Thread.current[:apartment_adapter] = Apartment::Adapters::AbstractAdapter.new(config)
+      Apartment::Railtie.config.to_prepare_blocks.map(&:call)
+      expect(Apartment::Tenant.adapter.class.name).to eq 'Apartment::Adapters::PostgresqlAdapter'
+    end
   end
 
   #
