@@ -39,9 +39,7 @@ module Apartment
         return reset if tenant.nil?
 
         tenant = tenant.to_s
-        unless tenant_exists?(tenant)
-          raise ActiveRecord::StatementInvalid, "Could not find schema #{tenant}"
-        end
+        raise ActiveRecord::StatementInvalid, "Could not find schema #{tenant}" unless tenant_exists?(tenant)
 
         @current = tenant
         Apartment.connection.schema_search_path = full_search_path

@@ -49,9 +49,7 @@ namespace :db do
     unless File.exist?(apartment_db_file)
       FileUtils.copy(apartment_db_file + '.sample', apartment_db_file, verbose: true)
     end
-    unless File.exist?(rails_db_file)
-      FileUtils.copy(rails_db_file + '.sample', rails_db_file, verbose: true)
-    end
+    FileUtils.copy(rails_db_file + '.sample', rails_db_file, verbose: true) unless File.exist?(rails_db_file)
   end
 end
 

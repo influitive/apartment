@@ -45,9 +45,7 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
       end
 
       after do
-        if Apartment.connection.schema_exists? 'has-dashes'
-          Apartment::Tenant.drop('has-dashes')
-              end
+        Apartment::Tenant.drop('has-dashes') if Apartment.connection.schema_exists? 'has-dashes'
       end
     end
 
