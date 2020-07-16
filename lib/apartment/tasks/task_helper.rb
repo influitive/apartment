@@ -31,11 +31,9 @@ module Apartment
     end
 
     def self.create_tenant(tenant_name)
-      begin
-        Apartment::Tenant.create(tenant_name)
-      rescue Apartment::TenantExists => e
-        puts 'Tried to create already existing tenant'
-      end
+      Apartment::Tenant.create(tenant_name)
+    rescue Apartment::TenantExists => e
+      puts "Tried to create already existing tenant: #{e}"
     end
   end
 end
