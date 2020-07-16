@@ -7,7 +7,9 @@ module ActiveRecord
 
       database = color("[#{Apartment.connection.current_database}] ", ActiveSupport::LogSubscriber::MAGENTA, true)
       schema = nil
-      schema = color("[#{Apartment.connection.schema_search_path.tr('"', '')}] ", ActiveSupport::LogSubscriber::YELLOW, true) unless Apartment.connection.schema_search_path.nil?
+      unless Apartment.connection.schema_search_path.nil?
+        schema = color("[#{Apartment.connection.schema_search_path.tr('"', '')}] ", ActiveSupport::LogSubscriber::YELLOW, true)
+      end
       "#{database}#{schema}"
     end
 

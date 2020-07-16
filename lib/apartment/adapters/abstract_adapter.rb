@@ -123,7 +123,9 @@ module Apartment
       #
       def seed_data
         # Don't log the output of seeding the db
-        silence_warnings { load_or_raise(Apartment.seed_data_file) } if Apartment.seed_data_file
+        if Apartment.seed_data_file
+          silence_warnings { load_or_raise(Apartment.seed_data_file) }
+        end
       end
       alias seed seed_data
 
@@ -194,7 +196,9 @@ module Apartment
       def import_database_schema
         ActiveRecord::Schema.verbose = false # do not log schema load output.
 
-        load_or_raise(Apartment.database_schema_file) if Apartment.database_schema_file
+        if Apartment.database_schema_file
+          load_or_raise(Apartment.database_schema_file)
+        end
       end
 
       #   Return a new config that is multi-tenanted

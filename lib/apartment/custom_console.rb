@@ -7,9 +7,7 @@ module Apartment
     begin
       require 'pry-rails'
     rescue LoadError
-      # rubocop:disable Rails/Output
       puts '[Failed to load pry-rails] If you want to use Apartment custom prompt you need to add pry-rails to your gemfile'
-      # rubocop:enable Rails/Output
     end
 
     desc = "Includes the current Rails environment and project folder name.\n" \

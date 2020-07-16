@@ -7,7 +7,9 @@ module Apartment
     def self.postgresql_adapter(config)
       adapter = Adapters::PostgresqlAdapter
       adapter = Adapters::PostgresqlSchemaAdapter if Apartment.use_schemas
-      adapter = Adapters::PostgresqlSchemaFromSqlAdapter if Apartment.use_sql && Apartment.use_schemas
+      if Apartment.use_sql && Apartment.use_schemas
+        adapter = Adapters::PostgresqlSchemaFromSqlAdapter
+      end
       adapter.new(config)
     end
   end
@@ -74,7 +76,9 @@ module Apartment
         return reset if tenant.nil?
 
         tenant = tenant.to_s
-        raise ActiveRecord::StatementInvalid, "Could not find schema #{tenant}" unless tenant_exists?(tenant)
+        unless tenant_exists?(tenant)
+          raise ActiveRecord::StatementInvalid, "Could not find schema #{tenant}"
+        end
 
         @current = tenant
         Apartment.connection.schema_search_path = full_search_path
@@ -127,7 +131,9 @@ module Apartment
                           .each do |c|
                             # NOTE: due to this https://github.com/rails-on-services/apartment/issues/81
                             # unreproduceable error we're checking before trying to remove it
-                            c.remove_instance_variable :@sequence_name if c.instance_variable_defined?(:@sequence_name)
+                            if c.instance_variable_defined?(:@sequence_name)
+                              c.remove_instance_variable :@sequence_name
+                            end
                           end
       end
     end

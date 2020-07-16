@@ -9,7 +9,9 @@ require 'apartment/tenant'
 # require_relative 'apartment/arel/visitors/postgresql'
 
 require_relative 'apartment/active_record/log_subscriber'
-require_relative 'apartment/active_record/connection_handling' if ActiveRecord.version.release >= Gem::Version.new('6.0')
+if ActiveRecord.version.release >= Gem::Version.new('6.0')
+  require_relative 'apartment/active_record/connection_handling'
+end
 
 if ActiveRecord.version.release >= Gem::Version.new('6.1')
   require_relative 'apartment/active_record/schema_migration'
@@ -106,7 +108,9 @@ module Apartment
     # Reset all the config for Apartment
     def reset
       (ACCESSOR_METHODS + WRITER_METHODS).each do |method|
-        remove_instance_variable(:"@#{method}") if instance_variable_defined?(:"@#{method}")
+        if instance_variable_defined?(:"@#{method}")
+          remove_instance_variable(:"@#{method}")
+        end
       end
     end
 

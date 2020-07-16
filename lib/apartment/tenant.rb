@@ -51,7 +51,9 @@ module Apartment
           raise "The adapter `#{adapter_method}` is not yet supported"
         end
 
-        raise AdapterNotFound, "database configuration specifies nonexistent #{config[:adapter]} adapter" unless respond_to?(adapter_method)
+        unless respond_to?(adapter_method)
+          raise AdapterNotFound, "database configuration specifies nonexistent #{config[:adapter]} adapter"
+        end
 
         send(adapter_method, config)
       end

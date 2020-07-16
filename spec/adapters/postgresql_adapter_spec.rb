@@ -44,7 +44,11 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
         expect { Apartment::Tenant.create('has-dashes') }.to_not raise_error
       end
 
-      after { Apartment::Tenant.drop('has-dashes') if Apartment.connection.schema_exists? 'has-dashes' }
+      after do
+        if Apartment.connection.schema_exists? 'has-dashes'
+          Apartment::Tenant.drop('has-dashes')
+              end
+      end
     end
 
     context 'using connections' do
