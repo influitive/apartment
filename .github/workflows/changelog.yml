@@ -15,26 +15,26 @@ jobs:
     runs-on: ubuntu-latest
     name: Generate changelog for master branch
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
 
       - name: Generate changelog
         uses: charmixer/auto-changelog-action@v1
         with:
-          token: ${{ secrets.YOUR_GITHUB_TOKEN or GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Commit files
         env:
-          CI_USER: ${{ secrets.YOUR_GITHUB_USER }}
-          CI_EMAIL: ${{ secrets.YOUR_GITHUB_EMAIL }}
+          ACTION_EMAIL: action@github.com
+          ACTION_USERNAME: GitHub Action
         run: |
-          git config --local user.email "$CI_EMAIL"
-          git config --local user.name "$CI_USER"
+          git config --local user.email "$ACTION_EMAIL"
+          git config --local user.name "$ACTION_USERNAME"
           git add CHANGELOG.md && git commit -m 'Updated CHANGELOG.md' && echo ::set-env name=push::1 || echo "No changes to CHANGELOG.md"
 
       - name: Push changes
-        if: env.push == 1
-        env:
-          CI_USER: ${{ secrets.YOUR_GITHUB_USER }}
-          CI_TOKEN: ${{ secrets.YOUR_GITHUB_TOKEN or GITHUB_TOKEN }}
-        run: |
-          git push "https://$CI_USER:$CI_TOKEN@github.com/$GITHUB_REPOSITORY.git" HEAD:master
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.CHANGELOG_GITHUB_TOKEN }}
+          branch: development
