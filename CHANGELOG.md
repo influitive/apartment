@@ -4,15 +4,20 @@
 
 [Full Changelog](https://github.com/rails-on-services/apartment/compare/v2.7.1...HEAD)
 
+**Implemented enhancements:**
+
+- Deprecate History.md [\#80](https://github.com/rails-on-services/apartment/issues/80)
+
+**Fixed bugs:**
+
+- Tenant.switch! raises exception on first call / Postgresql [\#92](https://github.com/rails-on-services/apartment/issues/92)
+- NameError: instance variable @sequence\_name not defined [\#81](https://github.com/rails-on-services/apartment/issues/81)
+
 **Closed issues:**
 
 - Error creating tenant with uuid column [\#85](https://github.com/rails-on-services/apartment/issues/85)
 - enhanced db:create task breaks plugins compatibility [\#82](https://github.com/rails-on-services/apartment/issues/82)
 - Support disabling of full\_migration\_on\_create [\#30](https://github.com/rails-on-services/apartment/issues/30)
-
-**Merged pull requests:**
-
-- \[Resolves \#81\] check for var existence before [\#89](https://github.com/rails-on-services/apartment/pull/89) ([rpbaltazar](https://github.com/rpbaltazar))
 
 ## [v2.7.1](https://github.com/rails-on-services/apartment/tree/v2.7.1) (2020-06-27)
 
@@ -20,6 +25,7 @@
 
 **Merged pull requests:**
 
+- \[Resolves \#80\] added changelog action [\#90](https://github.com/rails-on-services/apartment/pull/90) ([rpbaltazar](https://github.com/rpbaltazar))
 - Prepare Release 2.7.1 [\#84](https://github.com/rails-on-services/apartment/pull/84) ([rpbaltazar](https://github.com/rpbaltazar))
 - \[Resolves \#82\] Enhanced db create task breaks plugins compatibility [\#83](https://github.com/rails-on-services/apartment/pull/83) ([rpbaltazar](https://github.com/rpbaltazar))
 - \[ci\] update rake [\#79](https://github.com/rails-on-services/apartment/pull/79) ([ahorek](https://github.com/ahorek))
@@ -61,7 +67,6 @@
 
 - db:rollback uses second latest migration for tenants [\#56](https://github.com/rails-on-services/apartment/issues/56)
 - rake db:setup tries to seed non existing tenant [\#52](https://github.com/rails-on-services/apartment/issues/52)
-- Custom Console deprecation warning [\#37](https://github.com/rails-on-services/apartment/issues/37)
 
 **Merged pull requests:**
 
@@ -71,6 +76,8 @@
 - \[\#52\] enhance after db create [\#54](https://github.com/rails-on-services/apartment/pull/54) ([rpbaltazar](https://github.com/rpbaltazar))
 - fix init after reload on development [\#53](https://github.com/rails-on-services/apartment/pull/53) ([fsateler](https://github.com/fsateler))
 - fix: reset sequence\_name after tenant switch [\#51](https://github.com/rails-on-services/apartment/pull/51) ([fsateler](https://github.com/fsateler))
+- Add console welcome message [\#47](https://github.com/rails-on-services/apartment/pull/47) ([JeremiahChurch](https://github.com/JeremiahChurch))
+- Avoid early connection [\#39](https://github.com/rails-on-services/apartment/pull/39) ([fsateler](https://github.com/fsateler))
 
 ## [v2.6.0](https://github.com/rails-on-services/apartment/tree/v2.6.0) (2020-05-14)
 
@@ -81,13 +88,13 @@
 - Error Dropping Tenant [\#46](https://github.com/rails-on-services/apartment/issues/46)
 - After switch callback not working with nil argument [\#42](https://github.com/rails-on-services/apartment/issues/42)
 - Add tenant info to console boot? [\#41](https://github.com/rails-on-services/apartment/issues/41)
+- Custom Console deprecation warning [\#37](https://github.com/rails-on-services/apartment/issues/37)
 - Support configuration for skip checking of schema existence before switching [\#26](https://github.com/rails-on-services/apartment/issues/26)
 
 **Merged pull requests:**
 
 - \[Resolves \#37\] Custom console deprecation warning [\#49](https://github.com/rails-on-services/apartment/pull/49) ([rpbaltazar](https://github.com/rpbaltazar))
 - Prepare Release 2.6.0 [\#48](https://github.com/rails-on-services/apartment/pull/48) ([rpbaltazar](https://github.com/rpbaltazar))
-- Add console welcome message [\#47](https://github.com/rails-on-services/apartment/pull/47) ([JeremiahChurch](https://github.com/JeremiahChurch))
 - \[Resolves \#26\] Support configuration for skip checking of schema existence before switching [\#45](https://github.com/rails-on-services/apartment/pull/45) ([rpbaltazar](https://github.com/rpbaltazar))
 - \[Resolves \#42\] After switch callback not working with nil argument [\#43](https://github.com/rails-on-services/apartment/pull/43) ([rpbaltazar](https://github.com/rpbaltazar))
 
@@ -114,9 +121,9 @@
 
 - Prepare Release 2.5.0 [\#44](https://github.com/rails-on-services/apartment/pull/44) ([rpbaltazar](https://github.com/rpbaltazar))
 - \[Resolves \#27\] Added before hook to connected to to try to set the tenant [\#40](https://github.com/rails-on-services/apartment/pull/40) ([rpbaltazar](https://github.com/rpbaltazar))
-- Avoid early connection [\#39](https://github.com/rails-on-services/apartment/pull/39) ([fsateler](https://github.com/fsateler))
 - \[Resolves \#35\] update cache key to use a string or an array [\#36](https://github.com/rails-on-services/apartment/pull/36) ([rpbaltazar](https://github.com/rpbaltazar))
 - \[Hotfix \#27\] Some errors were being thrown due to caching issues [\#33](https://github.com/rails-on-services/apartment/pull/33) ([rpbaltazar](https://github.com/rpbaltazar))
+- \[Resolves \#31\] Add latest ruby verisons to test matrix [\#32](https://github.com/rails-on-services/apartment/pull/32) ([rpbaltazar](https://github.com/rpbaltazar))
 - \[Chore\] refactored files to their names [\#29](https://github.com/rails-on-services/apartment/pull/29) ([rpbaltazar](https://github.com/rpbaltazar))
 - \[Resolves \#27\] When manually switching the connection it resets the search path [\#28](https://github.com/rails-on-services/apartment/pull/28) ([rpbaltazar](https://github.com/rpbaltazar))
 - \[Resolves \#11\] Remove old ruby and rails versions from the supported versions [\#20](https://github.com/rails-on-services/apartment/pull/20) ([rpbaltazar](https://github.com/rpbaltazar))
@@ -139,7 +146,6 @@
 
 **Merged pull requests:**
 
-- \[Resolves \#31\] Add latest ruby verisons to test matrix [\#32](https://github.com/rails-on-services/apartment/pull/32) ([rpbaltazar](https://github.com/rpbaltazar))
 - Fix gemspec open versions and updated version [\#25](https://github.com/rails-on-services/apartment/pull/25) ([rpbaltazar](https://github.com/rpbaltazar))
 - Fix gemspec open versions and updated version [\#24](https://github.com/rails-on-services/apartment/pull/24) ([rpbaltazar](https://github.com/rpbaltazar))
 - Cleanup travis matrix [\#23](https://github.com/rails-on-services/apartment/pull/23) ([rpbaltazar](https://github.com/rpbaltazar))
@@ -264,15 +270,15 @@
 
 ## [v0.20.0](https://github.com/rails-on-services/apartment/tree/v0.20.0) (2013-02-06)
 
-[Full Changelog](https://github.com/rails-on-services/apartment/compare/v0.19.2...v0.20.0)
-
-## [v0.19.2](https://github.com/rails-on-services/apartment/tree/v0.19.2) (2013-01-30)
-
-[Full Changelog](https://github.com/rails-on-services/apartment/compare/rm...v0.19.2)
+[Full Changelog](https://github.com/rails-on-services/apartment/compare/rm...v0.20.0)
 
 ## [rm](https://github.com/rails-on-services/apartment/tree/rm) (2013-01-30)
 
-[Full Changelog](https://github.com/rails-on-services/apartment/compare/v0.19.0...rm)
+[Full Changelog](https://github.com/rails-on-services/apartment/compare/v0.19.2...rm)
+
+## [v0.19.2](https://github.com/rails-on-services/apartment/tree/v0.19.2) (2013-01-30)
+
+[Full Changelog](https://github.com/rails-on-services/apartment/compare/v0.19.0...v0.19.2)
 
 ## [v0.19.0](https://github.com/rails-on-services/apartment/tree/v0.19.0) (2012-12-30)
 
@@ -384,15 +390,15 @@
 
 ## [v0.7.0](https://github.com/rails-on-services/apartment/tree/v0.7.0) (2011-06-22)
 
-[Full Changelog](https://github.com/rails-on-services/apartment/compare/0.6.0...v0.7.0)
-
-## [0.6.0](https://github.com/rails-on-services/apartment/tree/0.6.0) (2011-06-21)
-
-[Full Changelog](https://github.com/rails-on-services/apartment/compare/v0.6.0...0.6.0)
+[Full Changelog](https://github.com/rails-on-services/apartment/compare/v0.6.0...v0.7.0)
 
 ## [v0.6.0](https://github.com/rails-on-services/apartment/tree/v0.6.0) (2011-06-21)
 
-[Full Changelog](https://github.com/rails-on-services/apartment/compare/v0.5.1...v0.6.0)
+[Full Changelog](https://github.com/rails-on-services/apartment/compare/0.6.0...v0.6.0)
+
+## [0.6.0](https://github.com/rails-on-services/apartment/tree/0.6.0) (2011-06-21)
+
+[Full Changelog](https://github.com/rails-on-services/apartment/compare/v0.5.1...0.6.0)
 
 ## [v0.5.1](https://github.com/rails-on-services/apartment/tree/v0.5.1) (2011-06-21)
 
