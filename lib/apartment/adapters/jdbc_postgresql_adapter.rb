@@ -3,6 +3,7 @@
 require 'apartment/adapters/postgresql_adapter'
 
 module Apartment
+  # JDBC helper to decide wether to use JDBC Postgresql Adapter or JDBC Postgresql Adapter with Schemas
   module Tenant
     def self.jdbc_postgresql_adapter(config)
       if Apartment.use_schemas
@@ -19,7 +20,7 @@ module Apartment
       private
 
       def multi_tenantify_with_tenant_db_name(config, tenant)
-        config[:url] = "#{config[:url].gsub(%r{(\S+)\/.+$}, '\1')}/#{environmentify(tenant)}"
+        config[:url] = "#{config[:url].gsub(%r{(\S+)/.+$}, '\1')}/#{environmentify(tenant)}"
       end
 
       def create_tenant_command(conn, tenant)

@@ -6,16 +6,18 @@ require 'forwardable'
 require 'active_record'
 require 'apartment/tenant'
 
-# require_relative 'apartment/arel/visitors/postgresql'
-
 require_relative 'apartment/active_record/log_subscriber'
-require_relative 'apartment/active_record/connection_handling' if ActiveRecord.version.release >= Gem::Version.new('6.0')
+
+if ActiveRecord.version.release >= Gem::Version.new('6.0')
+  require_relative 'apartment/active_record/connection_handling'
+end
 
 if ActiveRecord.version.release >= Gem::Version.new('6.1')
   require_relative 'apartment/active_record/schema_migration'
   require_relative 'apartment/active_record/internal_metadata'
 end
 
+# Apartment main definitions
 module Apartment
   class << self
     extend Forwardable

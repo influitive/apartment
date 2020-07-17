@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# This command will automatically be run when you run "rails" with Rails 4 gems installed from the root of your application.
+# This command will automatically be run when you run "rails" with Rails 4 gems installed
+# from the root of your application.
 
 ENGINE_ROOT = File.expand_path('..', __dir__)
 ENGINE_PATH = File.expand_path('../lib/dummy_engine/engine', __dir__)

@@ -1,0 +1,41 @@
+name: Changelog
+
+on:
+  pull_request:
+    types: [closed]
+
+  release:
+    types: [published]
+
+  issues:
+    types: [closed, edited]
+
+jobs:
+  generate_changelog:
+    runs-on: ubuntu-latest
+    name: Generate changelog for master branch
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+
+      - name: Generate changelog
+        uses: charmixer/auto-changelog-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit files
+        env:
+          ACTION_EMAIL: action@github.com
+          ACTION_USERNAME: GitHub Action
+        run: |
+          git config --local user.email "$ACTION_EMAIL"
+          git config --local user.name "$ACTION_USERNAME"
+          git add CHANGELOG.md && git commit -m 'Updated CHANGELOG.md' && echo ::set-env name=push::1 || echo "No changes to CHANGELOG.md"
+
+      - name: Push changes
+        if: env.push == 1
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.CHANGELOG_GITHUB_TOKEN }}
+          branch: development

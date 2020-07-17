@@ -27,7 +27,7 @@ module Apartment
 
     # Make sure Apartment is reconfigured when the code is reloaded
     config.to_prepare do
-      Apartment::Tenant.reinitialize
+      Apartment::Tenant.reload!
     end
 
     #

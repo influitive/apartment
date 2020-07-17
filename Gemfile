@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-source 'https://my.diffend.io/protect/gems'
+source 'http://rubygems.org'
 
 gemspec
 
-gem 'perx-rubocop', '~> 0.0.3'
 gem 'rails', '>= 3.1.2'
+gem 'rubocop'
 
 group :local do
   gem 'guard-rspec', '~> 4.2'

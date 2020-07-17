@@ -36,7 +36,7 @@ env:
 jobs:
   include:
   - name: Rubocop Lint
-    script: gem install perx-rubocop && rubocop
+    script: gem install rubocop
 
   allow_failures:
     - rvm: ruby-head
