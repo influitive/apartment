@@ -33,9 +33,23 @@ jobs:
           git config --local user.name "$ACTION_USERNAME"
           git add CHANGELOG.md && git commit -m 'Updated CHANGELOG.md' && echo ::set-env name=push::1 || echo "No changes to CHANGELOG.md"
 
-      - name: Push changes
+      - name: Push changelog to master
         if: env.push == 1
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.CHANGELOG_GITHUB_TOKEN }}
-          branch: development
+          branch: master
+
+      - name: Cherry-pick changelog to development
+        if: env.push == 1
+        env:
+          ACTION_EMAIL: action@github.com
+          ACTION_USERNAME: GitHub Action
+        run: |
+          git config --local user.email "$ACTION_EMAIL"
+          git config --local user.name "$ACTION_USERNAME"
+          commit_hash = git show HEAD | egrep commit\ .+$ | cut -d' ' -f2
+          git checkout development
+          git pull
+          git cherry-pick $commit_hash
+          git push
