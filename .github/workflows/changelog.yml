@@ -48,7 +48,7 @@ jobs:
         run: |
           git config --local user.email "$ACTION_EMAIL"
           git config --local user.name "$ACTION_USERNAME"
-          commit_hash = git show HEAD | egrep commit\ .+$ | cut -d' ' -f2
+          commit_hash=`git show HEAD | egrep commit\ .+$ | cut -d' ' -f2`
           git checkout development
           git pull
           git cherry-pick $commit_hash
