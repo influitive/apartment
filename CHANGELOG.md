@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/rails-on-services/apartment/tree/HEAD)
 
-[Full Changelog](https://github.com/rails-on-services/apartment/compare/v2.7.1...HEAD)
+[Full Changelog](https://github.com/rails-on-services/apartment/compare/v2.7.2...HEAD)
+
+**Closed issues:**
+
+- Improve changelog automatic generation [\#98](https://github.com/rails-on-services/apartment/issues/98)
+
+## [v2.7.2](https://github.com/rails-on-services/apartment/tree/v2.7.2) (2020-07-17)
+
+[Full Changelog](https://github.com/rails-on-services/apartment/compare/v2.7.1...v2.7.2)
 
 **Implemented enhancements:**
 
@@ -134,6 +142,7 @@
 - \[Resolves \#31\] Add latest ruby verisons to test matrix [\#32](https://github.com/rails-on-services/apartment/pull/32) ([rpbaltazar](https://github.com/rpbaltazar))
 - \[Chore\] refactored files to their names [\#29](https://github.com/rails-on-services/apartment/pull/29) ([rpbaltazar](https://github.com/rpbaltazar))
 - \[Resolves \#27\] When manually switching the connection it resets the search path [\#28](https://github.com/rails-on-services/apartment/pull/28) ([rpbaltazar](https://github.com/rpbaltazar))
+- \[Resolves \#11\] Remove old ruby and rails versions from the supported versions [\#20](https://github.com/rails-on-services/apartment/pull/20) ([rpbaltazar](https://github.com/rpbaltazar))
 - Support rails 6.1 [\#7](https://github.com/rails-on-services/apartment/pull/7) ([jean-francois-labbe](https://github.com/jean-francois-labbe))
 
 ## [2.4.0](https://github.com/rails-on-services/apartment/tree/2.4.0) (2020-04-01)
@@ -158,7 +167,6 @@
 - Cleanup travis matrix [\#23](https://github.com/rails-on-services/apartment/pull/23) ([rpbaltazar](https://github.com/rpbaltazar))
 - Prepare v2.4.0 Release [\#22](https://github.com/rails-on-services/apartment/pull/22) ([rpbaltazar](https://github.com/rpbaltazar))
 - Updated readme badges [\#21](https://github.com/rails-on-services/apartment/pull/21) ([rpbaltazar](https://github.com/rpbaltazar))
-- \[Resolves \#11\] Remove old ruby and rails versions from the supported versions [\#20](https://github.com/rails-on-services/apartment/pull/20) ([rpbaltazar](https://github.com/rpbaltazar))
 - Rescuing ActiveRecord::NoDatabaseError when dropping tenants [\#19](https://github.com/rails-on-services/apartment/pull/19) ([rpbaltazar](https://github.com/rpbaltazar))
 - Skip init if we're running webpacker:compile [\#18](https://github.com/rails-on-services/apartment/pull/18) ([rpbaltazar](https://github.com/rpbaltazar))
 - \[Resolves \#14\] Add console info about tenants and fast switches [\#17](https://github.com/rails-on-services/apartment/pull/17) ([rpbaltazar](https://github.com/rpbaltazar))
