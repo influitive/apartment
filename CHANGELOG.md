@@ -19,13 +19,21 @@
 - enhanced db:create task breaks plugins compatibility [\#82](https://github.com/rails-on-services/apartment/issues/82)
 - Support disabling of full\_migration\_on\_create [\#30](https://github.com/rails-on-services/apartment/issues/30)
 
+**Merged pull requests:**
+
+- \[Chore\] Fix Changelog github action [\#97](https://github.com/rails-on-services/apartment/pull/97) ([rpbaltazar](https://github.com/rpbaltazar))
+- Prepare release - 2.7.2 [\#96](https://github.com/rails-on-services/apartment/pull/96) ([rpbaltazar](https://github.com/rpbaltazar))
+- \[Resolves \#92\] tenant switch raises exception on first call [\#95](https://github.com/rails-on-services/apartment/pull/95) ([rpbaltazar](https://github.com/rpbaltazar))
+- Dont use custom rubocop [\#94](https://github.com/rails-on-services/apartment/pull/94) ([rpbaltazar](https://github.com/rpbaltazar))
+- \[Resolves \#80\] added changelog action [\#90](https://github.com/rails-on-services/apartment/pull/90) ([rpbaltazar](https://github.com/rpbaltazar))
+- \[Resolves \#81\] check for var existence before [\#89](https://github.com/rails-on-services/apartment/pull/89) ([rpbaltazar](https://github.com/rpbaltazar))
+
 ## [v2.7.1](https://github.com/rails-on-services/apartment/tree/v2.7.1) (2020-06-27)
 
 [Full Changelog](https://github.com/rails-on-services/apartment/compare/v2.7.0...v2.7.1)
 
 **Merged pull requests:**
 
-- \[Resolves \#80\] added changelog action [\#90](https://github.com/rails-on-services/apartment/pull/90) ([rpbaltazar](https://github.com/rpbaltazar))
 - Prepare Release 2.7.1 [\#84](https://github.com/rails-on-services/apartment/pull/84) ([rpbaltazar](https://github.com/rpbaltazar))
 - \[Resolves \#82\] Enhanced db create task breaks plugins compatibility [\#83](https://github.com/rails-on-services/apartment/pull/83) ([rpbaltazar](https://github.com/rpbaltazar))
 - \[ci\] update rake [\#79](https://github.com/rails-on-services/apartment/pull/79) ([ahorek](https://github.com/ahorek))
@@ -67,6 +75,7 @@
 
 - db:rollback uses second latest migration for tenants [\#56](https://github.com/rails-on-services/apartment/issues/56)
 - rake db:setup tries to seed non existing tenant [\#52](https://github.com/rails-on-services/apartment/issues/52)
+- Custom Console deprecation warning [\#37](https://github.com/rails-on-services/apartment/issues/37)
 
 **Merged pull requests:**
 
@@ -76,7 +85,6 @@
 - \[\#52\] enhance after db create [\#54](https://github.com/rails-on-services/apartment/pull/54) ([rpbaltazar](https://github.com/rpbaltazar))
 - fix init after reload on development [\#53](https://github.com/rails-on-services/apartment/pull/53) ([fsateler](https://github.com/fsateler))
 - fix: reset sequence\_name after tenant switch [\#51](https://github.com/rails-on-services/apartment/pull/51) ([fsateler](https://github.com/fsateler))
-- Add console welcome message [\#47](https://github.com/rails-on-services/apartment/pull/47) ([JeremiahChurch](https://github.com/JeremiahChurch))
 - Avoid early connection [\#39](https://github.com/rails-on-services/apartment/pull/39) ([fsateler](https://github.com/fsateler))
 
 ## [v2.6.0](https://github.com/rails-on-services/apartment/tree/v2.6.0) (2020-05-14)
@@ -88,13 +96,13 @@
 - Error Dropping Tenant [\#46](https://github.com/rails-on-services/apartment/issues/46)
 - After switch callback not working with nil argument [\#42](https://github.com/rails-on-services/apartment/issues/42)
 - Add tenant info to console boot? [\#41](https://github.com/rails-on-services/apartment/issues/41)
-- Custom Console deprecation warning [\#37](https://github.com/rails-on-services/apartment/issues/37)
 - Support configuration for skip checking of schema existence before switching [\#26](https://github.com/rails-on-services/apartment/issues/26)
 
 **Merged pull requests:**
 
 - \[Resolves \#37\] Custom console deprecation warning [\#49](https://github.com/rails-on-services/apartment/pull/49) ([rpbaltazar](https://github.com/rpbaltazar))
 - Prepare Release 2.6.0 [\#48](https://github.com/rails-on-services/apartment/pull/48) ([rpbaltazar](https://github.com/rpbaltazar))
+- Add console welcome message [\#47](https://github.com/rails-on-services/apartment/pull/47) ([JeremiahChurch](https://github.com/JeremiahChurch))
 - \[Resolves \#26\] Support configuration for skip checking of schema existence before switching [\#45](https://github.com/rails-on-services/apartment/pull/45) ([rpbaltazar](https://github.com/rpbaltazar))
 - \[Resolves \#42\] After switch callback not working with nil argument [\#43](https://github.com/rails-on-services/apartment/pull/43) ([rpbaltazar](https://github.com/rpbaltazar))
 
@@ -126,7 +134,6 @@
 - \[Resolves \#31\] Add latest ruby verisons to test matrix [\#32](https://github.com/rails-on-services/apartment/pull/32) ([rpbaltazar](https://github.com/rpbaltazar))
 - \[Chore\] refactored files to their names [\#29](https://github.com/rails-on-services/apartment/pull/29) ([rpbaltazar](https://github.com/rpbaltazar))
 - \[Resolves \#27\] When manually switching the connection it resets the search path [\#28](https://github.com/rails-on-services/apartment/pull/28) ([rpbaltazar](https://github.com/rpbaltazar))
-- \[Resolves \#11\] Remove old ruby and rails versions from the supported versions [\#20](https://github.com/rails-on-services/apartment/pull/20) ([rpbaltazar](https://github.com/rpbaltazar))
 - Support rails 6.1 [\#7](https://github.com/rails-on-services/apartment/pull/7) ([jean-francois-labbe](https://github.com/jean-francois-labbe))
 
 ## [2.4.0](https://github.com/rails-on-services/apartment/tree/2.4.0) (2020-04-01)
@@ -151,6 +158,7 @@
 - Cleanup travis matrix [\#23](https://github.com/rails-on-services/apartment/pull/23) ([rpbaltazar](https://github.com/rpbaltazar))
 - Prepare v2.4.0 Release [\#22](https://github.com/rails-on-services/apartment/pull/22) ([rpbaltazar](https://github.com/rpbaltazar))
 - Updated readme badges [\#21](https://github.com/rails-on-services/apartment/pull/21) ([rpbaltazar](https://github.com/rpbaltazar))
+- \[Resolves \#11\] Remove old ruby and rails versions from the supported versions [\#20](https://github.com/rails-on-services/apartment/pull/20) ([rpbaltazar](https://github.com/rpbaltazar))
 - Rescuing ActiveRecord::NoDatabaseError when dropping tenants [\#19](https://github.com/rails-on-services/apartment/pull/19) ([rpbaltazar](https://github.com/rpbaltazar))
 - Skip init if we're running webpacker:compile [\#18](https://github.com/rails-on-services/apartment/pull/18) ([rpbaltazar](https://github.com/rpbaltazar))
 - \[Resolves \#14\] Add console info about tenants and fast switches [\#17](https://github.com/rails-on-services/apartment/pull/17) ([rpbaltazar](https://github.com/rpbaltazar))
