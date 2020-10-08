@@ -104,6 +104,10 @@ module Apartment
         conn.execute(schema)
       end
 
+      def rollback_transaction(conn)
+        conn.execute("ROLLBACK;")
+      end
+
       #   Generate the final search path to set including persistent_schemas
       #
       def full_search_path
