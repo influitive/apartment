@@ -594,6 +594,17 @@ module Apartment
 end
 ```
 
+## Running rails console without a connection
+
+Before this fork, running rails with the gem installed would connect to the database
+which is different than the default behavior. To disable this initial
+connection, just run with `APARTMENT_DISABLE_INIT` set to something:
+
+```shell
+$ APARTMENT_DISABLE_INIT=true DATABASE_URL=postgresql://localhost:1234/buk_development bin/rails runner 'puts 1'
+# 1
+```
+
 ## Contributing
 
 * In both `spec/dummy/config` and `spec/config`, you will see `database.yml.sample` files
