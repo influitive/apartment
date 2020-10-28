@@ -2,7 +2,7 @@
 
 module ActiveRecord
   # Supports the logging configuration to prepend the database and schema in the ActiveRecord log
-  class LogSubscriber
+  class LogSubscriber < ActiveSupport::LogSubscriber
     def apartment_log
       return unless Apartment.active_record_log
 
