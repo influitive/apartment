@@ -164,10 +164,6 @@ module Apartment
           create_tenant_command(conn, tenant)
         end
       rescue *rescuable_exceptions => e
-        # rollback if unable to create
-        with_neutral_connection(tenant) do |conn|
-          rollback_transaction(conn)
-        end
         raise_create_tenant_error!(tenant, e)
       end
 

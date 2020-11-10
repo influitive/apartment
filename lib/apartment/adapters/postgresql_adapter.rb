@@ -102,6 +102,9 @@ module Apartment
         COMMIT;)
 
         conn.execute(schema)
+      rescue *rescuable_exceptions => e
+        rollback_transaction(conn)
+        raise e
       end
 
       def rollback_transaction(conn)
