@@ -97,11 +97,16 @@ module Apartment
       end
 
       def create_tenant_command(conn, tenant)
-        schema = %(BEGIN;
-        CREATE SCHEMA "#{tenant}";
-        COMMIT;)
+        # NOTE: This was causing some tests to fail because of the database strategy for rspec
+        if ActiveRecord::Base.connection.open_transactions > 0
+          conn.execute(%(CREATE SCHEMA "#{tenant}"))
+        else
+          schema = %(BEGIN;
+          CREATE SCHEMA "#{tenant}";
+          COMMIT;)
 
-        conn.execute(schema)
+          conn.execute(schema)
+        end
       rescue *rescuable_exceptions => e
         rollback_transaction(conn)
         raise e
