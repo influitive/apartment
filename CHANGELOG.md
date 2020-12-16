@@ -12,6 +12,12 @@
 
 - Fix seeding errors [\#86](https://github.com/rails-on-services/apartment/issues/86)
 - When tests run in a transaction, new tenants in tests fail to create [\#123](https://github.com/rails-on-services/apartment/issues/123)
+- Reverted unsafe initializer - introduces the possibility of disabling the initial connection to the database via
+environment variable. Relates to the following tickets/PRs:
+  - [#113](https://github.com/rails-on-services/apartment/issues/113)
+  - [#39](https://github.com/rails-on-services/apartment/pull/39)
+  - [#53](https://github.com/rails-on-services/apartment/pull/53)
+  - [#118](https://github.com/rails-on-services/apartment/pull/118)
 
 **Closed issues:**
 

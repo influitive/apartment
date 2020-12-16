@@ -594,11 +594,10 @@ module Apartment
 end
 ```
 
-## Running rails console without a connection
+## Running rails console without a connection to the database
 
-Before this fork, running rails with the gem installed would connect to the database
-which is different than the default behavior. To disable this initial
-connection, just run with `APARTMENT_DISABLE_INIT` set to something:
+By default, once apartment starts, it establishes a connection to the database. It is possible to
+disable this initial connection, by running with `APARTMENT_DISABLE_INIT` set to something:
 
 ```shell
 $ APARTMENT_DISABLE_INIT=true DATABASE_URL=postgresql://localhost:1234/buk_development bin/rails runner 'puts 1'
