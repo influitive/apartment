@@ -10,12 +10,7 @@ apartment_namespace = namespace :apartment do
     Apartment::TaskHelper.warn_if_tenants_empty
 
     Apartment::TaskHelper.tenants.each do |tenant|
-      begin
-        puts("Creating #{tenant} tenant")
-        Apartment::Tenant.create(tenant)
-      rescue Apartment::TenantExists => e
-        puts e.message
-      end
+      Apartment::TaskHelper.create_tenant(tenant)
     end
   end
 
@@ -36,6 +31,7 @@ apartment_namespace = namespace :apartment do
     Apartment::TaskHelper.warn_if_tenants_empty
     Apartment::TaskHelper.each_tenant do |tenant|
       begin
+        Apartment::TaskHelper.create_tenant(tenant)
         puts("Migrating #{tenant} tenant")
         Apartment::Migrator.migrate tenant
       rescue Apartment::TenantNotFound => e
@@ -45,11 +41,12 @@ apartment_namespace = namespace :apartment do
   end
 
   desc 'Seed all tenants'
-  task seed: :create do
+  task :seed do
     Apartment::TaskHelper.warn_if_tenants_empty
 
     Apartment::TaskHelper.each_tenant do |tenant|
       begin
+        Apartment::TaskHelper.create_tenant(tenant)
         puts("Seeding #{tenant} tenant")
         Apartment::Tenant.switch(tenant) do
           Apartment::Tenant.seed

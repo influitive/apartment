@@ -29,7 +29,7 @@ shared_examples_for 'a generic apartment adapter able to handle custom configura
           receive(:establish_connection).with(expected_args).and_call_original
         )
 
-        # because we dont have another server to connect to it errors
+        # because we don't have another server to connect to it errors
         # what matters is establish_connection receives proper args
         expect { subject.create(custom_tenant_name) }.to raise_error(Apartment::TenantExists)
       end

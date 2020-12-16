@@ -4,9 +4,25 @@
 
 [Full Changelog](https://github.com/rails-on-services/apartment/compare/v2.7.2...HEAD)
 
+**Implemented enhancements:**
+
+- Uses a transaction to create a tenant [\#66](https://github.com/rails-on-services/apartment/issues/66)
+
+**Fixed bugs:**
+
+- Fix seeding errors [\#86](https://github.com/rails-on-services/apartment/issues/86)
+- When tests run in a transaction, new tenants in tests fail to create [\#123](https://github.com/rails-on-services/apartment/issues/123)
+- Reverted unsafe initializer - introduces the possibility of disabling the initial connection to the database via
+environment variable. Relates to the following tickets/PRs:
+  - [#113](https://github.com/rails-on-services/apartment/issues/113)
+  - [#39](https://github.com/rails-on-services/apartment/pull/39)
+  - [#53](https://github.com/rails-on-services/apartment/pull/53)
+  - [#118](https://github.com/rails-on-services/apartment/pull/118)
+
 **Closed issues:**
 
 - Improve changelog automatic generation [\#98](https://github.com/rails-on-services/apartment/issues/98)
+- Relaxes dependencies to allow rails 6.1 [\#121](https://github.com/rails-on-services/apartment/issues/121)
 
 ## [v2.7.2](https://github.com/rails-on-services/apartment/tree/v2.7.2) (2020-07-17)
 
