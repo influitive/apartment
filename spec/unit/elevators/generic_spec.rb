@@ -4,11 +4,13 @@ require 'spec_helper'
 require 'apartment/elevators/generic'
 
 describe Apartment::Elevators::Generic do
+  # rubocop:disable Lint/ConstantDefinitionInBlock
   class MyElevator < described_class
     def parse_tenant_name(*)
       'tenant2'
     end
   end
+  # rubocop:enable Lint/ConstantDefinitionInBlock
 
   subject(:elevator) { described_class.new(proc {}) }
 
