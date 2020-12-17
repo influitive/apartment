@@ -35,9 +35,11 @@ jobs:
       - run:
           name: Configure spec dummy config database.yml
           command: cp spec/dummy/config/database.yml.sample spec/dummy/config/database.yml
+      - setup_remote_docker:
+          version: 19.03.13
       - run:
           name: Start database services
-          command: sudo docker-compose up -d
+          command: docker-compose up -d
       - run:
           name: Run tests
           command: bundle exec rspec
