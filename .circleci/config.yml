@@ -1,8 +1,36 @@
+version: 2.1
+orbs:
+  ruby: circleci/ruby@0.1.2
+
+jobs:
+  build:
+    docker:
+      - image: circleci/ruby:2.6.3-stretch-node
+    executor: ruby/default
+    steps:
+      - checkout
+      - run:
+          name: Which bundler?
+          command: bundle -v
+      - ruby/bundle-install
+
 workflows:
   workflow:
     jobs:
       - build:
           matrix:
             parameters:
-              ruby-versions: []
-              rails-version: []
+              ruby_versions:
+                - jruby-9.2.11.0
+                - 2.4.10
+                - 2.5.8
+                - 2.6.6
+                - 2.7.1
+                - jruby-head
+                - ruby-head
+              gemfiles:
+                - gemfiles/rails_5_0.gemfile
+                - gemfiles/rails_5_1.gemfile
+                - gemfiles/rails_5_2.gemfile
+                - gemfiles/rails_6_0.gemfile
+                - gemfiles/rails_master.gemfile
