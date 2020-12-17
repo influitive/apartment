@@ -1,0 +1,8 @@
+workflows:
+  workflow:
+    jobs:
+      - build:
+          matrix:
+            parameters:
+              ruby-versions: []
+              rails-version: []
