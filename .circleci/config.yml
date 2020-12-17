@@ -36,6 +36,10 @@ jobs:
           command: sudo apt install -y postgresql-client
 
       - run:
+          name: Install mysql client
+          command: sudo apt install -y mysql-server
+
+      - run:
           name: Configure config database.yml
           command: bundle exec rake db:copy_credentials
 
