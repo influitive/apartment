@@ -26,6 +26,9 @@ jobs:
       - run:
           name: Install gems
           command: bundle install --gemfile=<< parameters.gemfile >>
+      - run:
+          name: Configure spec config database.yml
+          command: cp spec/config/database.yml.sample spec/config/database.yml
       # TODO: copy config/database.yml.samples before tests start
       # - run:
       #     name: Run tests
@@ -37,7 +40,6 @@ workflows:
       - build:
           matrix:
             parameters:
-              # ruby_versions: ["jruby-9.2.11.0", "2.4.10", "2.5.8", "2.6.6", "2.7.1", "jruby-head", "ruby-head"]
-              # gemfiles: ["gemfiles/rails_5_0.gemfile", "gemfiles/rails_5_1.gemfile", "gemfiles/rails_5_2.gemfile", "gemfiles/rails_6_0.gemfile", "gemfiles/rails_master.gemfile"]
+              # TODO: figure out jruby image with git
               ruby_version: ["ruby:2.6-buster", "ruby:2.7-buster", "jruby:9.2"]
               gemfile: ["gemfiles/rails_5_2.gemfile", "gemfiles/rails_6_0.gemfile"]
