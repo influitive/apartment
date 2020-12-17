@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'active_record/log_subscriber'
+
 module Apartment
   class LogSubscriber < ActiveRecord::LogSubscriber
     def sql(event)

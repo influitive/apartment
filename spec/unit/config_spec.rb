@@ -50,6 +50,20 @@ describe Apartment do
       expect(Apartment.seed_after_create).to be true
     end
 
+    it 'should set tenant_presence_check' do
+      Apartment.configure do |config|
+        config.tenant_presence_check = true
+      end
+      expect(Apartment.tenant_presence_check).to be true
+    end
+
+    it 'should set active_record_log' do
+      Apartment.configure do |config|
+        config.active_record_log = true
+      end
+      expect(Apartment.active_record_log).to be true
+    end
+
     context 'databases' do
       let(:users_conf_hash) { { port: 5444 } }
 
