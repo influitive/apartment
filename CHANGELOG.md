@@ -9,6 +9,7 @@
 **Fixed bugs:**
 
 - New version raises an error with ActiveSupport::LogSubscriber [#128](https://github.com/rails-on-services/apartment/issues/128)
+- Weird logs when tenant fails to create [#127](<https://github.com/rails-on-services/apartment/issues/127>)
 
 **Closed issues:**
 
