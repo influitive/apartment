@@ -98,7 +98,7 @@ module Apartment
 
       def create_tenant_command(conn, tenant)
         # NOTE: This was causing some tests to fail because of the database strategy for rspec
-        if ActiveRecord::Base.connection.open_transactions > 0
+        if ActiveRecord::Base.connection.open_transactions.positive?
           conn.execute(%(CREATE SCHEMA "#{tenant}"))
         else
           schema = %(BEGIN;
@@ -113,7 +113,7 @@ module Apartment
       end
 
       def rollback_transaction(conn)
-        conn.execute("ROLLBACK;")
+        conn.execute('ROLLBACK;')
       end
 
       #   Generate the final search path to set including persistent_schemas

@@ -6,7 +6,6 @@ require 'apartment/reloader'
 
 module Apartment
   class Railtie < Rails::Railtie
-
     #
     #   Set up our default config options
     #   Do this before the app initializers run so we don't override custom settings
@@ -27,13 +26,14 @@ module Apartment
     end
 
     #   Hook into ActionDispatch::Reloader to ensure Apartment is properly initialized
-    #   Note that this doens't entirely work as expected in Development, because this is called before classes are reloaded
+    #   Note that this doesn't entirely work as expected in Development,
+    #   because this is called before classes are reloaded
     #   See the middleware/console declarations below to help with this. Hope to fix that soon.
     #
     config.to_prepare do
       next if ARGV.any? { |arg| arg =~ /\Aassets:(?:precompile|clean)\z/ }
       next if ARGV.any? { |arg| arg == 'webpacker:compile' }
-      next if ENV["APARTMENT_DISABLE_INIT"]
+      next if ENV['APARTMENT_DISABLE_INIT']
 
       begin
         Apartment.connection_class.connection_pool.with_connection do
@@ -45,7 +45,7 @@ module Apartment
       end
     end
 
-    config.after_initialize do |app|
+    config.after_initialize do
       # NOTE: Load the custom log subscriber if enabled
       if Apartment.active_record_log
         ActiveSupport::Notifications.unsubscribe 'sql.active_record'
@@ -72,10 +72,13 @@ module Apartment
         app.config.middleware.use Apartment::Reloader
       end
 
-      # Overrides reload! to also call Apartment::Tenant.init as well so that the reloaded classes have the proper table_names
+      # Overrides reload! to also call Apartment::Tenant.init as well
+      # so that the reloaded classes have the proper table_names
+      # rubocop:disable Lint/Debugger
       console do
         require 'apartment/console'
       end
+      # rubocop:enable Lint/Debugger
     end
   end
 end

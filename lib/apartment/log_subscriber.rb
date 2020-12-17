@@ -3,6 +3,7 @@
 require 'active_record/log_subscriber'
 
 module Apartment
+  # Custom Log subscriber to include database name and schema name in sql logs
   class LogSubscriber < ActiveRecord::LogSubscriber
     def sql(event)
       super(event)
