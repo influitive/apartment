@@ -66,8 +66,5 @@ workflows:
       - build:
           matrix:
             parameters:
-              # TODO: figure out jruby image with git
-              # ruby_version: ["ruby:2.6-buster", "ruby:2.7-buster", "jruby:9.2"]
-              ruby_version: ["ruby:2.7-buster"]
-              # gemfile: ["gemfiles/rails_5_2.gemfile", "gemfiles/rails_6_0.gemfile"]
-              gemfile: ["gemfiles/rails_6_0.gemfile"]
+              ruby_version: ["ruby:2.6-buster", "ruby:2.7-buster", "jruby:9.2"]
+              gemfile: ["gemfiles/rails_5_2.gemfile", "gemfiles/rails_6_0.gemfile"]
