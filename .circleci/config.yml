@@ -66,5 +66,5 @@ workflows:
       - build:
           matrix:
             parameters:
-              ruby_version: ["ruby:2.6-buster", "ruby:2.7-buster", "jruby:9.2.11.1-jdk14"]
+              ruby_version: ["ruby:2.6-buster", "ruby:2.7-buster", "jruby:9.2.11.1-jdk11"]
               gemfile: ["gemfiles/rails_5_2.gemfile", "gemfiles/rails_6_0.gemfile"]
