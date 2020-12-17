@@ -33,6 +33,9 @@ jobs:
           name: Configure spec dummy config database.yml
           command: cp spec/dummy/config/database.yml.sample spec/dummy/config/database.yml
       - run:
+          name: Start database services
+          command: docker-compose up -d
+      - run:
           name: Run tests
           command: bundle exec rspec
 
