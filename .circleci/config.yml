@@ -5,7 +5,7 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: circleci/ruby:<< parameters.ruby_version >>-stretch-node
+      - image: << parameters.ruby_version >>
     # executor: ruby/default
     parameters:
       ruby_version:
@@ -39,5 +39,5 @@ workflows:
             parameters:
               # ruby_versions: ["jruby-9.2.11.0", "2.4.10", "2.5.8", "2.6.6", "2.7.1", "jruby-head", "ruby-head"]
               # gemfiles: ["gemfiles/rails_5_0.gemfile", "gemfiles/rails_5_1.gemfile", "gemfiles/rails_5_2.gemfile", "gemfiles/rails_6_0.gemfile", "gemfiles/rails_master.gemfile"]
-              ruby_version: ["2.6.6", "2.7.1"]
+              ruby_version: ["ruby:2.6-alpine", "ruby:2.7-alpine", "jruby:9.2"]
               gemfile: ["gemfiles/rails_5_2.gemfile", "gemfiles/rails_6_0.gemfile"]
