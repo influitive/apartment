@@ -338,6 +338,21 @@ Apartment.configure do |config|
 end
 ```
 
+### Additional logging information
+
+Enabling this configuration will output the database that the process is currently connected to as well as which
+schemas are in the search path. This can be enabled by setting to true the `active_record_log` configuration.
+
+**Example log output:**
+
+<img src="documentation/images/log_example.png">
+
+```ruby
+Apartment.configure do |config|
+  active_record_log = true
+end
+```
+
 ### Excluding models
 
 If you have some models that should always access the 'public' tenant, you can specify this by configuring Apartment using `Apartment.configure`. This will yield a config object for you. You can set excluded models like so:
