@@ -23,6 +23,9 @@ jobs:
       - run:
           name: Install gems
           command: bundle install --gemfile=<< parameters.gemfile >>
+      - run:
+          name: Run tests
+          command: bundle exec rspec
 
 workflows:
   test_suite:
