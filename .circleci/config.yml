@@ -5,7 +5,7 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: circleci/ruby:<< matrix.ruby_version >>-stretch-node
+      - image: circleci/ruby:<< parameters.ruby_version >>-stretch-node
     # executor: ruby/default
     parameters:
       ruby_version:
