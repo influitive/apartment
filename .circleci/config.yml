@@ -5,7 +5,7 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: circleci/ruby:2.6.3-stretch-node
+      - image: circleci/ruby:<< matrix.ruby_version >>-stretch-node
     # executor: ruby/default
     parameters:
       ruby_version:
@@ -21,11 +21,15 @@ jobs:
           name: Which bundler?
           command: bundle -v
       - run:
+          name: Which ruby?
+          command: ruby -v
+      - run:
           name: Install gems
           command: bundle install --gemfile=<< parameters.gemfile >>
-      - run:
-          name: Run tests
-          command: bundle exec rspec
+      # TODO: copy config/database.yml.samples before tests start
+      # - run:
+      #     name: Run tests
+      #     command: bundle exec rspec
 
 workflows:
   test_suite:
