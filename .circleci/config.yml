@@ -1,17 +1,16 @@
 version: 2.1
-# orbs:
-#   ruby: circleci/ruby@0.1.2
 
 jobs:
   build:
     docker:
       - image: << parameters.ruby_version >>
-    # executor: ruby/default
     parameters:
       ruby_version:
         type: string
       gemfile:
         type: string
+    environment:
+      BUNDLE_GEMFILE: << parameters.gemfile >>
     steps:
       - checkout
       - run:
@@ -25,7 +24,7 @@ jobs:
           command: ruby -v
       - run:
           name: Install gems
-          command: bundle install --gemfile=<< parameters.gemfile >>
+          command: bundle install
       # TODO: copy config/database.yml.samples before tests start
       - run:
           name: Configure spec config database.yml
