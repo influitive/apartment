@@ -30,6 +30,9 @@ jobs:
           name: Configure spec config database.yml
           command: cp spec/config/database.yml.sample spec/config/database.yml
       - run:
+          name: Configure spec dummy config database.yml
+          command: cp spec/dummy/config/database.yml.sample spec/dummy/config/database.yml
+      - run:
           name: Run tests
           command: bundle exec rspec
 
