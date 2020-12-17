@@ -50,8 +50,7 @@ jobs:
       - run:
           name: Database Setup
           command: |
-            bundle exec rake db:create
-            bundle exec rake db:structure:load
+            bundle exec rake mysql:build_db postgres:build_db
 
       - run:
           name: Run tests
