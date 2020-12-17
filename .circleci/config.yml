@@ -16,14 +16,14 @@ jobs:
       # Restore Cached Dependencies
       - restore_cache:
           keys:
-            - gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "$BUNDLE_GEMFILE.lock" }}
+            - gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "${BUNDLE_GEMFILE}.lock" }}
             - gem-cache-v1-{{ arch }}-{{ .Branch }}
             - gem-cache-v1
 
       - run: bundle install --path vendor/bundle
 
       - save_cache:
-          key: gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "$BUNDLE_GEMFILE.lock" }}
+          key: gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "${BUNDLE_GEMFILE}.lock" }}
           paths:
             - vendor/bundle
 
