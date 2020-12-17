@@ -343,6 +343,8 @@ end
 Enabling this configuration will output the database that the process is currently connected to as well as which
 schemas are in the search path. This can be enabled by setting to true the `active_record_log` configuration.
 
+Please note that our custom logger inherits from `ActiveRecord::LogSubscriber` so this will be required for the configuration to work.
+
 **Example log output:**
 
 <img src="documentation/images/log_example.png">
