@@ -41,6 +41,12 @@ jobs:
           name: Start database services
           command: docker-compose up -d
       - run:
+          name: wait for postgresql
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run:
+          name: wait for mysql
+          command: dockerize -wait tcp://localhost:3306 -timeout 1m
+      - run:
           name: Run tests
           command: bundle exec rspec
 
