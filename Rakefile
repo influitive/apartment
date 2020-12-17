@@ -65,6 +65,7 @@ namespace :postgres do
     params << "-U#{pg_config['username']}"
     params << "-h#{pg_config['host']}" if pg_config['host']
     params << "-p#{pg_config['port']}" if pg_config['port']
+
     begin
       `createdb #{params.join(' ')}`
     rescue StandardError

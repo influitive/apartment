@@ -18,26 +18,26 @@ jobs:
     steps:
       - checkout
       # Restore Cached Dependencies
-      - restore_cache:
-          keys:
-            - gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "<< parameters.gemfile >>.lock" }}
-            - gem-cache-v1-{{ arch }}-{{ .Branch }}
-            - gem-cache-v1
+      # - restore_cache:
+      #     keys:
+      #       - gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "<< parameters.gemfile >>.lock" }}
+      #       - gem-cache-v1-{{ arch }}-{{ .Branch }}
+      #       - gem-cache-v1
 
       - run: bundle install --path vendor/bundle
 
-      - save_cache:
-          key: gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "<< parameters.gemfile >>.lock" }}
-          paths:
-            - vendor/bundle
+      # - save_cache:
+      #     key: gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "<< parameters.gemfile >>.lock" }}
+      #     paths:
+      #       - vendor/bundle
 
       - run:
-          name: Configure spec config database.yml
-          command: cp spec/config/{database.yml.sample,database.yml}
+          name: Install postgres client
+          command: sudo apt install -y postgresql-client
 
       - run:
-          name: Configure spec dummy config database.yml
-          command: cp spec/dummy/config/{database.yml.sample,database.yml}
+          name: Configure config database.yml
+          command: bundle exec rake db:copy_credentials
 
       - run:
           name: wait for postgresql
@@ -47,10 +47,15 @@ jobs:
           name: wait for mysql
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
 
+      # - run:
+      #     name: Database Setup
+      #     command: |
+      #       bundle exec rake db:test:prepare
+
       - run:
           name: Database Setup
           command: |
-            bundle exec rake mysql:build_db postgres:build_db
+            bundle exec rake postgres:build_db
 
       - run:
           name: Run tests
