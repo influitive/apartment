@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: << parameters.ruby_version >>
+      - image: circle/<< parameters.ruby_version >>
     parameters:
       ruby_version:
         type: string
