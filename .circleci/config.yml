@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  rubocop: hanachin/rubocop@0.0.6
+
 jobs:
   build:
     docker:
@@ -61,10 +64,14 @@ jobs:
           command: bundle exec rspec
 
 workflows:
-  test_suite:
+  tests:
     jobs:
       - build:
           matrix:
             parameters:
               ruby_version: ["ruby:2.6-buster", "ruby:2.7-buster"]
               gemfile: ["gemfiles/rails_5_2.gemfile", "gemfiles/rails_6_0.gemfile"]
+
+  rubocop:
+    jobs:
+      - rubocop/rubocop
