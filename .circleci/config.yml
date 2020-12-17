@@ -74,4 +74,5 @@ workflows:
 
   rubocop:
     jobs:
-      - rubocop/rubocop
+      - rubocop/rubocop:
+          version: 0.88.0

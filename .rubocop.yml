@@ -4,6 +4,7 @@ AllCops:
   Exclude:
     - 'gemfiles/**/*.gemfile'
     - 'gemfiles/vendor/**/*'
+    - 'spec/dummy_engine/dummy_engine.gemspec'
 
 Style/WordArray:
   Exclude:

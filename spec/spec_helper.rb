@@ -22,12 +22,14 @@ require 'rspec/rails'
 require 'capybara/rspec'
 require 'capybara/rails'
 
+# rubocop:disable Lint/ConstantDefinitionInBlock
 begin
   require 'pry'
   silence_warnings { IRB = Pry }
 rescue LoadError
   nil
 end
+# rubocop:enable Lint/ConstantDefinitionInBlock
 
 ActionMailer::Base.delivery_method = :test
 ActionMailer::Base.perform_deliveries = true
