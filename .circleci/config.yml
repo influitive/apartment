@@ -23,6 +23,9 @@ jobs:
           name: Which ruby?
           command: ruby -v
       - run:
+          name: Which docker?
+          command: docker -v
+      - run:
           name: Install gems
           command: bundle install
       # TODO: copy config/database.yml.samples before tests start
@@ -34,7 +37,7 @@ jobs:
           command: cp spec/dummy/config/database.yml.sample spec/dummy/config/database.yml
       - run:
           name: Start database services
-          command: docker-compose up -d
+          command: sudo docker-compose up -d
       - run:
           name: Run tests
           command: bundle exec rspec
@@ -46,5 +49,7 @@ workflows:
           matrix:
             parameters:
               # TODO: figure out jruby image with git
-              ruby_version: ["ruby:2.6-buster", "ruby:2.7-buster"]
-              gemfile: ["gemfiles/rails_5_2.gemfile", "gemfiles/rails_6_0.gemfile"]
+              # ruby_version: ["ruby:2.6-buster", "ruby:2.7-buster", "jruby:9.2"]
+              ruby_version: ["ruby:2.7-buster"]
+              # gemfile: ["gemfiles/rails_5_2.gemfile", "gemfiles/rails_6_0.gemfile"]
+              gemfile: ["gemfiles/rails_6_0.gemfile"]
