@@ -1,6 +1,6 @@
 version: 2.1
-orbs:
-  ruby: circleci/ruby@0.1.2
+# orbs:
+#   ruby: circleci/ruby@0.1.2
 
 jobs:
   build:
@@ -15,9 +15,14 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install bundler
+          command: gem install bundler
+      - run:
           name: Which bundler?
           command: bundle -v
-      - ruby/bundle-install --gemfile=<< parameters.gemfile >>
+      - run:
+          name: Install gems
+          command: bundle install --gemfile=<< parameters.gemfile >>
 
 workflows:
   test_suite:
