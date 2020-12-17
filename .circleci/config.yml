@@ -6,7 +6,7 @@ jobs:
   build:
     docker:
       - image: circleci/ruby:2.6.3-stretch-node
-    executor: ruby/default
+    # executor: ruby/default
     parameters:
       ruby_version:
         type: string
