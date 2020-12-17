@@ -37,7 +37,7 @@ jobs:
 
       - run:
           name: Install mysql client
-          command: sudo apt install -y mysql-server
+          command: sudo apt install -y default-mysql-client
 
       - run:
           name: Configure config database.yml
@@ -51,15 +51,10 @@ jobs:
           name: wait for mysql
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
 
-      # - run:
-      #     name: Database Setup
-      #     command: |
-      #       bundle exec rake db:test:prepare
-
       - run:
           name: Database Setup
           command: |
-            bundle exec rake postgres:build_db
+            bundle exec rake db:test:prepare
 
       - run:
           name: Run tests
