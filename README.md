@@ -351,7 +351,7 @@ Please note that our custom logger inherits from `ActiveRecord::LogSubscriber` s
 
 ```ruby
 Apartment.configure do |config|
-  active_record_log = true
+  config.active_record_log = true
 end
 ```
 
