@@ -14,23 +14,23 @@ jobs:
           command: bundle -v
       - ruby/bundle-install
 
-workflows:
-  workflow:
-    jobs:
-      - build:
-          matrix:
-            parameters:
-              ruby_versions:
+# workflows:
+#   workflow:
+#     jobs:
+#       - build:
+#           matrix:
+#             parameters:
+#               ruby_versions:
                 # - jruby-9.2.11.0
                 # - 2.4.10
                 # - 2.5.8
                 # - 2.6.6
-                - 2.7.1
+                # - 2.7.1
                 # - jruby-head
                 # - ruby-head
-              gemfiles:
+              # gemfiles:
                 # - gemfiles/rails_5_0.gemfile
                 # - gemfiles/rails_5_1.gemfile
                 # - gemfiles/rails_5_2.gemfile
-                - gemfiles/rails_6_0.gemfile
+                # - gemfiles/rails_6_0.gemfile
                 # - gemfiles/rails_master.gemfile
