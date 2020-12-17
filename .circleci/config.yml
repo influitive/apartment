@@ -4,6 +4,10 @@ jobs:
   build:
     docker:
       - image: circleci/<< parameters.ruby_version >>
+      - image: circleci/postgres:9.6.2-alpine
+      - image: circleci/mysql:5.7
+        environment:
+          MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     parameters:
       ruby_version:
         type: string
@@ -35,16 +39,9 @@ jobs:
           name: Configure spec dummy config database.yml
           command: cp spec/dummy/config/{database.yml.sample,database.yml}
 
-      - setup_remote_docker:
-          version: 19.03.13
-
       - run:
-          name: Start database services
-          command: docker-compose up -d
-
-      # - run:
-      #     name: wait for postgresql
-      #     command: dockerize -wait tcp://localhost:5432 -timeout 1m
+          name: wait for postgresql
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
 
       - run:
           name: wait for mysql
