@@ -13,39 +13,43 @@ jobs:
       BUNDLE_GEMFILE: << parameters.gemfile >>
     steps:
       - checkout
-      - run:
-          name: Install bundler
-          command: gem install bundler
-      - run:
-          name: Which bundler?
-          command: bundle -v
-      - run:
-          name: Which ruby?
-          command: ruby -v
-      - run:
-          name: Which docker?
-          command: docker -v
-      - run:
-          name: Install gems
-          command: bundle install
-      # TODO: copy config/database.yml.samples before tests start
+      # Restore Cached Dependencies
+      - restore_cache:
+          keys:
+            - gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+            - gem-cache-v1-{{ arch }}-{{ .Branch }}
+            - gem-cache-v1
+
+      - run: bundle install --path vendor/bundle
+
+      - save_cache:
+          key: gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
       - run:
           name: Configure spec config database.yml
-          command: cp spec/config/database.yml.sample spec/config/database.yml
+          command: cp spec/config/{database.yml.sample,database.yml}
+
       - run:
           name: Configure spec dummy config database.yml
-          command: cp spec/dummy/config/database.yml.sample spec/dummy/config/database.yml
+          command: cp spec/dummy/config/{database.yml.sample,database.yml}
+
       - setup_remote_docker:
           version: 19.03.13
+
       - run:
           name: Start database services
           command: docker-compose up -d
-      - run:
-          name: wait for postgresql
-          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      # - run:
+      #     name: wait for postgresql
+      #     command: dockerize -wait tcp://localhost:5432 -timeout 1m
+
       - run:
           name: wait for mysql
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
+
       - run:
           name: Run tests
           command: bundle exec rspec
