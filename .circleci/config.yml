@@ -7,6 +7,11 @@ jobs:
     docker:
       - image: circleci/ruby:2.6.3-stretch-node
     executor: ruby/default
+    parameters:
+      ruby_versions:
+        type: string
+      gemfiles:
+        type: string
     steps:
       - checkout
       - run:
