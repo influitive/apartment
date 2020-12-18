@@ -26,20 +26,20 @@ shared_examples_for 'a generic apartment adapter' do
     end
 
     it 'should not connect if env var is set' do
-      ENV["APARTMENT_DISABLE_INIT"] = "true"
+      ENV['APARTMENT_DISABLE_INIT'] = 'true'
       begin
         ActiveRecord::Base.connection_pool.disconnect!
 
         Apartment::Railtie.config.to_prepare_blocks.map(&:call)
 
         num_available_connections = Apartment.connection_class.connection_pool
-          .instance_variable_get(:@available)
-          .instance_variable_get(:@queue)
-          .size
+                                             .instance_variable_get(:@available)
+                                             .instance_variable_get(:@queue)
+                                             .size
 
         expect(num_available_connections).to eq(0)
       ensure
-        ENV.delete("APARTMENT_DISABLE_INIT")
+        ENV.delete('APARTMENT_DISABLE_INIT')
       end
     end
   end

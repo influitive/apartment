@@ -4,6 +4,11 @@ AllCops:
   Exclude:
     - 'gemfiles/**/*.gemfile'
     - 'gemfiles/vendor/**/*'
+    - 'spec/dummy_engine/dummy_engine.gemspec'
+
+Gemspec/RequiredRubyVersion:
+  Exclude:
+    - 'ros-apartment.gemspec'
 
 Style/WordArray:
   Exclude:

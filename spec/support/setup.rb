@@ -3,6 +3,7 @@
 module Apartment
   module Spec
     module Setup
+      # rubocop:disable Metrics/AbcSize
       def self.included(base)
         base.instance_eval do
           let(:db1) { Apartment::Test.next_db }
@@ -41,6 +42,7 @@ module Apartment
           end
         end
       end
+      # rubocop:enable Metrics/AbcSize
     end
   end
 end
