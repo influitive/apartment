@@ -27,7 +27,7 @@ module Apartment
 
     WRITER_METHODS = %i[tenant_names database_schema_file excluded_models
                         persistent_schemas connection_class
-                        db_migrate_tenants seed_data_file
+                        db_migrate_tenants db_migrate_tenant_missing_strategy seed_data_file
                         parallel_migration_threads pg_excluded_names].freeze
 
     attr_accessor(*ACCESSOR_METHODS)
@@ -70,6 +70,21 @@ module Apartment
       return @db_migrate_tenants if defined?(@db_migrate_tenants)
 
       @db_migrate_tenants = true
+    end
+
+    # How to handle tenant missing on db:migrate
+    # defaults to :rescue_exception
+    # available options: rescue_exception, raise_exception, create_tenant
+    def db_migrate_tenant_missing_strategy
+      valid = %i[rescue_exception raise_exception create_tenant]
+      value = @db_migrate_tenant_missing_strategy || :rescue_exception
+
+      return value if valid.include?(value)
+
+      key_name  = 'config.db_migrate_tenant_missing_strategy'
+      opt_names = valid.join(', ')
+
+      raise ApartmentError, "Option #{value} not valid for `#{key_name}`. Use one of #{opt_names}"
     end
 
     # Default to empty array
