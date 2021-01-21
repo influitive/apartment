@@ -30,13 +30,7 @@ apartment_namespace = namespace :apartment do
   task :migrate do
     Apartment::TaskHelper.warn_if_tenants_empty
     Apartment::TaskHelper.each_tenant do |tenant|
-      begin
-        Apartment::TaskHelper.create_tenant(tenant)
-        puts("Migrating #{tenant} tenant")
-        Apartment::Migrator.migrate tenant
-      rescue Apartment::TenantNotFound => e
-        puts e.message
-      end
+      Apartment::TaskHelper.migrate_tenant(tenant)
     end
   end
 
