@@ -1,14 +1,23 @@
 # Apartment
 
-[![Gem Version](https://badge.fury.io/rb/apartment.svg)](https://badge.fury.io/rb/apartment)
-[![Code Climate](https://codeclimate.com/github/influitive/apartment/badges/gpa.svg)](https://codeclimate.com/github/influitive/apartment)
-[![Build Status](https://travis-ci.org/influitive/apartment.svg?branch=development)](https://travis-ci.org/influitive/apartment)
+[![Code Climate](https://codeclimate.com/github/influitive/apartment/badges/gpa.svg)](https://codeclimate.com/github/opf/apartment)
+[![Build Status](https://travis-ci.org/influitive/apartment.svg?branch=development)](https://travis-ci.org/opf/apartment)
 
 *Multitenancy for Rails and ActiveRecord*
 
 Apartment provides tools to help you deal with multiple tenants in your Rails
 application. If you need to have certain data sequestered based on account or company,
 but still allow some data to exist in a common tenant, Apartment can help.
+
+## DISCLAIMER
+
+Since the original gem seems to be not maintained anymore we (opf) have forked it and just made what ever
+changes we needed to make it work for us. In the long run we should perhaps change to a maintained
+alternative.
+
+For instance the fork by [rails-on-services](https://github.com/rails-on-services/apartment).
+
+Use at your own risk.
 
 ## HELP!
 
