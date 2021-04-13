@@ -74,11 +74,9 @@ module Apartment
 
       # Overrides reload! to also call Apartment::Tenant.init as well
       # so that the reloaded classes have the proper table_names
-      # rubocop:disable Lint/Debugger
       console do
         require 'apartment/console'
       end
-      # rubocop:enable Lint/Debugger
     end
   end
 end
