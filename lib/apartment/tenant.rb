@@ -1,22 +1,18 @@
+# frozen_string_literal: true
+
 require 'forwardable'
 
 module Apartment
   #   The main entry point to Apartment functions
   #
   module Tenant
-
     extend self
     extend Forwardable
 
-    def_delegators :adapter, :create, :drop, :switch, :switch!, :current, :each, :reset, :set_callback, :seed, :current_tenant, :default_tenant, :environmentify
+    def_delegators :adapter, :create, :drop, :switch, :switch!, :current, :each,
+                   :reset, :init, :set_callback, :seed, :default_tenant, :environmentify
 
     attr_writer :config
-
-    #   Initialize Apartment config options such as excluded_models
-    #
-    def init
-      adapter.process_excluded_models
-    end
 
     #   Fetch the proper multi-tenant adapter based on Rails config
     #
@@ -27,9 +23,10 @@ module Apartment
         adapter_method = "#{config[:adapter]}_adapter"
 
         if defined?(JRUBY_VERSION)
-          if config[:adapter] =~ /mysql/
+          case config[:adapter]
+          when /mysql/
             adapter_method = 'jdbc_mysql_adapter'
-          elsif config[:adapter] =~ /postgresql/
+          when /postgresql/
             adapter_method = 'jdbc_postgresql_adapter'
           end
         end

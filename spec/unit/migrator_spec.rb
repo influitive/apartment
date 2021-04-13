@@ -1,21 +1,22 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'apartment/migrator'
 
 describe Apartment::Migrator do
-
-  let(:tenant){ Apartment::Test.next_db }
+  let(:tenant) { Apartment::Test.next_db }
 
   # Don't need a real switch here, just testing behaviour
   before { allow(Apartment::Tenant.adapter).to receive(:connect_to_new) }
 
-  context "with ActiveRecord below 5.2.0", skip: ActiveRecord.version >= Gem::Version.new("5.2.0") do
+  context 'with ActiveRecord below 5.2.0', skip: ActiveRecord.version >= Gem::Version.new('5.2.0') do
     before do
-      allow(ActiveRecord::Migrator).to receive(:migrations_paths) { %w(spec/dummy/db/migrate) }
+      allow(ActiveRecord::Migrator).to receive(:migrations_paths) { %w[spec/dummy/db/migrate] }
       allow(Apartment::Migrator).to receive(:activerecord_below_5_2?) { true }
     end
 
-    describe "::migrate" do
-      it "switches and migrates" do
+    describe '::migrate' do
+      it 'switches and migrates' do
         expect(Apartment::Tenant).to receive(:switch).with(tenant).and_call_original
         expect(ActiveRecord::Migrator).to receive(:migrate)
 
@@ -23,8 +24,8 @@ describe Apartment::Migrator do
       end
     end
 
-    describe "::run" do
-      it "switches and runs" do
+    describe '::run' do
+      it 'switches and runs' do
         expect(Apartment::Tenant).to receive(:switch).with(tenant).and_call_original
         expect(ActiveRecord::Migrator).to receive(:run).with(:up, anything, 1234)
 
@@ -32,8 +33,8 @@ describe Apartment::Migrator do
       end
     end
 
-    describe "::rollback" do
-      it "switches and rolls back" do
+    describe '::rollback' do
+      it 'switches and rolls back' do
         expect(Apartment::Tenant).to receive(:switch).with(tenant).and_call_original
         expect(ActiveRecord::Migrator).to receive(:rollback).with(anything, 2)
 
@@ -42,13 +43,13 @@ describe Apartment::Migrator do
     end
   end
 
-  context "with ActiveRecord above or equal to 5.2.0", skip: ActiveRecord.version < Gem::Version.new("5.2.0") do
+  context 'with ActiveRecord above or equal to 5.2.0', skip: ActiveRecord.version < Gem::Version.new('5.2.0') do
     before do
       allow(Apartment::Migrator).to receive(:activerecord_below_5_2?) { false }
     end
 
-    describe "::migrate" do
-      it "switches and migrates" do
+    describe '::migrate' do
+      it 'switches and migrates' do
         expect(Apartment::Tenant).to receive(:switch).with(tenant).and_call_original
         expect_any_instance_of(ActiveRecord::MigrationContext).to receive(:migrate)
 
@@ -56,8 +57,8 @@ describe Apartment::Migrator do
       end
     end
 
-    describe "::run" do
-      it "switches and runs" do
+    describe '::run' do
+      it 'switches and runs' do
         expect(Apartment::Tenant).to receive(:switch).with(tenant).and_call_original
         expect_any_instance_of(ActiveRecord::MigrationContext).to receive(:run).with(:up, 1234)
 
@@ -65,8 +66,8 @@ describe Apartment::Migrator do
       end
     end
 
-    describe "::rollback" do
-      it "switches and rolls back" do
+    describe '::rollback' do
+      it 'switches and rolls back' do
         expect(Apartment::Tenant).to receive(:switch).with(tenant).and_call_original
         expect_any_instance_of(ActiveRecord::MigrationContext).to receive(:rollback).with(2)
 

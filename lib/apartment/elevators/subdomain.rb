@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'apartment/elevators/generic'
 require 'public_suffix'
 
@@ -11,9 +13,11 @@ module Apartment
         @excluded_subdomains ||= []
       end
 
+      # rubocop:disable Style/TrivialAccessors
       def self.excluded_subdomains=(arg)
         @excluded_subdomains = arg
       end
+      # rubocop:enable Style/TrivialAccessors
 
       def parse_tenant_name(request)
         request_subdomain = subdomain(request.host)
@@ -21,15 +25,15 @@ module Apartment
         # If the domain acquired is set to be excluded, set the tenant to whatever is currently
         # next in line in the schema search path.
         tenant = if self.class.excluded_subdomains.include?(request_subdomain)
-          nil
-        else
-          request_subdomain
-        end
+                   nil
+                 else
+                   request_subdomain
+                 end
 
         tenant.presence
       end
 
-    protected
+      protected
 
       # *Almost* a direct ripoff of ActionDispatch::Request subdomain methods
 

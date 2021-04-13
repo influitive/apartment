@@ -1,18 +1,19 @@
+# frozen_string_literal: true
+
 module Apartment
   module Spec
     module Setup
-
+      # rubocop:disable Metrics/AbcSize
       def self.included(base)
         base.instance_eval do
-          let(:db1){ Apartment::Test.next_db }
-          let(:db2){ Apartment::Test.next_db }
-          let(:connection){ ActiveRecord::Base.connection }
+          let(:db1) { Apartment::Test.next_db }
+          let(:db2) { Apartment::Test.next_db }
+          let(:connection) { ActiveRecord::Base.connection }
 
           # This around ensures that we run these hooks before and after
           # any before/after hooks defined in individual tests
           # Otherwise these actually get run after test defined hooks
           around(:each) do |example|
-
             def config
               db = RSpec.current_example.metadata.fetch(:database, :postgresql)
 
@@ -41,6 +42,7 @@ module Apartment
           end
         end
       end
+      # rubocop:enable Metrics/AbcSize
     end
   end
 end

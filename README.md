@@ -1,8 +1,8 @@
 # Apartment
 
-[![Gem Version](https://badge.fury.io/rb/apartment.svg)](https://badge.fury.io/rb/apartment)
-[![Code Climate](https://codeclimate.com/github/influitive/apartment/badges/gpa.svg)](https://codeclimate.com/github/influitive/apartment)
-[![Build Status](https://travis-ci.org/influitive/apartment.svg?branch=development)](https://travis-ci.org/influitive/apartment)
+[![Gem Version](https://badge.fury.io/rb/ros-apartment.svg)](https://badge.fury.io/rb/apartment)
+[![Code Climate](https://api.codeclimate.com/v1/badges/b0dc327380bb8438f991/maintainability)](https://codeclimate.com/github/rails-on-services/apartment/maintainability)
+[![Build Status](https://travis-ci.org/rails-on-services/apartment.svg?branch=development)](https://travis-ci.org/rails-on-services/apartment)
 
 *Multitenancy for Rails and ActiveRecord*
 
@@ -10,26 +10,21 @@ Apartment provides tools to help you deal with multiple tenants in your Rails
 application. If you need to have certain data sequestered based on account or company,
 but still allow some data to exist in a common tenant, Apartment can help.
 
-## HELP!
+## Apartment drop in replacement gem
 
-In order to help drive the direction of development and clean up the codebase, we'd like to take a poll
-on how people are currently using Apartment. If you can take 5 seconds (1 question) to answer
-this poll, we'd greatly appreciated it.
+After having reached out via github issues and email directly, no replies ever
+came. Since we wanted to upgrade our application to Rails 6 we decided to fork
+and start some development to support Rails 6. Because we don't have access
+to the apartment gem itself, the solution was to release it under a different
+name but providing the exact same API as it was before.
 
-[View Poll](http://www.poll-maker.com/poll391552x4Bfb41a9-15)
+## Help wanted
 
-## Excessive Memory Issues on ActiveRecord 4.x
-
-> If you're noticing ever growing memory issues (ie growing with each tenant you add)
-> when using Apartment, that's because there's [an issue](https://github.com/rails/rails/issues/19578)
-> with how ActiveRecord maps Postgresql data types into AR data types.
-> This has been patched and will be released for AR 4.2.2. It's apparently hard
-> to backport to 4.1 unfortunately.
-> If you're noticing high memory usage from ActiveRecord with Apartment please upgrade.
-
-```ruby
-gem 'rails', '4.2.1', github: 'influitive/rails', tag: 'v4.2.1.memfix'
-```
+We were never involved with the development of Apartment gem in the first place
+and this project started out of our own needs. We will be more than happy
+to collaborate to maintain the gem alive and supporting the latest versions
+of ruby and rails, but your help is appreciated. Either by reporting bugs you
+may find or proposing improvements to the gem itself. Feel free to reach out.
 
 ## Installation
 
@@ -38,7 +33,7 @@ gem 'rails', '4.2.1', github: 'influitive/rails', tag: 'v4.2.1.memfix'
 Add the following to your Gemfile:
 
 ```ruby
-gem 'apartment'
+gem 'ros-apartment', require: 'apartment'
 ```
 
 Then generate your `Apartment` config file using
@@ -88,6 +83,14 @@ and migrate into there. This provides better performance, and allows Apartment t
 would not allow a full new database to be created.
 
 One can optionally use the full database creation instead if they want, though this is not recommended
+
+When using schemas, you can also pass in a list of schemas if desired. Any tables defined in a schema earlier in the chain will be referenced first, so this is only useful if you have a schema with only some of the tables defined:
+
+```ruby
+Apartment::Tenant.switch(['tenant_1', 'tenant_2']) do
+  # ...
+end
+```
 
 ### Switching Tenants
 
@@ -234,7 +237,7 @@ A Generic Elevator exists that allows you to pass a `Proc` (or anything that res
 module MyApplication
   class Application < Rails::Application
     # Obviously not a contrived example
-    config.middleware.use Apartment::Elevators::Generic, Proc.new { |request| request.host.reverse }
+    config.middleware.use Apartment::Elevators::Generic, proc { |request| request.host.reverse }
   end
 end
 ```
@@ -294,6 +297,27 @@ Apartment::Tenant.drop('tenant_name')
 
 When method is called, the schema is dropped and all data from itself will be lost. Be careful with this method.
 
+### Custom Prompt
+
+#### Console methods
+
+`ros-apartment` console configures two helper methods:
+1. `tenant_list` - list available tenants while using the console
+2. `st(tenant_name:String)` - Switches the context to the tenant name passed, if
+it exists.
+
+#### Custom printed prompt
+
+`ros-apartment` also has a custom prompt that gives a bit more information about
+the context in which you're running. It shows the environment as well as the tenant
+that is currently switched to. In order for you to enable this, you need to require
+the custom console in your application.
+
+In `application.rb` add `require 'apartment/custom_console'`.
+Please note that we rely on `pry-rails` to edit the prompt, thus your project needs
+to install it as well. In order to do so, you need to add `gem 'pry-rails'` to your
+project's gemfile.
+
 ## Config
 
 The following config options should be set up in a Rails initializer such as:
@@ -305,6 +329,37 @@ To set config options, add this to your initializer:
 ```ruby
 Apartment.configure do |config|
   # set your options (described below) here
+end
+```
+
+### Skip tenant schema check
+
+This is configurable by setting: `tenant_presence_check`. It defaults to true
+in order to maintain the original gem behavior. This is only checked when using one of the PostgreSQL adapters.
+The original gem behavior, when running `switch` would look for the existence of the schema before switching. This adds an extra query on every context switch. While in the default simple scenarios this is a valid check, in high volume platforms this adds some unnecessary overhead which can be detected in some other ways on the application level.
+
+Setting this configuration value to `false` will disable the schema presence check before trying to switch the context.
+
+```ruby
+Apartment.configure do |config|
+  tenant_presence_check = false
+end
+```
+
+### Additional logging information
+
+Enabling this configuration will output the database that the process is currently connected to as well as which
+schemas are in the search path. This can be enabled by setting to true the `active_record_log` configuration.
+
+Please note that our custom logger inherits from `ActiveRecord::LogSubscriber` so this will be required for the configuration to work.
+
+**Example log output:**
+
+<img src="documentation/images/log_example.png">
+
+```ruby
+Apartment.configure do |config|
+  config.active_record_log = true
 end
 ```
 
@@ -325,17 +380,30 @@ Rails will always access the 'public' tenant when accessing these models, but no
 
 ### Postgresql Schemas
 
-## Providing a Different default_schema
+#### Alternative: Creating new schemas by using raw SQL dumps
+
+Apartment can be forced to use raw SQL dumps insted of `schema.rb` for creating new schemas. Use this when you are using some extra features in postgres that can't be represented in `schema.rb`, like materialized views etc.
+
+This only applies while using postgres adapter and `config.use_schemas` is set to `true`.
+(Note: this option doesn't use `db/structure.sql`, it creates SQL dump by executing `pg_dump`)
+
+Enable this option with:
+
+```ruby
+config.use_sql = true
+```
+
+### Providing a Different default_tenant
 
 By default, ActiveRecord will use `"$user", public` as the default `schema_search_path`. This can be modified if you wish to use a different default schema be setting:
 
 ```ruby
-config.default_schema = "some_other_schema"
+config.default_tenant = "some_other_schema"
 ```
 
 With that set, all excluded models will use this schema as the table name prefix instead of `public` and `reset` on `Apartment::Tenant` will return to this schema as well.
 
-## Persistent Schemas
+### Persistent Schemas
 
 Apartment will normally just switch the `schema_search_path` whole hog to the one passed in. This can lead to problems if you want other schemas to always be searched as well. Enter `persistent_schemas`. You can configure a list of other schemas that will always remain in the search path, while the default gets swapped out:
 
@@ -403,7 +471,7 @@ schema_search_path: "public,shared_extensions"
 ...
 ```
 
-This would be for a config with `default_schema` set to `public` and `persistent_schemas` set to `['shared_extensions']`. **Note**: This only works on Heroku with [Rails 4.1+](https://devcenter.heroku.com/changelog-items/426). For apps that use older Rails versions hosted on Heroku, the only way to properly setup is to start with a fresh PostgreSQL instance:
+This would be for a config with `default_tenant` set to `public` and `persistent_schemas` set to `['shared_extensions']`. **Note**: This only works on Heroku with [Rails 4.1+](https://devcenter.heroku.com/changelog-items/426). For apps that use older Rails versions hosted on Heroku, the only way to properly setup is to start with a fresh PostgreSQL instance:
 
 1. Append `?schema_search_path=public,hstore` to your `DATABASE_URL` environment variable, by this you don't have to revise the `database.yml` file (which is impossible since Heroku regenerates a completely different and immutable `database.yml` of its own on each deploy)
 2. Run `heroku pg:psql` from your command line
@@ -441,18 +509,6 @@ schema in the `search_path` at all times. We won't be able to do this though unt
 also contain the tenanted tables, which is an open issue with no real milestone to be completed.
 Happy to accept PR's on the matter.
 
-#### Alternative: Creating new schemas by using raw SQL dumps
-
-Apartment can be forced to use raw SQL dumps insted of `schema.rb` for creating new schemas. Use this when you are using some extra features in postgres that can't be represented in `schema.rb`, like materialized views etc.
-
-This only applies while using postgres adapter and `config.use_schemas` is set to `true`.
-(Note: this option doesn't use `db/structure.sql`, it creates SQL dump by executing `pg_dump`)
-
-Enable this option with:
-```ruby
-config.use_sql = true
-```
-
 ### Managing Migrations
 
 In order to migrate all of your tenants (or postgresql schemas) you need to provide a list
@@ -484,7 +540,7 @@ Note that you can disable the default migrating of all tenants with `db:migrate`
 
 Apartment supports parallelizing migrations into multiple threads when
 you have a large number of tenants. By default, parallel migrations is
-turned off. You can enable this by setting `parallel_migration_threads` to 
+turned off. You can enable this by setting `parallel_migration_threads` to
 the number of threads you want to use in your initializer.
 
 Keep in mind that because migrations are going to access the database,
@@ -531,7 +587,12 @@ end
 
 ## Background workers
 
-See [apartment-sidekiq](https://github.com/influitive/apartment-sidekiq) or [apartment-activejob](https://github.com/influitive/apartment-activejob).
+Both these gems have been forked as a side consequence of having a new gem name.
+You can use them exactly as you were using before. They are, just like this one
+a drop-in replacement.
+
+See [apartment-sidekiq](https://github.com/rails-on-services/apartment-sidekiq)
+or [apartment-activejob](https://github.com/rails-on-services/apartment-activejob).
 
 ## Callbacks
 
@@ -558,6 +619,16 @@ module Apartment
 end
 ```
 
+## Running rails console without a connection to the database
+
+By default, once apartment starts, it establishes a connection to the database. It is possible to
+disable this initial connection, by running with `APARTMENT_DISABLE_INIT` set to something:
+
+```shell
+$ APARTMENT_DISABLE_INIT=true DATABASE_URL=postgresql://localhost:1234/buk_development bin/rails runner 'puts 1'
+# 1
+```
+
 ## Contributing
 
 * In both `spec/dummy/config` and `spec/config`, you will see `database.yml.sample` files
@@ -568,6 +639,13 @@ end
 * Ensure that your code is accompanied with tests. No code will be merged without tests
 
 * If you're looking to help, check out the TODO file for some upcoming changes I'd like to implement in Apartment.
+
+### Running bundle install
+
+mysql2 gem in some cases fails to install.
+If you face problems running bundle install in OSX, try installing the gem running:
+
+`gem install mysql2 -v '0.5.3' -- --with-ldflags=-L/usr/local/opt/openssl/lib --with-cppflags=-I/usr/local/opt/openssl/include`
 
 ## License
 

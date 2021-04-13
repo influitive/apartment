@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'apartment/adapters/abstract_adapter'
 
 module Apartment
@@ -16,8 +18,10 @@ module Apartment
       end
 
       def drop(tenant)
-        raise TenantNotFound,
-          "The tenant #{environmentify(tenant)} cannot be found." unless File.exists?(database_file(tenant))
+        unless File.exist?(database_file(tenant))
+          raise TenantNotFound,
+                "The tenant #{environmentify(tenant)} cannot be found."
+        end
 
         File.delete(database_file(tenant))
       end
@@ -26,18 +30,24 @@ module Apartment
         File.basename(Apartment.connection.instance_variable_get(:@config)[:database], '.sqlite3')
       end
 
-    protected
+      protected
 
       def connect_to_new(tenant)
-        raise TenantNotFound,
-          "The tenant #{environmentify(tenant)} cannot be found." unless File.exists?(database_file(tenant))
+        return reset if tenant.nil?
+
+        unless File.exist?(database_file(tenant))
+          raise TenantNotFound,
+                "The tenant #{environmentify(tenant)} cannot be found."
+        end
 
         super database_file(tenant)
       end
 
       def create_tenant(tenant)
-        raise TenantExists,
-          "The tenant #{environmentify(tenant)} already exists." if File.exists?(database_file(tenant))
+        if File.exist?(database_file(tenant))
+          raise TenantExists,
+                "The tenant #{environmentify(tenant)} already exists."
+        end
 
         begin
           f = File.new(database_file(tenant), File::CREAT)
@@ -46,7 +56,7 @@ module Apartment
         end
       end
 
-    private
+      private
 
       def database_file(tenant)
         "#{@default_dir}/#{environmentify(tenant)}.sqlite3"

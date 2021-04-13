@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Require whichever elevator you're using below here...
 #
 # require 'apartment/elevators/generic'
@@ -8,7 +10,6 @@ require 'apartment/elevators/subdomain'
 # Apartment Configuration
 #
 Apartment.configure do |config|
-
   # These models will not be multi-tenanted,
   # but remain in the global (public) namespace
   #
@@ -17,13 +18,13 @@ Apartment.configure do |config|
   #
   # config.excluded_models = %w{Tenant}
   #
-  config.excluded_models = %w{}
+  config.excluded_models = %w[]
 
   # use postgres schemas?
   config.use_schemas = true
 
   # use raw SQL dumps for creating postgres schemas? (only appies with use_schemas set to true)
-  #config.use_sql = true
+  # config.use_sql = true
 
   # configure persistent schemas (E.g. hstore )
   # config.persistent_schemas = %w{ hstore }
@@ -35,7 +36,8 @@ Apartment.configure do |config|
   # supply list of database names for migrations to run on
   # config.tenant_names = lambda{ ToDo_Tenant_Or_User_Model.pluck :database }
 
-  # Specify a connection other than ActiveRecord::Base for apartment to use (only needed if your models are using a different connection)
+  # Specify a connection other than ActiveRecord::Base for apartment to use
+  # (only needed if your models are using a different connection)
   # config.connection_class = ActiveRecord::Base
 end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rack/request'
 require 'apartment/tenant'
 
@@ -6,7 +8,6 @@ module Apartment
     #   Provides a rack based tenant switching solution based on request
     #
     class Generic
-
       def initialize(app, processor = nil)
         @app = app
         @processor = processor || method(:parse_tenant_name)
@@ -24,8 +25,8 @@ module Apartment
         end
       end
 
-      def parse_tenant_name(request)
-        raise "Override"
+      def parse_tenant_name(_request)
+        raise 'Override'
       end
     end
   end

@@ -3,10 +3,11 @@
 source "http://rubygems.org"
 
 gem "rails", "~> 5.2.0"
+gem "rubocop"
 
 group :local do
-  gem "pry"
   gem "guard-rspec", "~> 4.2"
+  gem "pry"
 end
 
 platforms :jruby do
