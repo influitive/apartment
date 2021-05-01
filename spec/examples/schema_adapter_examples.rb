@@ -108,11 +108,9 @@ shared_examples_for 'a schema based apartment adapter' do
       end
 
       after do
-        begin
-          subject.drop(db)
-        rescue StandardError => _e
-          nil
-        end
+        subject.drop(db)
+      rescue StandardError => _e
+        nil
       end
     end
   end

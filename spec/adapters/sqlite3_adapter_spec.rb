@@ -40,11 +40,9 @@ describe Apartment::Adapters::Sqlite3Adapter, database: :sqlite do
         end
 
         after do
-          begin
-            subject.drop db_name
-          rescue StandardError => _e
-            nil
-          end
+          subject.drop db_name
+        rescue StandardError => _e
+          nil
         end
 
         it 'should create a new database' do
@@ -61,11 +59,9 @@ describe Apartment::Adapters::Sqlite3Adapter, database: :sqlite do
         end
 
         after do
-          begin
-            subject.drop db_name
-          rescue StandardError => _e
-            nil
-          end
+          subject.drop db_name
+        rescue StandardError => _e
+          nil
         end
 
         it 'should create a new database' do
@@ -85,11 +81,9 @@ describe Apartment::Adapters::Sqlite3Adapter, database: :sqlite do
         end
 
         after do
-          begin
-            subject.drop db_name
-          rescue StandardError => _e
-            nil
-          end
+          subject.drop db_name
+        rescue StandardError => _e
+          nil
         end
 
         it 'should create a new database' do

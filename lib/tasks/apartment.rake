@@ -39,15 +39,13 @@ apartment_namespace = namespace :apartment do
     Apartment::TaskHelper.warn_if_tenants_empty
 
     Apartment::TaskHelper.each_tenant do |tenant|
-      begin
-        Apartment::TaskHelper.create_tenant(tenant)
-        puts("Seeding #{tenant} tenant")
-        Apartment::Tenant.switch(tenant) do
-          Apartment::Tenant.seed
-        end
-      rescue Apartment::TenantNotFound => e
-        puts e.message
+      Apartment::TaskHelper.create_tenant(tenant)
+      puts("Seeding #{tenant} tenant")
+      Apartment::Tenant.switch(tenant) do
+        Apartment::Tenant.seed
       end
+    rescue Apartment::TenantNotFound => e
+      puts e.message
     end
   end
 
@@ -58,12 +56,10 @@ apartment_namespace = namespace :apartment do
     step = ENV['STEP'] ? ENV['STEP'].to_i : 1
 
     Apartment::TaskHelper.each_tenant do |tenant|
-      begin
-        puts("Rolling back #{tenant} tenant")
-        Apartment::Migrator.rollback tenant, step
-      rescue Apartment::TenantNotFound => e
-        puts e.message
-      end
+      puts("Rolling back #{tenant} tenant")
+      Apartment::Migrator.rollback tenant, step
+    rescue Apartment::TenantNotFound => e
+      puts e.message
     end
   end
 
@@ -76,12 +72,10 @@ apartment_namespace = namespace :apartment do
       raise 'VERSION is required' unless version
 
       Apartment::TaskHelper.each_tenant do |tenant|
-        begin
-          puts("Migrating #{tenant} tenant up")
-          Apartment::Migrator.run :up, tenant, version
-        rescue Apartment::TenantNotFound => e
-          puts e.message
-        end
+        puts("Migrating #{tenant} tenant up")
+        Apartment::Migrator.run :up, tenant, version
+      rescue Apartment::TenantNotFound => e
+        puts e.message
       end
     end
 
@@ -93,12 +87,10 @@ apartment_namespace = namespace :apartment do
       raise 'VERSION is required' unless version
 
       Apartment::TaskHelper.each_tenant do |tenant|
-        begin
-          puts("Migrating #{tenant} tenant down")
-          Apartment::Migrator.run :down, tenant, version
-        rescue Apartment::TenantNotFound => e
-          puts e.message
-        end
+        puts("Migrating #{tenant} tenant down")
+        Apartment::Migrator.run :down, tenant, version
+      rescue Apartment::TenantNotFound => e
+        puts e.message
       end
     end
 

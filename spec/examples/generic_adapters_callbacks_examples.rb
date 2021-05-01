@@ -3,11 +3,9 @@
 require 'spec_helper'
 
 shared_examples_for 'a generic apartment adapter callbacks' do
-  # rubocop:disable Lint/ConstantDefinitionInBlock
   class MyProc
     def self.call(tenant_name); end
   end
-  # rubocop:enable Lint/ConstantDefinitionInBlock
 
   include Apartment::Spec::AdapterRequirements
 

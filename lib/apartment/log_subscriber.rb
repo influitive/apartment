@@ -6,11 +6,9 @@ module Apartment
   # Custom Log subscriber to include database name and schema name in sql logs
   class LogSubscriber < ActiveRecord::LogSubscriber
     # NOTE: for some reason, if the method definition is not here, then the custom debug method is not called
-    # rubocop:disable Lint/UselessMethodDefinition
     def sql(event)
       super(event)
     end
-    # rubocop:enable Lint/UselessMethodDefinition
 
     private
 

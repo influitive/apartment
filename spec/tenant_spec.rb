@@ -44,11 +44,9 @@ describe Apartment::Tenant do
         end
 
         after do
-          begin
-            subject.drop 'db_with_prefix'
-          rescue StandardError => _e
-            nil
-          end
+          subject.drop 'db_with_prefix'
+        rescue StandardError => _e
+          nil
         end
 
         it 'should create a new database' do
