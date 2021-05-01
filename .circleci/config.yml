@@ -1,8 +1,5 @@
 version: 2.1
 
-orbs:
-  rubocop: hanachin/rubocop@0.0.6
-
 jobs:
   build:
     docker:
@@ -71,8 +68,3 @@ workflows:
             parameters:
               ruby_version: ["ruby:2.6-buster", "ruby:2.7-buster"]
               gemfile: ["gemfiles/rails_5_2.gemfile", "gemfiles/rails_6_0.gemfile", "gemfiles/rails_6_1.gemfile"]
-
-  rubocop:
-    jobs:
-      - rubocop/rubocop:
-          version: 0.88.0
