@@ -24,7 +24,9 @@ require 'capybara/rails'
 
 begin
   require 'pry'
+  # rubocop:disable Lint/ConstantDefinitionInBlock
   silence_warnings { IRB = Pry }
+  # rubocop:enable Lint/ConstantDefinitionInBlock
 rescue LoadError
   nil
 end

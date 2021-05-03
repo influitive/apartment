@@ -201,11 +201,13 @@ module Apartment
       #   @param {String}  tenant: Database name
       #   @param {Boolean} with_database: if true, use the actual tenant's db name
       #                                   if false, use the default db name from the db
+      # rubocop:disable Style/OptionalBooleanParameter
       def multi_tenantify(tenant, with_database = true)
         db_connection_config(tenant).tap do |config|
           multi_tenantify_with_tenant_db_name(config, tenant) if with_database
         end
       end
+      # rubocop:enable Style/OptionalBooleanParameter
 
       def multi_tenantify_with_tenant_db_name(config, tenant)
         config[:database] = environmentify(tenant)

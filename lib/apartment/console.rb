@@ -4,6 +4,7 @@
 # This is unfortunate, but I haven't figured out how to hook into the reload process *after* files are reloaded
 
 # reloads the environment
+# rubocop:disable Style/OptionalBooleanParameter
 def reload!(print = true)
   puts 'Reloading...' if print
 
@@ -13,6 +14,7 @@ def reload!(print = true)
   Apartment::Tenant.init
   true
 end
+# rubocop:enable Style/OptionalBooleanParameter
 
 def st(schema_name = nil)
   if schema_name.nil?

@@ -6,6 +6,8 @@ AllCops:
     - 'gemfiles/vendor/**/*'
     - 'spec/dummy_engine/dummy_engine.gemspec'
 
+  NewCops: enable
+
 Gemspec/RequiredRubyVersion:
   Exclude:
     - 'ros-apartment.gemspec'

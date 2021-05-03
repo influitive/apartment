@@ -17,12 +17,10 @@ apartment_namespace = namespace :apartment do
   desc 'Drop all tenants'
   task :drop do
     Apartment::TaskHelper.tenants.each do |tenant|
-      begin
-        puts("Dropping #{tenant} tenant")
-        Apartment::Tenant.drop(tenant)
-      rescue Apartment::TenantNotFound, ActiveRecord::NoDatabaseError => e
-        puts e.message
-      end
+      puts("Dropping #{tenant} tenant")
+      Apartment::Tenant.drop(tenant)
+    rescue Apartment::TenantNotFound, ActiveRecord::NoDatabaseError => e
+      puts e.message
     end
   end
 
