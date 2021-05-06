@@ -16,6 +16,6 @@ jobs:
       - uses: reviewdog/action-rubocop@v1
         with:
           reporter: github-check
-          rubocop_version: gemfile
+          rubocop_version: '~> 0.93'
           rubocop_extensions: rubocop-rails:gemfile rubocop-rspec:gemfile rubocop-performance:gemfile
           github_token: ${{ secrets.github_token }}
