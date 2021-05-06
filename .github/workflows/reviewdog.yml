@@ -18,5 +18,4 @@ jobs:
           filter_mode: nofilter
           reporter: github-check
           rubocop_version: 0.93.1
-          rubocop_extensions: rubocop-rails:gemfile rubocop-rspec:gemfile rubocop-performance:gemfile
           github_token: ${{ secrets.github_token }}
