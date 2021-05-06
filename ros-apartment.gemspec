@@ -34,7 +34,8 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'appraisal',    '~> 2.2'
   s.add_development_dependency 'bundler',      '>= 1.3', '< 3.0'
-  s.add_development_dependency 'capybara',     '~> 2.0'
+  s.add_development_dependency 'guard-rspec', '~> 4.2'
+  s.add_development_dependency 'pry'
   s.add_development_dependency 'rake',         '~> 13.0'
   s.add_development_dependency 'rubocop',      '~> 0.93'
   s.add_development_dependency 'rubocop-performance'
