@@ -37,9 +37,9 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'guard-rspec', '~> 4.2'
   s.add_development_dependency 'pry'
   s.add_development_dependency 'rake',         '~> 13.0'
-  s.add_development_dependency 'rubocop',      '~> 0.93'
   s.add_development_dependency 'rspec',        '~> 3.4'
   s.add_development_dependency 'rspec-rails',  '~> 3.4'
+  s.add_development_dependency 'rubocop',      '~> 0.93'
 
   if defined?(JRUBY_VERSION)
     s.add_development_dependency 'activerecord-jdbc-adapter'
