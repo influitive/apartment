@@ -13,3 +13,4 @@ cookbooks
 tmp
 spec/dummy/db/*.sqlite3
 .DS_Store
+.ruby-version

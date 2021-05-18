@@ -16,7 +16,7 @@ module Apartment
     attr_accessor(*ACCESSOR_METHODS)
     attr_writer(*WRITER_METHODS)
 
-    def_delegators :connection_class, :connection, :connection_config, :establish_connection
+    def_delegators :connection_class, :connection, :connection_db_config, :establish_connection
 
     # configure apartment with available options
     def configure
@@ -98,6 +98,10 @@ module Apartment
       values.with_indifferent_access
     rescue ActiveRecord::StatementInvalid
       {}
+    end
+
+    def connection_config
+      connection_db_config.configuration_hash
     end
   end
 
