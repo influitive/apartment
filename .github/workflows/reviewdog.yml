@@ -19,3 +19,7 @@ jobs:
           reporter: github-check
           rubocop_version: 0.93.1
           github_token: ${{ secrets.github_token }}
+          rubocop_extensions:
+            - rubocop-performance:1.10.2
+            - rubocop-rails:2.9.1
+            - rubocop-rspec:1.44.1
