@@ -1,9 +1,9 @@
 inherit_from: .rubocop_todo.yml
 
-# require:
-#   - rubocop-rails
-#   - rubocop-performance
-#   - rubocop-rspec
+require:
+  - rubocop-rails
+  - rubocop-performance
+  - rubocop-rspec
 
 AllCops:
   Exclude:
