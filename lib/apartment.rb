@@ -107,13 +107,13 @@ module Apartment
     def database_schema_file
       return @database_schema_file if defined?(@database_schema_file)
 
-      @database_schema_file = Rails.root.join('db', 'schema.rb')
+      @database_schema_file = Rails.root.join('db/schema.rb')
     end
 
     def seed_data_file
       return @seed_data_file if defined?(@seed_data_file)
 
-      @seed_data_file = Rails.root.join('db', 'seeds.rb')
+      @seed_data_file = Rails.root.join('db/seeds.rb')
     end
 
     def pg_excluded_names
