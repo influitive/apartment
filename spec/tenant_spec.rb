@@ -13,24 +13,6 @@ describe Apartment::Tenant do
       end
     end
 
-    # TODO: this doesn't belong here, but there aren't integration tests currently for mysql
-    # where to put???
-    describe 'exception recovery', type: :request do
-      before do
-        subject.create db1
-      end
-      after { subject.drop db1 }
-
-      # it "should recover from incorrect database" do
-      #   session = Capybara::Session.new(:rack_test, Capybara.app)
-      #   session.visit("http://#{db1}.com")
-      #   expect {
-      #     session.visit("http://this-database-should-not-exist.com")
-      #   }.to raise_error
-      #   session.visit("http://#{db1}.com")
-      # end
-    end
-
     # TODO: re-organize these tests
     context 'with prefix and schemas' do
       describe '#create' do
