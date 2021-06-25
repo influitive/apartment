@@ -7,9 +7,10 @@ require:
 
 AllCops:
   Exclude:
-    - 'gemfiles/**/*.gemfile'
-    - 'gemfiles/vendor/**/*'
-    - 'spec/dummy_engine/dummy_engine.gemspec'
+    - gemfiles/**/*.gemfile
+    - gemfiles/vendor/**/*
+    - spec/dummy_engine/dummy_engine.gemspec
+    - spec/schemas/**/*.rb
 
   NewCops: enable
 
@@ -17,21 +18,13 @@ Gemspec/RequiredRubyVersion:
   Exclude:
     - 'ros-apartment.gemspec'
 
-Style/WordArray:
-  Exclude:
-    - spec/schemas/**/*.rb
-
-Style/NumericLiterals:
-  Exclude:
-    - spec/schemas/**/*.rb
-
-Layout/EmptyLineAfterMagicComment:
-  Exclude:
-    - spec/schemas/**/*.rb
-
 Metrics/BlockLength:
   Exclude:
     - spec/**/*.rb
+
+Rails/RakeEnvironment:
+  Exclude:
+    - Rakefile
 
 Layout/EmptyLinesAroundAttributeAccessor:
   Enabled: true
