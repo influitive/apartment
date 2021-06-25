@@ -8,7 +8,7 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
 
     subject { Apartment::Tenant.postgresql_adapter config }
 
-    it_should_behave_like 'a generic apartment adapter callbacks'
+    it_behaves_like 'a generic apartment adapter callbacks'
 
     context 'using schemas with schema.rb' do
       before { Apartment.use_schemas = true }
@@ -20,8 +20,8 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
 
       let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.schema_search_path.gsub('"', '') } }
 
-      it_should_behave_like 'a generic apartment adapter'
-      it_should_behave_like 'a schema based apartment adapter'
+      it_behaves_like 'a generic apartment adapter'
+      it_behaves_like 'a schema based apartment adapter'
     end
 
     context 'using schemas with SQL dump' do
@@ -37,8 +37,8 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
 
       let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.schema_search_path.gsub('"', '') } }
 
-      it_should_behave_like 'a generic apartment adapter'
-      it_should_behave_like 'a schema based apartment adapter'
+      it_behaves_like 'a generic apartment adapter'
+      it_behaves_like 'a schema based apartment adapter'
 
       it 'allows for dashes in the schema name' do
         expect { Apartment::Tenant.create('has-dashes') }.to_not raise_error
@@ -59,9 +59,9 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
 
       let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.current_database } }
 
-      it_should_behave_like 'a generic apartment adapter'
-      it_should_behave_like 'a generic apartment adapter able to handle custom configuration'
-      it_should_behave_like 'a connection based apartment adapter'
+      it_behaves_like 'a generic apartment adapter'
+      it_behaves_like 'a generic apartment adapter able to handle custom configuration'
+      it_behaves_like 'a connection based apartment adapter'
     end
   end
 end

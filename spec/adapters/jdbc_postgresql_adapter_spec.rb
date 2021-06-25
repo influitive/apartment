@@ -8,7 +8,7 @@ if defined?(JRUBY_VERSION)
   describe Apartment::Adapters::JDBCPostgresqlAdapter, database: :postgresql do
     subject { Apartment::Tenant.jdbc_postgresql_adapter config.symbolize_keys }
 
-    it_should_behave_like 'a generic apartment adapter callbacks'
+    it_behaves_like 'a generic apartment adapter callbacks'
 
     context 'using schemas' do
       before { Apartment.use_schemas = true }
@@ -20,8 +20,8 @@ if defined?(JRUBY_VERSION)
 
       let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.schema_search_path.gsub('"', '') } }
 
-      it_should_behave_like 'a generic apartment adapter'
-      it_should_behave_like 'a schema based apartment adapter'
+      it_behaves_like 'a generic apartment adapter'
+      it_behaves_like 'a schema based apartment adapter'
     end
 
     context 'using databases' do
@@ -34,8 +34,8 @@ if defined?(JRUBY_VERSION)
 
       let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.current_database } }
 
-      it_should_behave_like 'a generic apartment adapter'
-      it_should_behave_like 'a connection based apartment adapter'
+      it_behaves_like 'a generic apartment adapter'
+      it_behaves_like 'a connection based apartment adapter'
     end
   end
 end

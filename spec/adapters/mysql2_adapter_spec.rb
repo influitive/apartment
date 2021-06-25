@@ -16,12 +16,12 @@ describe Apartment::Adapters::Mysql2Adapter, database: :mysql do
 
     let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.current_database } }
 
-    it_should_behave_like 'a generic apartment adapter callbacks'
+    it_behaves_like 'a generic apartment adapter callbacks'
 
     context 'using - the equivalent of - schemas' do
       before { Apartment.use_schemas = true }
 
-      it_should_behave_like 'a generic apartment adapter'
+      it_behaves_like 'a generic apartment adapter'
 
       describe '#default_tenant' do
         it 'is set to the original db from config' do
@@ -57,9 +57,9 @@ describe Apartment::Adapters::Mysql2Adapter, database: :mysql do
     context 'using connections' do
       before { Apartment.use_schemas = false }
 
-      it_should_behave_like 'a generic apartment adapter'
-      it_should_behave_like 'a generic apartment adapter able to handle custom configuration'
-      it_should_behave_like 'a connection based apartment adapter'
+      it_behaves_like 'a generic apartment adapter'
+      it_behaves_like 'a generic apartment adapter able to handle custom configuration'
+      it_behaves_like 'a connection based apartment adapter'
     end
   end
 end

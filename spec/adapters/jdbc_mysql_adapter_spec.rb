@@ -16,8 +16,8 @@ if defined?(JRUBY_VERSION)
 
     let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.current_database } }
 
-    it_should_behave_like 'a generic apartment adapter callbacks'
-    it_should_behave_like 'a generic apartment adapter'
-    it_should_behave_like 'a connection based apartment adapter'
+    it_behaves_like 'a generic apartment adapter callbacks'
+    it_behaves_like 'a generic apartment adapter'
+    it_behaves_like 'a connection based apartment adapter'
   end
 end

@@ -8,7 +8,7 @@ describe Apartment::Adapters::Sqlite3Adapter, database: :sqlite do
 
     subject { Apartment::Tenant.sqlite3_adapter config }
 
-    it_should_behave_like 'a generic apartment adapter callbacks'
+    it_behaves_like 'a generic apartment adapter callbacks'
 
     context 'using connections' do
       def tenant_names
@@ -20,8 +20,8 @@ describe Apartment::Adapters::Sqlite3Adapter, database: :sqlite do
         subject.switch { File.basename(Apartment::Test.config['connections']['sqlite']['database'], '.sqlite3') }
       end
 
-      it_should_behave_like 'a generic apartment adapter'
-      it_should_behave_like 'a connection based apartment adapter'
+      it_behaves_like 'a generic apartment adapter'
+      it_behaves_like 'a connection based apartment adapter'
 
       after(:all) do
         File.delete(Apartment::Test.config['connections']['sqlite']['database'])
