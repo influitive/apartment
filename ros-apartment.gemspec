@@ -27,21 +27,21 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/rails-on-services/apartment'
   s.licenses = ['MIT']
 
-  s.add_dependency 'activerecord',    '>= 5.0.0', '< 6.2'
-  s.add_dependency 'parallel',        '< 2.0'
-  s.add_dependency 'public_suffix',   '>= 2.0.5', '< 5.0'
-  s.add_dependency 'rack',            '>= 1.3.6', '< 3.0'
+  s.add_dependency 'activerecord', '>= 5.0.0', '< 6.2'
+  s.add_dependency 'parallel', '< 2.0'
+  s.add_dependency 'public_suffix', '>= 2.0.5', '< 5.0'
+  s.add_dependency 'rack', '>= 1.3.6', '< 3.0'
 
-  s.add_development_dependency 'appraisal',    '~> 2.2'
-  s.add_development_dependency 'bundler',      '>= 1.3', '< 3.0'
+  s.add_development_dependency 'appraisal', '~> 2.2'
+  s.add_development_dependency 'bundler', '>= 1.3', '< 3.0'
   s.add_development_dependency 'guard-rspec', '~> 4.2'
   s.add_development_dependency 'pry'
-  s.add_development_dependency 'rake',         '~> 13.0'
-  s.add_development_dependency 'rspec',        '~> 3.4'
-  s.add_development_dependency 'rspec-rails',  '~> 3.4'
-  s.add_development_dependency 'rubocop',      '~> 0.93'
+  s.add_development_dependency 'rake', '~> 13.0'
+  s.add_development_dependency 'rspec', '~> 3.4'
+  s.add_development_dependency 'rspec-rails', '~> 3.4'
+  s.add_development_dependency 'rubocop', '~> 0.93'
   s.add_development_dependency 'rubocop-performance', '~> 1.10'
-  s.add_development_dependency 'rubocop-rails','~> 2.1'
+  s.add_development_dependency 'rubocop-rails', '~> 2.1'
   s.add_development_dependency 'rubocop-rspec', '~> 1.44'
 
   if defined?(JRUBY_VERSION)
