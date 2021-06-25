@@ -19,8 +19,6 @@ Apartment.excluded_models.each do |model|
 end
 
 require 'rspec/rails'
-# require 'capybara/rspec'
-# require 'capybara/rails'
 
 begin
   require 'pry'
@@ -41,7 +39,6 @@ Rails.backtrace_cleaner.remove_silencers!
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
 RSpec.configure do |config|
-  # config.include RSpec::Integration::CapybaraSessions, type: :request
   config.include Apartment::Spec::Setup
 
   # Somewhat brutal hack so that rails 4 postgres extensions don't modify this file
