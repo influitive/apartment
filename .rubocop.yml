@@ -23,8 +23,7 @@ Metrics/BlockLength:
     - spec/**/*.rb
 
 Rails/RakeEnvironment:
-  Exclude:
-    - Rakefile
+  Enabled: false
 
 Rails/ApplicationRecord:
   Enabled: false
