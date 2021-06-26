@@ -239,7 +239,7 @@ module Apartment
         ENV['PGUSER'] = @config[:username].to_s if @config[:username]
         ENV['PGPASSWORD'] = @config[:password].to_s if @config[:password]
 
-        block.call
+        yield
       ensure
         ENV['PGHOST'] = pghost
         ENV['PGPORT'] = pgport
