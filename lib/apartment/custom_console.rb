@@ -8,7 +8,7 @@ module Apartment
       require 'pry-rails'
     rescue LoadError
       # rubocop:disable Layout/LineLength
-      logger.info '[Failed to load pry-rails] If you want to use Apartment custom prompt you need to add pry-rails to your gemfile'
+      puts '[Failed to load pry-rails] If you want to use Apartment custom prompt you need to add pry-rails to your gemfile'
       # rubocop:enable Layout/LineLength
     end
 
