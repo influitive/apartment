@@ -6,7 +6,7 @@
 # reloads the environment
 # rubocop:disable Style/OptionalBooleanParameter
 def reload!(print = true)
-  puts 'Reloading...' if print
+  logger.info 'Reloading...' if print
 
   # This triggers the to_prepare callbacks
   ActionDispatch::Callbacks.new(proc {}).call({})
@@ -18,12 +18,12 @@ end
 
 def st(schema_name = nil)
   if schema_name.nil?
-    tenant_list.each { |t| puts t }
+    tenant_list.each { |t| logger.info t }
 
   elsif tenant_list.include? schema_name
     Apartment::Tenant.switch!(schema_name)
   else
-    puts "Tenant #{schema_name} is not part of the tenant list"
+    logger.info "Tenant #{schema_name} is not part of the tenant list"
 
   end
 end
@@ -35,6 +35,6 @@ def tenant_list
 end
 
 def tenant_info_msg
-  puts "Available Tenants: #{tenant_list}\n"
-  puts "Use `st 'tenant'` to switch tenants & `tenant_list` to see list\n"
+  logger.info "Available Tenants: #{tenant_list}\n"
+  logger.info "Use `st 'tenant'` to switch tenants & `tenant_list` to see list\n"
 end

@@ -19,7 +19,7 @@ module Apartment
     def self.warn_if_tenants_empty
       return unless tenants.empty? && ENV['IGNORE_EMPTY_TENANTS'] != 'true'
 
-      puts <<-WARNING
+      logger.info <<-WARNING
         [WARNING] - The list of tenants to migrate appears to be empty. This could mean a few things:
 
           1. You may not have created any, in which case you can ignore this message
@@ -31,22 +31,22 @@ module Apartment
     end
 
     def self.create_tenant(tenant_name)
-      puts("Creating #{tenant_name} tenant")
+      logger.info("Creating #{tenant_name} tenant")
       Apartment::Tenant.create(tenant_name)
     rescue Apartment::TenantExists => e
-      puts "Tried to create already existing tenant: #{e}"
+      logger.info "Tried to create already existing tenant: #{e}"
     end
 
     def self.migrate_tenant(tenant_name)
       strategy = Apartment.db_migrate_tenant_missing_strategy
       create_tenant(tenant_name) if strategy == :create_tenant
 
-      puts("Migrating #{tenant_name} tenant")
+      logger.info("Migrating #{tenant_name} tenant")
       Apartment::Migrator.migrate tenant_name
     rescue Apartment::TenantNotFound => e
       raise e if strategy == :raise_exception
 
-      puts e.message
+      logger.info e.message
     end
   end
 end
