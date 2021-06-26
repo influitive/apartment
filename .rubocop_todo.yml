@@ -38,14 +38,6 @@ Metrics/ClassLength:
 Metrics/MethodLength:
   Max: 24
 
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: AutoCorrect.
-Performance/TimesMap:
-  Exclude:
-    - 'spec/integration/apartment_rake_integration_spec.rb'
-    - 'spec/tasks/apartment_rake_spec.rb'
-
 # Offense count: 3
 RSpec/AnyInstance:
   Exclude:
