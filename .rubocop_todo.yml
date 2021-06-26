@@ -92,12 +92,6 @@ RSpec/EmptyLineAfterFinalLet:
     - 'spec/adapters/sqlite3_adapter_spec.rb'
     - 'spec/examples/schema_adapter_examples.rb'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-RSpec/EmptyLineAfterHook:
-  Exclude:
-    - 'spec/tenant_spec.rb'
-
 # Offense count: 14
 # Configuration parameters: Max.
 RSpec/ExampleLength:

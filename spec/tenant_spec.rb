@@ -59,6 +59,7 @@ describe Apartment::Tenant do
 
       context 'threadsafety' do
         before { subject.create db1 }
+
         after  { subject.drop   db1 }
 
         it 'has a threadsafe adapter' do
@@ -95,6 +96,7 @@ describe Apartment::Tenant do
 
         context 'creating models' do
           before { subject.create db2 }
+
           after { subject.drop db2 }
 
           it 'should create a model instance in the current schema' do
