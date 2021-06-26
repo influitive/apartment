@@ -162,7 +162,7 @@ describe Apartment::Tenant do
 
       it 'should seed from custom path' do
         Apartment.configure do |config|
-          config.seed_data_file = Rails.root.join('db', 'seeds', 'import.rb')
+          config.seed_data_file = Rails.root.join('db/seeds/import.rb')
         end
         subject.create db1
         subject.switch! db1

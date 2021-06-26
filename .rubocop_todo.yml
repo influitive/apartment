@@ -231,13 +231,6 @@ RSpec/VerifiedDoubles:
     - 'spec/unit/elevators/first_subdomain_spec.rb'
     - 'spec/unit/reloader_spec.rb'
 
-# Offense count: 1
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: slashes, arguments
-Rails/FilePath:
-  Exclude:
-    - 'spec/tenant_spec.rb'
-
 # Offense count: 17
 Style/Documentation:
   Exclude:
