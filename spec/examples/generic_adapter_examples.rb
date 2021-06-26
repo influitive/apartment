@@ -132,7 +132,7 @@ shared_examples_for 'a generic apartment adapter' do
 
       expect do
         subject.switch(db1) { subject.drop(db2) }
-      end.to_not raise_error
+      end.not_to raise_error
     end
   end
 

@@ -10,7 +10,7 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
 
     it_behaves_like 'a generic apartment adapter callbacks'
 
-    context 'using schemas with schema.rb' do
+    context 'when using schemas with schema.rb' do
       before { Apartment.use_schemas = true }
 
       # Not sure why, but somehow using let(:tenant_names) memoizes for the whole example group, not just each test
@@ -18,16 +18,20 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
         ActiveRecord::Base.connection.execute('SELECT nspname FROM pg_namespace;').collect { |row| row['nspname'] }
       end
 
-      let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.schema_search_path.gsub('"', '') } }
+      let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.schema_search_path.delete('"') } }
 
       it_behaves_like 'a generic apartment adapter'
       it_behaves_like 'a schema based apartment adapter'
     end
 
-    context 'using schemas with SQL dump' do
+    context 'when using schemas with SQL dump' do
       before do
         Apartment.use_schemas = true
         Apartment.use_sql = true
+      end
+
+      after do
+        Apartment::Tenant.drop('has-dashes') if Apartment.connection.schema_exists? 'has-dashes'
       end
 
       # Not sure why, but somehow using let(:tenant_names) memoizes for the whole example group, not just each test
@@ -35,21 +39,17 @@ describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
         ActiveRecord::Base.connection.execute('SELECT nspname FROM pg_namespace;').collect { |row| row['nspname'] }
       end
 
-      let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.schema_search_path.gsub('"', '') } }
+      let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.schema_search_path.delete('"') } }
 
       it_behaves_like 'a generic apartment adapter'
       it_behaves_like 'a schema based apartment adapter'
 
       it 'allows for dashes in the schema name' do
-        expect { Apartment::Tenant.create('has-dashes') }.to_not raise_error
-      end
-
-      after do
-        Apartment::Tenant.drop('has-dashes') if Apartment.connection.schema_exists? 'has-dashes'
+        expect { Apartment::Tenant.create('has-dashes') }.not_to raise_error
       end
     end
 
-    context 'using connections' do
+    context 'when using connections' do
       before { Apartment.use_schemas = false }
 
       # Not sure why, but somehow using let(:tenant_names) memoizes for the whole example group, not just each test
