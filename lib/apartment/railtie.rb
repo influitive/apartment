@@ -32,7 +32,7 @@ module Apartment
     #
     config.to_prepare do
       next if ARGV.any? { |arg| arg =~ /\Aassets:(?:precompile|clean)\z/ }
-      next if ARGV.any? { |arg| arg == 'webpacker:compile' }
+      next if ARGV.any?('webpacker:compile')
       next if ENV['APARTMENT_DISABLE_INIT']
 
       begin
