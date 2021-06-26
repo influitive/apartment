@@ -11,12 +11,6 @@ Lint/MixedRegexpCaptureTypes:
   Exclude:
     - 'lib/apartment/elevators/domain.rb'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-Lint/NonDeterministicRequireOrder:
-  Exclude:
-    - 'spec/spec_helper.rb'
-
 # Offense count: 3
 # Configuration parameters: IgnoredMethods.
 Metrics/AbcSize:

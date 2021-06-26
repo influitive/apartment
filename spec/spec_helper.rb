@@ -36,7 +36,7 @@ ActionMailer::Base.default_url_options[:host] = 'test.com'
 Rails.backtrace_cleaner.remove_silencers!
 
 # Load support files
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each { |f| require f }
 
 RSpec.configure do |config|
   config.include Apartment::Spec::Setup
@@ -59,4 +59,4 @@ RSpec.configure do |config|
 end
 
 # Load shared examples, must happen after configure for RSpec 3
-Dir["#{File.dirname(__FILE__)}/examples/**/*.rb"].each { |f| require f }
+Dir["#{File.dirname(__FILE__)}/examples/**/*.rb"].sort.each { |f| require f }
