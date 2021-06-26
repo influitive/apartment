@@ -10,7 +10,7 @@ if defined?(JRUBY_VERSION)
 
     it_behaves_like 'a generic apartment adapter callbacks'
 
-    context 'using schemas' do
+    context 'when using schemas' do
       before { Apartment.use_schemas = true }
 
       # Not sure why, but somehow using let(:tenant_names) memoizes for the whole example group, not just each test
@@ -18,13 +18,13 @@ if defined?(JRUBY_VERSION)
         ActiveRecord::Base.connection.execute('SELECT nspname FROM pg_namespace;').collect { |row| row['nspname'] }
       end
 
-      let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.schema_search_path.gsub('"', '') } }
+      let(:default_tenant) { subject.switch { ActiveRecord::Base.connection.schema_search_path.delete('"') } }
 
       it_behaves_like 'a generic apartment adapter'
       it_behaves_like 'a schema based apartment adapter'
     end
 
-    context 'using databases' do
+    context 'when using databases' do
       before { Apartment.use_schemas = false }
 
       # Not sure why, but somehow using let(:tenant_names) memoizes for the whole example group, not just each test

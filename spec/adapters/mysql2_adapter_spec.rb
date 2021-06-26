@@ -18,7 +18,7 @@ describe Apartment::Adapters::Mysql2Adapter, database: :mysql do
 
     it_behaves_like 'a generic apartment adapter callbacks'
 
-    context 'using - the equivalent of - schemas' do
+    context 'when using - the equivalent of - schemas' do
       before { Apartment.use_schemas = true }
 
       it_behaves_like 'a generic apartment adapter'
@@ -46,7 +46,7 @@ describe Apartment::Adapters::Mysql2Adapter, database: :mysql do
           end
         end
 
-        it 'should process model exclusions' do
+        it 'processes model exclusions' do
           Apartment::Tenant.init
 
           expect(Company.table_name).to eq("#{default_tenant}.companies")
@@ -54,7 +54,7 @@ describe Apartment::Adapters::Mysql2Adapter, database: :mysql do
       end
     end
 
-    context 'using connections' do
+    context 'when using connections' do
       before { Apartment.use_schemas = false }
 
       it_behaves_like 'a generic apartment adapter'

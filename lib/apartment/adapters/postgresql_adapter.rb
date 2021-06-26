@@ -228,7 +228,7 @@ module Apartment
 
       # Temporary set Postgresql related environment variables if there are in @config
       #
-      def with_pg_env(&block)
+      def with_pg_env
         pghost = ENV['PGHOST']
         pgport = ENV['PGPORT']
         pguser = ENV['PGUSER']
