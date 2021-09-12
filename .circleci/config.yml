@@ -58,7 +58,10 @@ jobs:
 
       - run:
           name: Run tests
-          command: bundle exec rspec
+          command: bundle exec rspec --format progress --format RspecJunitFormatter -o ~/test-results/rspec/rspec.xml
+
+      - store_test_results:
+          path: ~/test-results/rspec/
 
 workflows:
   tests:
