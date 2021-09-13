@@ -32,7 +32,7 @@ module Apartment
     #
     config.to_prepare do
       next if ARGV.any? { |arg| arg =~ /\Aassets:(?:precompile|clean)\z/ }
-      next if ARGV.any? { |arg| arg == 'webpacker:compile' }
+      next if ARGV.any?('webpacker:compile')
       next if ENV['APARTMENT_DISABLE_INIT']
 
       begin
@@ -74,11 +74,9 @@ module Apartment
 
       # Overrides reload! to also call Apartment::Tenant.init as well
       # so that the reloaded classes have the proper table_names
-      # rubocop:disable Lint/Debugger
       console do
         require 'apartment/console'
       end
-      # rubocop:enable Lint/Debugger
     end
   end
 end

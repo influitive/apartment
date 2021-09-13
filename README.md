@@ -101,6 +101,16 @@ switched back at the end of the block to what it was before.
 There is also `switch!` which doesn't take a block, but it's recommended to use `switch`.
 To return to the default tenant, you can call `switch` with no arguments.
 
+#### Multiple Tenants
+
+When using schemas, you can also pass in a list of schemas if desired. Any tables defined in a schema earlier in the chain will be referenced first, so this is only useful if you have a schema with only some of the tables defined:
+
+```ruby
+Apartment::Tenant.switch(['tenant_1', 'tenant_2']) do
+  # ...
+end
+```
+
 ### Switching Tenants per request
 
 You can have Apartment route to the appropriate tenant by adding some Rack middleware.

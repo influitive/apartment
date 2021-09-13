@@ -17,7 +17,9 @@ module Apartment
         cache_key = if key.is_a? String
                       "#{Apartment::Tenant.current}_#{key}"
                     else
-                      [Apartment::Tenant.current] + key
+                      # NOTE: In Rails 6.0.4 we start receiving an ActiveRecord::Reflection::BelongsToReflection
+                      # as the key, which wouldn't work well with an array.
+                      [Apartment::Tenant.current] + Array.wrap(key)
                     end
         cache = @find_by_statement_cache[connection.prepared_statements]
         cache.compute_if_absent(cache_key) { ActiveRecord::StatementCache.create(connection, &block) }

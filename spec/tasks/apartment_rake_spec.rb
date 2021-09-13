@@ -31,7 +31,7 @@ describe 'apartment rake tasks' do
   let(:version) { '1234' }
 
   context 'database migration' do
-    let(:tenant_names) { 3.times.map { Apartment::Test.next_db } }
+    let(:tenant_names) { Array(3).map { Apartment::Test.next_db } }
     let(:tenant_count) { tenant_names.length }
 
     before do

@@ -19,17 +19,15 @@ Apartment.excluded_models.each do |model|
 end
 
 require 'rspec/rails'
-require 'capybara/rspec'
-require 'capybara/rails'
 
-# rubocop:disable Lint/ConstantDefinitionInBlock
 begin
   require 'pry'
+  # rubocop:disable Lint/ConstantDefinitionInBlock
   silence_warnings { IRB = Pry }
+  # rubocop:enable Lint/ConstantDefinitionInBlock
 rescue LoadError
   nil
 end
-# rubocop:enable Lint/ConstantDefinitionInBlock
 
 ActionMailer::Base.delivery_method = :test
 ActionMailer::Base.perform_deliveries = true
@@ -38,10 +36,9 @@ ActionMailer::Base.default_url_options[:host] = 'test.com'
 Rails.backtrace_cleaner.remove_silencers!
 
 # Load support files
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each { |f| require f }
 
 RSpec.configure do |config|
-  config.include RSpec::Integration::CapybaraSessions, type: :request
   config.include Apartment::Spec::Setup
 
   # Somewhat brutal hack so that rails 4 postgres extensions don't modify this file
@@ -62,4 +59,4 @@ RSpec.configure do |config|
 end
 
 # Load shared examples, must happen after configure for RSpec 3
-Dir["#{File.dirname(__FILE__)}/examples/**/*.rb"].each { |f| require f }
+Dir["#{File.dirname(__FILE__)}/examples/**/*.rb"].sort.each { |f| require f }

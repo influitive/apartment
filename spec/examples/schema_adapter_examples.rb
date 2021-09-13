@@ -81,7 +81,7 @@ shared_examples_for 'a schema based apartment adapter' do
       it 'should allow them' do
         expect do
           subject.create(db)
-        end.to_not raise_error
+        end.not_to raise_error
         expect(tenant_names).to include(db.to_s)
       end
 
@@ -103,16 +103,14 @@ shared_examples_for 'a schema based apartment adapter' do
         subject.create(db)
         expect do
           subject.drop(db)
-        end.to_not raise_error
+        end.not_to raise_error
         expect(tenant_names).not_to include(db.to_s)
       end
 
       after do
-        begin
-          subject.drop(db)
-        rescue StandardError => _e
-          nil
-        end
+        subject.drop(db)
+      rescue StandardError => _e
+        nil
       end
     end
   end
@@ -126,6 +124,13 @@ shared_examples_for 'a schema based apartment adapter' do
 
       expect(connection.schema_search_path).to start_with %("#{public_schema}")
       expect(User.sequence_name).to eq "#{public_schema}.#{User.table_name}_id_seq"
+    end
+
+    it 'allows a list of schemas' do
+      subject.switch([schema1, schema2]) do
+        expect(connection.schema_search_path).to include %("#{schema1}")
+        expect(connection.schema_search_path).to include %("#{schema2}")
+      end
     end
   end
 
@@ -192,7 +197,7 @@ shared_examples_for 'a schema based apartment adapter' do
       it 'should not raise any errors' do
         expect do
           subject.switch! 'unknown_schema'
-        end.to_not raise_error(Apartment::TenantNotFound)
+        end.not_to raise_error(Apartment::TenantNotFound)
       end
     end
 
@@ -203,7 +208,7 @@ shared_examples_for 'a schema based apartment adapter' do
         subject.create(db)
         expect do
           subject.switch!(db)
-        end.to_not raise_error
+        end.not_to raise_error
 
         expect(connection.schema_search_path).to start_with %("#{db}")
       end

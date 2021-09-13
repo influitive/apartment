@@ -38,11 +38,9 @@ module Apartment
       #
       def connect_to_new(tenant = nil)
         return reset if tenant.nil?
+        raise ActiveRecord::StatementInvalid, "Could not find schema #{tenant}" unless schema_exists?(tenant)
 
-        tenant = tenant.to_s
-        raise ActiveRecord::StatementInvalid, "Could not find schema #{tenant}" unless tenant_exists?(tenant)
-
-        @current = tenant
+        @current = tenant.is_a?(Array) ? tenant.map(&:to_s) : tenant.to_s
         Apartment.connection.schema_search_path = full_search_path
       rescue ActiveRecord::StatementInvalid, ActiveRecord::JDBCError
         raise TenantNotFound, "One of the following schema(s) is invalid: #{full_search_path}"

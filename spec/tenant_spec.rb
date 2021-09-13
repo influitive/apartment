@@ -13,24 +13,6 @@ describe Apartment::Tenant do
       end
     end
 
-    # TODO: this doesn't belong here, but there aren't integration tests currently for mysql
-    # where to put???
-    describe 'exception recovery', type: :request do
-      before do
-        subject.create db1
-      end
-      after { subject.drop db1 }
-
-      # it "should recover from incorrect database" do
-      #   session = Capybara::Session.new(:rack_test, Capybara.app)
-      #   session.visit("http://#{db1}.com")
-      #   expect {
-      #     session.visit("http://this-database-should-not-exist.com")
-      #   }.to raise_error
-      #   session.visit("http://#{db1}.com")
-      # end
-    end
-
     # TODO: re-organize these tests
     context 'with prefix and schemas' do
       describe '#create' do
@@ -44,11 +26,9 @@ describe Apartment::Tenant do
         end
 
         after do
-          begin
-            subject.drop 'db_with_prefix'
-          rescue StandardError => _e
-            nil
-          end
+          subject.drop 'db_with_prefix'
+        rescue StandardError => _e
+          nil
         end
 
         it 'should create a new database' do
@@ -79,6 +59,7 @@ describe Apartment::Tenant do
 
       context 'threadsafety' do
         before { subject.create db1 }
+
         after  { subject.drop   db1 }
 
         it 'has a threadsafe adapter' do
@@ -115,6 +96,7 @@ describe Apartment::Tenant do
 
         context 'creating models' do
           before { subject.create db2 }
+
           after { subject.drop db2 }
 
           it 'should create a model instance in the current schema' do
@@ -182,7 +164,7 @@ describe Apartment::Tenant do
 
       it 'should seed from custom path' do
         Apartment.configure do |config|
-          config.seed_data_file = Rails.root.join('db', 'seeds', 'import.rb')
+          config.seed_data_file = Rails.root.join('db/seeds/import.rb')
         end
         subject.create db1
         subject.switch! db1

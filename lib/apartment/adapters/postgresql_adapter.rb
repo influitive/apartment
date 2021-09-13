@@ -72,11 +72,9 @@ module Apartment
       #
       def connect_to_new(tenant = nil)
         return reset if tenant.nil?
+        raise ActiveRecord::StatementInvalid, "Could not find schema #{tenant}" unless schema_exists?(tenant)
 
-        tenant = tenant.to_s
-        raise ActiveRecord::StatementInvalid, "Could not find schema #{tenant}" unless tenant_exists?(tenant)
-
-        @current = tenant
+        @current = tenant.is_a?(Array) ? tenant.map(&:to_s) : tenant.to_s
         Apartment.connection.schema_search_path = full_search_path
 
         # When the PostgreSQL version is < 9.3,
@@ -149,6 +147,12 @@ module Apartment
           c.remove_instance_variable :@sequence_name if c.instance_variable_defined?(:@sequence_name)
         end
       end
+
+      def schema_exists?(schemas)
+        return true unless Apartment.tenant_presence_check
+
+        Array(schemas).all? { |schema| Apartment.connection.schema_exists?(schema.to_s) }
+      end
     end
 
     # Another Adapter for Postgresql when using schemas and SQL
@@ -158,6 +162,7 @@ module Apartment
         /SET lock_timeout/i,                          # new in postgresql 9.3
         /SET row_security/i,                          # new in postgresql 9.5
         /SET idle_in_transaction_session_timeout/i,   # new in postgresql 9.6
+        /SET default_table_access_method/i,           # new in postgresql 12
         /CREATE SCHEMA public/i,
         /COMMENT ON SCHEMA public/i
 
@@ -224,7 +229,7 @@ module Apartment
 
       # Temporary set Postgresql related environment variables if there are in @config
       #
-      def with_pg_env(&block)
+      def with_pg_env
         pghost = ENV['PGHOST']
         pgport = ENV['PGPORT']
         pguser = ENV['PGUSER']
@@ -235,7 +240,7 @@ module Apartment
         ENV['PGUSER'] = @config[:username].to_s if @config[:username]
         ENV['PGPASSWORD'] = @config[:password].to_s if @config[:password]
 
-        block.call
+        yield
       ensure
         ENV['PGHOST'] = pghost
         ENV['PGPORT'] = pgport

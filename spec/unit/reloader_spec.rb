@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe Apartment::Reloader do
-  context 'using postgresql schemas' do
+  context 'when using postgresql schemas' do
     before do
       Apartment.configure do |config|
         config.excluded_models = ['Company']
@@ -15,7 +15,7 @@ describe Apartment::Reloader do
 
     subject { Apartment::Reloader.new(double('Rack::Application', call: nil)) }
 
-    it 'should initialize apartment when called' do
+    it 'initializes apartment when called' do
       expect(Company.table_name).not_to include('public.')
       subject.call(double('env'))
       expect(Company.table_name).to include('public.')

@@ -1,96 +1,32 @@
 inherit_from: .rubocop_todo.yml
 
+require:
+  - rubocop-rails
+  - rubocop-performance
+  - rubocop-rspec
+
 AllCops:
   Exclude:
-    - 'gemfiles/**/*.gemfile'
-    - 'gemfiles/vendor/**/*'
-    - 'spec/dummy_engine/dummy_engine.gemspec'
+    - gemfiles/**/*.gemfile
+    - gemfiles/vendor/**/*
+    - spec/dummy_engine/dummy_engine.gemspec
+    - spec/schemas/**/*.rb
+
+  NewCops: enable
 
 Gemspec/RequiredRubyVersion:
   Exclude:
     - 'ros-apartment.gemspec'
 
-Style/WordArray:
-  Exclude:
-    - spec/schemas/**/*.rb
-
-Style/NumericLiterals:
-  Exclude:
-    - spec/schemas/**/*.rb
-
-Layout/EmptyLineAfterMagicComment:
-  Exclude:
-    - spec/schemas/**/*.rb
-
 Metrics/BlockLength:
   Exclude:
     - spec/**/*.rb
 
-Layout/EmptyLinesAroundAttributeAccessor:
-  Enabled: true
+Rails/RakeEnvironment:
+  Enabled: false
 
-Layout/SpaceAroundMethodCallOperator:
-  Enabled: true
+Rails/ApplicationRecord:
+  Enabled: false
 
-Lint/DeprecatedOpenSSLConstant:
-  Enabled: true
-
-Lint/DuplicateElsifCondition:
-  Enabled: true
-
-Lint/MixedRegexpCaptureTypes:
-  Enabled: true
-
-Lint/RaiseException:
-  Enabled: true
-
-Lint/StructNewOverride:
-  Enabled: true
-
-Style/AccessorGrouping:
-  Enabled: true
-
-Style/ArrayCoercion:
-  Enabled: true
-
-Style/BisectedAttrAccessor:
-  Enabled: true
-
-Style/CaseLikeIf:
-  Enabled: true
-
-Style/ExponentialNotation:
-  Enabled: true
-
-Style/HashAsLastArrayItem:
-  Enabled: true
-
-Style/HashEachMethods:
-  Enabled: true
-
-Style/HashLikeCase:
-  Enabled: true
-
-Style/HashTransformKeys:
-  Enabled: true
-
-Style/HashTransformValues:
-  Enabled: true
-
-Style/RedundantAssignment:
-  Enabled: true
-
-Style/RedundantFetchBlock:
-  Enabled: true
-
-Style/RedundantFileExtensionInRequire:
-  Enabled: true
-
-Style/RedundantRegexpCharacterClass:
-  Enabled: true
-
-Style/RedundantRegexpEscape:
-  Enabled: true
-
-Style/SlicingWithRange:
-  Enabled: true
+Rails/Output:
+  Enabled: false
