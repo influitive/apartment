@@ -77,7 +77,6 @@ RSpec/DescribedClass:
     - 'spec/tenant_spec.rb'
     - 'spec/unit/elevators/host_hash_spec.rb'
     - 'spec/unit/migrator_spec.rb'
-    - 'spec/unit/reloader_spec.rb'
 
 # Offense count: 5
 # Cop supports --auto-correct.
@@ -128,7 +127,6 @@ RSpec/FilePath:
     - 'spec/unit/elevators/host_spec.rb'
     - 'spec/unit/elevators/subdomain_spec.rb'
     - 'spec/unit/migrator_spec.rb'
-    - 'spec/unit/reloader_spec.rb'
 
 # Offense count: 1
 # Cop supports --auto-correct.
@@ -159,7 +157,6 @@ RSpec/InstanceVariable:
 # Cop supports --auto-correct.
 RSpec/LeadingSubject:
   Exclude:
-    - 'spec/unit/reloader_spec.rb'
 
 # Offense count: 2
 RSpec/LeakyConstantDeclaration:
@@ -196,7 +193,6 @@ RSpec/NamedSubject:
     - 'spec/support/contexts.rb'
     - 'spec/support/requirements.rb'
     - 'spec/tenant_spec.rb'
-    - 'spec/unit/reloader_spec.rb'
 
 # Offense count: 24
 RSpec/NestedGroups:
@@ -217,7 +213,6 @@ RSpec/VerifiedDoubles:
   Exclude:
     - 'spec/integration/apartment_rake_integration_spec.rb'
     - 'spec/unit/elevators/first_subdomain_spec.rb'
-    - 'spec/unit/reloader_spec.rb'
 
 # Offense count: 17
 Style/Documentation:
@@ -233,7 +228,6 @@ Style/Documentation:
     - 'lib/apartment/migrator.rb'
     - 'lib/apartment/model.rb'
     - 'lib/apartment/railtie.rb'
-    - 'lib/apartment/reloader.rb'
     - 'lib/apartment/tasks/enhancements.rb'
     - 'lib/apartment/tasks/task_helper.rb'
     - 'lib/generators/apartment/install/install_generator.rb'
