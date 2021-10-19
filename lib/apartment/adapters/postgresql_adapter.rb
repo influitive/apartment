@@ -82,8 +82,8 @@ module Apartment
         # https://www.postgresql.org/docs/9.3/static/sql-prepare.html
         Apartment.connection.clear_cache! if postgresql_version < 90_300
         reset_sequence_names
-      rescue *rescuable_exceptions
-        raise TenantNotFound, "One of the following schema(s) is invalid: \"#{tenant}\" #{full_search_path}"
+      rescue *rescuable_exceptions => e
+        raise TenantNotFound, "One of the following schema(s) is invalid: \"#{tenant}\" #{full_search_path}.\nOriginal error: #{e.message}"
       end
 
       private
