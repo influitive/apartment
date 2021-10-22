@@ -83,7 +83,7 @@ module Apartment
         Apartment.connection.clear_cache! if postgresql_version < 90_300
         reset_sequence_names
       rescue *rescuable_exceptions => e
-        raise TenantNotFound, "One of the following schema(s) is invalid: \"#{tenant}\" #{full_search_path}.\nOriginal error: #{e.message}"
+        raise_schema_connect_to_new(tenant, e)
       end
 
       private
@@ -152,6 +152,13 @@ module Apartment
         return true unless Apartment.tenant_presence_check
 
         Array(schemas).all? { |schema| Apartment.connection.schema_exists?(schema.to_s) }
+      end
+
+      def raise_schema_connect_to_new(tenant, exception)
+        raise TenantNotFound, <<~EXCEPTION_MESSAGE
+          Could not set search path to schemas, they may be invalid: "#{tenant}" #{full_search_path}.
+          Original error: #{exception.class}: #{exception}
+        EXCEPTION_MESSAGE
       end
     end
 
