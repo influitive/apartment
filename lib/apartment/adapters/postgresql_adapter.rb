@@ -59,11 +59,21 @@ module Apartment
         conn.execute(%{DROP SCHEMA "#{tenant}" CASCADE})
       end
 
+      def schema_cache
+        @schema_cache ||= {}
+      end
+
+      def schema_exists?(name)
+        return schema_cache[name] if schema_cache.key?(name)
+
+        schema_cache[name] = Apartment.connection.schema_exists?(name)
+      end
+
       #   Set schema search path to new schema
       #
       def connect_to_new(tenant = nil)
         return reset if tenant.nil?
-        raise ActiveRecord::StatementInvalid.new("Could not find schema #{tenant}") unless Apartment.connection.schema_exists?(tenant.to_s)
+        raise ActiveRecord::StatementInvalid.new("Could not find schema #{tenant}") unless schema_exists?(tenant.to_s)
 
         @current = tenant.to_s
         Apartment.connection.schema_search_path = full_search_path
