@@ -16,7 +16,15 @@ module Apartment
     attr_accessor(*ACCESSOR_METHODS)
     attr_writer(*WRITER_METHODS)
 
-    def_delegators :connection_class, :connection, :connection_config, :establish_connection
+    def_delegators :connection_class, :connection, :establish_connection
+
+    def connection_config
+      if ::ActiveRecord::Base.respond_to?(:connection_db_config)
+        ::ActiveRecord::Base.connection_db_config.configuration_hash
+      else
+        ::ActiveRecord::Base.connection_config
+      end
+    end
 
     # configure apartment with available options
     def configure
