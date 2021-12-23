@@ -344,7 +344,7 @@ Setting this configuration value to `false` will disable the schema presence che
 
 ```ruby
 Apartment.configure do |config|
-  tenant_presence_check = false
+  config.tenant_presence_check = false
 end
 ```
 
