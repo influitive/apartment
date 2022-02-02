@@ -14,8 +14,8 @@ module Apartment::PostgreSqlAdapterPatch
       default_tenant_prefix = "#{Apartment::Tenant.default_tenant}."
       # NOTE: Excluded models should always access the sequence from the default
       # tenant schema
-      if excluded_model?(table) && schema_prefix != default_tenant_prefix
-        res.sub!(schema_prefix, default_tenant_prefix)
+      if excluded_model?(table)
+        res.sub!(schema_prefix, default_tenant_prefix) if schema_prefix != default_tenant_prefix
       else
         res.delete_prefix!(schema_prefix)
       end
