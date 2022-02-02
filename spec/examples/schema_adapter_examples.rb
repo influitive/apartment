@@ -122,6 +122,12 @@ shared_examples_for 'a schema based apartment adapter' do
   end
 
   describe '#switch' do
+    before do
+      Apartment.configure do |config|
+        config.excluded_models = ['Company']
+      end
+    end
+
     it 'connects and resets' do
       subject.switch(schema1) do
         expect(connection.schema_search_path).to start_with %("#{schema1}")
