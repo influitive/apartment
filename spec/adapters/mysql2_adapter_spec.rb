@@ -6,7 +6,7 @@ require 'apartment/adapters/mysql2_adapter'
 describe Apartment::Adapters::Mysql2Adapter, database: :mysql do
   unless defined?(JRUBY_VERSION)
 
-    subject(:adapter) { Apartment::Tenant.mysql2_adapter config }
+    subject(:adapter) { Apartment::Tenant.adapter }
 
     def tenant_names
       ActiveRecord::Base.connection.execute('SELECT schema_name FROM information_schema.schemata').collect do |row|
