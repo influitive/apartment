@@ -128,6 +128,7 @@ shared_examples_for 'a schema based apartment adapter' do
       end
     end
 
+    # rubocop:disable RSpec/MultipleExpectations
     it 'connects and resets' do
       subject.switch(schema1) do
         expect(connection.schema_search_path).to start_with %("#{schema1}")
@@ -139,6 +140,7 @@ shared_examples_for 'a schema based apartment adapter' do
       expect(User.sequence_name).to eq "#{User.table_name}_id_seq"
       expect(Company.sequence_name).to eq "#{public_schema}.#{Company.table_name}_id_seq"
     end
+    # rubocop:enable RSpec/MultipleExpectations
 
     it 'allows a list of schemas' do
       subject.switch([schema1, schema2]) do
