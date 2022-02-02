@@ -10,13 +10,13 @@ module Apartment::PostgreSqlAdapterPatch
     res = super
     schema_prefix = "#{Apartment::Tenant.current}."
 
-    unless res.starts_with?(schema_prefix)
-      schema, _seq_name = extract_schema_qualified_name(res)
-      res.sub!("#{schema}.", schema_prefix)
+    if res&.starts_with?(schema_prefix)
+      if Apartment.excluded_models.none? { |m| m.constantize.table_name == table }
+        res.delete_prefix!(schema_prefix)
+      else
+        res.sub!(schema_prefix, "#{Apartment::Tenant.default_tenant}.")
+      end
     end
-
-    res.delete_prefix!(schema_prefix) if Apartment.excluded_models.none? { |m| m.constantize.table_name == table }
-
     res
   end
 end
