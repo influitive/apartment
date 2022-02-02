@@ -6,7 +6,7 @@ require 'apartment/adapters/postgresql_adapter'
 describe Apartment::Adapters::PostgresqlAdapter, database: :postgresql do
   unless defined?(JRUBY_VERSION)
 
-    subject { Apartment::Tenant.postgresql_adapter config }
+    subject { Apartment::Tenant.adapter }
 
     it_behaves_like 'a generic apartment adapter callbacks'
 
