@@ -9,17 +9,17 @@ module Apartment::PostgreSqlAdapterPatch
   def default_sequence_name(table, _column)
     res = super
     schema_prefix = "#{Apartment::Tenant.current}."
+    default_tenant_prefix = "#{Apartment::Tenant.default_tenant}."
 
-    if res&.starts_with?(schema_prefix)
-      default_tenant_prefix = "#{Apartment::Tenant.default_tenant}."
-      # NOTE: Excluded models should always access the sequence from the default
-      # tenant schema
-      if excluded_model?(table)
-        res.sub!(schema_prefix, default_tenant_prefix) if schema_prefix != default_tenant_prefix
-      else
-        res.delete_prefix!(schema_prefix)
-      end
+    # NOTE: Excluded models should always access the sequence from the default
+    # tenant schema
+    if excluded_model?(table)
+      res.sub!(schema_prefix, default_tenant_prefix) if schema_prefix != default_tenant_prefix
+      return res
     end
+
+    res.delete_prefix!(schema_prefix) if res&.starts_with?(schema_prefix)
+
     res
   end
 
