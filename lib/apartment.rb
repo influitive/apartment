@@ -8,7 +8,10 @@ require 'apartment/tenant'
 
 require_relative 'apartment/log_subscriber'
 
-require_relative 'apartment/active_record/postgresql_adapter'
+if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+  require_relative 'apartment/active_record/postgresql_adapter'
+end
+
 if ActiveRecord.version.release >= Gem::Version.new('6.0')
   require_relative 'apartment/active_record/connection_handling'
 end
