@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'apartment/adapters/abstract_adapter'
+require 'apartment/active_record/postgresql_adapter'
 
 module Apartment
   module Tenant
