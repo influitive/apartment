@@ -2,7 +2,6 @@
 
 require 'rails'
 require 'apartment/tenant'
-require 'apartment/reloader'
 
 module Apartment
   class Railtie < Rails::Railtie
@@ -59,24 +58,6 @@ module Apartment
     rake_tasks do
       load 'tasks/apartment.rake'
       require 'apartment/tasks/enhancements' if Apartment.db_migrate_tenants
-    end
-
-    #
-    #   The following initializers are a workaround to the fact that I can't properly hook into the rails reloader
-    #   Note this is technically valid for any environment where cache_classes is false, for us, it's just development
-    #
-    if Rails.env.development?
-
-      # Apartment::Reloader is middleware to initialize things properly on each request to dev
-      initializer 'apartment.init' do |app|
-        app.config.middleware.use Apartment::Reloader
-      end
-
-      # Overrides reload! to also call Apartment::Tenant.init as well
-      # so that the reloaded classes have the proper table_names
-      console do
-        require 'apartment/console'
-      end
     end
   end
 end

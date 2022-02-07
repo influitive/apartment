@@ -3,12 +3,6 @@
 source "http://rubygems.org"
 
 gem "rails", "~> 6.1.0"
-gem "rubocop"
-
-group :local do
-  gem "guard-rspec", "~> 4.2"
-  gem "pry"
-end
 
 platforms :ruby do
   gem "sqlite3", "~> 1.4"

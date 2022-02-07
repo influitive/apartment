@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'apartment/adapters/abstract_adapter'
+require 'apartment/active_record/postgresql_adapter'
 
 module Apartment
   module Tenant
@@ -41,7 +42,6 @@ module Apartment
       def reset
         @current = default_tenant
         Apartment.connection.schema_search_path = full_search_path
-        reset_sequence_names
       end
 
       def init
@@ -81,9 +81,8 @@ module Apartment
         # there is a issue for prepared statement with changing search_path.
         # https://www.postgresql.org/docs/9.3/static/sql-prepare.html
         Apartment.connection.clear_cache! if postgresql_version < 90_300
-        reset_sequence_names
-      rescue *rescuable_exceptions
-        raise TenantNotFound, "One of the following schema(s) is invalid: \"#{tenant}\" #{full_search_path}"
+      rescue *rescuable_exceptions => e
+        raise_schema_connect_to_new(tenant, e)
       end
 
       private
@@ -130,28 +129,17 @@ module Apartment
         Apartment.connection.send(:postgresql_version)
       end
 
-      def reset_sequence_names
-        # sequence_name contains the schema, so it must be reset after switch
-        # There is `reset_sequence_name`, but that method actually goes to the database
-        # to find out the new name. Therefore, we do this hack to only unset the name,
-        # and it will be dynamically found the next time it is needed
-        descendants_to_unset = ActiveRecord::Base.descendants
-                                                 .select { |c| c.instance_variable_defined?(:@sequence_name) }
-                                                 .reject do |c|
-                                                   c.instance_variable_defined?(:@explicit_sequence_name) &&
-                                                     c.instance_variable_get(:@explicit_sequence_name)
-                                                 end
-        descendants_to_unset.each do |c|
-          # NOTE: due to this https://github.com/rails-on-services/apartment/issues/81
-          # unreproduceable error we're checking before trying to remove it
-          c.remove_instance_variable :@sequence_name if c.instance_variable_defined?(:@sequence_name)
-        end
-      end
-
       def schema_exists?(schemas)
         return true unless Apartment.tenant_presence_check
 
         Array(schemas).all? { |schema| Apartment.connection.schema_exists?(schema.to_s) }
+      end
+
+      def raise_schema_connect_to_new(tenant, exception)
+        raise TenantNotFound, <<~EXCEPTION_MESSAGE
+          Could not set search path to schemas, they may be invalid: "#{tenant}" #{full_search_path}.
+          Original error: #{exception.class}: #{exception}
+        EXCEPTION_MESSAGE
       end
     end
 
