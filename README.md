@@ -225,6 +225,18 @@ With the above set, these would be the results:
 - a.example.com => a.example.com
 - www.a.example.com => a.example.com
 
+#### Reverse Proxies and SSL/TLS for tenant domains/subdomains
+
+Routing and securing requests for tenant domains/subdomains to your application is out of the scope of this package, but there are some free and paid tools available to help you accomplish this:
+
+**Free Options**
+- [Caddy Server](https://caddyserver.com) - An open source server and reverse proxy that can manage SSL/TLS certificates
+- [Traefik](https://traefik.io/traefik/) - A server and reverse proxy, with both open source and enterprise options
+
+**Paid Options**
+- [Approximated.app](https://approximated.app) - A managed service for automating and securing custom domains/subdomains
+- [CloudFlare SSL for SAAS](https://www.cloudflare.com/en-gb/ssl-for-saas-providers/) - A managed service within the Cloudflare infrastructure for custom domains
+
 #### Custom Elevator
 
 A Generic Elevator exists that allows you to pass a `Proc` (or anything that responds to `call`) to the middleware. This Object will be passed in an `ActionDispatch::Request` object when called for you to do your magic. Apartment will use the return value of this proc to switch to the appropriate tenant. Use like so:
