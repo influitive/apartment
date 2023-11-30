@@ -40,7 +40,7 @@ describe Apartment::Adapters::Sqlite3Adapter, database: :sqlite do
         it "should create a new database" do
           subject.create db_name
 
-          expect(File.exists?("#{default_dir}/#{Rails.env}_#{db_name}.sqlite3")).to eq true
+          expect(File.exist?("#{default_dir}/#{Rails.env}_#{db_name}.sqlite3")).to eq true
         end
       end
 
@@ -55,7 +55,7 @@ describe Apartment::Adapters::Sqlite3Adapter, database: :sqlite do
         it "should create a new database" do
           subject.create db_name
 
-          expect(File.exists?("#{default_dir}/#{db_name}.sqlite3")).to eq true
+          expect(File.exist?("#{default_dir}/#{db_name}.sqlite3")).to eq true
         end
       end
 
@@ -73,7 +73,7 @@ describe Apartment::Adapters::Sqlite3Adapter, database: :sqlite do
         it "should create a new database" do
           subject.create db_name
 
-          expect(File.exists?("#{default_dir}/#{db_name}_#{Rails.env}.sqlite3")).to eq true
+          expect(File.exist?("#{default_dir}/#{db_name}_#{Rails.env}.sqlite3")).to eq true
         end
       end
 
