@@ -22,7 +22,7 @@ module Apartment
     protected
 
       def rescue_from
-        Mysql2::Error
+        Trilogy::Error
       end
     end
 

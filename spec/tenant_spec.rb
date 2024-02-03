@@ -187,4 +187,54 @@ describe Apartment::Tenant do
       end
     end
   end
+
+  context "using trilogy", database: :trilogy do
+
+    before { subject.reload!(config) }
+
+    describe "#adapter" do
+      it "should load trilogy adapter" do
+        subject.adapter
+        expect(Apartment::Adapters::TrilogyAdapter).to be_a(Class)
+      end
+    end
+
+    # TODO this doesn't belong here, but there aren't integration tests currently for trilogy
+    # where to put???
+    describe "exception recovery", :type => :request do
+      before do
+        subject.create db1
+      end
+      after{ subject.drop db1 }
+
+      # it "should recover from incorrect database" do
+      #   session = Capybara::Session.new(:rack_test, Capybara.app)
+      #   session.visit("http://#{db1}.com")
+      #   expect {
+      #     session.visit("http://this-database-should-not-exist.com")
+      #   }.to raise_error
+      #   session.visit("http://#{db1}.com")
+      # end
+    end
+
+    # TODO re-organize these tests
+    context "with prefix and schemas" do
+      describe "#create" do
+        before do
+          Apartment.configure do |config|
+            config.prepend_environment = true
+            config.use_schemas = true
+          end
+
+          subject.reload!(config)
+        end
+
+        after { subject.drop "db_with_prefix" rescue nil }
+
+        it "should create a new database" do
+          subject.create "db_with_prefix"
+        end
+      end
+    end
+  end
 end
