@@ -82,6 +82,11 @@ shared_examples_for "a generic apartment adapter able to handle custom configura
         database: 'override_database',
         username: 'root'
       },
+      trilogy: {
+        adapter:  'trilogy',
+        database: 'override_database',
+        username: 'root'
+      },
       sqlite: {
         adapter:  'sqlite3',
         database: 'override_database'

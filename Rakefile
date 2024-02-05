@@ -102,6 +102,33 @@ namespace :mysql do
 
 end
 
+namespace :trilogy do
+  require 'active_record'
+  require "#{File.join(File.dirname(__FILE__), 'spec', 'support', 'config')}"
+
+  desc 'Build the Trilogy test databases'
+  task :build_db do
+    params = []
+    params << "-h #{trilogy_config['host']}" if trilogy_config['host']
+    params << "-u #{trilogy_config['username']}" if trilogy_config['username']
+    params << "-p#{trilogy_config['password']}" if trilogy_config['password']
+    %x{ mysqladmin #{params.join(' ')} create #{trilogy_config['database']} } rescue "test db already exists"
+    ActiveRecord::Base.establish_connection trilogy_config
+    migrate
+  end
+
+  desc "drop the Trilogy test database"
+  task :drop_db do
+    puts "dropping database #{trilogy_config['database']}"
+    params = []
+    params << "-h #{trilogy_config['host']}" if trilogy_config['host']
+    params << "-u #{trilogy_config['username']}" if trilogy_config['username']
+    params << "-p#{trilogy_config['password']}" if trilogy_config['password']
+    %x{ mysqladmin #{params.join(' ')} drop #{trilogy_config['database']} --force}
+  end
+
+end
+
 # TODO clean this up
 def config
   Apartment::Test.config['connections']
@@ -113,6 +140,10 @@ end
 
 def my_config
   config['mysql']
+end
+
+def trilogy_config
+  config['trilogy']
 end
 
 def activerecord_below_5_2?

@@ -209,7 +209,7 @@ module Apartment
       #   Load a file or raise error if it doesn't exists
       #
       def load_or_raise(file)
-        if File.exists?(file)
+        if File.exist?(file)
           load(file)
         else
           raise FileNotFound, "#{file} doesn't exist yet"
